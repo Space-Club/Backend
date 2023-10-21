@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    active: develop
+---
+
+spring:
+  config:
+    activate:
+      on-profile: production
+    import: sub/application-db.yml
+
+---
+spring:
+  config:
+    activate:
+      on-profile: develop
+    import: develop/application-develop.yml
