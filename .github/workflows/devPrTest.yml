@@ -9,7 +9,7 @@ name: Java Test with Gradle
 
 on:
   pull_request:
-    branches: [ "dev" ]
+    branches: [ "develop" ]
 
 permissions:
   contents: read

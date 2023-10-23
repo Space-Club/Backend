@@ -1,4 +1,4 @@
-name: Execute CD
+name: Production Execute CD
 
 on:
   push:
@@ -9,9 +9,9 @@ permissions:
 
 env:
   BUCKET_NAME: space-club-be-bucket
-  DIRECTORY_NAME: space-club-be-directory
-  CODE_DEPLOY_APP_NAME: space-club-be-deploy
-  DEPLOYMENT_GROUP_NAME: space-club-be-deploy-group
+  DIRECTORY_NAME: space-club-be-prod-directory
+  CODE_DEPLOY_APP_NAME: space-club-be-prod-deploy
+  DEPLOYMENT_GROUP_NAME: space-club-be-prod-deploy-group
 
 jobs:
   build:
