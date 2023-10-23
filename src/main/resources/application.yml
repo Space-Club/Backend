@@ -1,0 +1,27 @@
+spring:
+  profiles:
+    active: local
+  jpa:
+    open-in-view: false
+
+---
+spring:
+  config:
+    activate:
+      on-profile: production
+    import: secrets/application-production.yml
+
+---
+spring:
+  config:
+    activate:
+      on-profile: develop
+    import: develop/application-develop.yml
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+    import: local/application-local.yml
+
