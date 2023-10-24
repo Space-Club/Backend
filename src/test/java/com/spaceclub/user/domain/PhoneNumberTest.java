@@ -2,10 +2,12 @@ package com.spaceclub.user.domain;
 
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -36,6 +38,18 @@ class PhoneNumberTest {
         // when, then
         assertThatNoException()
                 .isThrownBy(() -> new PhoneNumber(validPhoneNumber));
+    }
+
+    @Test
+    void 휴대폰_번호에_대시가_있을경우_제거_후_저장에_성공한다() {
+        // given
+        String phoneNumberWithDash = "010-1234-5678";
+
+        // when
+        PhoneNumber phoneNumber = new PhoneNumber(phoneNumberWithDash);
+
+        // then
+        assertThat(phoneNumber).isEqualTo(new PhoneNumber("01012345678"));
     }
 
 }
