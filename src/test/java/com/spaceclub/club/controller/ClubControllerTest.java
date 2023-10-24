@@ -40,7 +40,6 @@ class ClubControllerTest {
     @WithMockUser
     @DisplayName("클럽 생성에 성공한다")
     void createClubTest() throws Exception {
-
         // given
         CreateClubRequest request = new CreateClubRequest("requiredInfo");
 
@@ -65,7 +64,6 @@ class ClubControllerTest {
     @WithMockUser
     @DisplayName("클럽 조회에 성공한다")
     void getClubTest() throws Exception {
-
         // given
         Long clubId = 1L;
 
@@ -86,7 +84,6 @@ class ClubControllerTest {
     @WithMockUser
     @DisplayName("클럽 삭제에 성공한다")
     void deleteClubTest() throws Exception {
-
         // given
         Long clubId = 1L;
 
@@ -102,6 +99,5 @@ class ClubControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())));
     }
-
 
 }
