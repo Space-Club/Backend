@@ -11,15 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 @RestController
 @RequestMapping("/api/v1")
 public class ClubController {
 
     @PostMapping("/club")
-    public ResponseEntity<String> createClub(@RequestBody CreateClubRequest request) throws URISyntaxException {
-        return ResponseEntity.created(new URI("https://spaceclub.site/1")).build();
+    public ResponseEntity<String> createClub(@RequestBody CreateClubRequest request) {
+        return ResponseEntity.created(URI.create("https://spaceclub.site/1")).build();
     }
 
     @GetMapping("/club/{clubId}")
