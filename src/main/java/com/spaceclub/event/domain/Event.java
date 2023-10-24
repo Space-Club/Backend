@@ -9,6 +9,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -18,8 +19,9 @@ import java.time.LocalDateTime;
 public class Event extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue
+    @Getter
     @Column(name = "event_id")
+    @GeneratedValue
     private Long id;
 
     @Enumerated(EnumType.STRING)
