@@ -27,17 +27,8 @@ public class Event extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Category category;
 
-    private String title;
-
-    private String content;
-
-    private String poster;
-
-    private LocalDateTime startDate;
-
-    private String location;
-
-    private int capacity;
+    @Embedded
+    private EventInfo eventInfo;
 
     @Embedded
     private BankInfo bankInfo;
