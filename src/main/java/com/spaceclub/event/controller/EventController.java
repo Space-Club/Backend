@@ -19,7 +19,7 @@ public class EventController {
     private final EventService eventService;
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody CreateEventRequest request) {
+    public ResponseEntity<Void> saveEvent(@RequestBody CreateEventRequest request) {
         Long eventId = eventService.create(request.toEntity());
 
         return ResponseEntity.created(URI.create("https/" + eventId)).build();
