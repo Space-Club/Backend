@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Event extends BaseTimeEntity {
 
     @Id
@@ -49,5 +49,7 @@ public class Event extends BaseTimeEntity {
     private FormInfo formInfo;
 
     private Long clubId;
+
+    public Event() {}
 
 }
