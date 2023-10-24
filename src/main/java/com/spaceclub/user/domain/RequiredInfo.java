@@ -17,7 +17,6 @@ public class RequiredInfo {
     public static final int MIN_NICKNAME_LENGTH = 2;
     public static final int MAX_NICKNAME_LENGTH = 10;
 
-
     @Column(nullable = false)
     private String nickname;
 
