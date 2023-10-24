@@ -26,8 +26,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureRestDocs
 @WebMvcTest(ClubController.class)
+@AutoConfigureRestDocs
 class ClubControllerTest {
 
     @Autowired
@@ -37,8 +37,8 @@ class ClubControllerTest {
     private ObjectMapper mapper;
 
     @Test
-    @WithMockUser
     @DisplayName("클럽 생성에 성공한다")
+    @WithMockUser
     void createClubTest() throws Exception {
         // given
         CreateClubRequest request = new CreateClubRequest("requiredInfo");
@@ -61,8 +61,8 @@ class ClubControllerTest {
     }
 
     @Test
-    @WithMockUser
     @DisplayName("클럽 조회에 성공한다")
+    @WithMockUser
     void getClubTest() throws Exception {
         // given
         Long clubId = 1L;
@@ -81,8 +81,8 @@ class ClubControllerTest {
     }
 
     @Test
-    @WithMockUser
     @DisplayName("클럽 삭제에 성공한다")
+    @WithMockUser
     void deleteClubTest() throws Exception {
         // given
         Long clubId = 1L;
