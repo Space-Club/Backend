@@ -51,9 +51,9 @@ class ClubControllerTest {
                 .content(mapper.writeValueAsString(request)));
 
         // then
-        result.andExpect(status().isNoContent())
+        result.andExpect(status().isCreated())
                 .andDo(print())
-                .andDo(document("club-create",
+                .andDo(document("club/create",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
@@ -77,7 +77,7 @@ class ClubControllerTest {
         // then
         result.andExpect(status().isOk())
                 .andDo(print())
-                .andDo(document("club-get",
+                .andDo(document("club/get",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())));
     }
@@ -98,7 +98,7 @@ class ClubControllerTest {
         // then
         result.andExpect(status().isOk())
                 .andDo(print())
-                .andDo(document("club-delete",
+                .andDo(document("club/delete",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())));
     }
