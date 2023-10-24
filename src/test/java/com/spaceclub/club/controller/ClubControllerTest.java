@@ -62,8 +62,8 @@ class ClubControllerTest {
     }
 
     @Test
-    @DisplayName("클럽 조회에 성공한다")
     @WithMockUser
+    @DisplayName("클럽 조회에 성공한다")
     void getClubTest() throws Exception {
 
         // given
@@ -83,8 +83,8 @@ class ClubControllerTest {
     }
 
     @Test
-    @DisplayName("클럽 삭제에 성공한다")
     @WithMockUser
+    @DisplayName("클럽 삭제에 성공한다")
     void deleteClubTest() throws Exception {
 
         // given
