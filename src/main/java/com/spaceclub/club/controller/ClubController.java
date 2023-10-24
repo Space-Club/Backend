@@ -1,6 +1,8 @@
 package com.spaceclub.club.controller;
 
 import com.spaceclub.club.controller.dto.CreateClubRequest;
+import com.spaceclub.club.service.ClubService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +16,10 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/api/v1")
+@RequiredArgsConstructor
 public class ClubController {
+
+    private final ClubService service;
 
     @PostMapping("/club")
     public ResponseEntity<String> createClub(@RequestBody CreateClubRequest request) {
