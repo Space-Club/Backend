@@ -9,13 +9,12 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Entity
-//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Event extends BaseTimeEntity {
 
     @Id
@@ -27,17 +26,8 @@ public class Event extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Category category;
 
-    private String title;
-
-    private String content;
-
-    private String poster;
-
-    private LocalDateTime startDate;
-
-    private String location;
-
-    private int capacity;
+    @Embedded
+    private EventInfo eventInfo;
 
     @Embedded
     private BankInfo bankInfo;
@@ -50,6 +40,19 @@ public class Event extends BaseTimeEntity {
 
     private Long clubId;
 
-    public Event() {}
+    @Builder
+    public Event(Category category,
+                 EventInfo eventInfo,
+                 BankInfo bankInfo,
+                 TicketInfo ticketInfo,
+                 FormInfo formInfo,
+                 Long clubId) {
+        this.category = category;
+        this.eventInfo = eventInfo;
+        this.bankInfo = bankInfo;
+        this.ticketInfo = ticketInfo;
+        this.formInfo = formInfo;
+        this.clubId = clubId;
+    }
 
 }
