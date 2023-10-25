@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
@@ -28,7 +29,8 @@ public class Club extends BaseTimeEntity {
     @Lob
     private String info;
 
-    protected Club(Long id, String name, String image, String info) {
+    @Builder
+    public Club(Long id, String name, String image, String info) {
         Assert.notNull(id, "클럽 ID는 null 값이 올 수 없습니다");
         Assert.hasText(Long.toString(id), "클럽 ID는 빈 값이 올 수 없습니다");
         Assert.notNull(name, "이름에 null 값이 올 수 없습니다");
