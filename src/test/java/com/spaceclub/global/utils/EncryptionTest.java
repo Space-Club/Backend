@@ -20,7 +20,7 @@ class EncryptionTest {
         String password = "";
         String urlResult = encryptor.encrypt(url);
         String usernameResult = encryptor.encrypt(username);
-        String passwordReesult = encryptor.encrypt(password);
+        String passwordResult = encryptor.encrypt(password);
 
         System.out.println("url plain : " + encryptor.decrypt(urlResult));          //복호화
         System.out.println("url encoding : " + urlResult);                          //암호화 (설정파일에 사용)
@@ -28,8 +28,8 @@ class EncryptionTest {
         System.out.println("username plain : " + encryptor.decrypt(usernameResult));//복호화
         System.out.println("username encoding : " + usernameResult);                //암호화 (설정파일에 사용)
 
-        System.out.println("password plain : " + encryptor.decrypt(passwordReesult));//복호화
-        System.out.println("password encoding : " + passwordReesult);                //암호화 (설정파일에 사용)
+        System.out.println("password plain : " + encryptor.decrypt(passwordResult));//복호화
+        System.out.println("password encoding : " + passwordResult);                //암호화 (설정파일에 사용)
     }
 
 }
