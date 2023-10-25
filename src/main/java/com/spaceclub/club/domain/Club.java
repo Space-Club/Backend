@@ -29,17 +29,22 @@ public class Club extends BaseTimeEntity {
     @Lob
     private String info;
 
+    private String owner;
+
+    private boolean validateNameLength() {
+        return this.name.length() <= 12;
+    }
+
     @Builder
-    public Club(Long id, String name, String image, String info) {
-        Assert.notNull(id, "클럽 ID는 null 값이 올 수 없습니다");
-        Assert.hasText(Long.toString(id), "클럽 ID는 빈 값이 올 수 없습니다");
+    public Club(String name, String image, String info, String owner) {
         Assert.notNull(name, "이름에 null 값이 올 수 없습니다");
         Assert.hasText(name, "이름이 빈 값일 수 없습니다");
+        Assert.isTrue(validateNameLength(), "이름의 길이는 12자를 넘을 수 없습니다");
 
-        this.id = id;
         this.name = name;
         this.image = image;
         this.info = info;
+        this.owner = owner;
     }
 
 }
