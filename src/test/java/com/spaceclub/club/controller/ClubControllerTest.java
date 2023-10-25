@@ -49,7 +49,7 @@ class ClubControllerTest {
         CreateClubRequest request = new CreateClubRequest("requiredInfo");
 
         // when
-        ResultActions result = this.mockMvc.perform(post("/api/v1/club")
+        ResultActions result = this.mockMvc.perform(post("/api/v1/clubs")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(request)));
@@ -73,7 +73,7 @@ class ClubControllerTest {
         Long clubId = 1L;
 
         // when
-        ResultActions result = this.mockMvc.perform(get("/api/v1/club/{clubId}", clubId)
+        ResultActions result = this.mockMvc.perform(get("/api/v1/clubs/{clubId}", clubId)
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -93,7 +93,7 @@ class ClubControllerTest {
         Long clubId = 1L;
 
         // when
-        ResultActions result = this.mockMvc.perform(delete("/api/v1/club/{clubId}", clubId)
+        ResultActions result = this.mockMvc.perform(delete("/api/v1/clubs/{clubId}", clubId)
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON));
 
