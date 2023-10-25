@@ -16,7 +16,7 @@ class EmailTest {
     @ParameterizedTest(name = "{index}. email : {arguments}")
     @NullSource
     @ValueSource(strings = {"", " "})
-    void 이메일이_null이거나_공백이면_예외를_발생한다(String email) {
+    void 이메일이_null이거나_이메일_생성에_실패한다(String email) {
         // when, then
         assertThatThrownBy(() -> new Email(email))
                 .isInstanceOf(IllegalArgumentException.class);
@@ -24,14 +24,14 @@ class EmailTest {
 
     @ParameterizedTest(name = "{index}. email : {arguments}")
     @ValueSource(strings = {"123", "wrongEmail", "wrongEmail@", "wrongEmail@com", "wrongEmail@com."})
-    void 이메일의_형식이_잘못되었을_경우_예외를_발생한다(String email) {
+    void 이메일의_형식이_잘못되었을_경우_이메일_생성에_실패한다(String email) {
         // when, then
         assertThatThrownBy(() -> new Email(email))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    void 이메일의_형식이_올바르면_예외를_발생하지_않는다() {
+    void 이메일의_형식이_올바르면_이메일_생성에_성공한다() {
         // given
         String validEmail = "valid@gmail.com";
 

@@ -18,7 +18,7 @@ class RequiredInfoTest {
     @ParameterizedTest(name = "{index}. value : {arguments}")
     @NullSource
     @ValueSource(strings = {"", " ", "    ", "a ", "a b", "    a   "})
-    void 닉네임이_null이거나_공백을_포함하면_예외를_발생한다(String invalidNickname) {
+    void 닉네임이_null이거나_공백을_포함하면_필수정보_객체_생성에_생성에_실패한다(String invalidNickname) {
         // when, then
         assertThatThrownBy(() -> new RequiredInfo(invalidNickname, validPhoneNumber))
                 .isInstanceOf(IllegalArgumentException.class);
@@ -26,14 +26,14 @@ class RequiredInfoTest {
 
     @ParameterizedTest(name = "{index}. nickname : {arguments}")
     @ValueSource(strings = {"1", "가", "가나다라마바사아자차카", "12345678901"})
-    void 닉네임이_2글자이상_10글자이하_범위에서_벗어나면_예외를_발생한다(String invalidNickname) {
+    void 닉네임이_2글자이상_10글자이하_범위에서_벗어나면_필수정보_객체_생성에_생성에_실패한다(String invalidNickname) {
         // when, then
         assertThatThrownBy(() -> new RequiredInfo(invalidNickname, validPhoneNumber))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    void 닉네임이_2글자이상_10글자이하_범위에_있으면_예외를_발생하지_않는다() {
+    void 닉네임이_2글자이상_10글자이하_범위에_있으면_필수정보_객체_생성에_생성에_성공한다() {
         // given
         String validNickname = "가나";
 
