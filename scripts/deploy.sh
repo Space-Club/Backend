@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source ./properties.sh
+
 PROJECT_NAME=spring-cicd
 REPOSITORY=/home/ubuntu/action
 PACKAGE=$REPOSITORY/build/libs/
@@ -23,4 +25,4 @@ else
 fi
 
 echo "> 배포 - $JAR_PATH"
-sudo nohup java -jar $JAR_PATH > /dev/null 2>&1 &
+sudo nohup java -jar $JAR_PATH --spring.profiles.active=develop --jasypt.encryptor.password=${encrypt} > /dev/null 2>&1 &
