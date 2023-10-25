@@ -1,5 +1,21 @@
 package com.spaceclub.club.controller.dto;
 
-public record CreateClubRequest(String requiredInfo) {
+import com.spaceclub.club.domain.Club;
+
+public record CreateClubRequest(
+        String name,
+        String info,
+        String owner,
+        String image
+) {
+
+    public Club toEntity() {
+        return Club.builder()
+                .name(name)
+                .info(info)
+                .owner(owner)
+                .image(image)
+                .build();
+    }
 
 }
