@@ -9,17 +9,19 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Event extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue
+    @Getter
     @Column(name = "event_id")
+    @GeneratedValue
     private Long id;
 
     @Enumerated(EnumType.STRING)
@@ -47,5 +49,7 @@ public class Event extends BaseTimeEntity {
     private FormInfo formInfo;
 
     private Long clubId;
+
+    public Event() {}
 
 }
