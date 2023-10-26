@@ -43,12 +43,16 @@ public class Event extends BaseTimeEntity {
     private Long clubId;
 
     @Builder
-    private Event(Category category,
-                 EventInfo eventInfo,
-                 BankInfo bankInfo,
-                 TicketInfo ticketInfo,
-                 FormInfo formInfo,
-                 Long clubId) {
+    private Event(
+            Long id,
+            Category category,
+            EventInfo eventInfo,
+            BankInfo bankInfo,
+            TicketInfo ticketInfo,
+            FormInfo formInfo,
+            Long clubId
+    ) {
+        this.id = id;
         this.category = category;
         this.eventInfo = eventInfo;
         this.bankInfo = bankInfo;
