@@ -28,7 +28,6 @@ public class ClubController {
         Club createdClub = service.createClub(newClub);
         Long id = createdClub.getId();
 
-        return ResponseEntity.created(URI.create("https://spaceclub.site/" + id)).build();
         return ResponseEntity.created(URI.create("api/v1/clubs/" + id)).build();
     }
 
