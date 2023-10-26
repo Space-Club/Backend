@@ -10,5 +10,4 @@ public interface UserService {
 
     Page<Event> findAllEventPages(Long userId, Pageable pageable);
 
-
 }
