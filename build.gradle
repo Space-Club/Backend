@@ -30,6 +30,7 @@ dependencies {
 	// jasypt & jasypt-spring-boot-starter
 	implementation 'org.jasypt:jasypt:1.9.3'
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
