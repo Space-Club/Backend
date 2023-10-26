@@ -15,4 +15,9 @@ public class ClubService {
         return repository.save(club);
     }
 
+    public Club getClub(Long clubId) {
+        return repository.findById(clubId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다"));
+    }
+
 }

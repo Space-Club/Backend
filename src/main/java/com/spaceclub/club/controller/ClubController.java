@@ -1,5 +1,6 @@
 package com.spaceclub.club.controller;
 
+import com.spaceclub.club.controller.dto.ClubGetResponse;
 import com.spaceclub.club.controller.dto.CreateClubRequest;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.service.ClubService;
@@ -32,8 +33,11 @@ public class ClubController {
     }
 
     @GetMapping("/clubs/{clubId}")
-    public ResponseEntity<String> getClub(@PathVariable Long clubId) {
-        return ResponseEntity.ok("get club.");
+    public ResponseEntity<ClubGetResponse> getClub(@PathVariable Long clubId) {
+        Club club = service.getClub(clubId);
+        ClubGetResponse response = club.toGetResponseDto();
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/clubs/{clubId}")
