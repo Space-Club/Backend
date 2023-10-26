@@ -31,15 +31,16 @@ public class Club extends BaseTimeEntity {
 
     private String owner;
 
-    private boolean validateNameLength() {
-        return this.name.length() <= 12;
+    private boolean validateNameLength(String name) {
+        return name.length() <= 12;
     }
 
     @Builder
     public Club(String name, String image, String info, String owner) {
         Assert.notNull(name, "이름에 null 값이 올 수 없습니다");
         Assert.hasText(name, "이름이 빈 값일 수 없습니다");
-        Assert.isTrue(validateNameLength(), "이름의 길이는 12자를 넘을 수 없습니다");
+        Assert.isTrue(validateNameLength(name), "이름의 길이는 12자를 넘을 수 없습니다");
+        Assert.isTrue(name.equals(name.trim()), "이름의 맨앞과 맨뒤에는 공백이 추가될 수 없습니다");
 
         this.name = name;
         this.image = image;
