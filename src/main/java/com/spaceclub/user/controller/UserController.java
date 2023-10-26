@@ -24,10 +24,12 @@ public class UserController {
     @GetMapping("/{userId}/events")
     public EventPageResponse<EventResponse, Event> getAllEvents(@PathVariable Long userId, Pageable pageable) {
         Page<Event> eventPages = userService.findAllEventPages(userId, pageable);
+        System.out.println(eventPages);
         List<EventResponse> eventResponses = eventPages.getContent()
                 .stream()
                 .map(EventResponse::from)
                 .toList();
+        System.out.println("eventResponses = " + eventResponses);
 
         return new EventPageResponse<>(eventResponses, eventPages);
     }
