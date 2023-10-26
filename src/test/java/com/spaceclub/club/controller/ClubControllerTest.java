@@ -2,11 +2,13 @@ package com.spaceclub.club.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.club.controller.dto.CreateClubRequest;
+import com.spaceclub.club.service.ClubService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -36,6 +38,9 @@ class ClubControllerTest {
     @Autowired
     private ObjectMapper mapper;
 
+    @MockBean
+    private ClubService clubService;
+
     @Test
     @DisplayName("클럽 생성에 성공한다")
     @WithMockUser
@@ -44,7 +49,7 @@ class ClubControllerTest {
         CreateClubRequest request = new CreateClubRequest("requiredInfo");
 
         // when
-        ResultActions result = this.mockMvc.perform(post("/api/v1/club")
+        ResultActions result = this.mockMvc.perform(post("/api/v1/clubs")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(request)));
@@ -68,7 +73,7 @@ class ClubControllerTest {
         Long clubId = 1L;
 
         // when
-        ResultActions result = this.mockMvc.perform(get("/api/v1/club/{clubId}", clubId)
+        ResultActions result = this.mockMvc.perform(get("/api/v1/clubs/{clubId}", clubId)
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -88,7 +93,7 @@ class ClubControllerTest {
         Long clubId = 1L;
 
         // when
-        ResultActions result = this.mockMvc.perform(delete("/api/v1/club/{clubId}", clubId)
+        ResultActions result = this.mockMvc.perform(delete("/api/v1/clubs/{clubId}", clubId)
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON));
 

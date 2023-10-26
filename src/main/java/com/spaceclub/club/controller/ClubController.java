@@ -1,6 +1,9 @@
 package com.spaceclub.club.controller;
 
 import com.spaceclub.club.controller.dto.CreateClubRequest;
+import com.spaceclub.club.domain.Club;
+import com.spaceclub.club.service.ClubService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,19 +17,22 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/api/v1")
+@RequiredArgsConstructor
 public class ClubController {
 
-    @PostMapping("/club")
+    private final ClubService service;
+
+    @PostMapping("/clubs")
     public ResponseEntity<String> createClub(@RequestBody CreateClubRequest request) {
-        return ResponseEntity.created(URI.create("https://spaceclub.site/1")).build();
+        return ResponseEntity.created(URI.create("api/v1/clubs/1")).build();
     }
 
-    @GetMapping("/club/{clubId}")
+    @GetMapping("/clubs/{clubId}")
     public ResponseEntity<String> getClub(@PathVariable Long clubId) {
         return ResponseEntity.ok("get club.");
     }
 
-    @DeleteMapping("/club/{clubId}")
+    @DeleteMapping("/clubs/{clubId}")
     public ResponseEntity<String> deleteClub(@PathVariable Long clubId) {
         return ResponseEntity.ok("delete club.");
     }
