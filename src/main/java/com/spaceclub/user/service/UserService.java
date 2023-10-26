@@ -10,4 +10,8 @@ public interface UserService {
 
     Page<Event> findAllEventPages(Long userId, Pageable pageable);
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 99781ac (feat: user controller 및 mock User service 생성)
 }
