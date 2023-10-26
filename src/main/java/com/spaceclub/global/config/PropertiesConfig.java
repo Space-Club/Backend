@@ -21,6 +21,7 @@ public class PropertiesConfig {
         config.setPassword(password);             //암호화, 복호화할 때 사용할 패스워드
         config.setAlgorithm("PBEWithMD5AndDES");  //암호화 알고리즘
         config.setKeyObtentionIterations("1000"); //해시 반복 횟수
+        config.setPoolSize("1");
 
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
         encryptor.setConfig(config);
