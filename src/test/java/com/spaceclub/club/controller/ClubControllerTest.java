@@ -2,6 +2,7 @@ package com.spaceclub.club.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.club.controller.dto.CreateClubRequest;
+import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.service.ClubService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -46,7 +49,17 @@ class ClubControllerTest {
     @WithMockUser
     void createClubTest() throws Exception {
         // given
-        CreateClubRequest request = new CreateClubRequest("requiredInfo");
+        given(clubService.createClub(any(Club.class))).willReturn(
+                Club.builder()
+                        .name("연사모")
+                        .info("연어를 사랑하는 모임")
+                        .owner("연어대장")
+                        .image("연어.png")
+                        .build());
+        CreateClubRequest request = new CreateClubRequest("연사모",
+                "연어를 사랑하는 모임",
+                "연어대장",
+                "연어.png");
 
         // when
         ResultActions result = this.mockMvc.perform(post("/api/v1/clubs")
@@ -61,7 +74,10 @@ class ClubControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
-                                fieldWithPath("requiredInfo").type(JsonFieldType.STRING).description("클럽 생성시 필요한 임시 정보")
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("클럽 이름"),
+                                fieldWithPath("info").type(JsonFieldType.STRING).description("클럽 소개"),
+                                fieldWithPath("owner").type(JsonFieldType.STRING).description("클럽 생성자"),
+                                fieldWithPath("image").type(JsonFieldType.STRING).description("클럽 썸네일 이미지")
                         )));
     }
 

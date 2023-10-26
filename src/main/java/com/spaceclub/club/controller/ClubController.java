@@ -24,7 +24,11 @@ public class ClubController {
 
     @PostMapping("/clubs")
     public ResponseEntity<String> createClub(@RequestBody CreateClubRequest request) {
-        return ResponseEntity.created(URI.create("api/v1/clubs/1")).build();
+        Club newClub = request.toEntity();
+        Club createdClub = service.createClub(newClub);
+        Long id = createdClub.getId();
+
+        return ResponseEntity.created(URI.create("api/v1/clubs/" + id)).build();
     }
 
     @GetMapping("/clubs/{clubId}")
