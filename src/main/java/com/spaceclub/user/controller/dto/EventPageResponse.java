@@ -1,7 +1,6 @@
 package com.spaceclub.user.controller.dto;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -19,7 +18,6 @@ public record EventPageResponse<T, E>(
             boolean last,
             int pageNumber,
             int size,
-            SortResponse sort,
             int totalPages,
             long totalElements
     ) {
@@ -30,23 +28,8 @@ public record EventPageResponse<T, E>(
                     page.isLast(),
                     page.getNumber(),
                     page.getSize(),
-                    new SortResponse(page.getSort()),
                     page.getTotalPages(),
                     page.getTotalElements()
-            );
-        }
-
-    }
-
-    private record SortResponse(
-            boolean empty,
-            boolean sorted
-    ) {
-
-        public SortResponse(Sort sort) {
-            this(
-                    sort.isEmpty(),
-                    sort.isSorted()
             );
         }
 
