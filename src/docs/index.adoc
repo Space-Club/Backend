@@ -1,0 +1,15 @@
+
+= API Docs
+Space Club API Docs
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toc-title: API
+:toclevels: 2
+:sectlinks:
+
+== User
+
+== Club
+
+== Event
