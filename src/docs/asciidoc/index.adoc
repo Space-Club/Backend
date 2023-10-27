@@ -1,3 +1,6 @@
+ifndef::snippets[]
+:snippets: ../../../build/generated-snippets
+endif::[]
 
 = API Docs
 Space Club API Docs
