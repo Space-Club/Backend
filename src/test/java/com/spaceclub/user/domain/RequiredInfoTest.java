@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.ReplaceUnderscores.class)
+@DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.class)
 class RequiredInfoTest {
 
     private final PhoneNumber validPhoneNumber = new PhoneNumber("010-1234-5678");

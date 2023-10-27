@@ -1,10 +1,12 @@
 package com.spaceclub.club.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.controller.dto.ClubCreateRequest;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubNotice;
 import com.spaceclub.club.service.ClubService;
+import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -38,6 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ClubController.class)
 @AutoConfigureRestDocs
+@DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.class)
 class ClubControllerTest {
 
     @Autowired

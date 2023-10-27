@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.ReplaceUnderscores.class)
+@DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.class)
 class EmailTest {
 
     @ParameterizedTest(name = "{index}. email : {arguments}")

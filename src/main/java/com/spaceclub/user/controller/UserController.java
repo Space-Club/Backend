@@ -1,8 +1,8 @@
 package com.spaceclub.user.controller;
 
 import com.spaceclub.event.domain.Event;
-import com.spaceclub.user.controller.dto.EventPageResponse;
-import com.spaceclub.user.controller.dto.EventResponse;
+import com.spaceclub.global.dto.PageResponse;
+import com.spaceclub.user.controller.dto.UserEventGetResponse;
 import com.spaceclub.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,15 +22,15 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{userId}/events")
-    public EventPageResponse<EventResponse, Event> getAllEvents(@PathVariable Long userId, Pageable pageable) {
+    public PageResponse<UserEventGetResponse, Event> getAllEvents(@PathVariable Long userId, Pageable pageable) {
         Page<Event> eventPages = userService.findAllEventPages(userId, pageable);
         System.out.println(eventPages);
-        List<EventResponse> eventResponses = eventPages.getContent()
+        List<UserEventGetResponse> eventGetRespons = eventPages.getContent()
                 .stream()
-                .map(EventResponse::from)
+                .map(UserEventGetResponse::from)
                 .toList();
 
-        return new EventPageResponse<>(eventResponses, eventPages);
+        return new PageResponse<>(eventGetRespons, eventPages);
     }
 
 }

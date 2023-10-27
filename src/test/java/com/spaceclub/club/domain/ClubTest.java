@@ -1,5 +1,7 @@
 package com.spaceclub.club.domain;
 
+import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
+import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -7,6 +9,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.class)
 class ClubTest {
 
     @ValueSource(strings = {"내 클럽", "연사모", "오마이클럽", "연어를 사랑하는 모임"})
