@@ -1,6 +1,6 @@
 package com.spaceclub.event.controller;
 
-import com.spaceclub.event.controller.dto.CreateEventRequest;
+import com.spaceclub.event.controller.dto.EventCreateRequest;
 import com.spaceclub.event.service.EventService;
 import com.spaceclub.global.S3ImageUploader;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +25,9 @@ public class EventController {
     private final S3ImageUploader uploader;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> create(@RequestPart CreateEventRequest request, @RequestPart MultipartFile poster) throws IOException {
+    public ResponseEntity<String> create(@RequestPart EventCreateRequest request, @RequestPart MultipartFile poster) throws IOException {
         String fileName = uploader.uploadImage(poster);
-        Long eventId = eventService.create(request.toEntity(fileName));
+        Long eventId = eventService.create(request.toEntity(fileName), request.clubId());
 
         return ResponseEntity.created(URI.create("/api/v1/events/" + eventId)).build();
     }
