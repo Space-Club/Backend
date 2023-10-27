@@ -54,12 +54,10 @@ tasks.named('asciidoctor') {
 	dependsOn test
 }
 
-task()
-
 bootJar {
 	dependsOn asciidoctor
 	copy {
 		from('build/docs/asciidoc')
-		into('src/docs/asciidoc')
+		into('src/main/resources/static/')
 	}
 }
