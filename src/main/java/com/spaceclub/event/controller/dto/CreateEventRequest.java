@@ -19,26 +19,15 @@ public record CreateEventRequest(
         FormInfoRequest formInfo
 ) {
 
-    public record EventInfoRequest(
-            String title,
-            String content,
-            LocalDate startDate,
-            String location,
-            int capacity,
-            String poster
-    ) {
-
-        public EventInfo toEntity() {
-            return EventInfo.builder()
-                    .title(title)
-                    .content(content)
-                    .startDate(startDate)
-                    .location(location)
-                    .capacity(capacity)
-                    .poster(poster)
-                    .build();
-        }
-
+    public Event toEntity(String posterUrl) {
+        return Event.builder()
+                .category(category)
+                .clubId(clubId)
+                .eventInfo(eventInfo.toEntity(posterUrl))
+                .ticketInfo(ticketInfo.toEntity())
+                .bankInfo(bankInfo.toEntity())
+                .formInfo(formInfo.toEntity())
+                .build();
     }
 
     public record TicketInfoRequest(
@@ -85,15 +74,25 @@ public record CreateEventRequest(
 
     }
 
-    public Event toEntity() {
-        return Event.builder()
-                .category(category)
-                .clubId(clubId)
-                .eventInfo(eventInfo.toEntity())
-                .ticketInfo(ticketInfo.toEntity())
-                .bankInfo(bankInfo.toEntity())
-                .formInfo(formInfo.toEntity())
-                .build();
+    public record EventInfoRequest(
+            String title,
+            String content,
+            LocalDate startDate,
+            String location,
+            int capacity
+    ) {
+
+        public EventInfo toEntity(String posterUrl) {
+            return EventInfo.builder()
+                    .title(title)
+                    .content(content)
+                    .startDate(startDate)
+                    .location(location)
+                    .capacity(capacity)
+                    .poster(posterUrl)
+                    .build();
+        }
+
     }
 
 }
