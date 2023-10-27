@@ -1,0 +1,18 @@
+
+= API Docs
+Space Club API Docs
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toc-title: API
+:toclevels: 2
+:sectlinks:
+
+== User
+
+=== User : get all event
+operation::user/getAllEvents[snippets='http-request,http-response']
+
+== Club
+
+== Event

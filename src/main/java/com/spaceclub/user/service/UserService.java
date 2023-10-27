@@ -6,8 +6,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface UserService {
+public class UserService {
 
-    Page<Event> findAllEventPages(Long userId, Pageable pageable);
+    public Page<Event> findAllEventPages(Long userId, Pageable pageable) {
+        return null;
+    }
 
 }
