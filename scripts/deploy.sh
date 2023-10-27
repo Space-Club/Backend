@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source ./properties.sh
+source /home/ubuntu/action/scripts/properties.sh
 
 PROJECT_NAME=spring-cicd
 REPOSITORY=/home/ubuntu/action
