@@ -1,15 +1,15 @@
-package com.spaceclub.user.controller.dto;
+package com.spaceclub.global.dto;
 
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-public record EventPageResponse<T, E>(
+public record PageResponse<T, E>(
         List<T> data,
         PageableResponse<E> pageData
 ) {
 
-    public EventPageResponse(List<T> data, Page<E> page) {
+    public PageResponse(List<T> data, Page<E> page) {
         this(data, new PageableResponse<>(page));
     }
 
