@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.net.URI;
 
 @Controller
-@RequestMapping("/api/v1/event")
+@RequestMapping("/api/v1/events")
 @RequiredArgsConstructor
 public class EventController {
 
@@ -26,11 +26,10 @@ public class EventController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> create(@RequestPart CreateEventRequest request, @RequestPart MultipartFile poster) throws IOException {
-
         String fileName = uploader.uploadImage(poster);
         Long eventId = eventService.create(request.toEntity(fileName));
 
-        return ResponseEntity.created(URI.create("/api/v1/event/" + eventId)).build();
+        return ResponseEntity.created(URI.create("/api/v1/events/" + eventId)).build();
     }
 
 }

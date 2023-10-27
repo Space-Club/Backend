@@ -19,6 +19,8 @@ public class S3ImageUploader {
 
     private static final String DOT = ".";
 
+    public static final String SLASH = "/";
+
     private final AmazonS3Client amazonS3Client;
 
     @Value("${s3.bucket.name}")
@@ -34,14 +36,15 @@ public class S3ImageUploader {
 
         amazonS3Client.putObject(
                 new PutObjectRequest(s3BucketName, newFileName, poster.getInputStream(), objectMetaData)
-                        .withCannedAcl(CannedAccessControlList.PublicRead));
+                        .withCannedAcl(CannedAccessControlList.PublicRead)
+        );
 
         return getSavedFileName(poster);
     }
 
     private String getSavedFileName(MultipartFile poster) {
         String fullImageUrl = amazonS3Client.getUrl(s3BucketName, poster.getOriginalFilename()).toString();
-        String[] parts = fullImageUrl.split("/");
+        String[] parts = fullImageUrl.split(SLASH);
 
         return parts[parts.length - 1];
     }
