@@ -3,6 +3,7 @@ package com.spaceclub.club.domain;
 import com.spaceclub.global.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
@@ -42,11 +43,11 @@ public class Club extends BaseTimeEntity {
     private String owner;
 
     @Getter
-    @OneToMany(mappedBy = "club")
+    @OneToMany(mappedBy = "club", fetch = FetchType.EAGER)
     private List<ClubNotice> notices = new ArrayList<>();
 
     @Getter
-    @OneToMany(mappedBy = "club")
+    @OneToMany(mappedBy = "club", fetch = FetchType.EAGER)
     private List<ClubUser> clubUser = new ArrayList<>();
 
     private boolean validateNameLength(String name) {

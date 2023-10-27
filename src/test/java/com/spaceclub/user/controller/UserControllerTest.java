@@ -19,6 +19,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -62,7 +63,7 @@ class UserControllerTest {
                                 EventInfo.builder()
                                         .title("title1")
                                         .content("content1")
-                                        .startDate(LocalDate.of(2023, 9, 20))
+                                        .startDate(LocalDateTime.of(2023, 9, 20, 15, 30, 30))
                                         .location("location1")
                                         .capacity(10).build()
                         )
@@ -74,7 +75,7 @@ class UserControllerTest {
                                 EventInfo.builder()
                                         .title("title2")
                                         .content("content2")
-                                        .startDate(LocalDate.of(2023, 10, 30))
+                                        .startDate(LocalDateTime.of(2023, 9, 20, 15, 30, 30))
                                         .location("location2")
                                         .capacity(50).build()
                         )
@@ -86,7 +87,7 @@ class UserControllerTest {
                                 EventInfo.builder()
                                         .title("title3")
                                         .content("content3")
-                                        .startDate(LocalDate.of(2023, 11, 30))
+                                        .startDate(LocalDateTime.of(2023, 9, 20, 15, 30, 30))
                                         .location("location3").capacity(100).build()
                         )
                         .build()
