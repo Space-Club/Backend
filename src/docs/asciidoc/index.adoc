@@ -11,8 +11,11 @@ Space Club API Docs
 == User
 
 === User : get all event
-operation::user/getAllEvents[snippets='http-request,http-response']
+include::{snippets}/user/getAllEvents/http-request.adoc[]
+include::{snippets}/user/getAllEvents/http-response.adoc[]
 
 == Club
+include::{snippets}/club/create/http-request.adoc[]
+include::{snippets}/club/create/http-response.adoc[]
 
 == Event
