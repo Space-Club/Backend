@@ -26,6 +26,7 @@ public class Event extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    @Getter
     @Embedded
     private EventInfo eventInfo;
 
@@ -38,10 +39,11 @@ public class Event extends BaseTimeEntity {
     @Embedded
     private FormInfo formInfo;
 
+    @Getter
     private Long clubId;
 
     @Builder
-    public Event(Category category,
+    private Event(Category category,
                  EventInfo eventInfo,
                  BankInfo bankInfo,
                  TicketInfo ticketInfo,
@@ -53,6 +55,11 @@ public class Event extends BaseTimeEntity {
         this.ticketInfo = ticketInfo;
         this.formInfo = formInfo;
         this.clubId = clubId;
+    }
+
+    public String getClubHost() {
+        // TODO Club과 연관관계 설정 후 HOST (주최자) 반환하는 메서드
+        return "host";
     }
 
 }
