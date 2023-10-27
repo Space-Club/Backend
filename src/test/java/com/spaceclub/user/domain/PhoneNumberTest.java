@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.ReplaceUnderscores.class)
+@DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.class)
 class PhoneNumberTest {
 
     @ParameterizedTest(name = "{index}. Phone Number : {arguments}")

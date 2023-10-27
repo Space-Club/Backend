@@ -40,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UserController.class)
 @AutoConfigureRestDocs
-@DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.ReplaceUnderscores.class)
+@DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.class)
 class UserControllerTest {
 
     @Autowired
