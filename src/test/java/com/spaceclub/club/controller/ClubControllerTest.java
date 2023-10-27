@@ -5,14 +5,12 @@ import com.spaceclub.club.controller.dto.CreateClubRequest;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubNotice;
 import com.spaceclub.club.service.ClubService;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -30,7 +28,6 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.JsonFieldType.ARRAY;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
-import static org.springframework.restdocs.payload.JsonFieldType.OBJECT;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
@@ -53,9 +50,8 @@ class ClubControllerTest {
     private ClubService clubService;
 
     @Test
-    @DisplayName("클럽 생성에 성공한다")
     @WithMockUser
-    void createClubTest() throws Exception {
+    void 클럽_생성에_성공한다() throws Exception {
         // given
         given(clubService.createClub(any(Club.class))).willReturn(
                 Club.builder()
@@ -90,9 +86,8 @@ class ClubControllerTest {
     }
 
     @Test
-    @DisplayName("클럽 조회에 성공한다")
     @WithMockUser
-    void getClubTest() throws Exception {
+    void 클럽_조회에_성공한다() throws Exception {
         // given
         given(clubService.getClub(any(Long.class))).willReturn(
                 Club.builder()
@@ -126,9 +121,8 @@ class ClubControllerTest {
     }
 
     @Test
-    @DisplayName("클럽 삭제에 성공한다")
     @WithMockUser
-    void deleteClubTest() throws Exception {
+    void 클럽_삭제에_성공한다() throws Exception {
         // given
         Long clubId = 1L;
 
