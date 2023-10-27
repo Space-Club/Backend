@@ -13,6 +13,7 @@ java {
 }
 
 configurations {
+	asciidoctorExt
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
@@ -54,10 +55,30 @@ tasks.named('asciidoctor') {
 	dependsOn test
 }
 
-bootJar {
+tasks.register('copyDocument', Copy) {
 	dependsOn asciidoctor
-	copy {
-		from('build/docs/asciidoc')
-		into('src/main/resources/static/')
+	doFirst {
+		delete file('src/main/resources/static/docs')
+	}
+	from file("build/docs/asciidoc")
+	into file("src/main/resources/static/docs")
+}
+
+asciidoctor {
+	dependsOn test
+	inputs.dir snippetsDir
+	configurations 'asciidoctorExt'
+
+	baseDirFollowsSourceFile()
+}
+
+build {
+	dependsOn copyDocument
+}
+
+bootJar {
+	dependsOn copyDocument
+	from ("${asciidoctor.outputDir}") {
+		into 'static/docs'
 	}
 }
