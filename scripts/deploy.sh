@@ -25,4 +25,6 @@ else
 fi
 
 echo "> 배포 - $JAR_PATH"
+chmod +x $JAR_PATH
+
 sudo nohup java -jar $JAR_PATH --spring.profiles.active=develop --jasypt.encryptor.password=${encrypt} > /dev/null 2>&1 &
