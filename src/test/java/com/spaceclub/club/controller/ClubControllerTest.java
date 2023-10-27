@@ -135,7 +135,7 @@ class ClubControllerTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
-        result.andExpect(status().isOk())
+        result.andExpect(status().isNoContent())
                 .andDo(print())
                 .andDo(document("club/delete",
                         preprocessRequest(prettyPrint()),

@@ -22,4 +22,8 @@ public class ClubService {
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다"));
     }
 
+    public void deleteClub(Long clubId) {
+        repository.deleteById(clubId);
+    }
+
 }
