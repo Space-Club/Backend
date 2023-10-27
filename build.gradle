@@ -54,6 +54,7 @@ tasks.named('asciidoctor') {
 	dependsOn test
 }
 
+task()
 
 bootJar {
 	dependsOn asciidoctor
