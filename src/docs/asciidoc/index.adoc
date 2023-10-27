@@ -10,6 +10,9 @@ Space Club API Docs
 
 == User
 
+=== User : get all event
+operation::user/getAllEvents[snippets='http-request,http-response']
+
 == Club
 
 == Event
