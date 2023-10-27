@@ -66,7 +66,7 @@ class UserControllerTest {
                                         .location("location1")
                                         .capacity(10).build()
                         )
-                        .clubId(1L).build(),
+                        .build(),
                 Event.builder()
                         .id(2L)
                         .category(Category.SHOW)
@@ -78,7 +78,7 @@ class UserControllerTest {
                                         .location("location2")
                                         .capacity(50).build()
                         )
-                        .clubId(2L).build(),
+                        .build(),
                 Event.builder()
                         .id(3L)
                         .category(Category.SHOW)
@@ -89,7 +89,7 @@ class UserControllerTest {
                                         .startDate(LocalDate.of(2023, 11, 30))
                                         .location("location3").capacity(100).build()
                         )
-                        .clubId(3L).build()
+                        .build()
         );
         PageRequest pageRequest = PageRequest.of(1, 10, Sort.by(DESC, "startDate"));
         Page<Event> eventPages = new PageImpl<>(events);
