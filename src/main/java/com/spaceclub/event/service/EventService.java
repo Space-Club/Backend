@@ -5,6 +5,8 @@ import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +24,11 @@ public class EventService {
         Event registeredEvent = event.registerClub(club);
 
         return eventRepository.save(registeredEvent).getId();
+    }
+
+
+    public Page<Event> getAll(Pageable pageable) {
+        return eventRepository.findAll(pageable);
     }
 
 }
