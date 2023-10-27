@@ -29,7 +29,6 @@ public class UserController {
                 .stream()
                 .map(EventResponse::from)
                 .toList();
-        System.out.println("eventResponses = " + eventResponses);
 
         return new EventPageResponse<>(eventResponses, eventPages);
     }
