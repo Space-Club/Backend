@@ -136,7 +136,8 @@ class ClubControllerTest {
                 .andDo(print())
                 .andDo(document("club/delete",
                         preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint())));
+                        preprocessResponse(prettyPrint())
+                ));
     }
 
 }
