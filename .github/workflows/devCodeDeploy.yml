@@ -56,3 +56,7 @@ jobs:
 
       - name: Deploy to EC2 Instance
         run: aws deploy create-deployment --application-name $CODE_DEPLOY_APP_NAME --deployment-group-name $DEPLOYMENT_GROUP_NAME --deployment-config-name CodeDeployDefault.OneAtATime --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$DIRECTORY_NAME/$GITHUB_SHA.zip
+
+      - name: Set encrypt Secret key
+        run: echo ${{ secrets.encrypt }} > properties.sh
+        shell: bash
