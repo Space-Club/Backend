@@ -1,6 +1,5 @@
 package com.spaceclub.club.domain;
 
-import com.spaceclub.club.controller.dto.ClubGetResponse;
 import com.spaceclub.global.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,19 +27,25 @@ public class Club extends BaseTimeEntity {
     private Long id;
 
     @Column(length = 12, nullable = false)
+    @Getter
     private String name;
 
     @Lob
+    @Getter
     private String image;
 
     @Lob
+    @Getter
     private String info;
 
+    @Getter
     private String owner;
 
+    @Getter
     @OneToMany(mappedBy = "club")
     private List<ClubNotice> notices = new ArrayList<>();
 
+    @Getter
     @OneToMany(mappedBy = "club")
     private List<ClubUser> clubUser = new ArrayList<>();
 
@@ -63,20 +68,6 @@ public class Club extends BaseTimeEntity {
         if (notices != null) {
             this.notices = new ArrayList<>(notices);
         }
-    }
-
-    public ClubGetResponse toGetResponseDto() {
-        long memberCount = clubUser.stream()
-                .filter((user) -> user.getClub().getId().equals(this.id))
-                .count();
-
-        return ClubGetResponse.builder()
-                .name(name)
-                .info(info)
-                .memberCount(memberCount)
-                .image(image)
-                .notices(notices)
-                .build();
     }
 
 }

@@ -1,7 +1,7 @@
 package com.spaceclub.club.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spaceclub.club.controller.dto.CreateClubRequest;
+import com.spaceclub.club.controller.dto.ClubCreateRequest;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubNotice;
 import com.spaceclub.club.service.ClubService;
@@ -60,7 +60,7 @@ class ClubControllerTest {
                         .owner("연어대장")
                         .image("연어.png")
                         .build());
-        CreateClubRequest request = new CreateClubRequest("연사모",
+        ClubCreateRequest request = new ClubCreateRequest("연사모",
                 "연어를 사랑하는 모임",
                 "연어대장",
                 "연어.png");

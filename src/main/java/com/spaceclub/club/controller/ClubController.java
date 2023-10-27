@@ -1,7 +1,7 @@
 package com.spaceclub.club.controller;
 
 import com.spaceclub.club.controller.dto.ClubGetResponse;
-import com.spaceclub.club.controller.dto.CreateClubRequest;
+import com.spaceclub.club.controller.dto.ClubCreateRequest;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.service.ClubService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class ClubController {
     private final ClubService service;
 
     @PostMapping("/clubs")
-    public ResponseEntity<String> createClub(@RequestBody CreateClubRequest request) {
+    public ResponseEntity<String> createClub(@RequestBody ClubCreateRequest request) {
         Club newClub = request.toEntity();
         Club createdClub = service.createClub(newClub);
         Long id = createdClub.getId();
@@ -35,7 +35,7 @@ public class ClubController {
     @GetMapping("/clubs/{clubId}")
     public ResponseEntity<ClubGetResponse> getClub(@PathVariable Long clubId) {
         Club club = service.getClub(clubId);
-        ClubGetResponse response = club.toGetResponseDto();
+        ClubGetResponse response = ClubGetResponse.from(club);
 
         return ResponseEntity.ok(response);
     }

@@ -2,7 +2,7 @@ package com.spaceclub.club.controller.dto;
 
 import com.spaceclub.club.domain.Club;
 
-public record CreateClubRequest(
+public record ClubCreateRequest(
         String name,
         String info,
         String owner,
