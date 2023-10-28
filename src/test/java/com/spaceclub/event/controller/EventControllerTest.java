@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -22,21 +25,31 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
+import static com.spaceclub.event.EventTestFixture.event1;
+import static com.spaceclub.event.EventTestFixture.event2;
+import static com.spaceclub.event.EventTestFixture.event3;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
+import static org.springframework.restdocs.payload.JsonFieldType.ARRAY;
+import static org.springframework.restdocs.payload.JsonFieldType.BOOLEAN;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
+import static org.springframework.restdocs.payload.JsonFieldType.OBJECT;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestPartFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(EventController.class)
@@ -135,6 +148,55 @@ class EventControllerTest {
                         ),
                         responseHeaders(
                                 headerWithName("Location").description("해당 행사 조회 URI")
+                        )
+                ));
+    }
+
+    @Test
+    @WithMockUser
+    public void 전체_행사_조회에_성공한다() throws Exception {
+        // given
+        List<Event> events = List.of(event1(), event2(), event3());
+        Page<Event> eventPages = new PageImpl<>(events);
+
+        given(eventService.getAll(any(Pageable.class))).willReturn(eventPages);
+
+        // when
+        ResultActions actions = mvc.perform(get("/api/v1/events")
+                .param("page", "1")
+                .param("size", "3")
+                .param("sort", "id,asc")
+        );
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.size()").value(events.size()))
+                .andExpect(jsonPath("$.pageData.first").value(true))
+                .andExpect(jsonPath("$.pageData.last").value(true))
+                .andExpect(jsonPath("$.pageData.pageNumber").value(0))
+                .andExpect(jsonPath("$.pageData.size").value(3))
+                .andExpect(jsonPath("$.pageData.totalPages").value(1))
+                .andExpect(jsonPath("$.pageData.totalElements").value(events.size()))
+                .andDo(document("events/getAll",
+                        responseFields(
+                                fieldWithPath("data").type(ARRAY).description("페이지 내 행사 정보"),
+                                fieldWithPath("data[].id").type(NUMBER).description("행사 아이디"),
+                                fieldWithPath("data[].title").type(STRING).description("행사 제목"),
+                                fieldWithPath("data[].poster").type(STRING).description("포스터 URL"),
+                                fieldWithPath("data[].location").type(STRING).description("행사 위치"),
+                                fieldWithPath("data[].startDate").type(STRING).description("행사 날짜"),
+                                fieldWithPath("data[].startTime").type(STRING).description("행사 시간"),
+                                fieldWithPath("data[].location").type(STRING).description("행사 위치"),
+                                fieldWithPath("data[].clubName").type(STRING).description("클럽 명"),
+                                fieldWithPath("data[].clubImage").type(STRING).description("클럽 이미지"),
+                                fieldWithPath("pageData").type(OBJECT).description("페이지 정보"),
+                                fieldWithPath("pageData.first").type(BOOLEAN).description("첫 페이지 여부"),
+                                fieldWithPath("pageData.last").type(BOOLEAN).description("마지막 페이지 여부"),
+                                fieldWithPath("pageData.pageNumber").type(NUMBER).description("현재 페이지 번호"),
+                                fieldWithPath("pageData.size").type(NUMBER).description("페이지 내 개수"),
+                                fieldWithPath("pageData.totalPages").type(NUMBER).description("총 페이지 개수"),
+                                fieldWithPath("pageData.totalElements").type(NUMBER).description("총 행사 개수")
                         )
                 ));
     }
