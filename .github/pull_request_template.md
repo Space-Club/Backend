@@ -6,7 +6,6 @@
 <br>
 
 ### ✅ PR시 확인 사항
-- [ ] 테스트 코드 작성
 - [ ] Linear History 여부
   <br>
 
