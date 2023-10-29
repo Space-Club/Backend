@@ -11,8 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -22,11 +21,12 @@ import static com.spaceclub.event.EventTestFixture.event1;
 import static com.spaceclub.event.EventTestFixture.event2;
 import static com.spaceclub.event.EventTestFixture.event3;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.JsonFieldType.ARRAY;
 import static org.springframework.restdocs.payload.JsonFieldType.BOOLEAN;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
@@ -57,11 +57,10 @@ class UserControllerTest {
         // given
         final Long userId = 1L;
         List<Event> events = List.of(event1(), event2(), event3());
-        PageRequest pageRequest = PageRequest.of(1, 10, Sort.by(DESC, "startDate"));
         Page<Event> eventPages = new PageImpl<>(events);
 
-        given(userService.findAllEventPages(userId, pageRequest)).willReturn(eventPages);
-        given(userService.findEventStatus(eq(userId), any())).willReturn("CONFIRMED");
+        given(userService.findAllEventPages(any(Long.class), any(Pageable.class))).willReturn(eventPages);
+        given(userService.findEventStatus(any(Long.class), any(Event.class))).willReturn("CONFIRMED");
 
         // when, then
         mvc.perform(get("/api/v1/users/{userId}/events", userId)
@@ -79,6 +78,8 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.pageData.totalElements").value(events.size()))
                 .andDo(
                         document("user/getAllEvents",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
                                 queryParameters(
                                         parameterWithName("page").description("페이지"),
                                         parameterWithName("size").description("페이지 내 개수"),
