@@ -45,7 +45,7 @@ class ClubServiceTest {
     }
 
     @Test
-    void 원하는_클럽의_조회에_성공한다() {
+    void 클럽_조회에_성공한다() {
         // given
         Long id = 1L;
         given(clubRepository.save(any(Club.class))).willReturn(club);
@@ -61,7 +61,7 @@ class ClubServiceTest {
     }
 
     @Test
-    void 원하는_클럽의_삭제에_성공한다() {
+    void 클럽_삭제에_성공한다() {
         // given
         Long id = 1L;
 
