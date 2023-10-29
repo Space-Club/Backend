@@ -37,6 +37,9 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.responseH
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.JsonFieldType.ARRAY;
 import static org.springframework.restdocs.payload.JsonFieldType.BOOLEAN;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
@@ -126,6 +129,8 @@ class EventControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(header().stringValues("Location", "/api/v1/events/1"))
                 .andDo(document("events/create",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
                         requestParts(
                                 partWithName("request").description("행사 생성 관련 정보"),
                                 partWithName("poster").description("포스터 사진")
@@ -181,6 +186,8 @@ class EventControllerTest {
                 .andExpect(jsonPath("$.pageData.totalPages").value(1))
                 .andExpect(jsonPath("$.pageData.totalElements").value(events.size()))
                 .andDo(document("events/getAll",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
                         queryParameters(
                                 parameterWithName("page").description("페이지"),
                                 parameterWithName("size").description("페이지 내 개수"),
