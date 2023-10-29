@@ -61,7 +61,7 @@ class UserControllerTest {
         Page<Event> eventPages = new PageImpl<>(events);
 
         given(userService.findAllEventPages(userId, pageRequest)).willReturn(eventPages);
-//        given(userService.findEventStatus(eq(userId), any())).willReturn("CONFIRMED");
+        given(userService.findEventStatus(eq(userId), any())).willReturn("CONFIRMED");
 
         // when, then
         mvc.perform(get("/api/v1/users/{userId}/events", userId)
