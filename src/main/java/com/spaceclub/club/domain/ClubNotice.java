@@ -2,6 +2,7 @@ package com.spaceclub.club.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -15,6 +16,7 @@ public class ClubNotice {
 
     @Id
     @Column(name = "club_notice_id")
+    @GeneratedValue
     private Long id;
 
     @ManyToOne

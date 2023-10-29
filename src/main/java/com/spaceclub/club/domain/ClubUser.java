@@ -4,6 +4,7 @@ import com.spaceclub.global.BaseTimeEntity;
 import com.spaceclub.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -16,6 +17,7 @@ public class ClubUser extends BaseTimeEntity {
 
     @Id
     @Column(name = "club_user_id")
+    @GeneratedValue
     private Long id;
 
     @Getter
