@@ -8,7 +8,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -63,7 +62,7 @@ public class User {
         this.provider = provider;
         this.email = email;
         this.refreshToken = refreshToken;
-        this.events = events;
+        this.events = List.copyOf(events);
     }
 
 }
