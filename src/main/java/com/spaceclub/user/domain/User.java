@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.EnumType.STRING;
+import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
@@ -18,7 +19,7 @@ import static lombok.AccessLevel.PROTECTED;
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "user_id")
     private Long userid;
 
