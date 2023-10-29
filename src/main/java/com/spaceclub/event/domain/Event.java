@@ -11,10 +11,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -49,6 +53,10 @@ public class Event extends BaseTimeEntity {
     @JoinColumn(name = "club_id")
     private Club club;
 
+    @Getter
+    @OneToMany(mappedBy = "event")
+    private List<EventUser> users = new ArrayList<>();
+
     @Builder
     private Event(
             Long id,
@@ -66,11 +74,6 @@ public class Event extends BaseTimeEntity {
         this.ticketInfo = ticketInfo;
         this.formInfo = formInfo;
         this.club = club;
-    }
-
-    public String getClubHost() {
-        // TODO Club과 연관관계 설정 후 HOST (주최자) 반환하는 메서드
-        return "host";
     }
 
     public Event registerClub(Club club) {
