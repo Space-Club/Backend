@@ -17,6 +17,8 @@ import org.springframework.util.Assert;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Club extends BaseTimeEntity {
@@ -24,7 +26,7 @@ public class Club extends BaseTimeEntity {
     @Id
     @Column(name = "club_id")
     @Getter
-    @GeneratedValue
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @Column(length = 12, nullable = false)

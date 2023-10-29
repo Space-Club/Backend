@@ -10,13 +10,15 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ClubNotice {
 
     @Id
     @Column(name = "club_notice_id")
-    @GeneratedValue
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @ManyToOne

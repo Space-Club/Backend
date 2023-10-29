@@ -11,13 +11,15 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 @Table(name = "club_user")
 @Entity
 public class ClubUser extends BaseTimeEntity {
 
     @Id
     @Column(name = "club_user_id")
-    @GeneratedValue
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @Getter
