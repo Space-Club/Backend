@@ -22,3 +22,31 @@ include::{snippets}/club/create/http-request.adoc[]
 include::{snippets}/club/create/http-response.adoc[]
 
 == Event
+
+=== Event : create
+==== Request
+include::{snippets}/events/create/http-request.adoc[]
+
+===== RequestBody
+include::{snippets}/events/create/request-parts.adoc[]
+
+===== RequestBody.request
+include::{snippets}/events/create/request-part-request-fields.adoc[]
+
+==== Response
+include::{snippets}/events/getAll/http-response.adoc[]
+
+===== ResponseHeader
+include::{snippets}/events/create/response-headers.adoc[]
+
+=== Event : get all event
+
+==== Request
+include::{snippets}/events/getAll/http-request.adoc[]
+===== Query Parameter
+include::{snippets}/events/getAll/query-parameters.adoc[]
+
+==== Response
+include::{snippets}/events/getAll/http-response.adoc[]
+===== Response Body
+include::{snippets}/events/getAll/response-fields.adoc[]
