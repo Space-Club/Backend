@@ -1,5 +1,6 @@
 package com.spaceclub.event.controller;
 
+import com.spaceclub.event.controller.dto.EventApplyRequest;
 import com.spaceclub.event.controller.dto.EventCreateRequest;
 import com.spaceclub.event.controller.dto.EventGetResponse;
 import com.spaceclub.event.domain.Event;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,6 +51,15 @@ public class EventController {
                 .toList();
 
         return ResponseEntity.ok(new PageResponse<>(eventGetResponses, events));
+    }
+
+    @PostMapping("/apply")
+    public ResponseEntity<Void> applyEvent(@RequestBody EventApplyRequest request) {
+        Long eventId = request.eventId();
+        Long userId = request.userId();
+        eventService.applyEvent(eventId, userId);
+
+        return ResponseEntity.ok().build();
     }
 
 }
