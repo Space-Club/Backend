@@ -45,7 +45,9 @@ import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestPartFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -179,6 +181,11 @@ class EventControllerTest {
                 .andExpect(jsonPath("$.pageData.totalPages").value(1))
                 .andExpect(jsonPath("$.pageData.totalElements").value(events.size()))
                 .andDo(document("events/getAll",
+                        queryParameters(
+                                parameterWithName("page").description("페이지"),
+                                parameterWithName("size").description("페이지 내 개수"),
+                                parameterWithName("sort").description("정렬 방법((ex) id,desc)")
+                        ),
                         responseFields(
                                 fieldWithPath("data").type(ARRAY).description("페이지 내 행사 정보"),
                                 fieldWithPath("data[].id").type(NUMBER).description("행사 아이디"),
