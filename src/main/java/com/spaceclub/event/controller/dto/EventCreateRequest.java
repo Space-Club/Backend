@@ -77,6 +77,7 @@ public record EventCreateRequest(
             String title,
             String content,
             LocalDate startDate,
+            LocalTime startTime,
             String location,
             int capacity
     ) {
@@ -85,7 +86,7 @@ public record EventCreateRequest(
             return EventInfo.builder()
                     .title(title)
                     .content(content)
-                    .startDate(startDate)
+                    .startDate(startDate.atTime(startTime))
                     .location(location)
                     .capacity(capacity)
                     .poster(posterUrl)

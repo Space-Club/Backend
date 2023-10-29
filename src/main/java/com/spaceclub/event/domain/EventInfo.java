@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Embeddable
 @EqualsAndHashCode
@@ -20,17 +20,19 @@ public class EventInfo {
     @Getter
     private String content;
 
-    private LocalDate startDate;
+    @Getter
+    private LocalDateTime startDate;
 
     @Getter
     private String location;
 
     private int capacity;
 
+    @Getter
     private String poster;
 
     @Builder
-    private EventInfo(String title, String content, LocalDate startDate, String location, int capacity, String poster) {
+    private EventInfo(String title, String content, LocalDateTime startDate, String location, int capacity, String poster) {
         this.title = title;
         this.content = content;
         this.startDate = startDate;
