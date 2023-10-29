@@ -34,7 +34,7 @@ include::{snippets}/events/create/request-parts.adoc[]
 include::{snippets}/events/create/request-part-request-fields.adoc[]
 
 ==== Response
-include::{snippets}/events/getAll/http-response.adoc[]
+include::{snippets}/events/create/http-response.adoc[]
 
 ===== ResponseHeader
 include::{snippets}/events/create/response-headers.adoc[]
