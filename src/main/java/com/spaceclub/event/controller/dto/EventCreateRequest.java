@@ -10,7 +10,7 @@ import com.spaceclub.event.domain.TicketInfo;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public record CreateEventRequest(
+public record EventCreateRequest(
         Category category,
         Long clubId,
         EventInfoRequest eventInfo,
@@ -22,7 +22,6 @@ public record CreateEventRequest(
     public Event toEntity(String posterUrl) {
         return Event.builder()
                 .category(category)
-                .clubId(clubId)
                 .eventInfo(eventInfo.toEntity(posterUrl))
                 .ticketInfo(ticketInfo.toEntity())
                 .bankInfo(bankInfo.toEntity())
