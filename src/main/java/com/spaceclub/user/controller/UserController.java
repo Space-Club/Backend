@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.spaceclub.user.controller.dto.UserEventGetResponse.from;
+
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
@@ -24,13 +26,12 @@ public class UserController {
     @GetMapping("/{userId}/events")
     public PageResponse<UserEventGetResponse, Event> getAllEvents(@PathVariable Long userId, Pageable pageable) {
         Page<Event> eventPages = userService.findAllEventPages(userId, pageable);
-        System.out.println(eventPages);
-        List<UserEventGetResponse> eventGetRespons = eventPages.getContent()
-                .stream()
-                .map(UserEventGetResponse::from)
+
+        List<UserEventGetResponse> eventGetResponse = eventPages.getContent().stream()
+                .map(event -> from(event, userService.findEventStatus(userId, event)))
                 .toList();
 
-        return new PageResponse<>(eventGetRespons, eventPages);
+        return new PageResponse<>(eventGetResponse, eventPages);
     }
 
 }
