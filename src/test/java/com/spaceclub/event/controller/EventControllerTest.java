@@ -2,6 +2,7 @@ package com.spaceclub.event.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
+import com.spaceclub.event.controller.dto.EventApplyRequest;
 import com.spaceclub.event.controller.dto.EventCreateRequest;
 import com.spaceclub.event.domain.Category;
 import com.spaceclub.event.domain.Event;
@@ -32,11 +33,13 @@ import static com.spaceclub.event.EventTestFixture.event2;
 import static com.spaceclub.event.EventTestFixture.event3;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -46,6 +49,7 @@ import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.OBJECT;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestPartFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -53,6 +57,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.partWith
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -213,6 +218,37 @@ class EventControllerTest {
                                 fieldWithPath("pageData.totalElements").type(NUMBER).description("총 행사 개수")
                         )
                 ));
+    }
+
+    @Test
+    @WithMockUser
+    void 행사_신청에_성공한다() throws Exception {
+        // given
+        doNothing().when(eventService).applyEvent(any(Long.class), any(Long.class));
+        Long eventId = 1L;
+        Long userId = 1L;
+        EventApplyRequest request = EventApplyRequest.builder()
+                .eventId(eventId)
+                .userId(userId)
+                .build();
+
+        // when
+        ResultActions result = mvc.perform(post("/api/v1/events/apply")
+                .content(mapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .with(csrf()));
+
+
+        // then
+        result.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("events/apply",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("eventId").type(NUMBER).description("이벤트 ID"),
+                                fieldWithPath("userId").type(NUMBER).description("유저 ID")
+                        )));
     }
 
 }
