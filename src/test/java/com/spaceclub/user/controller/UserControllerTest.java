@@ -1,9 +1,7 @@
 package com.spaceclub.user.controller;
 
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
-import com.spaceclub.event.domain.Category;
 import com.spaceclub.event.domain.Event;
-import com.spaceclub.event.domain.EventInfo;
 import com.spaceclub.user.service.UserService;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
@@ -18,10 +16,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.spaceclub.event.EventTestFixture.event1;
+import static com.spaceclub.event.EventTestFixture.event2;
+import static com.spaceclub.event.EventTestFixture.event3;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -55,46 +56,12 @@ class UserControllerTest {
     void 유저의_모든_이벤트_조회에_성공한다() throws Exception {
         // given
         final Long userId = 1L;
-        List<Event> events = List.of(
-                Event.builder()
-                        .id(1L)
-                        .category(Category.SHOW)
-                        .eventInfo(
-                                EventInfo.builder()
-                                        .title("title1")
-                                        .content("content1")
-                                        .startDate(LocalDateTime.of(2023, 9, 20, 15, 30, 30))
-                                        .location("location1")
-                                        .capacity(10).build()
-                        )
-                        .build(),
-                Event.builder()
-                        .id(2L)
-                        .category(Category.SHOW)
-                        .eventInfo(
-                                EventInfo.builder()
-                                        .title("title2")
-                                        .content("content2")
-                                        .startDate(LocalDateTime.of(2023, 9, 20, 15, 30, 30))
-                                        .location("location2")
-                                        .capacity(50).build()
-                        )
-                        .build(),
-                Event.builder()
-                        .id(3L)
-                        .category(Category.SHOW)
-                        .eventInfo(
-                                EventInfo.builder()
-                                        .title("title3")
-                                        .content("content3")
-                                        .startDate(LocalDateTime.of(2023, 9, 20, 15, 30, 30))
-                                        .location("location3").capacity(100).build()
-                        )
-                        .build()
-        );
+        List<Event> events = List.of(event1(), event2(), event3());
         PageRequest pageRequest = PageRequest.of(1, 10, Sort.by(DESC, "startDate"));
         Page<Event> eventPages = new PageImpl<>(events);
+
         given(userService.findAllEventPages(userId, pageRequest)).willReturn(eventPages);
+//        given(userService.findEventStatus(eq(userId), any())).willReturn("CONFIRMED");
 
         // when, then
         mvc.perform(get("/api/v1/users/{userId}/events", userId)
@@ -124,7 +91,10 @@ class UserControllerTest {
                                         fieldWithPath("data[].id").type(NUMBER).description("이벤트 아이디"),
                                         fieldWithPath("data[].title").type(STRING).description("이벤트 제목"),
                                         fieldWithPath("data[].location").type(STRING).description("이벤트 위치"),
-                                        fieldWithPath("data[].host").type(STRING).description("이벤트 주최자"),
+                                        fieldWithPath("data[].clubName").type(STRING).description("이벤트 주최자"),
+                                        fieldWithPath("data[].poster").type(STRING).description("포스터 URL"),
+                                        fieldWithPath("data[].startDate").type(STRING).description("이벤트 시작일"),
+                                        fieldWithPath("data[].status").type(STRING).description("이벤트 상태"),
                                         fieldWithPath("pageData").type(OBJECT).description("페이지 정보"),
                                         fieldWithPath("pageData.first").type(BOOLEAN).description("첫 페이지 여부"),
                                         fieldWithPath("pageData.last").type(BOOLEAN).description("마지막 페이지 여부"),
