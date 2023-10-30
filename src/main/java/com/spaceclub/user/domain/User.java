@@ -12,6 +12,7 @@ import jakarta.persistence.OneToMany;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.EnumType.STRING;
@@ -43,7 +44,7 @@ public class User {
     private String refreshToken;
 
     @OneToMany(mappedBy = "user")
-    private List<EventUser> events;
+    private List<EventUser> events = new ArrayList<>();
 
     @Builder
     private User(
@@ -53,8 +54,7 @@ public class User {
             String oauthUserName,
             Provider provider,
             Email email,
-            String refreshToken,
-            List<EventUser> events
+            String refreshToken
     ) {
         this.userid= userId;
         this.requiredInfo = new RequiredInfo(nickname, new PhoneNumber(phoneNumber));
@@ -62,7 +62,6 @@ public class User {
         this.provider = provider;
         this.email = email;
         this.refreshToken = refreshToken;
-        this.events = List.copyOf(events);
     }
 
 }

@@ -56,6 +56,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -137,8 +138,10 @@ class EventControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestParts(
-                                partWithName("request").description("행사 생성 관련 정보"),
+                                partWithName("request").description("행사 생성 관련 정보")
+                                        .attributes(key("content-type").value(MediaType.APPLICATION_JSON_VALUE)),
                                 partWithName("poster").description("포스터 사진")
+                                        .attributes(key("content-type").value(MediaType.IMAGE_JPEG_VALUE))
                         ),
                         requestPartFields("request",
                                 fieldWithPath("category").type(STRING).description("카테고리"),

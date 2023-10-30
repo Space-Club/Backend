@@ -2,7 +2,7 @@ ifndef::snippets[]
 :snippets: ../../../build/generated-snippets
 endif::[]
 
-= API Docs
+= Space Club API Docs
 Space Club API Docs
 :icons: font
 :source-highlighter: highlightjs
@@ -11,36 +11,50 @@ Space Club API Docs
 :toclevels: 2
 :sectlinks:
 
-== User
-
-=== User : get all event
+== 유저
+=== 유저가 신청한 모든 이벤트 조회
 include::{snippets}/user/getAllEvents/http-request.adoc[]
+===== Path Parameter
+include::{snippets}/user/getAllEvents/path-parameters.adoc[]
+===== Query Parameter
+include::{snippets}/user/getAllEvents/query-parameters.adoc[]
 include::{snippets}/user/getAllEvents/http-response.adoc[]
 
-== Club
+
+
+== 클럽
+=== 생성
+==== Request
 include::{snippets}/club/create/http-request.adoc[]
+include::{snippets}/club/create/request-fields.adoc[]
+==== Response
 include::{snippets}/club/create/http-response.adoc[]
+include::{snippets}/club/create/response-headers.adoc[]
 
-== Event
 
-=== Event : create
+== 행사
+=== 생성
 ==== Request
 include::{snippets}/events/create/http-request.adoc[]
-
-===== RequestBody
+===== Multipart Form Data
 include::{snippets}/events/create/request-parts.adoc[]
-
-===== RequestBody.request
+===== Request Form Data
 include::{snippets}/events/create/request-part-request-fields.adoc[]
-
 ==== Response
 include::{snippets}/events/create/http-response.adoc[]
-
 ===== ResponseHeader
 include::{snippets}/events/create/response-headers.adoc[]
 
-=== Event : get all event
 
+=== 행사 신청
+==== Request
+include::{snippets}/events/apply/http-request.adoc[]
+include::{snippets}/events/apply/request-fields.adoc[]
+==== Response
+include::{snippets}/events/apply/http-response.adoc[]
+
+
+=== 모든 행사 조회
 ==== Request
 include::{snippets}/events/getAll/http-request.adoc[]
 ===== Query Parameter
