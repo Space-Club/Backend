@@ -2,7 +2,6 @@ package com.spaceclub.event.domain;
 
 import com.spaceclub.global.BaseTimeEntity;
 import com.spaceclub.user.domain.User;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -17,7 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
-import static jakarta.persistence.FetchType.LAZY;
+import static jakarta.persistence.FetchType.EAGER;
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
@@ -33,11 +32,11 @@ public class EventUser extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private EventStatus status;
 
-    @ManyToOne(fetch = LAZY, optional = false, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = EAGER, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = LAZY, optional = false, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = EAGER, optional = false)
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
