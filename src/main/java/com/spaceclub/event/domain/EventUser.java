@@ -1,5 +1,6 @@
 package com.spaceclub.event.domain;
 
+import com.spaceclub.global.BaseTimeEntity;
 import com.spaceclub.user.domain.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -20,7 +21,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @NoArgsConstructor(access = PROTECTED)
-public class EventUser {
+public class EventUser extends BaseTimeEntity {
 
     @Id
     @Column(name = "event_user_id")
