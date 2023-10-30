@@ -12,6 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
+                .allowedOrigins("http://localhost:5173/**")
                 .allowedOrigins("https://spaceclub.site/api/v1/**") // 모든 도메인에 대해 허용
                 .allowedMethods("*")
                 .allowCredentials(true)
