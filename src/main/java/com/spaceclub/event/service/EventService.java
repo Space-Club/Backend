@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class EventService {
 
@@ -28,6 +28,7 @@ public class EventService {
 
     private final EventUserRepository eventUserRepository;
 
+    @Transactional
     public Long create(Event event, Long clubId) {
         Club club = clubRepository.findById(clubId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 클럽입니다.")
@@ -42,6 +43,7 @@ public class EventService {
         return eventRepository.findAll(pageable);
     }
 
+    @Transactional
     public void applyEvent(Long eventId, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 회원입니다.")
