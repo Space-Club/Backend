@@ -21,6 +21,8 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -36,6 +38,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ClubController.class)
@@ -58,6 +61,7 @@ class ClubControllerTest {
         // given
         given(clubService.createClub(any(Club.class))).willReturn(
                 Club.builder()
+                        .id(1L)
                         .name("연사모")
                         .info("연어를 사랑하는 모임")
                         .owner("연어대장")
@@ -76,6 +80,7 @@ class ClubControllerTest {
 
         // then
         result.andExpect(status().isCreated())
+                .andExpect(header().stringValues("Location", "/api/v1/clubs/1"))
                 .andDo(print())
                 .andDo(document("club/create",
                         preprocessRequest(prettyPrint()),
@@ -85,7 +90,11 @@ class ClubControllerTest {
                                 fieldWithPath("info").type(STRING).description("클럽 소개"),
                                 fieldWithPath("owner").type(STRING).description("클럽 생성자"),
                                 fieldWithPath("image").type(STRING).description("클럽 썸네일 이미지")
-                        )));
+                        ),
+                        responseHeaders(
+                                headerWithName("Location").description("생성된 클럽의 URI")
+                        )
+                ));
     }
 
     @Test
