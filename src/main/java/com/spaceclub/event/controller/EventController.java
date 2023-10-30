@@ -59,7 +59,7 @@ public class EventController {
         Long userId = request.userId();
         eventService.applyEvent(eventId, userId);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -238,9 +238,8 @@ class EventControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .with(csrf()));
 
-
         // then
-        result.andExpect(status().isOk())
+        result.andExpect(status().isNoContent())
                 .andDo(print())
                 .andDo(document("events/apply",
                         preprocessRequest(prettyPrint()),
