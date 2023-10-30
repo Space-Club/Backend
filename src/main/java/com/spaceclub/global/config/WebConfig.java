@@ -12,7 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173/**", "https://spaceclub.site/api/v1/**")
+                .allowedOrigins("http://localhost:5173", "https://spaceclub.site")
                 .allowedMethods("*")
                 .allowCredentials(true)
                 .maxAge(1800); // 1800초, 30분으로 설정
