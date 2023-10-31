@@ -147,7 +147,6 @@ class ClubControllerTest {
 
         // when
         ResultActions result = this.mockMvc.perform(get("/api/v1/clubs/{clubId}", clubId)
-                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
