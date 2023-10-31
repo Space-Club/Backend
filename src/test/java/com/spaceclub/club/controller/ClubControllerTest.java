@@ -6,6 +6,7 @@ import com.spaceclub.club.controller.dto.ClubCreateRequest;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubNotice;
 import com.spaceclub.club.service.ClubService;
+import com.spaceclub.global.S3ImageUploader;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,12 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -26,7 +29,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.responseH
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -34,8 +37,10 @@ import static org.springframework.restdocs.payload.JsonFieldType.ARRAY;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestPartFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -55,6 +60,9 @@ class ClubControllerTest {
     @MockBean
     private ClubService clubService;
 
+    @MockBean
+    private S3ImageUploader uploader;
+
     @Test
     @WithMockUser
     void 클럽_생성에_성공한다() throws Exception {
@@ -65,18 +73,39 @@ class ClubControllerTest {
                         .name("연사모")
                         .info("연어를 사랑하는 모임")
                         .owner("연어대장")
-                        .image("연어.png")
+                        .thumbnailUrl("연어.jpg")
                         .build());
-        ClubCreateRequest request = new ClubCreateRequest("연사모",
+
+        ClubCreateRequest clubCreateRequest = new ClubCreateRequest(
+                "연사모",
                 "연어를 사랑하는 모임",
-                "연어대장",
-                "연어.png");
+                "연어대장"
+        );
+
+        MockMultipartFile thumbnail = new MockMultipartFile(
+                "thumbnail",
+                "thumbnail.jpg",
+                MediaType.IMAGE_JPEG_VALUE,
+                "<<jpeg data>>".getBytes()
+        );
+
+        MockMultipartFile request = new MockMultipartFile(
+                "request",
+                "",
+                MediaType.APPLICATION_JSON_VALUE,
+                mapper.writeValueAsString(clubCreateRequest).getBytes(StandardCharsets.UTF_8)
+        );
+
 
         // when
-        ResultActions result = this.mockMvc.perform(post("/api/v1/clubs")
+        ResultActions result = this.mockMvc.perform(multipart("/api/v1/clubs")
+                .file(request)
+                .file(thumbnail)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding(StandardCharsets.UTF_8)
                 .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(request)));
+        );
 
         // then
         result.andExpect(status().isCreated())
@@ -85,11 +114,15 @@ class ClubControllerTest {
                 .andDo(document("club/create",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestFields(
+                        requestParts(
+                                partWithName("request").description("클럽 생성 요청 DTO"),
+                                partWithName("thumbnail").description("클럽 썸네일 이미지")
+                        ),
+                        requestPartFields(
+                                "request",
                                 fieldWithPath("name").type(STRING).description("클럽 이름"),
                                 fieldWithPath("info").type(STRING).description("클럽 소개"),
-                                fieldWithPath("owner").type(STRING).description("클럽 생성자"),
-                                fieldWithPath("image").type(STRING).description("클럽 썸네일 이미지")
+                                fieldWithPath("owner").type(STRING).description("클럽 생성자")
                         ),
                         responseHeaders(
                                 headerWithName("Location").description("생성된 클럽의 URI")
@@ -105,7 +138,7 @@ class ClubControllerTest {
                 Club.builder()
                         .name("연사모")
                         .info("이곳은 연사모입니다")
-                        .image("연어.png")
+                        .thumbnailUrl("연어.png")
                         .owner("연어대장")
                         .notices(List.of(new ClubNotice("연사모의 공지사항1")))
                         .build()

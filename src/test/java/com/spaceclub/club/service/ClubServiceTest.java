@@ -39,7 +39,7 @@ class ClubServiceTest {
                 .name("연사모")
                 .info("연어를 사랑하는 모임")
                 .owner("연어대장")
-                .image("연어.png")
+                .thumbnailUrl("연어.jpg")
                 .notices(List.of(new ClubNotice("연어 공지사항 1: 연어는 맛있어요")))
                 .build();
     }
