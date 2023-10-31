@@ -25,7 +25,7 @@ public record EventGetResponse(
                 event.getEventInfo().getStartDate().toLocalTime(),
                 event.getEventInfo().getLocation(),
                 event.getClub().getName(),
-                event.getClub().getImage()
+                event.getClub().getThumbnailUrl()
         );
     }
 

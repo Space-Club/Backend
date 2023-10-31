@@ -5,8 +5,7 @@ import com.spaceclub.club.domain.Club;
 public record ClubCreateRequest(
         String name,
         String info,
-        String owner,
-        String image
+        String owner
 ) {
 
     public Club toEntity() {
@@ -14,7 +13,15 @@ public record ClubCreateRequest(
                 .name(name)
                 .info(info)
                 .owner(owner)
-                .image(image)
+                .build();
+    }
+
+    public Club toEntity(String thumbnailUrl) {
+        return Club.builder()
+                .name(name)
+                .info(info)
+                .owner(owner)
+                .thumbnailUrl(thumbnailUrl)
                 .build();
     }
 

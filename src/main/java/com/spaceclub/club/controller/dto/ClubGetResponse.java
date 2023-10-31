@@ -33,7 +33,7 @@ public record ClubGetResponse(
                 .name(club.getName())
                 .info(club.getInfo())
                 .memberCount(memberCount)
-                .image(club.getImage())
+                .image(club.getThumbnailUrl())
                 .notices(club.getNotices().stream()
                         .map(ClubNotice::getNotice)
                         .toList())
