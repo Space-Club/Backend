@@ -2,7 +2,11 @@ package com.spaceclub.club.service;
 
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.repository.ClubRepository;
+import com.spaceclub.event.domain.Event;
+import com.spaceclub.event.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class ClubService {
 
     private final ClubRepository repository;
+
+    private final EventRepository eventRepository;
 
     public Club createClub(Club club) {
         return repository.save(club);
@@ -24,6 +30,10 @@ public class ClubService {
 
     public void deleteClub(Long clubId) {
         repository.deleteById(clubId);
+    }
+
+    public Page<Event> getClubEvents(Long clubId, Pageable pageable) {
+        return eventRepository.findAll(pageable);
     }
 
 }
