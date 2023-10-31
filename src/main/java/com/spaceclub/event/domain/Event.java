@@ -17,6 +17,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,6 +88,34 @@ public class Event extends BaseTimeEntity {
                 .formInfo(this.formInfo)
                 .club(club)
                 .build();
+    }
+
+    public String getTitle() {
+        return eventInfo.getTitle();
+    }
+
+    public String getPoster() {
+        return eventInfo.getPoster();
+    }
+
+    public LocalDate getStartDate() {
+        return eventInfo.getStartDate().toLocalDate();
+    }
+
+    public LocalTime getStartTime() {
+        return eventInfo.getStartDate().toLocalTime();
+    }
+
+    public String getLocation() {
+        return eventInfo.getLocation();
+    }
+
+    public String getClubName() {
+        return club.getName();
+    }
+
+    public String getClubImage() {
+        return club.getImage();
     }
 
 }
