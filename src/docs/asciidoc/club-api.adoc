@@ -1,0 +1,10 @@
+== 클럽
+=== 클럽 개설
+:sectnums!:
+==== Request
+include::{snippets}/club/create/http-request.adoc[]
+include::{snippets}/club/create/request-part-request-fields.adoc[]
+==== Response
+include::{snippets}/club/create/http-response.adoc[]
+include::{snippets}/club/create/response-headers.adoc[]
+:sectnums:

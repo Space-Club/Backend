@@ -1,0 +1,14 @@
+== 유저
+=== 유저가 신청한 모든 이벤트 조회
+:sectnums!:
+==== Request
+include::{snippets}/user/getAllEvents/http-request.adoc[]
+===== Path Parameter
+include::{snippets}/user/getAllEvents/path-parameters.adoc[]
+===== Query Parameter
+include::{snippets}/user/getAllEvents/query-parameters.adoc[]
+==== Response
+include::{snippets}/user/getAllEvents/http-response.adoc[]
+===== Response Body
+include::{snippets}/user/getAllEvents/response-fields.adoc[]
+:sectnums:

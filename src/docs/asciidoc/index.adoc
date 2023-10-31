@@ -3,64 +3,19 @@ ifndef::snippets[]
 endif::[]
 
 = Space Club API Docs
-Space Club API Docs
+space club API 명세서
+:sectnums:
+:doctype: book
 :icons: font
 :source-highlighter: highlightjs
 :toc: left
-:toc-title: API
+:toc-title: Space Club API Docs
 :toclevels: 2
 :sectlinks:
+:docinfo: shared-head
 
-== 유저
-=== 유저가 신청한 모든 이벤트 조회
-include::{snippets}/user/getAllEvents/http-request.adoc[]
-===== Path Parameter
-include::{snippets}/user/getAllEvents/path-parameters.adoc[]
-===== Query Parameter
-include::{snippets}/user/getAllEvents/query-parameters.adoc[]
-include::{snippets}/user/getAllEvents/http-response.adoc[]
+include::user-api.adoc[]
 
+include::club-api.adoc[]
 
-
-== 클럽
-=== 생성
-==== Request
-include::{snippets}/club/create/http-request.adoc[]
-include::{snippets}/club/create/request-fields.adoc[]
-==== Response
-include::{snippets}/club/create/http-response.adoc[]
-include::{snippets}/club/create/response-headers.adoc[]
-
-
-== 행사
-=== 생성
-==== Request
-include::{snippets}/events/create/http-request.adoc[]
-===== Multipart Form Data
-include::{snippets}/events/create/request-parts.adoc[]
-===== Request Form Data
-include::{snippets}/events/create/request-part-request-fields.adoc[]
-==== Response
-include::{snippets}/events/create/http-response.adoc[]
-===== ResponseHeader
-include::{snippets}/events/create/response-headers.adoc[]
-
-
-=== 행사 신청
-==== Request
-include::{snippets}/events/apply/http-request.adoc[]
-include::{snippets}/events/apply/request-fields.adoc[]
-==== Response
-include::{snippets}/events/apply/http-response.adoc[]
-
-
-=== 모든 행사 조회
-==== Request
-include::{snippets}/events/getAll/http-request.adoc[]
-===== Query Parameter
-include::{snippets}/events/getAll/query-parameters.adoc[]
-
-==== Response
-include::{snippets}/events/getAll/http-response.adoc[]
-===== Response Body
-include::{snippets}/events/getAll/response-fields.adoc[]
+include::event-api.adoc[]
