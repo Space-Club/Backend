@@ -72,7 +72,7 @@ public class EventTestFixture {
     public static Event event3() {
         return Event.builder()
                 .id(3L)
-                .category(Category.SHOW)
+                .category(Category.CLUB)
                 .eventInfo(eventInfo())
                 .ticketInfo(ticketInfo())
                 .bankInfo(bankInfo())
