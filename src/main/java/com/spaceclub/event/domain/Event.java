@@ -115,7 +115,7 @@ public class Event extends BaseTimeEntity {
     }
 
     public String getClubImage() {
-        return club.getImage();
+        return club.getThumbnailUrl();
     }
 
 }
