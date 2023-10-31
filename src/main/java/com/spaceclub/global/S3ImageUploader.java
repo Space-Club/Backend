@@ -45,20 +45,20 @@ public class S3ImageUploader {
         return getSavedFileName(poster);
     }
 
-    public String uploadClubThumbnail(MultipartFile poster) throws IOException {
-        String newFileName = createFileName(poster.getOriginalFilename());
+    public String uploadClubThumbnail(MultipartFile thumbnail) throws IOException {
+        String newFileName = createFileName(thumbnail.getOriginalFilename());
 
         ObjectMetadata objectMetaData = new ObjectMetadata();
 
-        objectMetaData.setContentType(poster.getContentType());
-        objectMetaData.setContentLength(poster.getSize());
+        objectMetaData.setContentType(thumbnail.getContentType());
+        objectMetaData.setContentLength(thumbnail.getSize());
 
         amazonS3Client.putObject(
-                new PutObjectRequest(clubS3BucketName, newFileName, poster.getInputStream(), objectMetaData)
+                new PutObjectRequest(clubS3BucketName, newFileName, thumbnail.getInputStream(), objectMetaData)
                         .withCannedAcl(CannedAccessControlList.PublicRead)
         );
 
-        return getSavedFileName(poster);
+        return getSavedFileName(thumbnail);
     }
 
     private String getSavedFileName(MultipartFile poster) {
