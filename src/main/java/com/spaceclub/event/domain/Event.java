@@ -34,6 +34,7 @@ public class Event extends BaseTimeEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
+    @Getter
     @Enumerated(EnumType.STRING)
     private Category category;
 

@@ -2,6 +2,7 @@ package com.spaceclub.club.service;
 
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.repository.ClubRepository;
+import com.spaceclub.event.domain.Category;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class ClubService {
     }
 
     public Page<Event> getClubEvents(Long clubId, Pageable pageable) {
-        return eventRepository.findAll(pageable);
+        return eventRepository.findByClub_Id(clubId, pageable);
     }
 
 }

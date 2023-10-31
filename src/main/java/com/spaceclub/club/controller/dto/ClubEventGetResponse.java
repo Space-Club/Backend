@@ -15,7 +15,7 @@ public record ClubEventGetResponse(
         String location,
         String clubName,
         String clubImage,
-        String clubStatus
+        String openStatus
 ) {
 
     public static ClubEventGetResponse from(Event event) {
@@ -28,7 +28,7 @@ public record ClubEventGetResponse(
                 event.getLocation(),
                 event.getClubName(),
                 event.getClubImage(),
-                Category.CLUB.toString() // 임시로 넣음
+                event.getCategory() == Category.CLUB ? "CLUB" : "ALL"
         );
     }
 
