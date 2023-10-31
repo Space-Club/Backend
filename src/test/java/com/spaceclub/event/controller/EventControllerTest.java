@@ -253,4 +253,33 @@ class EventControllerTest {
                         )));
     }
 
+    @Test
+    @WithMockUser
+    void 행사_상세_조회에_성공한다() throws Exception {
+        // given
+        Event event = event1();
+
+        given(eventService.get(any(Long.class))).willReturn(event);
+
+        // when
+        ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}", 1L));
+
+        // then
+        actions.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("event/get",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                                fieldWithPath("id").type(NUMBER).description("행사 ID"),
+                                fieldWithPath("title").type(STRING).description("행사 제목"),
+                                fieldWithPath("poster").type(STRING).description("행사 포스터 URL"),
+                                fieldWithPath("startDate").type(STRING).description("행사 시작 날짜"),
+                                fieldWithPath("startTime").type(STRING).description("행사 시작 시각"),
+                                fieldWithPath("location").type(STRING).description("행사 위치"),
+                                fieldWithPath("clubName").type(STRING).description("행사 주최 클럽 이름"),
+                                fieldWithPath("clubImage").type(STRING).description("행사 주최 클럽 이미지")
+                        )));
+    }
+
 }

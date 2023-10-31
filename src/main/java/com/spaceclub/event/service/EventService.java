@@ -62,4 +62,9 @@ public class EventService {
         eventUserRepository.save(newEventUser);
     }
 
+    public Event get(Long eventId) {
+        return eventRepository.findById(eventId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 행사입니다."));
+    }
+
 }
