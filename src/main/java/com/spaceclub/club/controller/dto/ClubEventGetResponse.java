@@ -21,13 +21,13 @@ public record ClubEventGetResponse(
     public static ClubEventGetResponse from(Event event) {
         return new ClubEventGetResponse(
                 event.getId(),
-                event.getEventInfo().getTitle(),
-                event.getEventInfo().getPoster(),
-                event.getEventInfo().getStartDate().toLocalDate(),
-                event.getEventInfo().getStartDate().toLocalTime(),
-                event.getEventInfo().getLocation(),
-                event.getClub().getName(),
-                event.getClub().getImage(),
+                event.getTitle(),
+                event.getPoster(),
+                event.getStartDate(),
+                event.getStartTime(),
+                event.getLocation(),
+                event.getClubName(),
+                event.getClubImage(),
                 Category.CLUB.toString() // 임시로 넣음
         );
     }
