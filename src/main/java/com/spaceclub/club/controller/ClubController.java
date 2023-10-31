@@ -37,7 +37,15 @@ public class ClubController {
 
     @PostMapping(value = "/clubs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> createClub(@RequestPart(value = "request") ClubCreateRequest request,
-                                             @RequestPart(value = "thumbnail") MultipartFile thumbnail) throws IOException {
+                                             @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail) throws IOException {
+        if (thumbnail == null) {
+            Club newClub = request.toEntity();
+            Club createdClub = service.createClub(newClub);
+            Long id = createdClub.getId();
+
+            return ResponseEntity.created(URI.create("/api/v1/clubs/" + id)).build();
+        }
+
         String thumbnailUrl = uploader.uploadClubThumbnail(thumbnail);
         Club newClub = request.toEntity(thumbnailUrl);
         Club createdClub = service.createClub(newClub);

@@ -8,6 +8,14 @@ public record ClubCreateRequest(
         String owner
 ) {
 
+    public Club toEntity() {
+        return Club.builder()
+                .name(name)
+                .info(info)
+                .owner(owner)
+                .build();
+    }
+
     public Club toEntity(String thumbnailUrl) {
         return Club.builder()
                 .name(name)
