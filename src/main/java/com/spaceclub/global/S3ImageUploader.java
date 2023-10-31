@@ -26,6 +26,9 @@ public class S3ImageUploader {
     @Value("${s3.bucket.name}")
     private String s3BucketName;
 
+    @Value("${s3.bucket.club-name}")
+    private String clubS3BucketName;
+
     public String uploadImage(MultipartFile poster) throws IOException {
         String newFileName = createFileName(poster.getOriginalFilename());
 
@@ -36,6 +39,22 @@ public class S3ImageUploader {
 
         amazonS3Client.putObject(
                 new PutObjectRequest(s3BucketName, newFileName, poster.getInputStream(), objectMetaData)
+                        .withCannedAcl(CannedAccessControlList.PublicRead)
+        );
+
+        return getSavedFileName(poster);
+    }
+
+    public String uploadClubThumbnail(MultipartFile poster) throws IOException {
+        String newFileName = createFileName(poster.getOriginalFilename());
+
+        ObjectMetadata objectMetaData = new ObjectMetadata();
+
+        objectMetaData.setContentType(poster.getContentType());
+        objectMetaData.setContentLength(poster.getSize());
+
+        amazonS3Client.putObject(
+                new PutObjectRequest(clubS3BucketName, newFileName, poster.getInputStream(), objectMetaData)
                         .withCannedAcl(CannedAccessControlList.PublicRead)
         );
 

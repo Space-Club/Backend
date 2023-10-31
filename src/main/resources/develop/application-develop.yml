@@ -8,6 +8,7 @@ spring:
 s3:
   bucket:
     name: ENC(kSZb9yw2JDAVxz/12V7CRNzRskzFvwgqKzJdZzg2nWdIHAnbxBvfknN0fEBTL1j3C6t4LC1iqXk=)
+    club-name: ENC(7kgYNjvsaM9w7JZQJVYrbRoONOnCoLQfqdnA0zxnZLwVpMXElZrfBEY4LcntBZRG)
   iam:
     access-key: ENC(1G8ZGZQKMoihcCiT2kgRMLqmKHWfk10LtbhDURaLzDs=)
     secret-key: ENC(iVBb5DDSSAGVQhCL6/KnOPKWC3x89s+9s9SyvR+7/55uBtkdhmL0aobUoL1uGa+67NYXjP1KRUI=)
