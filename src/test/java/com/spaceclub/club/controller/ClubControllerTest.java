@@ -114,6 +114,7 @@ class ClubControllerTest {
         ResultActions result = this.mockMvc.perform(multipart("/api/v1/clubs")
                 .file(request)
                 .file(thumbnail)
+                .header("Authorization", "token")
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8)
@@ -186,6 +187,7 @@ class ClubControllerTest {
         // when
         ResultActions result = this.mockMvc.perform(delete("/api/v1/clubs/{clubId}", clubId)
                 .with(csrf())
+                .header("Authorization", "token")
                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
@@ -212,6 +214,7 @@ class ClubControllerTest {
                 .param("page", "1")
                 .param("size", "3")
                 .param("sort", "id,asc")
+                .header("Authorization", "token")
         );
 
         // then

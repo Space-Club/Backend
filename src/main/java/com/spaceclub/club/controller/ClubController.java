@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,7 +38,8 @@ public class ClubController {
 
     @PostMapping(value = "/clubs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> createClub(@RequestPart(value = "request") ClubCreateRequest request,
-                                             @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail) throws IOException {
+                                             @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail,
+                                             @RequestHeader("Authorization") String token) throws IOException {
         if (thumbnail == null) {
             Club newClub = request.toEntity();
             Club createdClub = service.createClub(newClub);
@@ -63,13 +65,16 @@ public class ClubController {
     }
 
     @DeleteMapping("/clubs/{clubId}")
-    public ResponseEntity<String> deleteClub(@PathVariable Long clubId) {
+    public ResponseEntity<String> deleteClub(@PathVariable Long clubId,
+                                             @RequestHeader("Authorization") String token) {
         service.deleteClub(clubId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/clubs/{clubId}/events")
-    public ResponseEntity<PageResponse<ClubEventGetResponse, Event>> getClubEvents(@PathVariable Long clubId, Pageable pageable) {
+    public ResponseEntity<PageResponse<ClubEventGetResponse, Event>> getClubEvents(@PathVariable Long clubId,
+                                                                                   Pageable pageable,
+                                                                                   @RequestHeader("Authorization") String token) {
         Page<Event> events = service.getClubEvents(clubId, pageable);
 
         List<ClubEventGetResponse> clubEventGetResponses = events.getContent()
