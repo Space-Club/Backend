@@ -3,7 +3,11 @@ package com.spaceclub.club.service;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubNotice;
+import com.spaceclub.club.domain.ClubUser;
+import com.spaceclub.club.domain.ClubUserRole;
 import com.spaceclub.club.repository.ClubRepository;
+import com.spaceclub.club.repository.ClubUserRepository;
+import com.spaceclub.club.service.vo.ClubUserUpdate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
@@ -15,7 +19,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
+import static com.spaceclub.club.ClubTestFixture.club1;
+import static com.spaceclub.club.ClubTestFixture.clubUser;
+import static com.spaceclub.user.UserTestFixture.user;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -29,6 +37,12 @@ class ClubServiceTest {
 
     @Mock
     private ClubRepository clubRepository;
+
+    private final ClubUserUpdate clubUserUpdate = ClubUserUpdate.builder()
+            .clubId(club1().getId())
+            .memberId(user().getId())
+            .role(ClubUserRole.MEMBER)
+            .build();
 
     private Club club;
 
@@ -72,6 +86,42 @@ class ClubServiceTest {
         assertThatThrownBy(() -> clubService.getClub(id))
                 .isInstanceOf(IllegalArgumentException.class);
 
+    }
+
+    @Mock
+    private ClubUserRepository clubUserRepository;
+
+    @Test
+    void 클럽_멤버_권한_수정에_성공한다() {
+        // given
+        given(clubRepository.findById(club1().getId())).willReturn(Optional.of(club1()));
+        given(clubUserRepository.findByClub_IdAndUser_Id(any(Long.class), any(Long.class))).willReturn(Optional.ofNullable(clubUser()));
+        given(clubUserRepository.save(any(ClubUser.class))).willReturn(clubUser().updateRole(ClubUserRole.MEMBER));
+
+        // when, then
+        assertThatNoException()
+                .isThrownBy(() -> clubService.updateMemberRole(clubUserUpdate));
+    }
+
+    @Test
+    void 존재하지_않는_클럽의_경우_클럽_멤버_권한_수정에_실패한다() {
+        // given
+        given(clubRepository.findById(club1().getId())).willThrow(IllegalArgumentException.class);
+
+        // when, then
+        assertThatThrownBy(() -> clubService.updateMemberRole(clubUserUpdate))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void 클럽의_멤버가_아닐_경우_클럽_멤버_권한_수정에_실패한다() {
+        // given
+        given(clubRepository.findById(club1().getId())).willReturn(Optional.of(club1()));
+        given(clubUserRepository.findByClub_IdAndUser_Id(any(Long.class), any(Long.class))).willThrow(IllegalArgumentException.class);
+
+        // when, then
+        assertThatThrownBy(() -> clubService.updateMemberRole(clubUserUpdate))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
 }
