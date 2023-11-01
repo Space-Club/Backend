@@ -278,7 +278,9 @@ class EventControllerTest {
                                 fieldWithPath("startTime").type(STRING).description("행사 시작 시각"),
                                 fieldWithPath("location").type(STRING).description("행사 위치"),
                                 fieldWithPath("clubName").type(STRING).description("행사 주최 클럽 이름"),
-                                fieldWithPath("clubImage").type(STRING).description("행사 주최 클럽 이미지")
+                                fieldWithPath("clubImage").type(STRING).description("행사 주최 클럽 이미지"),
+                                fieldWithPath("formOpenDateTime").type(STRING).description("행사 참여 신청 시작 날짜와 시간"),
+                                fieldWithPath("formCloseDateTime").type(STRING).description("행사 참여 신청 종료 날짜와 시간")
                         )));
     }
 

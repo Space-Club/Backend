@@ -2,6 +2,7 @@ package com.spaceclub.event.controller;
 
 import com.spaceclub.event.controller.dto.EventApplyRequest;
 import com.spaceclub.event.controller.dto.EventCreateRequest;
+import com.spaceclub.event.controller.dto.EventDetailGetResponse;
 import com.spaceclub.event.controller.dto.EventGetResponse;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.service.EventService;
@@ -64,9 +65,9 @@ public class EventController {
     }
 
     @GetMapping("/{eventId}")
-    public ResponseEntity<EventGetResponse> getEventDetail(@PathVariable Long eventId) {
+    public ResponseEntity<EventDetailGetResponse> getEventDetail(@PathVariable Long eventId) {
         Event event = eventService.get(eventId);
-        EventGetResponse response = EventGetResponse.from(event);
+        EventDetailGetResponse response = EventDetailGetResponse.from(event);
 
         return ResponseEntity.ok(response);
     }
