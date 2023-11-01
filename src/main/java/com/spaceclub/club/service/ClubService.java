@@ -1,7 +1,9 @@
 package com.spaceclub.club.service;
 
 import com.spaceclub.club.domain.Club;
+import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.repository.ClubRepository;
+import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.repository.EventRepository;
@@ -19,6 +21,9 @@ public class ClubService {
     private final ClubRepository clubRepository;
 
     private final EventRepository eventRepository;
+
+    private final ClubUserRepository clubUserRepository;
+
 
     public Club createClub(Club club) {
         return clubRepository.save(club);
@@ -38,6 +43,14 @@ public class ClubService {
     }
 
     public void updateMemberRole(ClubUserUpdate updateVo) {
+        clubRepository.findById(updateVo.clubId())
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다"));
+        ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(updateVo.clubId(), updateVo.memberId())
+                .orElseThrow(() -> new IllegalArgumentException("클럽의 멤버가 아닙니다"));
+
+        ClubUser updateClubUser = clubUser.updateRole(updateVo.role());
+
+        clubUserRepository.save(updateClubUser);
     }
 
 }

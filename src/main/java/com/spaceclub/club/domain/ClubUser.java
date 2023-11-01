@@ -11,12 +11,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Table(name = "club_user")
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ClubUser extends BaseTimeEntity {
 
     @Id
@@ -29,11 +33,29 @@ public class ClubUser extends BaseTimeEntity {
     @JoinColumn(name = "club_id")
     private Club club;
 
+    @Getter
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @Enumerated(EnumType.STRING)
     private ClubUserRole role;
+
+    @Builder
+    private ClubUser(Long id, Club club, User user, ClubUserRole role) {
+        this.id = id;
+        this.club = club;
+        this.user = user;
+        this.role = role;
+    }
+
+    public ClubUser updateRole(ClubUserRole role) {
+        return ClubUser.builder()
+                .id(this.id)
+                .club(this.club)
+                .user(this.user)
+                .role(role)
+                .build();
+    }
 
 }
