@@ -12,6 +12,7 @@ import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.global.dto.PageResponse;
+import com.spaceclub.invitation.service.InvitationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +41,8 @@ public class ClubController {
     private final ClubService service;
 
     private final S3ImageUploader uploader;
+
+    private final InvitationService invitationService;
 
     @PostMapping(value = "/clubs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> createClub(@RequestPart(value = "request") ClubCreateRequest request,
@@ -102,6 +105,11 @@ public class ClubController {
                 .toList();
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/clubs/{clubId}/invite")
+    public ResponseEntity<String> getInvitationCode(@PathVariable Long clubId) {
+        return ResponseEntity.ok(invitationService.getCode(clubId));
     }
 
 }
