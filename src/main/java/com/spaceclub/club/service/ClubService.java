@@ -2,7 +2,7 @@ package com.spaceclub.club.service;
 
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.repository.ClubRepository;
-import com.spaceclub.event.domain.Category;
+import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,25 +16,28 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ClubService {
 
-    private final ClubRepository repository;
+    private final ClubRepository clubRepository;
 
     private final EventRepository eventRepository;
 
     public Club createClub(Club club) {
-        return repository.save(club);
+        return clubRepository.save(club);
     }
 
     public Club getClub(Long clubId) {
-        return repository.findById(clubId)
+        return clubRepository.findById(clubId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다"));
     }
 
     public void deleteClub(Long clubId) {
-        repository.deleteById(clubId);
+        clubRepository.deleteById(clubId);
     }
 
     public Page<Event> getClubEvents(Long clubId, Pageable pageable) {
         return eventRepository.findByClub_Id(clubId, pageable);
+    }
+
+    public void updateMemberRole(ClubUserUpdate updateVo) {
     }
 
 }

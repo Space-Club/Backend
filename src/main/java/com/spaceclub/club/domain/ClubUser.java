@@ -4,6 +4,8 @@ import com.spaceclub.global.BaseTimeEntity;
 import com.spaceclub.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -31,7 +33,7 @@ public class ClubUser extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(length = 16, nullable = false)
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private ClubUserRole role;
 
 }
