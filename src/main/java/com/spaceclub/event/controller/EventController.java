@@ -2,6 +2,7 @@ package com.spaceclub.event.controller;
 
 import com.spaceclub.event.controller.dto.EventApplyRequest;
 import com.spaceclub.event.controller.dto.EventCreateRequest;
+import com.spaceclub.event.controller.dto.EventDetailGetResponse;
 import com.spaceclub.event.controller.dto.EventGetResponse;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.service.EventService;
@@ -14,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,6 +62,14 @@ public class EventController {
         eventService.applyEvent(eventId, userId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{eventId}")
+    public ResponseEntity<EventDetailGetResponse> getEventDetail(@PathVariable Long eventId) {
+        Event event = eventService.get(eventId);
+        EventDetailGetResponse response = EventDetailGetResponse.from(event);
+
+        return ResponseEntity.ok(response);
     }
 
 }
