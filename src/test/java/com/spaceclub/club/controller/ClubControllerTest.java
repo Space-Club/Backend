@@ -224,7 +224,7 @@ class ClubControllerTest {
                 .andExpect(jsonPath("$.pageData.size").value(3))
                 .andExpect(jsonPath("$.pageData.totalPages").value(1))
                 .andExpect(jsonPath("$.pageData.totalElements").value(events.size()))
-                .andDo(document("club/event/getAll",
+                .andDo(document("club/getAllEvent",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
