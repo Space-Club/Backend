@@ -9,7 +9,7 @@ import com.spaceclub.event.domain.TicketInfo;
 
 import java.time.LocalDateTime;
 
-import static com.spaceclub.club.ClubTestFixture.club;
+import static com.spaceclub.club.ClubTestFixture.club1;
 
 public class EventTestFixture {
 
@@ -53,7 +53,7 @@ public class EventTestFixture {
                 .ticketInfo(ticketInfo())
                 .bankInfo(bankInfo())
                 .formInfo(formInfo())
-                .club(club())
+                .club(club1())
                 .build();
     }
 
@@ -65,7 +65,7 @@ public class EventTestFixture {
                 .ticketInfo(ticketInfo())
                 .bankInfo(bankInfo())
                 .formInfo(formInfo())
-                .club(club())
+                .club(club1())
                 .build();
     }
 
@@ -77,7 +77,7 @@ public class EventTestFixture {
                 .ticketInfo(ticketInfo())
                 .bankInfo(bankInfo())
                 .formInfo(formInfo())
-                .club(club())
+                .club(club1())
                 .build();
     }
 
