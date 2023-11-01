@@ -55,7 +55,7 @@ class EventUserRepositoryTest {
         clubRepository.save(club);
 
         User user = User.builder()
-                .userId(1L)
+                .id(1L)
                 .nickname("nickname1")
                 .phoneNumber("010-1234-5678")
                 .oauthUserName("1234")

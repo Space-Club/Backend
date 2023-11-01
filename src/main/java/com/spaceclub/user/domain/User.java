@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -24,9 +25,10 @@ import static lombok.AccessLevel.PROTECTED;
 public class User {
 
     @Id
+    @Getter
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "user_id")
-    private Long userid;
+    private Long id;
 
     @Embedded
     private RequiredInfo requiredInfo;
@@ -48,7 +50,7 @@ public class User {
 
     @Builder
     private User(
-            Long userId,
+            Long id,
             String nickname,
             String phoneNumber,
             String oauthUserName,
@@ -56,7 +58,7 @@ public class User {
             Email email,
             String refreshToken
     ) {
-        this.userid= userId;
+        this.id = id;
         this.requiredInfo = new RequiredInfo(nickname, new PhoneNumber(phoneNumber));
         this.oauthUserName = oauthUserName;
         this.provider = provider;

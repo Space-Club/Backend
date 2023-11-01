@@ -10,10 +10,10 @@ import org.springframework.data.repository.query.Param;
 
 public interface EventUserRepository extends JpaRepository<EventUser, Long> {
 
-    @Query("select eu.event from EventUser eu where eu.user.userid = :userId")
+    @Query("select eu.event from EventUser eu where eu.user.id = :userId")
     Page<Event> findAllByUserId(@Param("userId") Long userId, Pageable pageable);
 
-    @Query("select eu.status from EventUser eu where eu.user.userid = :userId and eu.event = :event")
+    @Query("select eu.status from EventUser eu where eu.user.id = :userId and eu.event = :event")
     String findEventStatusByUserId(@Param("userId") Long userId, @Param("event") Event event);
 
 }
