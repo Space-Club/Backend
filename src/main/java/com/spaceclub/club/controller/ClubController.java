@@ -3,11 +3,13 @@ package com.spaceclub.club.controller;
 import com.spaceclub.club.controller.dto.ClubCreateRequest;
 import com.spaceclub.club.controller.dto.ClubEventGetResponse;
 import com.spaceclub.club.controller.dto.ClubGetResponse;
+import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.service.ClubService;
+import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
-import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.S3ImageUploader;
+import com.spaceclub.global.dto.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,8 +17,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -78,6 +82,13 @@ public class ClubController {
                 .toList();
 
         return ResponseEntity.ok(new PageResponse<>(clubEventGetResponses, events));
+    }
+
+    @PatchMapping("/clubs/{clubId}/members/{memberId}")
+    public ResponseEntity<Void> updateMemberRole(@PathVariable Long clubId, @PathVariable Long memberId, @RequestBody ClubUserUpdateRequest request) {
+        service.updateMemberRole(new ClubUserUpdate(clubId, memberId, request.role()));
+
+        return ResponseEntity.noContent().build();
     }
 
 }
