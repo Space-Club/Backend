@@ -8,6 +8,8 @@ import com.spaceclub.club.domain.ClubNotice;
 import com.spaceclub.club.service.ClubService;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.S3ImageUploader;
+import com.spaceclub.invitation.InvitationCodeGenerator;
+import com.spaceclub.invitation.service.InvitationService;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import static com.spaceclub.club.ClubTestFixture.club1;
 import static com.spaceclub.event.EventTestFixture.event1;
 import static com.spaceclub.event.EventTestFixture.event2;
 import static com.spaceclub.event.EventTestFixture.event3;
@@ -37,6 +40,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -75,6 +79,12 @@ class ClubControllerTest {
 
     @MockBean
     private S3ImageUploader uploader;
+
+    @MockBean
+    private InvitationService invitationService;
+
+    @MockBean
+    private InvitationCodeGenerator codeGenerator;
 
     @Test
     @WithMockUser
@@ -253,6 +263,31 @@ class ClubControllerTest {
                                 fieldWithPath("pageData.size").type(NUMBER).description("페이지 내 개수"),
                                 fieldWithPath("pageData.totalPages").type(NUMBER).description("총 페이지 개수"),
                                 fieldWithPath("pageData.totalElements").type(NUMBER).description("총 행사 개수")
+                        )
+                ));
+    }
+
+    @Test
+    @WithMockUser
+    void 클럽_초대_링크_생성에_성공한다() throws Exception {
+        // given
+        Club club = club1();
+        Long clubId = club.getId();
+
+        given(invitationService.getCode(clubId)).willReturn("1D98eg");
+
+        // when
+        ResultActions actions = mockMvc.perform(post("/api/v1/clubs/{clubId}/invite", clubId)
+                .with(csrf()));
+
+        // then
+        actions.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("club/invite",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                                fieldWithPath("invitationCode").type(STRING).description("클럽 초대 링크")
                         )
                 ));
     }
