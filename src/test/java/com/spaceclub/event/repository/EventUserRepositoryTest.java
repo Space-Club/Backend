@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @DataJpaTest
+@DirtiesContext
 @DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.class)
 class EventUserRepositoryTest {
 

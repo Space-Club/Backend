@@ -8,3 +8,18 @@ include::{snippets}/club/create/request-part-request-fields.adoc[]
 include::{snippets}/club/create/http-response.adoc[]
 include::{snippets}/club/create/response-headers.adoc[]
 :sectnums:
+
+=== 클럽 행사 조회
+:sectnums!:
+==== Request
+include::{snippets}/club/getAllEvent/http-request.adoc[]
+===== Path Parameter
+include::{snippets}/club/getAllEvent/path-parameters.adoc[]
+===== Query Parameter
+include::{snippets}/club/getAllEvent/query-parameters.adoc[]
+
+==== Response
+include::{snippets}/club/getAllEvent/http-response.adoc[]
+===== Response Body
+include::{snippets}/club/getAllEvent/response-fields.adoc[]
+:sectnums:

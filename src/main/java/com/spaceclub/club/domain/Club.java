@@ -10,6 +10,7 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
@@ -21,6 +22,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class Club extends BaseTimeEntity {
 
     @Id

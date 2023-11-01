@@ -2,10 +2,13 @@ package com.spaceclub.club.controller.dto;
 
 import com.spaceclub.event.domain.Category;
 import com.spaceclub.event.domain.Event;
+import lombok.Builder;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+
+@Builder
 public record ClubEventGetResponse(
         Long id,
         String title,
@@ -15,7 +18,7 @@ public record ClubEventGetResponse(
         String location,
         String clubName,
         String clubImage,
-        String clubStatus
+        String openStatus
 ) {
 
     public static ClubEventGetResponse from(Event event) {
@@ -28,7 +31,7 @@ public record ClubEventGetResponse(
                 event.getLocation(),
                 event.getClubName(),
                 event.getClubImage(),
-                Category.CLUB.toString() // 임시로 넣음
+                event.getCategory().equals(Category.CLUB) ? "CLUB" : "ALL"
         );
     }
 

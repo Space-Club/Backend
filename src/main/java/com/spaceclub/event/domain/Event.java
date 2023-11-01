@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,6 +27,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class Event extends BaseTimeEntity {
 
     @Id
@@ -34,6 +36,7 @@ public class Event extends BaseTimeEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
+    @Getter
     @Enumerated(EnumType.STRING)
     private Category category;
 
@@ -108,6 +111,10 @@ public class Event extends BaseTimeEntity {
 
     public String getLocation() {
         return eventInfo.getLocation();
+    }
+
+    public Long getClubId() {
+        return club.getId();
     }
 
     public String getClubName() {
