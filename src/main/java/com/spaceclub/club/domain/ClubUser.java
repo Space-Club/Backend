@@ -38,17 +38,18 @@ public class ClubUser extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Getter
     @Enumerated(EnumType.STRING)
     private ClubUserRole role;
 
     @Builder
-    private ClubUser(Long id, Club club, User user, ClubUserRole role) {
+    public ClubUser(Long id, Club club, User user, ClubUserRole role) {
         this.id = id;
         this.club = club;
         this.user = user;
         this.role = role;
     }
-
+    
     public ClubUser updateRole(ClubUserRole role) {
         return ClubUser.builder()
                 .id(this.id)
@@ -56,6 +57,18 @@ public class ClubUser extends BaseTimeEntity {
                 .user(this.user)
                 .role(role)
                 .build();
+    }
+
+    public Long getUserId() {
+        return user.getId();
+    }
+
+    public String getName() {
+        return user.getName();
+    }
+
+    public String getImage() {
+        return user.getImage();
     }
 
 }
