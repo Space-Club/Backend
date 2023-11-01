@@ -29,6 +29,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import static com.spaceclub.club.ClubTestFixture.club1;
+import static com.spaceclub.club.ClubUserTestFixture.club1User1;
+import static com.spaceclub.club.ClubUserTestFixture.club1User2;
 import static com.spaceclub.event.EventTestFixture.event1;
 import static com.spaceclub.event.EventTestFixture.event2;
 import static com.spaceclub.event.EventTestFixture.event3;
@@ -259,6 +262,34 @@ class ClubControllerTest {
                                 fieldWithPath("pageData.size").type(NUMBER).description("페이지 내 개수"),
                                 fieldWithPath("pageData.totalPages").type(NUMBER).description("총 페이지 개수"),
                                 fieldWithPath("pageData.totalElements").type(NUMBER).description("총 행사 개수")
+                        )
+                ));
+    }
+
+    @Test
+    @WithMockUser
+    public void 클럽_멤버_조회에_성공한다() throws Exception {
+        // given
+        given(clubService.getMembers(any(Long.class))).willReturn(List.of(club1User1(), club1User2()));
+
+        // when
+        ResultActions actions = mockMvc.perform(get("/api/v1/clubs/{clubId}/members", club1().getId()));
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andDo(document("club/getAllMember",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("clubId").description("클럽 아이디")),
+                        responseFields(
+                                fieldWithPath("[]").type(ARRAY).description("멤버 리스트"),
+                                fieldWithPath("[].id").type(NUMBER).description("멤버 아이디"),
+                                fieldWithPath("[].name").type(STRING).description("멤버 이름"),
+                                fieldWithPath("[].image").type(STRING).description("멤버 이미지"),
+                                fieldWithPath("[].role").type(STRING).description("멤버 권한")
+
                         )
                 ));
     }
