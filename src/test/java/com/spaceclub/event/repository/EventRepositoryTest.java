@@ -3,6 +3,7 @@ package com.spaceclub.event.repository;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.event.domain.Event;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
 
@@ -23,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @DataJpaTest
+@DirtiesContext
 @DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.class)
 class EventRepositoryTest {
 
