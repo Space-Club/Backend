@@ -134,7 +134,7 @@ class EventControllerTest {
         actions
                 .andExpect(status().isCreated())
                 .andExpect(header().stringValues("Location", "/api/v1/events/1"))
-                .andDo(document("events/create",
+                .andDo(document("event/create",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestParts(
@@ -193,7 +193,7 @@ class EventControllerTest {
                 .andExpect(jsonPath("$.pageData.size").value(3))
                 .andExpect(jsonPath("$.pageData.totalPages").value(1))
                 .andExpect(jsonPath("$.pageData.totalElements").value(events.size()))
-                .andDo(document("events/getAll",
+                .andDo(document("event/getAll",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         queryParameters(
@@ -244,7 +244,7 @@ class EventControllerTest {
         // then
         result.andExpect(status().isNoContent())
                 .andDo(print())
-                .andDo(document("events/apply",
+                .andDo(document("event/apply",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(

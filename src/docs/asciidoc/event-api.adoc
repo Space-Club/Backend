@@ -1,0 +1,35 @@
+== 행사
+=== 행사 개설
+:sectnums!:
+==== Request
+include::{snippets}/event/create/http-request.adoc[]
+===== Multipart Form Data
+include::{snippets}/event/create/request-parts.adoc[]
+===== Request Form Data
+include::{snippets}/event/create/request-part-request-fields.adoc[]
+==== Response
+include::{snippets}/event/create/http-response.adoc[]
+===== ResponseHeader
+include::{snippets}/event/create/response-headers.adoc[]
+:sectnums:
+
+=== 행사 신청
+:sectnums!:
+==== Request
+include::{snippets}/event/apply/http-request.adoc[]
+include::{snippets}/event/apply/request-fields.adoc[]
+==== Response
+include::{snippets}/event/apply/http-response.adoc[]
+:sectnums:
+
+=== 모든 행사 조회
+:sectnums!:
+==== Request
+include::{snippets}/event/getAll/http-request.adoc[]
+===== Query Parameter
+include::{snippets}/event/getAll/query-parameters.adoc[]
+==== Response
+include::{snippets}/event/getAll/http-response.adoc[]
+===== Response Body
+include::{snippets}/event/getAll/response-fields.adoc[]
+:sectnums:
