@@ -3,9 +3,12 @@ package com.spaceclub.club.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.controller.dto.ClubCreateRequest;
+import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubNotice;
+import com.spaceclub.club.domain.ClubUserRole;
 import com.spaceclub.club.service.ClubService;
+import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.S3ImageUploader;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -31,12 +34,14 @@ import static com.spaceclub.event.EventTestFixture.event2;
 import static com.spaceclub.event.EventTestFixture.event3;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -46,6 +51,7 @@ import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.OBJECT;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestPartFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -253,6 +259,39 @@ class ClubControllerTest {
                                 fieldWithPath("pageData.size").type(NUMBER).description("페이지 내 개수"),
                                 fieldWithPath("pageData.totalPages").type(NUMBER).description("총 페이지 개수"),
                                 fieldWithPath("pageData.totalElements").type(NUMBER).description("총 행사 개수")
+                        )
+                ));
+    }
+
+    @Test
+    @WithMockUser
+    void 클럽_멤버_권한_수정에_성공한다() throws Exception {
+        // given
+        Long clubId = 1L;
+        Long memberId = 1L;
+        ClubUserUpdateRequest request = new ClubUserUpdateRequest(ClubUserRole.MANAGER);
+
+        doNothing().when(clubService).updateMemberRole(any(ClubUserUpdate.class));
+
+        // when
+        ResultActions result = this.mockMvc.perform(patch("/api/v1/clubs/{clubId}/members/{memberId}", clubId, memberId)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(request))
+        );
+
+        // then
+        result.andExpect(status().isNoContent())
+                .andDo(print())
+                .andDo(document("club/updateMemberRole",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("clubId").description("클럽 아이디"),
+                                parameterWithName("memberId").description("멤버 아이디")
+                        ),
+                        requestFields(
+                                fieldWithPath("role").description("멤버 권한")
                         )
                 ));
     }

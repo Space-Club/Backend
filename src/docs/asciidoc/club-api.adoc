@@ -23,3 +23,17 @@ include::{snippets}/club/getAllEvent/http-response.adoc[]
 ===== Response Body
 include::{snippets}/club/getAllEvent/response-fields.adoc[]
 :sectnums:
+
+=== 클럽 멤버 권한 변경
+:sectnums!:
+==== Request
+include::{snippets}/club/updateMemberRole/http-request.adoc[]
+===== Request Body
+include::{snippets}/club/updateMemberRole/request-body.adoc[]
+include::{snippets}/club/updateMemberRole/request-fields.adoc[]
+===== Path Parameter
+include::{snippets}/club/updateMemberRole/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/club/updateMemberRole/http-response.adoc[]
+:sectnums:
