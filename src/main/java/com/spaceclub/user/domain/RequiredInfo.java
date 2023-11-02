@@ -19,7 +19,7 @@ public class RequiredInfo {
     private static final int MAX_NICKNAME_LENGTH = 10;
 
     @Getter
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "varchar(10) default UNKNOWN")
     private String nickname;
 
     @Embedded
@@ -38,6 +38,10 @@ public class RequiredInfo {
 
     private boolean isValidRange(String nickname) {
         return nickname.length() >= MIN_NICKNAME_LENGTH && nickname.length() <= MAX_NICKNAME_LENGTH;
+    }
+
+    public String getPhoneNumber() {
+        return this.phoneNumber.getPhoneNumber();
     }
 
 }

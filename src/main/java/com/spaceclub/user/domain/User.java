@@ -30,6 +30,9 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
+    @Column(length = 100)
+    private String password;
+
     @Embedded
     private RequiredInfo requiredInfo;
 
@@ -57,23 +60,27 @@ public class User {
             Long id,
             String nickname,
             String phoneNumber,
-            String oauthUserName,
+            String oauthId,
             Provider provider,
-            Email email,
+            String email,
             String refreshToken,
             String image
     ) {
         this.id = id;
         this.requiredInfo = new RequiredInfo(nickname, new PhoneNumber(phoneNumber));
-        this.oauthUserName = oauthUserName;
+        this.oauthUserName = generateOauthUsername(oauthId, provider);
         this.provider = provider;
-        this.email = email;
+        this.email = new Email(email);
         this.refreshToken = refreshToken;
         this.image = image;
     }
 
     public String getName() {
         return requiredInfo.getNickname();
+    }
+
+    private String generateOauthUsername(String oauthId, Provider provider) {
+        return provider.name() + oauthId;
     }
 
 }
