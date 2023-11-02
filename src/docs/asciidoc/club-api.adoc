@@ -50,3 +50,14 @@ include::{snippets}/club/updateMemberRole/path-parameters.adoc[]
 ==== Response
 include::{snippets}/club/updateMemberRole/http-response.adoc[]
 :sectnums:
+
+=== 클럽 멤버 탈퇴
+:sectnums!:
+==== Request
+include::{snippets}/club/deleteMember/http-request.adoc[]
+===== Path Parameter
+include::{snippets}/club/deleteMember/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/club/deleteMember/http-response.adoc[]
+:sectnums:

@@ -26,6 +26,14 @@ public class ClubUserTestFixture {
                 .build();
     }
 
+    public static ClubUser club1User2Member() {
+        return ClubUser.builder()
+                .club(club1())
+                .user(user2())
+                .role(ClubUserRole.MEMBER)
+                .build();
+    }
+
     public static ClubUser club2User1Manager() {
         return ClubUser.builder()
                 .club(club2())

@@ -334,6 +334,34 @@ class ClubControllerTest {
 
     @Test
     @WithMockUser
+    void 클럽_멤버_탈퇴에_성공한다() throws Exception {
+        // given
+        Long clubId = 1L;
+        Long memberId = 1L;
+
+        doNothing().when(clubService).deleteMember(any(Long.class), any(Long.class));
+
+        // when
+        ResultActions result = this.mockMvc.perform(delete("/api/v1/clubs/{clubId}/members/{memberId}", clubId, memberId)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        // then
+        result.andExpect(status().isNoContent())
+                .andDo(print())
+                .andDo(document("club/deleteMember",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("clubId").description("클럽 아이디"),
+                                parameterWithName("memberId").description("멤버 아이디")
+                        )
+                ));
+    }
+
+    @Test
+    @WithMockUser
     void 클럽_초대_링크_생성에_성공한다() throws Exception {
         // given
         Club club = club1();
