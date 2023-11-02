@@ -87,4 +87,18 @@ class ClubUserRepositoryTest {
         assertThat(managerNum).isEqualTo(1);
     }
 
+    @Test
+    @DirtiesContext
+    void 유저에_따른_클럽유저_조회에_성공한다() {
+        // given
+        clubRepository.save(club2());
+        clubUserRepository.save(club2User1Manager());
+
+        // when
+        List<ClubUser> clubUsers = clubUserRepository.findByUser_Id(user1().getId());
+
+        // then
+        assertThat(clubUsers.size()).isEqualTo(2);
+    }
+
 }

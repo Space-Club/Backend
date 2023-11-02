@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.spaceclub.club.ClubTestFixture.club1;
+import static com.spaceclub.club.ClubTestFixture.club2;
 import static com.spaceclub.club.ClubUserTestFixture.club1User1Manager;
 import static com.spaceclub.club.ClubUserTestFixture.club1User2Manager;
 import static com.spaceclub.event.EventTestFixture.event1;
@@ -412,6 +413,34 @@ class ClubControllerTest {
                                 parameterWithName("uuid").description("클럽 초대 링크 식별자")
                         )));
 
+    }
+
+    @Test
+    @WithMockUser
+    void 모든_클럽_조회에_성공한다() throws Exception {
+        // given
+        Long userId = 1L;
+        given(clubService.getAllClubs(1L)).willReturn(List.of(club1(), club2()));
+
+        // when
+        ResultActions actions = mockMvc.perform(get("/api/v1/clubs/all/{userId}", userId));
+
+        // then
+        actions.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("club/getAll",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("userId").description("유저 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("[]").type(ARRAY).description("멤버 리스트"),
+                                fieldWithPath("[].id").type(NUMBER).description("멤버 아이디"),
+                                fieldWithPath("[].image").type(STRING).description("멤버 이미지"),
+                                fieldWithPath("[].name").type(STRING).description("멤버 이름")
+                        )
+                ));
     }
 
 }
