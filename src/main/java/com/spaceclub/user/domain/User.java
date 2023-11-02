@@ -32,6 +32,9 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
+    @Column(length = 100)
+    private String password;
+
     @Embedded
     private RequiredInfo requiredInfo = new RequiredInfo();
 
