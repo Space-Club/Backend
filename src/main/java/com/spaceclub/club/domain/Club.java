@@ -2,6 +2,7 @@ package com.spaceclub.club.domain;
 
 import com.spaceclub.global.BaseTimeEntity;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -15,6 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +48,9 @@ public class Club extends BaseTimeEntity {
     @Getter
     private String owner;
 
+    @Embedded
+    private Invitation invitation;
+
     @Getter
     @OneToMany(mappedBy = "club", fetch = FetchType.EAGER)
     private List<ClubNotice> notices = new ArrayList<>();
@@ -59,7 +64,7 @@ public class Club extends BaseTimeEntity {
     }
 
     @Builder
-    public Club(Long id, String name, String thumbnailUrl, String info, String owner, List<ClubNotice> notices) {
+    public Club(Long id, String name, String thumbnailUrl, String info, String owner, Invitation invitation, List<ClubNotice> notices) {
         Assert.notNull(name, "이름에 null 값이 올 수 없습니다");
         Assert.hasText(name, "이름이 빈 값일 수 없습니다");
         Assert.isTrue(validateNameLength(name), "이름의 길이는 12글자를 넘을 수 없습니다");
@@ -70,10 +75,24 @@ public class Club extends BaseTimeEntity {
         this.thumbnailUrl = thumbnailUrl;
         this.info = info;
         this.owner = owner;
+        this.invitation = invitation;
 
         if (notices != null) {
             this.notices = new ArrayList<>(notices);
         }
+    }
+
+    public String getInvitationCode() {
+        return invitation.getInvitationCode();
+    }
+
+    public Club assignInvitationCode(String invitationCode) {
+        this.invitation = Invitation.builder()
+                .invitationCode(invitationCode)
+                .invitationCodeGeneratedAt(LocalDateTime.now())
+                .build();
+
+        return this;
     }
 
 }

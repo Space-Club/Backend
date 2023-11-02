@@ -1,5 +1,6 @@
 package com.spaceclub.club.service;
 
+import com.spaceclub.club.InvitationCodeGenerator;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.repository.ClubRepository;
@@ -25,6 +26,8 @@ public class ClubService {
     private final EventRepository eventRepository;
 
     private final ClubUserRepository clubUserRepository;
+
+    private final InvitationCodeGenerator codeGenerator;
 
     public Club createClub(Club club) {
         return clubRepository.save(club);
@@ -59,6 +62,21 @@ public class ClubService {
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다"));
 
         return clubUserRepository.findByClub_Id(clubId);
+    }
+
+    public String getInvitationCode(Long clubId) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
+
+        String invitationCode = club.getInvitationCode();
+        if (invitationCode == null || invitationCode.equals(InvitationCodeGenerator.getInitValue())) {
+            invitationCode = codeGenerator.generateInvitationCode();
+            Club newClub = club.assignInvitationCode(invitationCode);
+
+            clubRepository.save(newClub);
+        }
+
+        return invitationCode;
     }
 
 }

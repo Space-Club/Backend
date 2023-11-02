@@ -31,6 +31,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
+
+import static java.util.Collections.singletonMap;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -102,6 +105,13 @@ public class ClubController {
                 .toList();
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/clubs/{clubId}/invite")
+    public ResponseEntity<Map<String, String>> getInvitationCode(@PathVariable Long clubId) {
+        return ResponseEntity.ok(
+                singletonMap("invitationCode",service.getInvitationCode(clubId))
+        );
     }
 
 }
