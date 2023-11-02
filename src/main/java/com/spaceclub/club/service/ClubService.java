@@ -3,6 +3,7 @@ package com.spaceclub.club.service;
 import com.spaceclub.club.InvitationCodeGenerator;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubUser;
+import com.spaceclub.club.domain.ClubUserRole;
 import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
@@ -47,11 +48,7 @@ public class ClubService {
     }
 
     public void updateMemberRole(ClubUserUpdate updateVo) {
-        clubRepository.findById(updateVo.clubId())
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다"));
-        ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(updateVo.clubId(), updateVo.memberId())
-                .orElseThrow(() -> new IllegalArgumentException("클럽의 멤버가 아닙니다"));
-
+        ClubUser clubUser = validateClubMember(updateVo.clubId(), updateVo.memberId());
         ClubUser updateClubUser = clubUser.updateRole(updateVo.role());
 
         clubUserRepository.save(updateClubUser);
@@ -62,6 +59,25 @@ public class ClubService {
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다"));
 
         return clubUserRepository.findByClub_Id(clubId);
+    }
+
+    public void deleteMember(Long clubId, Long memberId) {
+        ClubUser clubUser = validateClubMember(clubId, memberId);
+
+        int count = clubUserRepository.countByClub_IdAndRole(clubId, ClubUserRole.MANAGER);
+        if (count == 1) {
+            throw new IllegalArgumentException("마지막 관리자는 탈퇴가 불가합니다.");
+        }
+
+        clubUserRepository.delete(clubUser);
+    }
+
+    private ClubUser validateClubMember(Long clubId, Long memberId) {
+        clubRepository.findById(clubId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다"));
+
+        return clubUserRepository.findByClub_IdAndUser_Id(clubId, memberId)
+                .orElseThrow(() -> new IllegalArgumentException("클럽의 멤버가 아닙니다"));
     }
 
     public String getInvitationCode(Long clubId) {
