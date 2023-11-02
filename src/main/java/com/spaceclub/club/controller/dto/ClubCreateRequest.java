@@ -38,8 +38,8 @@ public record ClubCreateRequest(
 
         public static Invitation toEntity() {
             return Invitation.builder()
-                    .invitationCode(InvitationCodeGenerator.getInitValue())
-                    .invitationCodeGeneratedAt(LocalDateTime.now())
+                    .invitationCode(null)
+                    .invitationCodeGeneratedAt(null)
                     .build();
         }
 

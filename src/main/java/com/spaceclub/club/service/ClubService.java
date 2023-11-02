@@ -69,7 +69,7 @@ public class ClubService {
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
 
         String invitationCode = club.getInvitationCode();
-        if (invitationCode.equals(InvitationCodeGenerator.getInitValue())) {
+        if (invitationCode == null || invitationCode.equals(InvitationCodeGenerator.getInitValue())) {
             invitationCode = codeGenerator.generateInvitationCode();
             Club newClub = club.assignInvitationCode(invitationCode);
 
