@@ -69,9 +69,10 @@ public class ClubService {
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
 
         String invitationCode = club.getInvitationCode();
-        if (invitationCode == null || invitationCode.equals("EXPIRED")) {
+        if (invitationCode.equals(InvitationCodeGenerator.getInitValue())) {
             invitationCode = codeGenerator.generateInvitationCode();
             Club newClub = club.assignInvitationCode(invitationCode);
+
             clubRepository.save(newClub);
         }
 
