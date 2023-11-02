@@ -351,6 +351,9 @@ class ClubControllerTest {
                 .andDo(document("club/invite",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("clubId").description("클럽 ID")
+                        ),
                         responseFields(
                                 fieldWithPath("invitationCode").type(STRING).description("클럽 초대 링크")
                         )
