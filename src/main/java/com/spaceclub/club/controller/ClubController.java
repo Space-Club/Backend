@@ -6,7 +6,7 @@ import com.spaceclub.club.controller.dto.ClubGetResponse;
 import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
 import com.spaceclub.club.controller.dto.MemberGetResponse;
 import com.spaceclub.club.domain.Club;
-import com.spaceclub.club.domain.ClubUserRole;
+import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.service.ClubService;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
@@ -95,9 +95,13 @@ public class ClubController {
 
     @GetMapping("/clubs/{clubId}/members")
     public ResponseEntity<List<MemberGetResponse>> getMembers(@PathVariable Long clubId) {
-        service.getMembers(clubId);
+        List<ClubUser> clubUsers = service.getMembers(clubId);
 
-        return ResponseEntity.ok(List.of(new MemberGetResponse(1L, "name", "image", ClubUserRole.MEMBER)));
+        List<MemberGetResponse> response = clubUsers.stream()
+                .map(MemberGetResponse::from)
+                .toList();
+
+        return ResponseEntity.ok(response);
     }
 
 }

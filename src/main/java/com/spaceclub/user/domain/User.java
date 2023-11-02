@@ -45,6 +45,10 @@ public class User {
     @Lob
     private String refreshToken;
 
+    @Lob
+    @Getter
+    private String image;
+
     @OneToMany(mappedBy = "user")
     private List<EventUser> events = new ArrayList<>();
 
@@ -56,7 +60,8 @@ public class User {
             String oauthUserName,
             Provider provider,
             Email email,
-            String refreshToken
+            String refreshToken,
+            String image
     ) {
         this.id = id;
         this.requiredInfo = new RequiredInfo(nickname, new PhoneNumber(phoneNumber));
@@ -64,6 +69,11 @@ public class User {
         this.provider = provider;
         this.email = email;
         this.refreshToken = refreshToken;
+        this.image = image;
+    }
+
+    public String getName() {
+        return requiredInfo.getNickname();
     }
 
 }

@@ -24,6 +24,19 @@ include::{snippets}/club/getAllEvent/http-response.adoc[]
 include::{snippets}/club/getAllEvent/response-fields.adoc[]
 :sectnums:
 
+=== 클럽 멤버 조회
+:sectnums!:
+==== Request
+include::{snippets}/club/getAllMember/http-request.adoc[]
+===== Path Parameter
+include::{snippets}/club/getAllMember/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/club/getAllMember/http-response.adoc[]
+===== Response Body
+include::{snippets}/club/getAllMember/response-fields.adoc[]
+:sectnums:
+
 === 클럽 멤버 권한 변경
 :sectnums!:
 ==== Request
