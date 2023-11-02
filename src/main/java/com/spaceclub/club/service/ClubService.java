@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -95,6 +96,18 @@ public class ClubService {
         }
 
         return invitationCode;
+    }
+
+    public List<Club> getAllClubs(Long userId) {
+        List<ClubUser> clubUsers = clubUserRepository.findByUser_Id(userId);
+        List<Club> clubs = new ArrayList<>();
+
+        for (ClubUser clubUser : clubUsers) {
+            Club club = clubUser.getClub();
+            clubs.add(club);
+        }
+
+        return clubs;
     }
 
 }
