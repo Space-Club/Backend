@@ -6,6 +6,7 @@ import com.spaceclub.user.domain.User;
 import static com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import static com.spaceclub.user.domain.Provider.KAKAO;
 
+
 @JsonNaming(value = SnakeCaseStrategy.class)
 public record KakaoUserInfo(
         Long id,
@@ -25,7 +26,7 @@ public record KakaoUserInfo(
             boolean isEmailValid,
             boolean isEmailVerified,
             String email
-            ) {
+    ) {
 
     }
 
