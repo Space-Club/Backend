@@ -22,6 +22,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ClubService {
 
+    public static final int MANAGER_COUNT = 1;
+
     private final ClubRepository clubRepository;
 
     private final EventRepository eventRepository;
@@ -65,7 +67,7 @@ public class ClubService {
         ClubUser clubUser = validateClubMember(clubId, memberId);
 
         int count = clubUserRepository.countByClub_IdAndRole(clubId, ClubUserRole.MANAGER);
-        if (count == 1) {
+        if (count == MANAGER_COUNT) {
             throw new IllegalArgumentException("마지막 관리자는 탈퇴가 불가합니다.");
         }
 

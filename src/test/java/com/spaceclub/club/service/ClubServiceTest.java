@@ -137,7 +137,7 @@ class ClubServiceTest {
     }
 
     @Test
-    void 마지막_관리자인_경우_클럽_멤버_탈퇴에_성공한다() {
+    void 마지막_관리자인_경우_클럽_멤버_탈퇴에_실패한다() {
         // given
         given(clubRepository.findById(club1().getId())).willReturn(Optional.of(club1()));
         given(clubUserRepository.findByClub_IdAndUser_Id(any(Long.class), any(Long.class))).willReturn(Optional.ofNullable(club1User1Manager()));
