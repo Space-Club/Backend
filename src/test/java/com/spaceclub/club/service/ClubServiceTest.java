@@ -124,4 +124,28 @@ class ClubServiceTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
+    @Test
+    void 클럽_멤버_탈퇴에_성공한다() {
+        // given
+        given(clubRepository.findById(club1().getId())).willReturn(Optional.of(club1()));
+        given(clubUserRepository.findByClub_IdAndUser_Id(any(Long.class), any(Long.class))).willReturn(Optional.ofNullable(club1User1Manager()));
+        given(clubUserRepository.countByClub_IdAndRole(any(Long.class), any(ClubUserRole.class))).willReturn(2);
+
+        // when, then
+        assertThatNoException()
+                .isThrownBy(() -> clubService.deleteMember(club1().getId(), user1().getId()));
+    }
+
+    @Test
+    void 마지막_관리자인_경우_클럽_멤버_탈퇴에_실패한다() {
+        // given
+        given(clubRepository.findById(club1().getId())).willReturn(Optional.of(club1()));
+        given(clubUserRepository.findByClub_IdAndUser_Id(any(Long.class), any(Long.class))).willReturn(Optional.ofNullable(club1User1Manager()));
+        given(clubUserRepository.countByClub_IdAndRole(any(Long.class), any(ClubUserRole.class))).willReturn(1);
+
+        // when, then
+        assertThatThrownBy(() -> clubService.deleteMember(club1().getId(), user1().getId()))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
 }

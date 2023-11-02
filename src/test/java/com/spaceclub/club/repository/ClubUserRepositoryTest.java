@@ -2,6 +2,7 @@ package com.spaceclub.club.repository;
 
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.domain.ClubUser;
+import com.spaceclub.club.domain.ClubUserRole;
 import com.spaceclub.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -16,8 +17,10 @@ import java.util.Optional;
 import static com.spaceclub.club.ClubTestFixture.club1;
 import static com.spaceclub.club.ClubTestFixture.club2;
 import static com.spaceclub.club.ClubUserTestFixture.club1User1Manager;
+import static com.spaceclub.club.ClubUserTestFixture.club1User2Member;
 import static com.spaceclub.club.ClubUserTestFixture.club2User1Manager;
 import static com.spaceclub.user.UserTestFixture.user1;
+import static com.spaceclub.user.UserTestFixture.user2;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -68,6 +71,20 @@ class ClubUserRepositoryTest {
                 () -> assertThat(getClubUser).isNotEmpty(),
                 () -> assertThat(getEmpty).isEmpty()
         );
+    }
+
+    @Test
+    @DirtiesContext
+    void 클럽의_권한에_따른_인원수_조회에_성공한다() {
+        // given
+        userRepository.save(user2());
+        clubUserRepository.save(club1User2Member());
+
+        // when
+        int managerNum = clubUserRepository.countByClub_IdAndRole(club1().getId(), ClubUserRole.MANAGER);
+
+        // then
+        assertThat(managerNum).isEqualTo(1);
     }
 
 }

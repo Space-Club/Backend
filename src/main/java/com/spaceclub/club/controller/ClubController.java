@@ -107,6 +107,13 @@ public class ClubController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/clubs/{clubId}/members/{memberId}")
+    public ResponseEntity<Void> deleteMember(@PathVariable Long clubId, @PathVariable Long memberId) {
+        service.deleteMember(clubId, memberId);
+
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/clubs/{clubId}/invite")
     public ResponseEntity<Map<String, String>> getInvitationCode(@PathVariable Long clubId) {
         return ResponseEntity.ok(
