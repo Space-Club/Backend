@@ -2,6 +2,7 @@ package com.spaceclub.club.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
+import com.spaceclub.club.InvitationCodeGenerator;
 import com.spaceclub.club.controller.dto.ClubCreateRequest;
 import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
 import com.spaceclub.club.domain.Club;
@@ -11,8 +12,6 @@ import com.spaceclub.club.service.ClubService;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.S3ImageUploader;
-import com.spaceclub.invitation.InvitationCodeGenerator;
-import com.spaceclub.invitation.service.InvitationService;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,9 +86,6 @@ class ClubControllerTest {
 
     @MockBean
     private S3ImageUploader uploader;
-
-    @MockBean
-    private InvitationService invitationService;
 
     @MockBean
     private InvitationCodeGenerator codeGenerator;
@@ -343,7 +339,7 @@ class ClubControllerTest {
         Club club = club1();
         Long clubId = club.getId();
 
-        given(invitationService.getCode(clubId)).willReturn("1D98eg");
+        given(clubService.getInvitationCode(1L)).willReturn("https://spaceclub.site/api/v1/clubs/invite/650d2d91-a8cf-45e7-8a43-a0c798173ecb");
 
         // when
         ResultActions actions = mockMvc.perform(post("/api/v1/clubs/{clubId}/invite", clubId)
