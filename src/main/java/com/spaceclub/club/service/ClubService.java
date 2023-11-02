@@ -7,7 +7,6 @@ import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.repository.EventRepository;
-import com.spaceclub.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,13 +52,6 @@ public class ClubService {
         ClubUser updateClubUser = clubUser.updateRole(updateVo.role());
 
         clubUserRepository.save(updateClubUser);
-    }
-
-    public List<ClubUser> getMembers(Long clubId) {
-        clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다"));
-
-        return clubUserRepository.findByClub_Id(clubId);
     }
 
     public List<ClubUser> getMembers(Long clubId) {

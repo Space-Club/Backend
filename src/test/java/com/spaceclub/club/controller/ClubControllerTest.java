@@ -30,8 +30,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static com.spaceclub.club.ClubTestFixture.club1;
-import static com.spaceclub.club.ClubUserTestFixture.club1User1;
-import static com.spaceclub.club.ClubUserTestFixture.club1User2;
+import static com.spaceclub.club.ClubUserTestFixture.club1User1Manager;
+import static com.spaceclub.club.ClubUserTestFixture.club1User2Manager;
 import static com.spaceclub.event.EventTestFixture.event1;
 import static com.spaceclub.event.EventTestFixture.event2;
 import static com.spaceclub.event.EventTestFixture.event3;
@@ -270,7 +270,7 @@ class ClubControllerTest {
     @WithMockUser
     public void 클럽_멤버_조회에_성공한다() throws Exception {
         // given
-        given(clubService.getMembers(any(Long.class))).willReturn(List.of(club1User1(), club1User2()));
+        given(clubService.getMembers(any(Long.class))).willReturn(List.of(club1User1Manager(), club1User2Manager()));
 
         // when
         ResultActions actions = mockMvc.perform(get("/api/v1/clubs/{clubId}/members", club1().getId()));

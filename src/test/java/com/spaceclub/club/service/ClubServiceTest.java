@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.spaceclub.club.ClubTestFixture.club1;
-import static com.spaceclub.club.ClubTestFixture.clubUser;
-import static com.spaceclub.user.UserTestFixture.user;
+import static com.spaceclub.club.ClubUserTestFixture.club1User1Manager;
+import static com.spaceclub.user.UserTestFixture.user1;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -40,7 +40,7 @@ class ClubServiceTest {
 
     private final ClubUserUpdate clubUserUpdate = ClubUserUpdate.builder()
             .clubId(club1().getId())
-            .memberId(user().getId())
+            .memberId(user1().getId())
             .role(ClubUserRole.MEMBER)
             .build();
 
@@ -95,8 +95,8 @@ class ClubServiceTest {
     void 클럽_멤버_권한_수정에_성공한다() {
         // given
         given(clubRepository.findById(club1().getId())).willReturn(Optional.of(club1()));
-        given(clubUserRepository.findByClub_IdAndUser_Id(any(Long.class), any(Long.class))).willReturn(Optional.ofNullable(clubUser()));
-        given(clubUserRepository.save(any(ClubUser.class))).willReturn(clubUser().updateRole(ClubUserRole.MEMBER));
+        given(clubUserRepository.findByClub_IdAndUser_Id(any(Long.class), any(Long.class))).willReturn(Optional.ofNullable(club1User1Manager()));
+        given(clubUserRepository.save(any(ClubUser.class))).willReturn(club1User1Manager().updateRole(ClubUserRole.MEMBER));
 
         // when, then
         assertThatNoException()

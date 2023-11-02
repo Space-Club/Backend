@@ -1,10 +1,6 @@
 package com.spaceclub.club;
 
 import com.spaceclub.club.domain.Club;
-import com.spaceclub.club.domain.ClubUser;
-import com.spaceclub.club.domain.ClubUserRole;
-
-import static com.spaceclub.user.UserTestFixture.user;
 
 public class ClubTestFixture {
 
@@ -25,14 +21,6 @@ public class ClubTestFixture {
                 .thumbnailUrl("클럽 이미지 URL")
                 .info("클럽 정보")
                 .owner("클럽 주인")
-                .build();
-    }
-
-    public static ClubUser clubUser() {
-        return ClubUser.builder()
-                .club(club1())
-                .user(user())
-                .role(ClubUserRole.MANAGER)
                 .build();
     }
 
