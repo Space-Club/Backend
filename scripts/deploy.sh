@@ -2,7 +2,7 @@
 
 source /home/ubuntu/action/scripts/properties.sh
 
-PROJECT_NAME=spring-cicd
+PROJECT_NAME=space-club-backend
 REPOSITORY=/home/ubuntu/action
 PACKAGE=$REPOSITORY/build/libs/
 JAR_NAME=$(ls -tr $PACKAGE | grep 'SNAPSHOT.jar' | tail -n 1)
