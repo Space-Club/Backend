@@ -27,4 +27,4 @@ fi
 echo "> 배포 - $JAR_PATH"
 chmod +x $JAR_PATH
 
-sudo nohup java -jar $JAR_PATH --spring.profiles.active=develop --jasypt.encryptor.password=${encrypt} > /dev/null 2>&1 &
+sudo nohup java -jar $JAR_PATH --spring.profiles.active=develop --jasypt.encryptor.password=${encrypt} > /home/ubuntu/log/nohup_log.out 2> /home/ubuntu/log/nohup_error.out &
