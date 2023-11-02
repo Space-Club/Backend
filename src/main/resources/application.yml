@@ -23,5 +23,5 @@ spring:
   config:
     activate:
       on-profile: local
-    import: local/application-local.yml, local/application-oauth.yml
+    import: local/application-local.yml
 

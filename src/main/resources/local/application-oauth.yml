@@ -1,7 +1,0 @@
-
-oauth:
-  kakao:
-    access:
-      client-id: ENC(1HPXzg0UKdo61X7AAZeCMZXT1/gU0rhRhDPO3XucG+9yI3uAxIewoZT/E1ybGvsT)
-      redirect-url: http://localhost:8080/api/v1/oauths/kakao/callback
-      client-secret: ENC(azg1Eb4DTVE7mvByLggSse6ZZGAseZKavbcdVHmux7Oob1fnk2+VlVvwdJB61VcJ)
