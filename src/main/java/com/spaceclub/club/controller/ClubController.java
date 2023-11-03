@@ -33,8 +33,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Collections.singletonMap;
-
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -117,7 +115,7 @@ public class ClubController {
     @PostMapping("/clubs/{clubId}/invite")
     public ResponseEntity<Map<String, String>> getInvitationCode(@PathVariable Long clubId) {
         return ResponseEntity.ok(
-                singletonMap("invitationCode",service.getInvitationCode(clubId))
+                Map.of("invitationCode", service.getInvitationCode(clubId))
         );
     }
 
