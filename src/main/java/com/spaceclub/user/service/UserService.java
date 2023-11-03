@@ -27,7 +27,7 @@ public class UserService {
         return eventUserRepository.findAllByUserId(userId, pageable);
     }
 
-    public String findEventStatus(Long userId, Event event){
+    public String findEventStatus(Long userId, Event event) {
         return eventUserRepository.findEventStatusByUserId(userId, event);
     }
 
