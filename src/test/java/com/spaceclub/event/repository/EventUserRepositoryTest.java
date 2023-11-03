@@ -6,7 +6,6 @@ import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventStatus;
 import com.spaceclub.event.domain.EventUser;
-import com.spaceclub.user.domain.Email;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.repository.UserRepository;
@@ -25,6 +24,7 @@ import java.util.List;
 import static com.spaceclub.event.EventTestFixture.event1;
 import static com.spaceclub.event.EventTestFixture.event2;
 import static com.spaceclub.event.EventTestFixture.event3;
+import static com.spaceclub.user.domain.Status.NOT_REGISTERED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -59,6 +59,7 @@ class EventUserRepositoryTest {
                 .name("name")
                 .phoneNumber("010-1234-5678")
                 .oauthId("1234")
+                .status(NOT_REGISTERED)
                 .provider(Provider.KAKAO)
                 .email("abc@naver.com")
                 .refreshToken("refreshToken")
