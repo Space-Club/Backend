@@ -1,6 +1,5 @@
 package com.spaceclub.user;
 
-import com.spaceclub.user.domain.Email;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
 
@@ -11,9 +10,9 @@ public class UserTestFixture {
                 .id(1L)
                 .nickname("멤버명")
                 .phoneNumber("010-1234-5678")
-                .oauthUserName("1234")
+                .oauthId("1234")
                 .provider(Provider.KAKAO)
-                .email(new Email("abc@naver.com"))
+                .email("abc@naver.com")
                 .refreshToken("refreshToken")
                 .image("www.image.com")
                 .build();
@@ -24,9 +23,9 @@ public class UserTestFixture {
                 .id(2L)
                 .nickname("멤버명")
                 .phoneNumber("010-1234-5678")
-                .oauthUserName("12345")
+                .oauthId("12345")
                 .provider(Provider.KAKAO)
-                .email(new Email("abc@naver.com"))
+                .email("abc@naver.com")
                 .refreshToken("refreshToken")
                 .image("www.image.com")
                 .build();
