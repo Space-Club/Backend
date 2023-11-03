@@ -3,12 +3,15 @@ package com.spaceclub.user.controller;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.dto.PageResponse;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import com.spaceclub.global.jwt.service.JwtService;
 =======
 import com.spaceclub.global.oauth.service.OAuthService;
 import com.spaceclub.global.oauth.service.vo.KakaoTokenInfo;
 import com.spaceclub.global.oauth.service.vo.KakaoUserInfo;
 >>>>>>> b03348a (feat: 카카오 OAuth 회원가입 기능 구현)
+=======
+>>>>>>> f23d245 (refactor: 리펙토링 사항 반영)
 import com.spaceclub.user.controller.dto.UserEventGetResponse;
 import com.spaceclub.user.controller.dto.UserLoginResponse;
 import com.spaceclub.user.domain.User;
@@ -34,7 +37,6 @@ public class UserController {
 
     private final UserService userService;
     private final JwtService jwtService;
-
 
     @GetMapping("/{userId}/events")
     public PageResponse<UserEventGetResponse, Event> getAllEvents(@PathVariable Long userId, Pageable pageable) {
