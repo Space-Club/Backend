@@ -33,3 +33,15 @@ include::{snippets}/event/getAll/http-response.adoc[]
 ===== Response Body
 include::{snippets}/event/getAll/response-fields.adoc[]
 :sectnums:
+
+=== 행사 상세 조회
+:sectnums!:
+==== Request
+include::{snippets}/event/get/http-request.adoc[]
+===== Path Parameter
+include::{snippets}/event/get/path-parameters.adoc[]
+==== Response
+include::{snippets}/event/get/http-response.adoc[]
+===== Response Body
+include::{snippets}/event/get/response-fields.adoc[]
+:sectnums:
