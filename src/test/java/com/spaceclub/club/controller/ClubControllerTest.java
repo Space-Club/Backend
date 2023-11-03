@@ -402,7 +402,7 @@ class ClubControllerTest {
                 .with(csrf()));
 
         // then
-        actions.andExpect(status().isOk())
+        actions.andExpect(status().isNoContent())
                 .andDo(print())
                 .andDo(document("club/join",
                         preprocessRequest(prettyPrint()),
