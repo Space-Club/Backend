@@ -16,6 +16,7 @@ import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.spaceclub.user.domain.Status.NOT_REGISTERED;
 import static jakarta.persistence.EnumType.STRING;
@@ -35,7 +36,10 @@ public class User {
     @Embedded
     private RequiredInfo requiredInfo = new RequiredInfo();
 
+<<<<<<< HEAD
     @Getter
+=======
+>>>>>>> 672ce18 (feat: User 객체 신규 회원 검증 로직 추가 및 테스트)
     @Enumerated(STRING)
     private Status status;
 

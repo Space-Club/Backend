@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
+import java.util.Optional;
+
 import static lombok.AccessLevel.PROTECTED;
 
 @Embeddable

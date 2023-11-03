@@ -3,7 +3,11 @@ package com.spaceclub.user;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
 
+<<<<<<< HEAD
 import static com.spaceclub.user.domain.Status.REGISTERED;
+=======
+import static com.spaceclub.user.domain.Status.*;
+>>>>>>> 672ce18 (feat: User 객체 신규 회원 검증 로직 추가 및 테스트)
 
 public class UserTestFixture {
 
