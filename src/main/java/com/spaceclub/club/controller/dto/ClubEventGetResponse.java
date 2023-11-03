@@ -17,7 +17,7 @@ public record ClubEventGetResponse(
         LocalTime startTime,
         String location,
         String clubName,
-        String clubImage,
+        String clubLogoImageUrl,
         String openStatus
 ) {
 
@@ -30,7 +30,7 @@ public record ClubEventGetResponse(
                 event.getStartTime(),
                 event.getLocation(),
                 event.getClubName(),
-                event.getClubImage(),
+                event.getClubLogoImageUrl(),
                 event.getCategory().equals(Category.CLUB) ? "CLUB" : "ALL"
         );
     }

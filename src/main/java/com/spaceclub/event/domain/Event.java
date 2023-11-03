@@ -122,8 +122,8 @@ public class Event extends BaseTimeEntity {
         return club.getName();
     }
 
-    public String getClubImage() {
-        return club.getThumbnailUrl();
+    public String getClubLogoImageUrl() {
+        return club.getLogoImageUrl();
     }
 
     public LocalDateTime getFormOpenDate() {

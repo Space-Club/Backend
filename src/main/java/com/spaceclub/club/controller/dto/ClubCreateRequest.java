@@ -21,13 +21,13 @@ public record ClubCreateRequest(
                 .build();
     }
 
-    public Club toEntity(String thumbnailUrl) {
+    public Club toEntity(String logoImageUrl) {
         return Club.builder()
                 .name(name)
                 .info(info)
                 .owner(owner)
                 .invitation(InvitationCreateRequest.toEntity())
-                .thumbnailUrl(thumbnailUrl)
+                .logoImageUrl(logoImageUrl)
                 .build();
     }
 

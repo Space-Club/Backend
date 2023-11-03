@@ -211,7 +211,7 @@ class EventControllerTest {
                                 fieldWithPath("data[].startTime").type(STRING).description("행사 시간"),
                                 fieldWithPath("data[].location").type(STRING).description("행사 위치"),
                                 fieldWithPath("data[].clubName").type(STRING).description("클럽 명"),
-                                fieldWithPath("data[].clubImage").type(STRING).description("클럽 이미지"),
+                                fieldWithPath("data[].clubLogoImageUrl").type(STRING).description("클럽 로그 이미지 Url"),
                                 fieldWithPath("pageData").type(OBJECT).description("페이지 정보"),
                                 fieldWithPath("pageData.first").type(BOOLEAN).description("첫 페이지 여부"),
                                 fieldWithPath("pageData.last").type(BOOLEAN).description("마지막 페이지 여부"),
@@ -278,7 +278,7 @@ class EventControllerTest {
                                 fieldWithPath("startTime").type(STRING).description("행사 시작 시각"),
                                 fieldWithPath("location").type(STRING).description("행사 위치"),
                                 fieldWithPath("clubName").type(STRING).description("행사 주최 클럽 이름"),
-                                fieldWithPath("clubImage").type(STRING).description("행사 주최 클럽 이미지"),
+                                fieldWithPath("clubLogoImageUrl").type(STRING).description("행사 주최 클럽 로고 이미지 Url"),
                                 fieldWithPath("formOpenDateTime").type(STRING).description("행사 참여 신청 시작 날짜와 시간"),
                                 fieldWithPath("formCloseDateTime").type(STRING).description("행사 참여 신청 종료 날짜와 시간")
                         )));

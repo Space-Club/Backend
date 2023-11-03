@@ -48,7 +48,7 @@ class EventUserRepositoryTest {
         Club club = Club.builder()
                 .id(1L)
                 .name("클럽 명")
-                .thumbnailUrl("클럽 썸네일 이미지 URL")
+                .logoImageUrl("클럽 썸네일 이미지 URL")
                 .info("클럽 정보")
                 .owner("클럽 주인")
                 .build();

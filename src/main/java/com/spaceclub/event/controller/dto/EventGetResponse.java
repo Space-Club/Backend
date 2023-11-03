@@ -13,7 +13,7 @@ public record EventGetResponse(
         LocalTime startTime,
         String location,
         String clubName,
-        String clubImage
+        String clubLogoImageUrl
 ) {
 
     public static EventGetResponse from(Event event) {
@@ -25,7 +25,7 @@ public record EventGetResponse(
                 event.getEventInfo().getStartDate().toLocalTime(),
                 event.getEventInfo().getLocation(),
                 event.getClub().getName(),
-                event.getClub().getThumbnailUrl()
+                event.getClub().getLogoImageUrl()
         );
     }
 

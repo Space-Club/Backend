@@ -15,7 +15,7 @@ public record EventDetailGetResponse(
         LocalTime startTime,
         String location,
         String clubName,
-        String clubImage,
+        String clubLogoImageUrl,
         LocalDateTime formOpenDateTime,
         LocalDateTime formCloseDateTime
 ) {
@@ -33,7 +33,7 @@ public record EventDetailGetResponse(
                 .startTime(event.getStartTime())
                 .location(event.getLocation())
                 .clubName(event.getClubName())
-                .clubImage(event.getClubImage())
+                .clubLogoImageUrl(event.getClubLogoImageUrl())
                 .formOpenDateTime(event.getFormOpenDate())
                 .formCloseDateTime(event.getFormCloseDate())
                 .build();
