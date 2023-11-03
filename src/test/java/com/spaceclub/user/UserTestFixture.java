@@ -8,7 +8,7 @@ public class UserTestFixture {
     public static User user1() {
         return User.builder()
                 .id(1L)
-                .nickname("멤버명")
+                .name("멤버명")
                 .phoneNumber("010-1234-5678")
                 .oauthId("1234")
                 .provider(Provider.KAKAO)
@@ -21,7 +21,7 @@ public class UserTestFixture {
     public static User user2() {
         return User.builder()
                 .id(2L)
-                .nickname("멤버명")
+                .name("멤버명")
                 .phoneNumber("010-1234-5678")
                 .oauthId("12345")
                 .provider(Provider.KAKAO)

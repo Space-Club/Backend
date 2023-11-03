@@ -55,7 +55,7 @@ public class User {
     @Builder
     private User(
             Long id,
-            String nickname,
+            String name,
             String phoneNumber,
             String oauthId,
             Provider provider,
@@ -64,7 +64,7 @@ public class User {
             String profileImageUrl
     ) {
         this.id = id;
-        this.requiredInfo = new RequiredInfo(nickname, new PhoneNumber(phoneNumber));
+        this.requiredInfo = new RequiredInfo(name, new PhoneNumber(phoneNumber));
         this.oauthUserName = generateOauthUsername(oauthId, provider);
         this.provider = provider;
         this.email = new Email(email);
@@ -73,7 +73,7 @@ public class User {
     }
 
     public String getName() {
-        return requiredInfo.getNickname();
+        return requiredInfo.getName();
     }
 
     private String generateOauthUsername(String oauthId, Provider provider) {

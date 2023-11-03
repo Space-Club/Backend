@@ -56,7 +56,7 @@ class EventUserRepositoryTest {
 
         User user = User.builder()
                 .id(1L)
-                .nickname("nickname1")
+                .name("name")
                 .phoneNumber("010-1234-5678")
                 .oauthId("1234")
                 .provider(Provider.KAKAO)
