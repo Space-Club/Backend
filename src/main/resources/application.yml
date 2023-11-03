@@ -16,7 +16,7 @@ spring:
   config:
     activate:
       on-profile: develop
-    import: develop/application-develop.yml
+    import: develop/application-develop.yml, local/application-oauth.yml
 
 ---
 spring:
