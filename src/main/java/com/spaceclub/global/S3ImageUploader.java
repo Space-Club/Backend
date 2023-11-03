@@ -29,7 +29,7 @@ public class S3ImageUploader {
     @Value("${s3.bucket.club-name}")
     private String clubS3BucketName;
 
-    public String uploadImage(MultipartFile posterImage) throws IOException {
+    public String uploadPosterImage(MultipartFile posterImage) throws IOException {
         String newFileName = createFileName(posterImage.getOriginalFilename());
 
         ObjectMetadata objectMetaData = new ObjectMetadata();

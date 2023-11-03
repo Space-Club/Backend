@@ -1,6 +1,5 @@
 package com.spaceclub.club.controller.dto;
 
-import com.spaceclub.club.InvitationCodeGenerator;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.Invitation;
 

@@ -37,7 +37,7 @@ public class EventController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> create(@RequestPart EventCreateRequest request, @RequestPart MultipartFile posterImage) throws IOException {
-        String posterImageUrl = uploader.uploadImage(posterImage);
+        String posterImageUrl = uploader.uploadPosterImage(posterImage);
         Long eventId = eventService.create(request.toEntity(posterImageUrl), request.clubId());
 
         return ResponseEntity.created(URI.create("/api/v1/events/" + eventId)).build();

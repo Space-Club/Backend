@@ -293,7 +293,7 @@ class ClubControllerTest {
                                 fieldWithPath("[]").type(ARRAY).description("멤버 리스트"),
                                 fieldWithPath("[].id").type(NUMBER).description("멤버 아이디"),
                                 fieldWithPath("[].name").type(STRING).description("멤버 이름"),
-                                fieldWithPath("[].image").type(STRING).description("멤버 이미지"),
+                                fieldWithPath("[].profileImageUrl").type(STRING).description("멤버 이미지 Url"),
                                 fieldWithPath("[].role").type(STRING).description("멤버 권한")
 
                         )

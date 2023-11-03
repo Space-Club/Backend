@@ -119,7 +119,7 @@ class EventControllerTest {
         );
 
         final String posterImageUrl = "image.jpeg";
-        given(uploader.uploadImage(any(MultipartFile.class))).willReturn(posterImageUrl);
+        given(uploader.uploadPosterImage(any(MultipartFile.class))).willReturn(posterImageUrl);
         given(eventService.create(any(Event.class), any(Long.class))).willReturn(1L);
 
         // when
