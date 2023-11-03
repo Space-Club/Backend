@@ -93,7 +93,7 @@ class UserControllerTest {
                                         fieldWithPath("data[].title").type(STRING).description("이벤트 제목"),
                                         fieldWithPath("data[].location").type(STRING).description("이벤트 위치"),
                                         fieldWithPath("data[].clubName").type(STRING).description("이벤트 주최자"),
-                                        fieldWithPath("data[].poster").type(STRING).description("포스터 URL"),
+                                        fieldWithPath("data[].posterImageUrl").type(STRING).description("포스터 URL"),
                                         fieldWithPath("data[].startDate").type(STRING).description("이벤트 시작일"),
                                         fieldWithPath("data[].status").type(STRING).description("이벤트 상태"),
                                         fieldWithPath("pageData").type(OBJECT).description("페이지 정보"),

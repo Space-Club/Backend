@@ -98,8 +98,8 @@ public class Event extends BaseTimeEntity {
         return eventInfo.getTitle();
     }
 
-    public String getPoster() {
-        return eventInfo.getPoster();
+    public String getPosterImageUrl() {
+        return eventInfo.getPosterImageUrl();
     }
 
     public LocalDate getStartDate() {

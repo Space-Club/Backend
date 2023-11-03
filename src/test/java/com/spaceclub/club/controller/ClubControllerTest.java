@@ -253,7 +253,7 @@ class ClubControllerTest {
                                 fieldWithPath("data").type(ARRAY).description("페이지 내 행사 정보"),
                                 fieldWithPath("data[].id").type(NUMBER).description("행사 아이디"),
                                 fieldWithPath("data[].title").type(STRING).description("행사 제목"),
-                                fieldWithPath("data[].poster").type(STRING).description("포스터 URL"),
+                                fieldWithPath("data[].posterImageUrl").type(STRING).description("포스터 URL"),
                                 fieldWithPath("data[].location").type(STRING).description("행사 위치"),
                                 fieldWithPath("data[].startDate").type(STRING).description("행사 날짜"),
                                 fieldWithPath("data[].startTime").type(STRING).description("행사 시간"),

@@ -20,7 +20,7 @@ public class EventTestFixture {
                 .startDate(LocalDateTime.of(2023, 9, 21, 12, 30, 30))
                 .location("위치")
                 .capacity(100)
-                .poster("www.aaa.com")
+                .posterImageUrl("www.aaa.com")
                 .build();
     }
 

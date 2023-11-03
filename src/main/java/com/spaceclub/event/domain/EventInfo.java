@@ -29,16 +29,16 @@ public class EventInfo {
     private int capacity;
 
     @Getter
-    private String poster;
+    private String posterImageUrl;
 
     @Builder
-    private EventInfo(String title, String content, LocalDateTime startDate, String location, int capacity, String poster) {
+    private EventInfo(String title, String content, LocalDateTime startDate, String location, int capacity, String posterImageUrl) {
         this.title = title;
         this.content = content;
         this.startDate = startDate;
         this.location = location;
         this.capacity = capacity;
-        this.poster = poster;
+        this.posterImageUrl = posterImageUrl;
     }
 
 }

@@ -12,7 +12,7 @@ import java.time.LocalTime;
 public record ClubEventGetResponse(
         Long id,
         String title,
-        String poster,
+        String posterImageUrl,
         LocalDate startDate,
         LocalTime startTime,
         String location,
@@ -25,7 +25,7 @@ public record ClubEventGetResponse(
         return new ClubEventGetResponse(
                 event.getId(),
                 event.getTitle(),
-                event.getPoster(),
+                event.getPosterImageUrl(),
                 event.getStartDate(),
                 event.getStartTime(),
                 event.getLocation(),

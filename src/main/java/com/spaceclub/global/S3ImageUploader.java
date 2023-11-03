@@ -29,20 +29,20 @@ public class S3ImageUploader {
     @Value("${s3.bucket.club-name}")
     private String clubS3BucketName;
 
-    public String uploadImage(MultipartFile poster) throws IOException {
-        String newFileName = createFileName(poster.getOriginalFilename());
+    public String uploadImage(MultipartFile posterImage) throws IOException {
+        String newFileName = createFileName(posterImage.getOriginalFilename());
 
         ObjectMetadata objectMetaData = new ObjectMetadata();
 
-        objectMetaData.setContentType(poster.getContentType());
-        objectMetaData.setContentLength(poster.getSize());
+        objectMetaData.setContentType(posterImage.getContentType());
+        objectMetaData.setContentLength(posterImage.getSize());
 
         amazonS3Client.putObject(
-                new PutObjectRequest(s3BucketName, newFileName, poster.getInputStream(), objectMetaData)
+                new PutObjectRequest(s3BucketName, newFileName, posterImage.getInputStream(), objectMetaData)
                         .withCannedAcl(CannedAccessControlList.PublicRead)
         );
 
-        return getSavedFileName(poster);
+        return getSavedFileName(posterImage);
     }
 
     public String uploadClubLogoImage(MultipartFile logoImage) throws IOException {
@@ -61,8 +61,8 @@ public class S3ImageUploader {
         return getSavedFileName(logoImage);
     }
 
-    private String getSavedFileName(MultipartFile poster) {
-        String fullImageUrl = amazonS3Client.getUrl(s3BucketName, poster.getOriginalFilename()).toString();
+    private String getSavedFileName(MultipartFile posterImage) {
+        String fullImageUrl = amazonS3Client.getUrl(s3BucketName, posterImage.getOriginalFilename()).toString();
         String[] parts = fullImageUrl.split(SLASH);
 
         return parts[parts.length - 1];

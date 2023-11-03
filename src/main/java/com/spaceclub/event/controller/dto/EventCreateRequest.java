@@ -19,10 +19,10 @@ public record EventCreateRequest(
         FormInfoRequest formInfo
 ) {
 
-    public Event toEntity(String posterUrl) {
+    public Event toEntity(String posterImageUrl) {
         return Event.builder()
                 .category(category)
-                .eventInfo(eventInfo.toEntity(posterUrl))
+                .eventInfo(eventInfo.toEntity(posterImageUrl))
                 .ticketInfo(ticketInfo.toEntity())
                 .bankInfo(bankInfo.toEntity())
                 .formInfo(formInfo.toEntity())
@@ -82,14 +82,14 @@ public record EventCreateRequest(
             int capacity
     ) {
 
-        public EventInfo toEntity(String posterUrl) {
+        public EventInfo toEntity(String posterImageUrl) {
             return EventInfo.builder()
                     .title(title)
                     .content(content)
                     .startDate(startDate.atTime(startTime))
                     .location(location)
                     .capacity(capacity)
-                    .poster(posterUrl)
+                    .posterImageUrl(posterImageUrl)
                     .build();
         }
 

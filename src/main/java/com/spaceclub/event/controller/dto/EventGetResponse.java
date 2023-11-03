@@ -8,7 +8,7 @@ import java.time.LocalTime;
 public record EventGetResponse(
         Long id,
         String title,
-        String poster,
+        String posterImageUrl,
         LocalDate startDate,
         LocalTime startTime,
         String location,
@@ -20,7 +20,7 @@ public record EventGetResponse(
         return new EventGetResponse(
                 event.getId(),
                 event.getEventInfo().getTitle(),
-                event.getEventInfo().getPoster(),
+                event.getEventInfo().getPosterImageUrl(),
                 event.getEventInfo().getStartDate().toLocalDate(),
                 event.getEventInfo().getStartDate().toLocalTime(),
                 event.getEventInfo().getLocation(),
