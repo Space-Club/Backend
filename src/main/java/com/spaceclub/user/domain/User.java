@@ -47,7 +47,7 @@ public class User {
 
     @Lob
     @Getter
-    private String image;
+    private String profileImageUrl;
 
     @OneToMany(mappedBy = "user")
     private List<EventUser> events = new ArrayList<>();
@@ -55,25 +55,25 @@ public class User {
     @Builder
     private User(
             Long id,
-            String nickname,
+            String name,
             String phoneNumber,
             String oauthId,
             Provider provider,
             String email,
             String refreshToken,
-            String image
+            String profileImageUrl
     ) {
         this.id = id;
-        this.requiredInfo = new RequiredInfo(nickname, new PhoneNumber(phoneNumber));
+        this.requiredInfo = new RequiredInfo(name, new PhoneNumber(phoneNumber));
         this.oauthUserName = generateOauthUsername(oauthId, provider);
         this.provider = provider;
         this.email = new Email(email);
         this.refreshToken = refreshToken;
-        this.image = image;
+        this.profileImageUrl = profileImageUrl;
     }
 
     public String getName() {
-        return requiredInfo.getNickname();
+        return requiredInfo.getName();
     }
 
     private String generateOauthUsername(String oauthId, Provider provider) {

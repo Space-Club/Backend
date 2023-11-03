@@ -1,6 +1,5 @@
 package com.spaceclub.event.repository;
 
-import com.spaceclub.event.domain.Category;
 import com.spaceclub.event.domain.Event;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -7,7 +7,7 @@ public record UserEventGetResponse(
         String title,
         String location,
         String clubName,
-        String poster,
+        String posterImageUrl,
         String startDate,
         String status
 ) {
@@ -18,7 +18,7 @@ public record UserEventGetResponse(
                 event.getEventInfo().getTitle(),
                 event.getEventInfo().getLocation(),
                 event.getClub().getName(),
-                event.getEventInfo().getPoster(),
+                event.getEventInfo().getPosterImageUrl(),
                 event.getEventInfo().getStartDate().toLocalDate().toString(),
                 eventStatus
         );

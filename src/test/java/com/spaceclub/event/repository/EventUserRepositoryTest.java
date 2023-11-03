@@ -48,7 +48,7 @@ class EventUserRepositoryTest {
         Club club = Club.builder()
                 .id(1L)
                 .name("클럽 명")
-                .thumbnailUrl("클럽 썸네일 이미지 URL")
+                .logoImageUrl("클럽 썸네일 이미지 URL")
                 .info("클럽 정보")
                 .owner("클럽 주인")
                 .build();
@@ -56,7 +56,7 @@ class EventUserRepositoryTest {
 
         User user = User.builder()
                 .id(1L)
-                .nickname("nickname1")
+                .name("name")
                 .phoneNumber("010-1234-5678")
                 .oauthId("1234")
                 .provider(Provider.KAKAO)

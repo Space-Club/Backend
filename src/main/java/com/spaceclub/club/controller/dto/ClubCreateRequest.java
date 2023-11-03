@@ -1,6 +1,5 @@
 package com.spaceclub.club.controller.dto;
 
-import com.spaceclub.club.InvitationCodeGenerator;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.Invitation;
 
@@ -21,13 +20,13 @@ public record ClubCreateRequest(
                 .build();
     }
 
-    public Club toEntity(String thumbnailUrl) {
+    public Club toEntity(String logoImageUrl) {
         return Club.builder()
                 .name(name)
                 .info(info)
                 .owner(owner)
                 .invitation(InvitationCreateRequest.toEntity())
-                .thumbnailUrl(thumbnailUrl)
+                .logoImageUrl(logoImageUrl)
                 .build();
     }
 

@@ -8,24 +8,24 @@ import java.time.LocalTime;
 public record EventGetResponse(
         Long id,
         String title,
-        String poster,
+        String posterImageUrl,
         LocalDate startDate,
         LocalTime startTime,
         String location,
         String clubName,
-        String clubImage
+        String clubLogoImageUrl
 ) {
 
     public static EventGetResponse from(Event event) {
         return new EventGetResponse(
                 event.getId(),
                 event.getEventInfo().getTitle(),
-                event.getEventInfo().getPoster(),
+                event.getEventInfo().getPosterImageUrl(),
                 event.getEventInfo().getStartDate().toLocalDate(),
                 event.getEventInfo().getStartDate().toLocalTime(),
                 event.getEventInfo().getLocation(),
                 event.getClub().getName(),
-                event.getClub().getThumbnailUrl()
+                event.getClub().getLogoImageUrl()
         );
     }
 

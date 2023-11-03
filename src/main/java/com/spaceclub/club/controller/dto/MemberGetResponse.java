@@ -7,15 +7,15 @@ import lombok.Builder;
 public record MemberGetResponse(
         Long id,
         String name,
-        String image,
+        String profileImageUrl,
         ClubUserRole role
 ) {
 
     @Builder
-    public MemberGetResponse(Long id, String name, String image, ClubUserRole role) {
+    public MemberGetResponse(Long id, String name, String profileImageUrl, ClubUserRole role) {
         this.id = id;
         this.name = name;
-        this.image = image;
+        this.profileImageUrl = profileImageUrl;
         this.role = role;
     }
 
@@ -24,7 +24,7 @@ public record MemberGetResponse(
         return MemberGetResponse.builder()
                 .id(clubUser.getUserId())
                 .name(clubUser.getName())
-                .image(clubUser.getImage())
+                .profileImageUrl(clubUser.getProfileImageUrl())
                 .role(clubUser.getRole())
                 .build();
     }

@@ -39,7 +39,7 @@ public class Club extends BaseTimeEntity {
 
     @Lob
     @Getter
-    private String thumbnailUrl;
+    private String logoImageUrl;
 
     @Lob
     @Getter
@@ -64,7 +64,7 @@ public class Club extends BaseTimeEntity {
     }
 
     @Builder
-    public Club(Long id, String name, String thumbnailUrl, String info, String owner, Invitation invitation, List<ClubNotice> notices) {
+    public Club(Long id, String name, String logoImageUrl, String info, String owner, Invitation invitation, List<ClubNotice> notices) {
         Assert.notNull(name, "이름에 null 값이 올 수 없습니다");
         Assert.hasText(name, "이름이 빈 값일 수 없습니다");
         Assert.isTrue(validateNameLength(name), "이름의 길이는 12글자를 넘을 수 없습니다");
@@ -72,7 +72,7 @@ public class Club extends BaseTimeEntity {
 
         this.id = id;
         this.name = name;
-        this.thumbnailUrl = thumbnailUrl;
+        this.logoImageUrl = logoImageUrl;
         this.info = info;
         this.owner = owner;
         this.invitation = invitation;

@@ -101,7 +101,7 @@ class ClubControllerTest {
                         .name("연사모")
                         .info("연어를 사랑하는 모임")
                         .owner("연어대장")
-                        .thumbnailUrl("연어.jpg")
+                        .logoImageUrl("연어.jpg")
                         .build());
 
         ClubCreateRequest clubCreateRequest = new ClubCreateRequest(
@@ -110,9 +110,9 @@ class ClubControllerTest {
                 "연어대장"
         );
 
-        MockMultipartFile thumbnail = new MockMultipartFile(
-                "thumbnail",
-                "thumbnail.jpg",
+        MockMultipartFile logoImage = new MockMultipartFile(
+                "logoImage",
+                "logoImage.jpg",
                 MediaType.IMAGE_JPEG_VALUE,
                 "<<jpeg data>>".getBytes()
         );
@@ -128,7 +128,7 @@ class ClubControllerTest {
         // when
         ResultActions result = this.mockMvc.perform(multipart("/api/v1/clubs")
                 .file(request)
-                .file(thumbnail)
+                .file(logoImage)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8)
@@ -144,7 +144,7 @@ class ClubControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestParts(
                                 partWithName("request").description("클럽 생성 요청 DTO"),
-                                partWithName("thumbnail").description("클럽 썸네일 이미지")
+                                partWithName("logoImage").description("클럽 썸네일 이미지")
                         ),
                         requestPartFields(
                                 "request",
@@ -166,7 +166,7 @@ class ClubControllerTest {
                 Club.builder()
                         .name("연사모")
                         .info("이곳은 연사모입니다")
-                        .thumbnailUrl("연어.png")
+                        .logoImageUrl("연어.png")
                         .owner("연어대장")
                         .notices(List.of(new ClubNotice("연사모의 공지사항1")))
                         .build()
@@ -253,13 +253,13 @@ class ClubControllerTest {
                                 fieldWithPath("data").type(ARRAY).description("페이지 내 행사 정보"),
                                 fieldWithPath("data[].id").type(NUMBER).description("행사 아이디"),
                                 fieldWithPath("data[].title").type(STRING).description("행사 제목"),
-                                fieldWithPath("data[].poster").type(STRING).description("포스터 URL"),
+                                fieldWithPath("data[].posterImageUrl").type(STRING).description("포스터 URL"),
                                 fieldWithPath("data[].location").type(STRING).description("행사 위치"),
                                 fieldWithPath("data[].startDate").type(STRING).description("행사 날짜"),
                                 fieldWithPath("data[].startTime").type(STRING).description("행사 시간"),
                                 fieldWithPath("data[].location").type(STRING).description("행사 위치"),
                                 fieldWithPath("data[].clubName").type(STRING).description("클럽 명"),
-                                fieldWithPath("data[].clubImage").type(STRING).description("클럽 이미지"),
+                                fieldWithPath("data[].clubLogoImageUrl").type(STRING).description("클럽 로고 이미지 Url"),
                                 fieldWithPath("data[].openStatus").type(STRING).description("행사 공개 상태"),
                                 fieldWithPath("pageData").type(OBJECT).description("페이지 정보"),
                                 fieldWithPath("pageData.first").type(BOOLEAN).description("첫 페이지 여부"),
@@ -293,7 +293,7 @@ class ClubControllerTest {
                                 fieldWithPath("[]").type(ARRAY).description("멤버 리스트"),
                                 fieldWithPath("[].id").type(NUMBER).description("멤버 아이디"),
                                 fieldWithPath("[].name").type(STRING).description("멤버 이름"),
-                                fieldWithPath("[].image").type(STRING).description("멤버 이미지"),
+                                fieldWithPath("[].profileImageUrl").type(STRING).description("멤버 이미지 Url"),
                                 fieldWithPath("[].role").type(STRING).description("멤버 권한")
 
                         )

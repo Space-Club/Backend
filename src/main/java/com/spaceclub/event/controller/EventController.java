@@ -36,9 +36,9 @@ public class EventController {
     private final S3ImageUploader uploader;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> create(@RequestPart EventCreateRequest request, @RequestPart MultipartFile poster) throws IOException {
-        String fileName = uploader.uploadImage(poster);
-        Long eventId = eventService.create(request.toEntity(fileName), request.clubId());
+    public ResponseEntity<String> create(@RequestPart EventCreateRequest request, @RequestPart MultipartFile posterImage) throws IOException {
+        String posterImageUrl = uploader.uploadPosterImage(posterImage);
+        Long eventId = eventService.create(request.toEntity(posterImageUrl), request.clubId());
 
         return ResponseEntity.created(URI.create("/api/v1/events/" + eventId)).build();
     }

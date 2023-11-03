@@ -105,8 +105,8 @@ class EventControllerTest {
     @WithMockUser
     public void 행사_생성에_성공한다() throws Exception {
         // given
-        MockMultipartFile poster = new MockMultipartFile(
-                "poster",
+        MockMultipartFile posterImage = new MockMultipartFile(
+                "posterImage",
                 "image.png",
                 MediaType.IMAGE_JPEG_VALUE,
                 "<<jpeg data>>".getBytes());
@@ -118,13 +118,13 @@ class EventControllerTest {
                 mapper.writeValueAsBytes(eventCreateRequest)
         );
 
-        final String posterUrl = "image.jpeg";
-        given(uploader.uploadImage(any(MultipartFile.class))).willReturn(posterUrl);
+        final String posterImageUrl = "image.jpeg";
+        given(uploader.uploadPosterImage(any(MultipartFile.class))).willReturn(posterImageUrl);
         given(eventService.create(any(Event.class), any(Long.class))).willReturn(1L);
 
         // when
         ResultActions actions = mvc.perform(multipart("/api/v1/events")
-                .file(poster)
+                .file(posterImage)
                 .file(request)
                 .with(csrf())
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -140,7 +140,7 @@ class EventControllerTest {
                         requestParts(
                                 partWithName("request").description("행사 생성 관련 정보")
                                         .attributes(key("content-type").value(MediaType.APPLICATION_JSON_VALUE)),
-                                partWithName("poster").description("포스터 사진")
+                                partWithName("posterImage").description("포스터 사진")
                                         .attributes(key("content-type").value(MediaType.IMAGE_JPEG_VALUE))
                         ),
                         requestPartFields("request",
@@ -205,13 +205,13 @@ class EventControllerTest {
                                 fieldWithPath("data").type(ARRAY).description("페이지 내 행사 정보"),
                                 fieldWithPath("data[].id").type(NUMBER).description("행사 아이디"),
                                 fieldWithPath("data[].title").type(STRING).description("행사 제목"),
-                                fieldWithPath("data[].poster").type(STRING).description("포스터 URL"),
+                                fieldWithPath("data[].posterImageUrl").type(STRING).description("포스터 URL"),
                                 fieldWithPath("data[].location").type(STRING).description("행사 위치"),
                                 fieldWithPath("data[].startDate").type(STRING).description("행사 날짜"),
                                 fieldWithPath("data[].startTime").type(STRING).description("행사 시간"),
                                 fieldWithPath("data[].location").type(STRING).description("행사 위치"),
                                 fieldWithPath("data[].clubName").type(STRING).description("클럽 명"),
-                                fieldWithPath("data[].clubImage").type(STRING).description("클럽 이미지"),
+                                fieldWithPath("data[].clubLogoImageUrl").type(STRING).description("클럽 로그 이미지 Url"),
                                 fieldWithPath("pageData").type(OBJECT).description("페이지 정보"),
                                 fieldWithPath("pageData.first").type(BOOLEAN).description("첫 페이지 여부"),
                                 fieldWithPath("pageData.last").type(BOOLEAN).description("마지막 페이지 여부"),
@@ -273,12 +273,12 @@ class EventControllerTest {
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
                                 fieldWithPath("title").type(STRING).description("행사 제목"),
-                                fieldWithPath("poster").type(STRING).description("행사 포스터 URL"),
+                                fieldWithPath("posterImageUrl").type(STRING).description("행사 포스터 URL"),
                                 fieldWithPath("startDate").type(STRING).description("행사 시작 날짜"),
                                 fieldWithPath("startTime").type(STRING).description("행사 시작 시각"),
                                 fieldWithPath("location").type(STRING).description("행사 위치"),
                                 fieldWithPath("clubName").type(STRING).description("행사 주최 클럽 이름"),
-                                fieldWithPath("clubImage").type(STRING).description("행사 주최 클럽 이미지"),
+                                fieldWithPath("clubLogoImageUrl").type(STRING).description("행사 주최 클럽 로고 이미지 Url"),
                                 fieldWithPath("formOpenDateTime").type(STRING).description("행사 참여 신청 시작 날짜와 시간"),
                                 fieldWithPath("formCloseDateTime").type(STRING).description("행사 참여 신청 종료 날짜와 시간")
                         )));

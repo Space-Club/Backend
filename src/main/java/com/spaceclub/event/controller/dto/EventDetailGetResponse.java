@@ -10,12 +10,12 @@ import java.time.LocalTime;
 public record EventDetailGetResponse(
         Long id,
         String title,
-        String poster,
+        String posterImageUrl,
         LocalDate startDate,
         LocalTime startTime,
         String location,
         String clubName,
-        String clubImage,
+        String clubLogoImageUrl,
         LocalDateTime formOpenDateTime,
         LocalDateTime formCloseDateTime
 ) {
@@ -28,12 +28,12 @@ public record EventDetailGetResponse(
         return EventDetailGetResponse.builder()
                 .id(event.getId())
                 .title(event.getTitle())
-                .poster(event.getPoster())
+                .posterImageUrl(event.getPosterImageUrl())
                 .startDate(event.getStartDate())
                 .startTime(event.getStartTime())
                 .location(event.getLocation())
                 .clubName(event.getClubName())
-                .clubImage(event.getClubImage())
+                .clubLogoImageUrl(event.getClubLogoImageUrl())
                 .formOpenDateTime(event.getFormOpenDate())
                 .formCloseDateTime(event.getFormCloseDate())
                 .build();
