@@ -435,10 +435,10 @@ class ClubControllerTest {
                                 parameterWithName("userId").description("유저 ID")
                         ),
                         responseFields(
-                                fieldWithPath("[]").type(ARRAY).description("멤버 리스트"),
-                                fieldWithPath("[].id").type(NUMBER).description("멤버 아이디"),
-                                fieldWithPath("[].image").type(STRING).description("멤버 이미지"),
-                                fieldWithPath("[].name").type(STRING).description("멤버 이름")
+                                fieldWithPath("[]").type(ARRAY).description("클럽"),
+                                fieldWithPath("[].id").type(NUMBER).description("클럽 아이디"),
+                                fieldWithPath("[].logoImageUrl").type(STRING).description("클럽 이미지 Url"),
+                                fieldWithPath("[].name").type(STRING).description("클럽 이름")
                         )
                 ));
     }

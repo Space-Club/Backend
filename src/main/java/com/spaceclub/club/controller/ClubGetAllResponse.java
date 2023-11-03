@@ -3,19 +3,19 @@ package com.spaceclub.club.controller;
 import com.spaceclub.club.domain.Club;
 import lombok.Builder;
 
-public record ClubGetAllResponse(Long id, String image, String name) {
+public record ClubGetAllResponse(Long id, String logoImageUrl, String name) {
 
     @Builder
-    public ClubGetAllResponse(Long id, String image, String name) {
+    public ClubGetAllResponse(Long id, String logoImageUrl, String name) {
         this.id = id;
-        this.image = image;
+        this.logoImageUrl = logoImageUrl;
         this.name = name;
     }
 
     public static ClubGetAllResponse from(Club club) {
         return ClubGetAllResponse.builder()
                 .id(club.getId())
-                .image(club.getThumbnailUrl())
+                .logoImageUrl(club.getLogoImageUrl())
                 .name(club.getName())
                 .build();
     }
