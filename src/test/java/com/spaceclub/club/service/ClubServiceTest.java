@@ -148,4 +148,16 @@ class ClubServiceTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
+    @Test
+    void 모든_클럽_조회에_성공한다() {
+        // given
+        given(clubUserRepository.findByUser_Id(user1().getId())).willReturn(List.of(club1User1Manager()));
+
+        // when
+        List<Club> clubs = clubService.getAllClubs(user1().getId());
+
+        // then
+        assertThat(clubs).usingRecursiveComparison().isEqualTo(List.of(club1()));
+    }
+
 }

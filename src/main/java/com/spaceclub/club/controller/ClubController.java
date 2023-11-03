@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -122,6 +123,17 @@ public class ClubController {
     @PostMapping("/clubs/{clubId}/invite/{uuid}")
     public ResponseEntity<Void> joinClub(@PathVariable Long clubId, @PathVariable String uuid) {
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/clubs/all/{userId}")
+    public ResponseEntity<List<ClubGetAllResponse>> getAllClubs(@PathVariable Long userId) {
+        List<Club> clubs = service.getAllClubs(userId);
+
+        List<ClubGetAllResponse> clubResponses = clubs.stream()
+                .map(ClubGetAllResponse::from)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(clubResponses);
     }
 
 }

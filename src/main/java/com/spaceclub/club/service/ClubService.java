@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -95,6 +96,14 @@ public class ClubService {
         }
 
         return invitationCode;
+    }
+
+    public List<Club> getAllClubs(Long userId) {
+        List<ClubUser> clubUsers = clubUserRepository.findByUser_Id(userId);
+
+        return clubUsers.stream()
+                .map(ClubUser::getClub)
+                .collect(Collectors.toList());
     }
 
 }
