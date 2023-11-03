@@ -14,7 +14,7 @@ public class UserTestFixture {
                 .provider(Provider.KAKAO)
                 .email("abc@naver.com")
                 .refreshToken("refreshToken")
-                .image("www.image.com")
+                .profileImageUrl("www.image.com")
                 .build();
     }
 
@@ -27,7 +27,7 @@ public class UserTestFixture {
                 .provider(Provider.KAKAO)
                 .email("abc@naver.com")
                 .refreshToken("refreshToken")
-                .image("www.image.com")
+                .profileImageUrl("www.image.com")
                 .build();
     }
 

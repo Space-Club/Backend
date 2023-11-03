@@ -67,8 +67,8 @@ public class ClubUser extends BaseTimeEntity {
         return user.getName();
     }
 
-    public String getImage() {
-        return user.getImage();
+    public String getProfileImageUrl() {
+        return user.getProfileImageUrl();
     }
 
 }

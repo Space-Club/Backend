@@ -47,7 +47,7 @@ public class User {
 
     @Lob
     @Getter
-    private String image;
+    private String profileImageUrl;
 
     @OneToMany(mappedBy = "user")
     private List<EventUser> events = new ArrayList<>();
@@ -61,7 +61,7 @@ public class User {
             Provider provider,
             String email,
             String refreshToken,
-            String image
+            String profileImageUrl
     ) {
         this.id = id;
         this.requiredInfo = new RequiredInfo(nickname, new PhoneNumber(phoneNumber));
@@ -69,7 +69,7 @@ public class User {
         this.provider = provider;
         this.email = new Email(email);
         this.refreshToken = refreshToken;
-        this.image = image;
+        this.profileImageUrl = profileImageUrl;
     }
 
     public String getName() {
