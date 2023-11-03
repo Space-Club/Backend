@@ -61,3 +61,25 @@ include::{snippets}/club/deleteMember/path-parameters.adoc[]
 ==== Response
 include::{snippets}/club/deleteMember/http-response.adoc[]
 :sectnums:
+
+=== 클럽 초대 링크 생성
+:sectnums!:
+==== Request
+include::{snippets}/club/invite/http-request.adoc[]
+===== Path Parameter
+include::{snippets}/club/invite/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/club/invite/http-response.adoc[]
+:sectnums:
+
+=== 초대 링크를 통한 클럽 가입
+:sectnums!:
+==== Request
+include::{snippets}/club/join/http-request.adoc[]
+===== Path Parameter
+include::{snippets}/club/join/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/club/join/http-response.adoc[]
+:sectnums:

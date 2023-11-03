@@ -29,6 +29,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.UUID;
 
 import static com.spaceclub.club.ClubTestFixture.club1;
 import static com.spaceclub.club.ClubUserTestFixture.club1User1Manager;
@@ -386,6 +387,31 @@ class ClubControllerTest {
                                 fieldWithPath("invitationCode").type(STRING).description("클럽 초대 링크")
                         )
                 ));
+    }
+
+    @Test
+    @WithMockUser
+    void 초대_링크를_통해_클럽_가입에_성공한다() throws Exception {
+        // given
+        Long clubId = 1L;
+        String uuid = UUID.randomUUID().toString();
+
+        // when
+        ResultActions actions =
+                mockMvc.perform(post("/api/v1/clubs/{clubId}/invite/{uuid}", clubId, uuid)
+                .with(csrf()));
+
+        // then
+        actions.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("club/join",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("clubId").description("클럽 ID"),
+                                parameterWithName("uuid").description("클럽 초대 링크 식별자")
+                        )));
+
     }
 
 }

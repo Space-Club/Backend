@@ -119,4 +119,9 @@ public class ClubController {
         );
     }
 
+    @PostMapping("/clubs/{clubId}/invite/{uuid}")
+    public ResponseEntity<Void> joinClub(@PathVariable Long clubId, @PathVariable String uuid) {
+        return ResponseEntity.ok().build();
+    }
+
 }
