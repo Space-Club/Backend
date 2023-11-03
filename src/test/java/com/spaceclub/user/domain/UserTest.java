@@ -19,8 +19,10 @@ class UserTest {
                 .status(Status.NOT_REGISTERED)
                 .email("test@gmail.com")
                 .build();
+
         // when
         boolean isNewMember = user.isNewMember();
+
         // then
         assertThat(isNewMember).isTrue();
     }

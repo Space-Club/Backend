@@ -8,8 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
-import java.util.Optional;
-
 import static lombok.AccessLevel.PROTECTED;
 
 @Embeddable
@@ -43,7 +41,7 @@ public class RequiredInfo {
     }
 
     public boolean isNotFilled() {
-        return Optional.ofNullable(name).isEmpty() || Optional.ofNullable(phoneNumber).isEmpty();
+        return name == null || phoneNumber == null;
     }
 
 }

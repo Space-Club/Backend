@@ -2,6 +2,9 @@ package com.spaceclub.user.service;
 
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.repository.EventUserRepository;
+import com.spaceclub.global.oauth.config.KakaoOauthInfoSender;
+import com.spaceclub.global.oauth.config.vo.KakaoTokenInfo;
+import com.spaceclub.global.oauth.config.vo.KakaoUserInfo;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
 
+    private final KakaoOauthInfoSender kakaoOauthInfoSender;
     private final EventUserRepository eventUserRepository;
     private final UserRepository userRepository;
 
@@ -26,16 +30,13 @@ public class UserService {
         return eventUserRepository.findEventStatusByUserId(userId, event);
     }
 
-    public boolean isNewMember(User user) {
-        Long userId = user.getId();
-        return userRepository.findById(userId)
-                .orElseThrow()
-                .isNewMember();
-    }
-
     @Transactional
-    public void save(User user) {
-        userRepository.save(user);
+    public User createKakaoUser(String code) {
+        KakaoTokenInfo accessTokenInfo = kakaoOauthInfoSender.getAccessTokenInfo(code);
+        String accessToken = accessTokenInfo.accessToken();
+        KakaoUserInfo userInfo = kakaoOauthInfoSender.getUserInfo(accessToken);
+
+        return userRepository.save(userInfo.toUser());
     }
 
 }

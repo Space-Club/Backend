@@ -3,7 +3,7 @@ package com.spaceclub.user;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
 
-import static com.spaceclub.user.domain.Status.*;
+import static com.spaceclub.user.domain.Status.REGISTERED;
 
 public class UserTestFixture {
 

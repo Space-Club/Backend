@@ -16,7 +16,6 @@ import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static com.spaceclub.user.domain.Status.NOT_REGISTERED;
 import static jakarta.persistence.EnumType.STRING;
@@ -82,9 +81,12 @@ public class User {
     }
 
     private RequiredInfo generateRequiredInfo(String nickname, String phoneNumber) {
-        if (Optional.ofNullable(nickname).isEmpty() || Optional.ofNullable(phoneNumber).isEmpty()) {
+        if (nickname == null && phoneNumber == null) {
             return new RequiredInfo();
         }
+        Assert.hasText(nickname, "닉네임은 필수입니다.");
+        Assert.hasText(phoneNumber, "전화번호는 필수입니다.");
+
         return new RequiredInfo(nickname, new PhoneNumber(phoneNumber));
     }
 
