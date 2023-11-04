@@ -19,7 +19,7 @@ public class RequiredInfo {
     private static final int MAX_NAME_LENGTH = 10;
 
     @Getter
-    @Column(nullable = false, columnDefinition = "varchar(10) default UNKNOWN")
+    @Column(nullable = false, length = 10)
     private String name;
 
     @Embedded
@@ -40,8 +40,8 @@ public class RequiredInfo {
         return name.length() >= MIN_NAME_LENGTH && name.length() <= MAX_NAME_LENGTH;
     }
 
-    public String getPhoneNumber() {
-        return this.phoneNumber.getPhoneNumber();
+    public boolean isNotFilled() {
+        return name == null || phoneNumber == null;
     }
 
 }

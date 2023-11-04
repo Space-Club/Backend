@@ -22,7 +22,7 @@ public class PhoneNumber {
     private static final Pattern VALID_PHONE_NUMBER_REGEX =
             Pattern.compile("^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$");
 
-    @Column(nullable = false, columnDefinition = "varchar(11) default UNKNOWN")
+    @Column(nullable = false, length = 11)
     private String phoneNumber;
 
     public PhoneNumber(String phoneNumber) {

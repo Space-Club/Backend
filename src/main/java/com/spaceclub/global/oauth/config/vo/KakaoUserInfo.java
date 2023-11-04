@@ -1,6 +1,7 @@
-package com.spaceclub.global.oauth.service.vo;
+package com.spaceclub.global.oauth.config.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.spaceclub.user.domain.Status;
 import com.spaceclub.user.domain.User;
 
 import static com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
@@ -17,6 +18,7 @@ public record KakaoUserInfo(
         return User.builder()
                 .oauthId(id.toString())
                 .provider(KAKAO)
+                .status(Status.NOT_REGISTERED)
                 .email(kakaoAccount.email)
                 .build();
     }
