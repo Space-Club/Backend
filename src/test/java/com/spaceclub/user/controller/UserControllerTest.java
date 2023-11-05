@@ -6,6 +6,7 @@ import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.jwt.service.JwtService;
 import com.spaceclub.user.UserTestFixture;
 import com.spaceclub.user.controller.dto.UserRequiredInfoRequest;
+import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.service.UserService;
 import com.spaceclub.user.service.vo.UserRequiredInfo;
@@ -27,6 +28,8 @@ import java.util.Map;
 import static com.spaceclub.event.EventTestFixture.event1;
 import static com.spaceclub.event.EventTestFixture.event2;
 import static com.spaceclub.event.EventTestFixture.event3;
+import static com.spaceclub.user.domain.Status.NOT_REGISTERED;
+import static com.spaceclub.user.domain.Status.REGISTERED;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -131,7 +134,17 @@ class UserControllerTest {
     @WithMockUser
     void 유저가_신규유저이면_빈값_토큰과_아이디반환에_성공한다() throws Exception {
         //given
-        User newUser = UserTestFixture.user1();
+        User newUser = User.builder()
+                .id(1L)
+                .name(null)
+                .phoneNumber(null)
+                .status(NOT_REGISTERED)
+                .oauthId("12345678")
+                .provider(Provider.KAKAO)
+                .email("abc@naver.com")
+                .refreshToken("refreshToken")
+                .profileImageUrl("www.image.com")
+                .build();
         given(userService.createKakaoUser(any())).willReturn(newUser);
 
         // when, then

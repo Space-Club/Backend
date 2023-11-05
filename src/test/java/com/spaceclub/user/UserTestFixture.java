@@ -3,7 +3,6 @@ package com.spaceclub.user;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
 
-import static com.spaceclub.user.domain.Status.NOT_REGISTERED;
 import static com.spaceclub.user.domain.Status.REGISTERED;
 
 public class UserTestFixture {
@@ -11,9 +10,9 @@ public class UserTestFixture {
     public static User user1() {
         return User.builder()
                 .id(1L)
-                .name(null)
-                .phoneNumber(null)
-                .status(NOT_REGISTERED)
+                .name("멤버명")
+                .phoneNumber("010-1234-5678")
+                .status(REGISTERED)
                 .oauthId("12345678")
                 .provider(Provider.KAKAO)
                 .email("abc@naver.com")
