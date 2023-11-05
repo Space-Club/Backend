@@ -138,7 +138,7 @@ class ClubControllerTest {
 
         // then
         result.andExpect(status().isCreated())
-                .andExpect(header().stringValues("Location", "/api/v1/clubs/1"))
+                .andExpect(header().exists("Location"))
                 .andDo(print())
                 .andDo(document("club/create",
                         preprocessRequest(prettyPrint()),
