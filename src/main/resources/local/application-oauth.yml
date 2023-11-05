@@ -9,7 +9,6 @@ oauth:
 jwt:
   header: access-token
   issuer: space-club
-  client-secret:
-  expiry-seconds: 60
-
+  client-secret: ENC(2qr8v6d7x0P13dZVjQx4XToeeUHUh7tW)
+  expiry-seconds: 300
 

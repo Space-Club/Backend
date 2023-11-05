@@ -5,7 +5,6 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 import java.util.StringJoiner;
@@ -17,24 +16,24 @@ import static lombok.AccessLevel.PRIVATE;
 public class Claims {
 
     public static final String USER_NAME = "username";
-    public static final String USER_ROLE = "roles";
+    public static final String USER_ID = "userId";
     public static final String IAT = "iat";
     public static final String EXP = "exp;";
 
     @Getter
-    private String username;
+    private Long id;
 
     @Getter
-    private String[] roles;
+    private String username;
 
     private Date iat;
 
     private Date exp;
 
-    public static Claims from(String username, String[] roles) {
+    public static Claims from(Long userId, String username) {
         Claims claims = new Claims();
+        claims.id = userId;
         claims.username = username;
-        claims.roles = roles;
 
         return claims;
     }
@@ -44,9 +43,9 @@ public class Claims {
         if (!username.isNull()) {
             this.username = username.asString();
         }
-        Claim roles = decodedJWT.getClaim(USER_ROLE);
-        if (!roles.isNull()) {
-            this.roles = roles.asArray(String.class);
+        Claim userId = decodedJWT.getClaim(USER_ID);
+        if (!userId.isNull()) {
+            this.id = userId.asLong();
         }
         this.iat = decodedJWT.getIssuedAt();
         this.exp = decodedJWT.getIssuedAt();
@@ -54,8 +53,8 @@ public class Claims {
 
     public Map<String, Object> asMap() {
         return Map.of(
+                USER_ID, id,
                 USER_NAME, username,
-                USER_ROLE, roles,
                 IAT, iat(),
                 EXP, exp()
         );
@@ -80,8 +79,8 @@ public class Claims {
     @Override
     public String toString() {
         return new StringJoiner(", ", Claims.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
                 .add("username='" + username + "'")
-                .add("roles=" + Arrays.toString(roles))
                 .add("iat=" + iat)
                 .add("exp=" + exp)
                 .toString();
