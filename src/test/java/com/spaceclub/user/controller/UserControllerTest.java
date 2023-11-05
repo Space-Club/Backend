@@ -1,9 +1,14 @@
 package com.spaceclub.user.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.jwt.service.JwtService;
+import com.spaceclub.user.UserTestFixture;
+import com.spaceclub.user.controller.dto.UserRequiredInfoRequest;
+import com.spaceclub.user.domain.User;
 import com.spaceclub.user.service.UserService;
+import com.spaceclub.user.service.vo.UserRequiredInfo;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +22,19 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.spaceclub.event.EventTestFixture.event1;
 import static com.spaceclub.event.EventTestFixture.event2;
 import static com.spaceclub.event.EventTestFixture.event3;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -34,10 +44,12 @@ import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.OBJECT;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -48,6 +60,9 @@ class UserControllerTest {
 
     @Autowired
     private MockMvc mvc;
+
+    @Autowired
+    private ObjectMapper mapper;
 
     @MockBean
     private UserService userService;
@@ -107,6 +122,104 @@ class UserControllerTest {
                                         fieldWithPath("pageData.size").type(NUMBER).description("페이지 내 개수"),
                                         fieldWithPath("pageData.totalPages").type(NUMBER).description("총 페이지 개수"),
                                         fieldWithPath("pageData.totalElements").type(NUMBER).description("총 이벤트 개수")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    @WithMockUser
+    void 유저가_신규유저이면_빈값_토큰과_아이디반환에_성공한다() throws Exception {
+        //given
+        User newUser = UserTestFixture.user1();
+        given(userService.createKakaoUser(any())).willReturn(newUser);
+
+        // when, then
+        mvc.perform(post("/api/v1/users/oauths")
+                        .contentType(APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(Map.of("code", "123456789")))
+                        .with(csrf())
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("userId").value(newUser.getId()))
+                .andExpect(jsonPath("accessToken").isEmpty())
+                .andDo(
+                        document("user/kakaoLoginNewUser",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestFields(
+                                        fieldWithPath("code").type(STRING).description("카카오 로그인 코드")
+                                ),
+                                responseFields(
+                                        fieldWithPath("userId").type(NUMBER).description("유저 ID"),
+                                        fieldWithPath("accessToken").type(STRING).description("access token")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    @WithMockUser
+    void 유저가_신규유저가_아니면_생성된_토큰과_아이디반환에_성공한다() throws Exception {
+        //given
+        User newUser = UserTestFixture.user2();
+        given(userService.createKakaoUser(any())).willReturn(newUser);
+        final String accessToken = "generated access token";
+        given(jwtService.createToken(any(Long.class), any(String.class))).willReturn(accessToken);
+
+        // when, then
+        mvc.perform(post("/api/v1/users/oauths")
+                        .contentType(APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(Map.of("code", "123456789")))
+                        .with(csrf())
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("userId").value(newUser.getId()))
+                .andExpect(jsonPath("accessToken").value(accessToken))
+                .andDo(
+                        document("user/kakaoLoginExistingUser",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestFields(
+                                        fieldWithPath("code").type(STRING).description("카카오 로그인 코드")
+                                ),
+                                responseFields(
+                                        fieldWithPath("userId").type(NUMBER).description("유저 ID"),
+                                        fieldWithPath("accessToken").type(STRING).description("access token")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    @WithMockUser
+    void 필수정보를_입력하면_회원가입에_성공한다() throws Exception {
+        //given
+        UserRequiredInfoRequest request = new UserRequiredInfoRequest(2L, "name", "010-1234-5678");
+        final User savedUser = UserTestFixture.user2();
+        final String accessToken = "generated access token";
+        given(userService.findByUser(any(), any(UserRequiredInfo.class))).willReturn(savedUser);
+        given(jwtService.createToken(any(Long.class), any(String.class))).willReturn(accessToken);
+
+        // when, then
+        mvc.perform(post("/api/v1/users")
+                        .content(mapper.writeValueAsString(request))
+                        .contentType(APPLICATION_JSON)
+                        .with(csrf())
+                )
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("userId").value(savedUser.getId()))
+                .andExpect(jsonPath("accessToken").value(accessToken))
+                .andDo(
+                        document("user/createUser",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                responseHeaders(
+                                        headerWithName("location").description("생성된 유저의 URI")
+                                ),
+                                responseFields(
+                                        fieldWithPath("userId").type(NUMBER).description("유저 ID"),
+                                        fieldWithPath("accessToken").type(STRING).description("access token")
                                 )
                         )
                 );

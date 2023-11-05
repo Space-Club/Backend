@@ -12,3 +12,41 @@ include::{snippets}/user/getAllEvents/http-response.adoc[]
 ===== Response Body
 include::{snippets}/user/getAllEvents/response-fields.adoc[]
 :sectnums:
+
+=== 카카오 로그인으로 회원가입한 유저 - 신규 유저일 경우
+:sectnums!:
+==== Request
+include::{snippets}/user/kakaoLoginNewUser/http-response.adoc[]
+===== Request Body
+include::{snippets}/user/kakaoLoginNewUser/request-fields.adoc[]
+
+==== Response
+include::{snippets}/user/kakaoLoginNewUser/http-response.adoc[]
+===== Response Body
+include::{snippets}/user/kakaoLoginNewUser/response-fields.adoc[]
+:sectnums:
+
+=== 카카오 로그인으로 회원가입한 유저 - 기존 유저일 경우
+:sectnums!:
+==== Request
+include::{snippets}/user/kakaoLoginExistingUser/http-response.adoc[]
+===== Request Body
+include::{snippets}/user/kakaoLoginExistingUser/request-fields.adoc[]
+
+==== Response
+include::{snippets}/user/kakaoLoginExistingUser/http-response.adoc[]
+===== Response Body
+include::{snippets}/user/kakaoLoginExistingUser/response-fields.adoc[]
+:sectnums:
+
+=== 신규 유저일 경우 필수 정보 작성
+:sectnums!:
+==== Request
+include::{snippets}/user/createUser/http-response.adoc[]
+
+==== Response
+include::{snippets}/user/createUser/http-response.adoc[]
+===== Response Body
+include::{snippets}/user/createUser/response-fields.adoc[]
+:sectnums:
+
