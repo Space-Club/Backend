@@ -163,19 +163,10 @@ class ClubControllerTest {
     @WithMockUser
     void 클럽_조회에_성공한다() throws Exception {
         // given
-        given(clubService.getClub(any(Long.class))).willReturn(
-                Club.builder()
-                        .name("연사모")
-                        .info("이곳은 연사모입니다")
-                        .logoImageUrl("연어.png")
-                        .owner("연어대장")
-                        .notices(List.of(new ClubNotice("연사모의 공지사항1")))
-                        .build()
-        );
-        Long clubId = 1L;
+        given(clubService.getClub(any(Long.class))).willReturn(club1());
 
         // when
-        ResultActions result = this.mockMvc.perform(get("/api/v1/clubs/{clubId}", clubId)
+        ResultActions result = this.mockMvc.perform(get("/api/v1/clubs/{clubId}", club1().getId())
                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
@@ -184,12 +175,15 @@ class ClubControllerTest {
                 .andDo(document("club/get",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("clubId").description("클럽 아이디")),
                         responseFields(
                                 fieldWithPath("name").type(STRING).description("클럽 이름"),
+                                fieldWithPath("logoImageUrl").type(STRING).description("클럽 이미지 Url"),
                                 fieldWithPath("info").type(STRING).description("클럽 소개"),
-                                fieldWithPath("memberCount").type(NUMBER).description("클럽 멤버수"),
-                                fieldWithPath("image").type(STRING).description("클럽 썸네일 이미지"),
-                                fieldWithPath("notices").type(ARRAY).description("클럽 공지사항 리스트")
+                                fieldWithPath("memberCount").type(NUMBER).description("클럽 멤버 수"),
+                                fieldWithPath("coverImageUrl").type(STRING).description("클럽 커버 이미지 Url"),
+                                fieldWithPath("inviteUrl").type(STRING).description("클럽 초대 링크")
                         )));
     }
 
