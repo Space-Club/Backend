@@ -96,3 +96,16 @@ include::{snippets}/club/getAll/http-response.adoc[]
 ===== Response Body
 include::{snippets}/club/getAll/response-fields.adoc[]
 :sectnums:
+
+=== 클럽 조회
+:sectnums!:
+==== Request
+include::{snippets}/club/get/http-request.adoc[]
+===== Path Parameter
+include::{snippets}/club/get/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/club/get/http-response.adoc[]
+===== Response Body
+include::{snippets}/club/get/response-fields.adoc[]
+:sectnums:
