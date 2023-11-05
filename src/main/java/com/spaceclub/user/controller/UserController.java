@@ -6,6 +6,7 @@ import com.spaceclub.global.jwt.Claims;
 import com.spaceclub.global.jwt.service.JwtService;
 import com.spaceclub.user.controller.dto.UserEventGetResponse;
 import com.spaceclub.user.controller.dto.UserLoginResponse;
+import com.spaceclub.user.controller.dto.UserProfileImageResponse;
 import com.spaceclub.user.controller.dto.UserProfileResponse;
 import com.spaceclub.user.controller.dto.UserRequiredInfoRequest;
 import com.spaceclub.user.domain.User;
@@ -78,6 +79,13 @@ public class UserController {
         Claims authorization = jwtService.verifyToken(request.getHeader(AUTHORIZATION_HEADER));
 
         return userService.getUserProfile(authorization.getId()).toResponse();
+    }
+
+    @GetMapping("/images")
+    public UserProfileImageResponse getUserImage(HttpServletRequest request){
+        Claims authorization = jwtService.verifyToken(request.getHeader(AUTHORIZATION_HEADER));
+
+        return new UserProfileImageResponse(userService.getUserProfileImage(authorization.getId()));
     }
 
 }

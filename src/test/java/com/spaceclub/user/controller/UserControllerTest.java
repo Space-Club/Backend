@@ -272,4 +272,34 @@ class UserControllerTest {
                 );
     }
 
+    @Test
+    @WithMockUser
+    void 유저_프로필_이미지_조회에_성공한다() throws Exception {
+        //given
+        final User user = UserTestFixture.user1();
+        final String profileImageUrl = "www.image.com";
+        Claims claims = Claims.from(user.getId(), user.getUsername());
+
+        given(jwtService.verifyToken(any())).willReturn(claims);
+        given(userService.getUserProfileImage(any())).willReturn(profileImageUrl);
+
+        // when, then
+        mvc.perform(get("/api/v1/users/images")
+                .header("Authorization", "access token")
+                )
+                .andExpect(status().isOk())
+                .andDo(
+                        document("user/getUserProfileImage",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName("Authorization").description("access token")
+                                ),
+                                responseFields(
+                                        fieldWithPath("profileImageUrl").type(STRING).description("유저 프로필 이미지 URL")
+                                )
+                        )
+                );
+    }
+
 }

@@ -61,3 +61,15 @@ include::{snippets}/user/getUserProfile/http-response.adoc[]
 ===== Response Body
 include::{snippets}/user/getUserProfile/response-fields.adoc[]
 :sectnums:
+
+=== 유저 프로필 이미지 확인
+:sectnums!:
+==== Request
+include::{snippets}/user/getUserProfileImage/http-response.adoc[]
+===== Request Header
+include::{snippets}/user/getUserProfileImage/request-headers.adoc[]
+==== Response
+include::{snippets}/user/getUserProfileImage/http-response.adoc[]
+===== Response Body
+include::{snippets}/user/getUserProfileImage/response-fields.adoc[]
+:sectnums:
