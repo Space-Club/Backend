@@ -2,6 +2,7 @@ package com.spaceclub.user.controller;
 
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.dto.PageResponse;
+import com.spaceclub.global.jwt.service.JwtService;
 import com.spaceclub.user.controller.dto.UserEventGetResponse;
 import com.spaceclub.user.controller.dto.UserLoginResponse;
 import com.spaceclub.user.domain.User;
@@ -26,6 +27,7 @@ import static com.spaceclub.user.controller.dto.UserEventGetResponse.from;
 public class UserController {
 
     private final UserService userService;
+    private final JwtService jwtService;
 
     @GetMapping("/{userId}/events")
     public PageResponse<UserEventGetResponse, Event> getAllEvents(@PathVariable Long userId, Pageable pageable) {
@@ -40,8 +42,13 @@ public class UserController {
 
     @PostMapping("/oauths")
     public UserLoginResponse getKaKaoCode(@RequestParam String code) {
+
         User kakaoUser = userService.createKakaoUser(code);
-        return UserLoginResponse.from(kakaoUser);
+
+        if (kakaoUser.isNewMember()) {
+            return UserLoginResponse.from("");
+        }
+        return UserLoginResponse.from(jwtService.createToken(kakaoUser.getId(), kakaoUser.getUsername()));
     }
 
 }

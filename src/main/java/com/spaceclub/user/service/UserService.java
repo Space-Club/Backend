@@ -5,6 +5,7 @@ import com.spaceclub.event.repository.EventUserRepository;
 import com.spaceclub.global.oauth.config.KakaoOauthInfoSender;
 import com.spaceclub.global.oauth.config.vo.KakaoTokenInfo;
 import com.spaceclub.global.oauth.config.vo.KakaoUserInfo;
+import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,8 @@ public class UserService {
         String accessToken = accessTokenInfo.accessToken();
         KakaoUserInfo userInfo = kakaoOauthInfoSender.getUserInfo(accessToken);
 
-        return userRepository.save(userInfo.toUser());
+        return userRepository.findByEmailAndOauthUserName(userInfo.email(), Provider.KAKAO.name() + userInfo.id())
+                .orElseGet(() -> userRepository.save(userInfo.toUser()));
     }
 
 }
