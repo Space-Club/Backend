@@ -54,6 +54,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestP
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import static org.springframework.restdocs.snippet.Attributes.key;
@@ -270,6 +271,9 @@ class EventControllerTest {
                 .andDo(document("event/get",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        pathParameters(
+                          parameterWithName("eventId").description("행사 ID")
+                        ),
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
                                 fieldWithPath("title").type(STRING).description("행사 제목"),
