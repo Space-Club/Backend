@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.URI;
@@ -45,13 +46,20 @@ public class ClubController {
 
     @PostMapping(value = "/clubs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> createClub(@RequestPart(value = "request") ClubCreateRequest request,
-                                             @RequestPart(value = "logoImage", required = false) MultipartFile logoImage) throws IOException {
+                                             @RequestPart(value = "logoImage", required = false) MultipartFile logoImage,
+                                             UriComponentsBuilder uriBuilder) throws IOException {
+
         if (logoImage == null) {
             Club newClub = request.toEntity();
             Club createdClub = service.createClub(newClub);
             Long id = createdClub.getId();
 
-            return ResponseEntity.created(URI.create("/api/v1/clubs/" + id)).build();
+            URI location = uriBuilder
+                    .path("/api/v1/clubs/{id}")
+                    .buildAndExpand(id)
+                    .toUri();
+
+            return ResponseEntity.created(location).build();
         }
 
         String logoImageUrl = uploader.uploadClubLogoImage(logoImage);
@@ -59,7 +67,12 @@ public class ClubController {
         Club createdClub = service.createClub(newClub);
         Long id = createdClub.getId();
 
-        return ResponseEntity.created(URI.create("/api/v1/clubs/" + id)).build();
+        URI location = uriBuilder
+                .path("/api/v1/clubs/{id}")
+                .buildAndExpand(id)
+                .toUri();
+
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/clubs/{clubId}")
