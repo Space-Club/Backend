@@ -44,4 +44,8 @@ public class RequiredInfo {
         return name == null || phoneNumber == null;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber.getPhoneNumber();
+    }
+
 }

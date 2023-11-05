@@ -2,13 +2,16 @@ package com.spaceclub.user.controller;
 
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.dto.PageResponse;
+import com.spaceclub.global.jwt.Claims;
 import com.spaceclub.global.jwt.service.JwtService;
 import com.spaceclub.user.controller.dto.UserEventGetResponse;
 import com.spaceclub.user.controller.dto.UserLoginResponse;
+import com.spaceclub.user.controller.dto.UserProfileResponse;
 import com.spaceclub.user.controller.dto.UserRequiredInfoRequest;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.service.UserService;
 import com.spaceclub.user.service.vo.UserRequiredInfo;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +32,7 @@ import static com.spaceclub.user.controller.dto.UserEventGetResponse.from;
 @RequiredArgsConstructor
 public class UserController {
 
+    public static final String AUTHORIZATION_HEADER = "Authorization";
     private final UserService userService;
     private final JwtService jwtService;
 
@@ -66,6 +70,14 @@ public class UserController {
         // 기존 유저면 jwt
         String accessToken = jwtService.createToken(kakaoUser.getId(), kakaoUser.getUsername());
         return UserLoginResponse.from(kakaoUser.getId(), accessToken);
+    }
+
+
+    @GetMapping("/profiles")
+    public UserProfileResponse getUserProfile(HttpServletRequest request){
+        Claims authorization = jwtService.verifyToken(request.getHeader(AUTHORIZATION_HEADER));
+
+        return userService.getUserProfile(authorization.getId()).toResponse();
     }
 
 }

@@ -10,7 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
@@ -18,8 +17,8 @@ import org.springframework.util.Assert;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.spaceclub.user.domain.Status.*;
 import static com.spaceclub.user.domain.Status.NOT_REGISTERED;
+import static com.spaceclub.user.domain.Status.REGISTERED;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -107,6 +106,10 @@ public class User {
 
     public String getUsername() {
         return requiredInfo.getName();
+    }
+
+    public String getPhoneNumber() {
+        return requiredInfo.getPhoneNumber();
     }
 
     public User updateRequiredInfo(String name, String phoneNumber) {

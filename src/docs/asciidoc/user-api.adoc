@@ -50,3 +50,14 @@ include::{snippets}/user/createUser/http-response.adoc[]
 include::{snippets}/user/createUser/response-fields.adoc[]
 :sectnums:
 
+=== 유저 프로필 페이지 확인
+:sectnums!:
+==== Request
+include::{snippets}/user/getUserProfile/http-response.adoc[]
+===== Request Header
+include::{snippets}/user/getUserProfile/request-headers.adoc[]
+==== Response
+include::{snippets}/user/getUserProfile/http-response.adoc[]
+===== Response Body
+include::{snippets}/user/getUserProfile/response-fields.adoc[]
+:sectnums:

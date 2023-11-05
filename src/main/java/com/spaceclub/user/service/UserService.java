@@ -8,6 +8,7 @@ import com.spaceclub.global.oauth.config.vo.KakaoUserInfo;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.repository.UserRepository;
+import com.spaceclub.user.service.vo.UserProfileInfo;
 import com.spaceclub.user.service.vo.UserRequiredInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -48,6 +49,13 @@ public class UserService {
         User updatedUser = user.updateRequiredInfo(userRequiredInfo.name(), userRequiredInfo.phoneNumber());
 
         return userRepository.save(updatedUser);
+    }
+
+    public UserProfileInfo getUserProfile(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+        return new UserProfileInfo(user.getUsername(), user.getPhoneNumber(), user.getProfileImageUrl());
     }
 
 }

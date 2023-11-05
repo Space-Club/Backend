@@ -3,12 +3,14 @@ package com.spaceclub.user.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.event.domain.Event;
+import com.spaceclub.global.jwt.Claims;
 import com.spaceclub.global.jwt.service.JwtService;
 import com.spaceclub.user.UserTestFixture;
 import com.spaceclub.user.controller.dto.UserRequiredInfoRequest;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.service.UserService;
+import com.spaceclub.user.service.vo.UserProfileInfo;
 import com.spaceclub.user.service.vo.UserRequiredInfo;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
@@ -29,11 +31,11 @@ import static com.spaceclub.event.EventTestFixture.event1;
 import static com.spaceclub.event.EventTestFixture.event2;
 import static com.spaceclub.event.EventTestFixture.event3;
 import static com.spaceclub.user.domain.Status.NOT_REGISTERED;
-import static com.spaceclub.user.domain.Status.REGISTERED;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -233,6 +235,38 @@ class UserControllerTest {
                                 responseFields(
                                         fieldWithPath("userId").type(NUMBER).description("유저 ID"),
                                         fieldWithPath("accessToken").type(STRING).description("access token")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    @WithMockUser
+    void 유저의_프로필_조회에_성공한다() throws Exception {
+        //given
+        final User user = UserTestFixture.user1();
+        UserProfileInfo userProfileInfo = new UserProfileInfo("멤버명", "010-1234-5678", "www.image.com");
+
+        Claims claims = Claims.from(user.getId(), user.getUsername());
+        given(jwtService.verifyToken(any())).willReturn(claims);
+        given(userService.getUserProfile(any())).willReturn(userProfileInfo);
+
+        // when, then
+        mvc.perform(get("/api/v1/users/profiles")
+                        .header("Authorization", "access token")
+                )
+                .andExpect(status().isOk())
+                .andDo(
+                        document("user/getUserProfile",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName("Authorization").description("access token")
+                                ),
+                                responseFields(
+                                        fieldWithPath("username").type(STRING).description("유저 이름"),
+                                        fieldWithPath("phoneNumber").type(STRING).description("유저 전화번호"),
+                                        fieldWithPath("profileImageUrl").type(STRING).description("유저 프로필 이미지 URL")
                                 )
                         )
                 );
