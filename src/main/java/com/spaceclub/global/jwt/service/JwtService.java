@@ -15,4 +15,8 @@ public class JwtService {
         return jwt.sign(Claims.from(userId, username));
     }
 
+    public Claims verifyToken(String token) {
+        return jwt.verify(token);
+    }
+
 }
