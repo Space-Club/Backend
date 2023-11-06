@@ -51,9 +51,9 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -78,7 +78,6 @@ class UserControllerTest {
     @WithMockUser
     void 유저의_모든_이벤트_조회에_성공한다() throws Exception {
         // given
-        final Long userId = 1L;
         List<Event> events = List.of(event1(), event2(), event3());
         Page<Event> eventPages = new PageImpl<>(events);
 
@@ -86,10 +85,11 @@ class UserControllerTest {
         given(userService.findEventStatus(any(Long.class), any(Event.class))).willReturn("CONFIRMED");
 
         // when, then
-        mvc.perform(get("/api/v1/users/{userId}/events", userId)
-                                .param("page", "1")
-                                .param("size", "10")
-                                .param("sort", "startDate,desc")
+        mvc.perform(get("/api/v1/users/events")
+                        .header("Authorization", "access token")
+                        .param("page", "1")
+                        .param("size", "10")
+                        .param("sort", "startDate,desc")
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.size()").value(events.size()))
@@ -103,13 +103,14 @@ class UserControllerTest {
                         document("user/getAllEvents",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName("Authorization").description("액세스 토큰")
+                                ),
                                 queryParameters(
                                         parameterWithName("page").description("페이지"),
                                         parameterWithName("size").description("페이지 내 개수"),
                                         parameterWithName("sort").description("정렬 방법((ex) id,desc)")
                                 ),
-                                pathParameters(
-                                        parameterWithName("userId").description("유저 아이디")),
                                 responseFields(
                                         fieldWithPath("data").type(ARRAY).description("페이지 내 이벤트 정보"),
                                         fieldWithPath("data[].id").type(NUMBER).description("이벤트 아이디"),
@@ -287,7 +288,7 @@ class UserControllerTest {
 
         // when, then
         mvc.perform(get("/api/v1/users/images")
-                .header("Authorization", "access token")
+                        .header("Authorization", "access token")
                 )
                 .andExpect(status().isOk())
                 .andDo(

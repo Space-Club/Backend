@@ -1,28 +1,40 @@
 == 유저
-=== 유저가 신청한 모든 이벤트 조회
+
+=== 유저가 신청한 모든 행사 조회
 :sectnums!:
 ==== Request
+
 include::{snippets}/user/getAllEvents/http-request.adoc[]
-===== Path Parameter
-include::{snippets}/user/getAllEvents/path-parameters.adoc[]
+===== Request Header
+
+include::{snippets}/user/getAllEvents/request-headers.adoc[]
+
 ===== Query Parameter
+
 include::{snippets}/user/getAllEvents/query-parameters.adoc[]
+
 ==== Response
+
 include::{snippets}/user/getAllEvents/http-response.adoc[]
 ===== Response Body
+
 include::{snippets}/user/getAllEvents/response-fields.adoc[]
 :sectnums:
 
 === 카카오 로그인으로 회원가입한 유저 - 신규 유저일 경우
 :sectnums!:
 ==== Request
+
 include::{snippets}/user/kakaoLoginNewUser/http-request.adoc[]
 ===== Request Body
+
 include::{snippets}/user/kakaoLoginNewUser/request-fields.adoc[]
 
 ==== Response
+
 include::{snippets}/user/kakaoLoginNewUser/http-response.adoc[]
 ===== Response Body
+
 include::{snippets}/user/kakaoLoginNewUser/response-fields.adoc[]
 :sectnums:
 
