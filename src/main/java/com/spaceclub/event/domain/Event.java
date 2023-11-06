@@ -17,6 +17,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.Assert;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -73,6 +74,7 @@ public class Event extends BaseTimeEntity {
             FormInfo formInfo,
             Club club
     ) {
+        Assert.notNull(category, "행사 카테고리는 필수 값입니다.");
         this.id = id;
         this.category = category;
         this.eventInfo = eventInfo;
