@@ -19,7 +19,7 @@ public class RequiredInfo {
     private static final int MAX_NAME_LENGTH = 10;
 
     @Getter
-    @Column(nullable = false, length = 10)
+    @Column(length = 10)
     private String name;
 
     @Embedded

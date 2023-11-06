@@ -22,7 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final KakaoOauthInfoSender kakaoOauthInfoSender;
+
     private final EventUserRepository eventUserRepository;
+
     private final UserRepository userRepository;
 
     public Page<Event> findAllEventPages(Long userId, Pageable pageable) {
@@ -43,7 +45,8 @@ public class UserService {
                 .orElseGet(() -> userRepository.save(userInfo.toUser()));
     }
 
-    public User findByUser(Long userId, UserRequiredInfo userRequiredInfo) {
+    @Transactional
+    public User updateRequiredInfo(Long userId, UserRequiredInfo userRequiredInfo) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
         User updatedUser = user.updateRequiredInfo(userRequiredInfo.name(), userRequiredInfo.phoneNumber());
@@ -66,5 +69,3 @@ public class UserService {
     }
 
 }
-
-
