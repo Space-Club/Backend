@@ -22,10 +22,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 import java.util.Map;
 
+import static com.spaceclub.club.ClubTestFixture.club1;
+import static com.spaceclub.club.ClubTestFixture.club2;
 import static com.spaceclub.event.EventTestFixture.event1;
 import static com.spaceclub.event.EventTestFixture.event2;
 import static com.spaceclub.event.EventTestFixture.event3;
@@ -303,6 +306,37 @@ class UserControllerTest {
                                 )
                         )
                 );
+    }
+
+
+    @Test
+    @WithMockUser
+    void 유저의_모든_클럽_조회에_성공한다() throws Exception {
+        // given
+        given(jwtService.verifyUserId(any())).willReturn(1L);
+        given(userService.getClubs(1L)).willReturn(List.of(club1(), club2()));
+
+        // when
+        ResultActions actions = mvc.perform(get("/api/v1/users/clubs")
+                .header("Authorization", "access token")
+        );
+
+        // then
+        actions.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("user/getAllClubs",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName("Authorization").description("액세스 토큰")
+                        ),
+                        responseFields(
+                                fieldWithPath("[]").type(ARRAY).description("클럽"),
+                                fieldWithPath("[].id").type(NUMBER).description("클럽 아이디"),
+                                fieldWithPath("[].logoImageUrl").type(STRING).description("클럽 이미지 Url"),
+                                fieldWithPath("[].name").type(STRING).description("클럽 이름")
+                        )
+                ));
     }
 
 }

@@ -105,3 +105,20 @@ include::{snippets}/user/getUserProfileImage/http-response.adoc[]
 
 include::{snippets}/user/getUserProfileImage/response-fields.adoc[]
 :sectnums:
+
+=== 유저의 클럽 목록 조회
+:sectnums!:
+==== Request
+
+include::{snippets}/user/getAllClubs/http-request.adoc[]
+===== Request Header
+
+include::{snippets}/user/getAllClubs/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/user/getAllClubs/http-response.adoc[]
+===== Response Body
+
+include::{snippets}/user/getAllClubs/response-fields.adoc[]
+:sectnums:

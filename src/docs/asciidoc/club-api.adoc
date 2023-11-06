@@ -84,19 +84,6 @@ include::{snippets}/club/join/path-parameters.adoc[]
 include::{snippets}/club/join/http-response.adoc[]
 :sectnums:
 
-=== 클럽 목록 조회
-:sectnums!:
-==== Request
-include::{snippets}/club/getAll/http-request.adoc[]
-===== Path Parameter
-include::{snippets}/club/getAll/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/club/getAll/http-response.adoc[]
-===== Response Body
-include::{snippets}/club/getAll/response-fields.adoc[]
-:sectnums:
-
 === 클럽 조회
 :sectnums!:
 ==== Request

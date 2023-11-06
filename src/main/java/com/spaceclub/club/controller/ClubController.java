@@ -12,6 +12,7 @@ import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.global.dto.PageResponse;
+import com.spaceclub.global.jwt.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +34,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -136,17 +136,6 @@ public class ClubController {
     @PostMapping("/clubs/{clubId}/invite/{uuid}")
     public ResponseEntity<Void> joinClub(@PathVariable Long clubId, @PathVariable String uuid) {
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/clubs/all/{userId}")
-    public ResponseEntity<List<ClubGetAllResponse>> getAllClubs(@PathVariable Long userId) {
-        List<Club> clubs = service.getAllClubs(userId);
-
-        List<ClubGetAllResponse> clubResponses = clubs.stream()
-                .map(ClubGetAllResponse::from)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(clubResponses);
     }
 
 }
