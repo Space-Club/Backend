@@ -8,6 +8,8 @@ import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.service.EventService;
 import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.global.dto.PageResponse;
+import com.spaceclub.global.jwt.service.JwtService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +37,8 @@ public class EventController {
 
     private final S3ImageUploader uploader;
 
+    private final JwtService jwtService;
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> create(@RequestPart EventCreateRequest request, @RequestPart MultipartFile posterImage) throws IOException {
         String posterImageUrl = uploader.uploadPosterImage(posterImage);
@@ -56,9 +60,10 @@ public class EventController {
     }
 
     @PostMapping("/apply")
-    public ResponseEntity<Void> applyEvent(@RequestBody EventApplyRequest request) {
+    public ResponseEntity<Void> applyEvent(@RequestBody EventApplyRequest request, HttpServletRequest servletRequest) {
         Long eventId = request.eventId();
-        Long userId = request.userId();
+        Long userId = jwtService.verifyUserId(servletRequest);
+
         eventService.applyEvent(eventId, userId);
 
         return ResponseEntity.noContent().build();
