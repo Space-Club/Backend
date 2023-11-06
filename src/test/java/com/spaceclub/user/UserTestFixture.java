@@ -29,7 +29,7 @@ public class UserTestFixture {
                 .status(REGISTERED)
                 .oauthId("1234")
                 .provider(Provider.KAKAO)
-                .email("abc@naver.com")
+                .email("abcd@naver.com")
                 .refreshToken("refreshToken")
                 .profileImageUrl("www.image.com")
                 .build();

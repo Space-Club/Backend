@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "jwt")
 public class JwtProperties {
 
-    private final String secret;
+    private final String header;
 
     private final String issuer;
 

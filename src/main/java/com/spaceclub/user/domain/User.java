@@ -35,6 +35,7 @@ public class User {
     @Embedded
     private RequiredInfo requiredInfo = new RequiredInfo();
 
+    @Getter
     @Enumerated(STRING)
     private Status status;
 
@@ -100,6 +101,10 @@ public class User {
 
     private String generateOauthUsername(String oauthId, Provider provider) {
         return provider.name() + oauthId;
+    }
+
+    public String getUsername() {
+        return requiredInfo.getName();
     }
 
 }

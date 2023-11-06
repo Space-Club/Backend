@@ -2,6 +2,7 @@ package com.spaceclub.user.controller;
 
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.event.domain.Event;
+import com.spaceclub.global.jwt.service.JwtService;
 import com.spaceclub.user.service.UserService;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
@@ -50,6 +51,9 @@ class UserControllerTest {
 
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private JwtService jwtService;
 
     @Test
     @WithMockUser

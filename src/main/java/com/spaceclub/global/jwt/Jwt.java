@@ -12,8 +12,6 @@ public class Jwt {
 
     private final String issuer;
 
-    private final String clientSecret;
-
     private final int expirySeconds;
 
     private final Algorithm algorithm;
@@ -27,7 +25,6 @@ public class Jwt {
             int expirySeconds
     ) {
         this.issuer = issuer;
-        this.clientSecret = clientSecret;
         this.expirySeconds = expirySeconds;
         this.algorithm = Algorithm.HMAC512(clientSecret);
         this.jwtVerifier = JWT.require(algorithm)
@@ -43,8 +40,8 @@ public class Jwt {
          if (expirySeconds > 0) {
              builder.withExpiresAt(new Date(now.getTime() + (expirySeconds * 1_000L)));
          }
+         builder.withClaim(Claims.USER_ID, claims.getId());
          builder.withClaim(Claims.USER_NAME, claims.getUsername());
-         builder.withArrayClaim(Claims.USER_ROLE, claims.getRoles());
          return builder.sign(algorithm);
      }
 
