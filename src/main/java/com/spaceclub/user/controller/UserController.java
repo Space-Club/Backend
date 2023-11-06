@@ -5,18 +5,21 @@ import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.service.JwtService;
 import com.spaceclub.user.controller.dto.UserEventGetResponse;
 import com.spaceclub.user.controller.dto.UserLoginResponse;
+import com.spaceclub.user.controller.dto.UserRequiredInfoRequest;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.service.UserService;
+import com.spaceclub.user.service.vo.UserRequiredInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.util.List;
 
 import static com.spaceclub.user.controller.dto.UserEventGetResponse.from;
@@ -40,15 +43,29 @@ public class UserController {
         return new PageResponse<>(eventGetResponse, eventPages);
     }
 
-    @PostMapping("/oauths")
-    public UserLoginResponse getKaKaoCode(@RequestParam String code) {
+    @PostMapping
+    public ResponseEntity<UserLoginResponse> getUserRequiredInfo(UserRequiredInfoRequest request) {//유저 찾기
+        User user = userService.findByUser(request.userId(), new UserRequiredInfo(request.name(), request.phoneNumber()));
 
+        String accessToken = jwtService.createToken(user.getId(), user.getUsername());
+
+        return ResponseEntity.created(URI.create("/api/v1/users/" + user.getId()))
+                .body(UserLoginResponse.from(user.getId(), accessToken));
+    }
+
+
+    @PostMapping("/oauths")
+    public UserLoginResponse getKaKaoCode(String code) {
         User kakaoUser = userService.createKakaoUser(code);
 
+        // 신규 유저면 빈 access token
         if (kakaoUser.isNewMember()) {
-            return UserLoginResponse.from("");
+            return UserLoginResponse.from(kakaoUser.getId(), "");
         }
-        return UserLoginResponse.from(jwtService.createToken(kakaoUser.getId(), kakaoUser.getUsername()));
+
+        // 기존 유저면 jwt
+        String accessToken = jwtService.createToken(kakaoUser.getId(), kakaoUser.getUsername());
+        return UserLoginResponse.from(kakaoUser.getId(), accessToken);
     }
 
 }

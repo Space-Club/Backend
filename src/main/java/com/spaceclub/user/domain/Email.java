@@ -3,6 +3,7 @@ package com.spaceclub.user.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
@@ -11,6 +12,7 @@ import java.util.regex.Pattern;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static lombok.AccessLevel.PROTECTED;
 
+@Getter
 @Embeddable
 @EqualsAndHashCode
 @NoArgsConstructor(access = PROTECTED)
