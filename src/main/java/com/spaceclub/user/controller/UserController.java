@@ -78,17 +78,17 @@ public class UserController {
 
 
     @GetMapping("/profiles")
-    public UserProfileResponse getUserProfile(HttpServletRequest request){
-        Claims authorization = jwtService.verifyToken(request.getHeader(AUTHORIZATION_HEADER));
+    public UserProfileResponse getUserProfile(HttpServletRequest request) {
+        Long userId = jwtService.verifyUserId(request);
 
-        return userService.getUserProfile(authorization.getId()).toResponse();
+        return userService.getUserProfile(userId).toResponse();
     }
 
     @GetMapping("/images")
-    public UserProfileImageResponse getUserImage(HttpServletRequest request){
-        Claims authorization = jwtService.verifyToken(request.getHeader(AUTHORIZATION_HEADER));
+    public UserProfileImageResponse getUserImage(HttpServletRequest request) {
+        Long userId = jwtService.verifyUserId(request);
 
-        return new UserProfileImageResponse(userService.getUserProfileImage(authorization.getId()));
+        return new UserProfileImageResponse(userService.getUserProfileImage(userId));
     }
 
 }

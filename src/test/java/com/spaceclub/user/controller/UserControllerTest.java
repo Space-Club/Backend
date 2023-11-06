@@ -3,7 +3,6 @@ package com.spaceclub.user.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.event.domain.Event;
-import com.spaceclub.global.jwt.Claims;
 import com.spaceclub.global.jwt.service.JwtService;
 import com.spaceclub.user.UserTestFixture;
 import com.spaceclub.user.controller.dto.UserRequiredInfoRequest;
@@ -213,7 +212,7 @@ class UserControllerTest {
         UserRequiredInfoRequest request = new UserRequiredInfoRequest(2L, "name", "010-1234-5678");
         final User savedUser = UserTestFixture.user2();
         final String accessToken = "generated access token";
-        given(userService.findByUser(any(), any(UserRequiredInfo.class))).willReturn(savedUser);
+        given(userService.updateRequiredInfo(any(), any(UserRequiredInfo.class))).willReturn(savedUser);
         given(jwtService.createToken(any(Long.class), any(String.class))).willReturn(accessToken);
 
         // when, then
@@ -229,6 +228,11 @@ class UserControllerTest {
                         document("user/createUser",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
+                                requestFields(
+                                        fieldWithPath("userId").type(NUMBER).description("유저 ID"),
+                                        fieldWithPath("name").type(STRING).description("유저 이름"),
+                                        fieldWithPath("phoneNumber").type(STRING).description("유저 핸드폰 번호")
+                                ),
                                 responseHeaders(
                                         headerWithName("location").description("생성된 유저의 URI")
                                 ),
@@ -247,8 +251,7 @@ class UserControllerTest {
         final User user = UserTestFixture.user1();
         UserProfileInfo userProfileInfo = new UserProfileInfo("멤버명", "010-1234-5678", "www.image.com");
 
-        Claims claims = Claims.from(user.getId(), user.getUsername());
-        given(jwtService.verifyToken(any())).willReturn(claims);
+        given(jwtService.verifyUserId(any())).willReturn(1L);
         given(userService.getUserProfile(any())).willReturn(userProfileInfo);
 
         // when, then
@@ -278,9 +281,8 @@ class UserControllerTest {
         //given
         final User user = UserTestFixture.user1();
         final String profileImageUrl = "www.image.com";
-        Claims claims = Claims.from(user.getId(), user.getUsername());
 
-        given(jwtService.verifyToken(any())).willReturn(claims);
+        given(jwtService.verifyUserId(any())).willReturn(1L);
         given(userService.getUserProfileImage(any())).willReturn(profileImageUrl);
 
         // when, then
