@@ -4,6 +4,11 @@ spring:
     username: ENC(4h2d2+xkCOzO1lh3R5J1Gw==)
     password: ENC(RiMn2xWrRb3iNOuRye4f8W+lCx+M/cjb)
     driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    properties:
+      hibernate:
+        create_empty_composites:
+          enabled: true
 
 s3:
   bucket:
