@@ -12,7 +12,7 @@ public record ClubGetResponse(
         String inviteUrl
 ) {
 
-    private static final String INVITE_FIXED_URL = "https://spaceclub.site/api/v1/invite/";
+    public static final String INVITE_FIXED_URL = "https://spaceclub.site/api/v1/clubs/invite/";
 
     @Builder
     public ClubGetResponse(String name,

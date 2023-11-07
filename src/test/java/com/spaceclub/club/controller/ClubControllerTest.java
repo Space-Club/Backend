@@ -123,7 +123,6 @@ class ClubControllerTest {
                 mapper.writeValueAsString(clubCreateRequest).getBytes(StandardCharsets.UTF_8)
         );
 
-
         // when
         ResultActions result = this.mockMvc.perform(multipart("/api/v1/clubs")
                 .file(request)
@@ -361,7 +360,7 @@ class ClubControllerTest {
         Club club = club1();
         Long clubId = club.getId();
 
-        given(clubService.getInvitationCode(1L)).willReturn("https://spaceclub.site/api/v1/clubs/invite/650d2d91-a8cf-45e7-8a43-a0c798173ecb");
+        given(clubService.getInvitationCode(1L)).willReturn("650d2d91-a8cf-45e7-8a43-a0c798173ecb");
 
         // when
         ResultActions actions = mockMvc.perform(post("/api/v1/clubs/{clubId}/invite", clubId)
@@ -389,9 +388,11 @@ class ClubControllerTest {
         Long clubId = 1L;
         String uuid = UUID.randomUUID().toString();
 
+        given(clubService.joinClub(uuid)).willReturn(true);
+
         // when
         ResultActions actions =
-                mockMvc.perform(post("/api/v1/clubs/{clubId}/invite/{uuid}", clubId, uuid)
+                mockMvc.perform(post("/api/v1/clubs/invite/{uuid}", uuid)
                         .with(csrf()));
 
         // then
@@ -401,7 +402,6 @@ class ClubControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
-                                parameterWithName("clubId").description("클럽 ID"),
                                 parameterWithName("uuid").description("클럽 초대 링크 식별자")
                         )));
 

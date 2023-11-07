@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Embeddable
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "invitationCode")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Invitation {
 

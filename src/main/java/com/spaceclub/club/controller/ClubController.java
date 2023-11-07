@@ -34,6 +34,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import static com.spaceclub.club.controller.dto.ClubGetResponse.INVITE_FIXED_URL;
+
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -128,14 +130,18 @@ public class ClubController {
 
     @PostMapping("/clubs/{clubId}/invite")
     public ResponseEntity<Map<String, String>> getInvitationCode(@PathVariable Long clubId) {
+        String uuid = service.getInvitationCode(clubId);
+
+        String invitationCode = INVITE_FIXED_URL + uuid;
+
         return ResponseEntity.ok(
-                Map.of("invitationCode", service.getInvitationCode(clubId))
+                Map.of("invitationCode", invitationCode)
         );
     }
 
-    @PostMapping("/clubs/{clubId}/invite/{uuid}")
-    public ResponseEntity<Void> joinClub(@PathVariable Long clubId, @PathVariable String uuid) {
-        boolean isSuccess = service.joinClub(clubId, uuid);
+    @PostMapping("/clubs/invite/{uuid}")
+    public ResponseEntity<Void> joinClub(@PathVariable String uuid) {
+        boolean isSuccess = service.joinClub(uuid);
         if (isSuccess) {
             return ResponseEntity.noContent().build();
         }

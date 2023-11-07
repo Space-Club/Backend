@@ -4,6 +4,7 @@ import com.spaceclub.club.InvitationCodeGenerator;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.domain.ClubUserRole;
+import com.spaceclub.club.domain.Invitation;
 import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
@@ -101,17 +102,18 @@ public class ClubService {
         return invitationCode;
     }
 
-    public boolean joinClub(Long clubId, String uuid) {
-        Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
-
+    public boolean joinClub(String uuid) {
         User user = userRepository.findById(1L)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
 
-        String invitationCode;
-        if ((invitationCode = club.getInvitationCode()) == null) {
-            throw new IllegalArgumentException("존재하지 않는 초대코드 입니다.");
-        }
+        Invitation invitation = Invitation.builder()
+                .invitationCode(uuid)
+                .build();
+
+        Club club = clubRepository.findByInvitation(invitation)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 초대코드 입니다"));
+
+        String invitationCode = club.getInvitationCode();
 
         if (invitationCode.equals(uuid)) {
             ClubUser clubUser = ClubUser.builder()
