@@ -1,5 +1,7 @@
 package com.spaceclub.user.controller;
 
+import com.spaceclub.club.controller.ClubGetAllResponse;
+import com.spaceclub.club.domain.Club;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.service.JwtService;
@@ -18,7 +20,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.spaceclub.user.controller.dto.UserEventGetResponse.from;
 
@@ -40,8 +42,9 @@ public class UserController {
 
     private final JwtService jwtService;
 
-    @GetMapping("/{userId}/events")
-    public PageResponse<UserEventGetResponse, Event> getAllEvents(@PathVariable Long userId, Pageable pageable) {
+    @GetMapping("/events")
+    public PageResponse<UserEventGetResponse, Event> getAllEvents(Pageable pageable, HttpServletRequest servletRequest) {
+        Long userId = jwtService.verifyUserId(servletRequest);
         Page<Event> eventPages = userService.findAllEventPages(userId, pageable);
 
         List<UserEventGetResponse> eventGetResponse = eventPages.getContent().stream()
@@ -89,6 +92,18 @@ public class UserController {
         Long userId = jwtService.verifyUserId(request);
 
         return new UserProfileImageResponse(userService.getUserProfileImage(userId));
+    }
+
+    @GetMapping("/clubs")
+    public ResponseEntity<List<ClubGetAllResponse>> getClubs(HttpServletRequest servletRequest) {
+        Long userId = jwtService.verifyUserId(servletRequest);
+        List<Club> clubs = userService.getClubs(userId);
+
+        List<ClubGetAllResponse> clubResponses = clubs.stream()
+                .map(ClubGetAllResponse::from)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(clubResponses);
     }
 
 }

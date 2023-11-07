@@ -1,5 +1,8 @@
 package com.spaceclub.user.service;
 
+import com.spaceclub.club.domain.Club;
+import com.spaceclub.club.domain.ClubUser;
+import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.repository.EventUserRepository;
 import com.spaceclub.global.oauth.config.KakaoOauthInfoSender;
@@ -17,6 +20,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -25,6 +31,8 @@ public class UserService {
     private final KakaoOauthInfoSender kakaoOauthInfoSender;
 
     private final EventUserRepository eventUserRepository;
+
+    private final ClubUserRepository clubUserRepository;
 
     private final UserRepository userRepository;
 
@@ -67,6 +75,14 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
         return user.getProfileImageUrl();
+    }
+
+    public List<Club> getClubs(Long userId) {
+        List<ClubUser> clubUsers = clubUserRepository.findByUser_Id(userId);
+
+        return clubUsers.stream()
+                .map(ClubUser::getClub)
+                .collect(Collectors.toList());
     }
 
 }

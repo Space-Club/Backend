@@ -38,6 +38,9 @@ class ClubServiceTest {
     @Mock
     private ClubRepository clubRepository;
 
+    @Mock
+    private ClubUserRepository clubUserRepository;
+
     private final ClubUserUpdate clubUserUpdate = ClubUserUpdate.builder()
             .clubId(club1().getId())
             .memberId(user1().getId())
@@ -87,9 +90,6 @@ class ClubServiceTest {
                 .isInstanceOf(IllegalArgumentException.class);
 
     }
-
-    @Mock
-    private ClubUserRepository clubUserRepository;
 
     @Test
     void 클럽_멤버_권한_수정에_성공한다() {
@@ -146,18 +146,6 @@ class ClubServiceTest {
         // when, then
         assertThatThrownBy(() -> clubService.deleteMember(club1().getId(), user1().getId()))
                 .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    void 모든_클럽_조회에_성공한다() {
-        // given
-        given(clubUserRepository.findByUser_Id(user1().getId())).willReturn(List.of(club1User1Manager()));
-
-        // when
-        List<Club> clubs = clubService.getAllClubs(user1().getId());
-
-        // then
-        assertThat(clubs).usingRecursiveComparison().isEqualTo(List.of(club1()));
     }
 
 }

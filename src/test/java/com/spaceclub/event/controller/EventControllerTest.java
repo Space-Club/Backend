@@ -8,6 +8,7 @@ import com.spaceclub.event.domain.Category;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.service.EventService;
 import com.spaceclub.global.S3ImageUploader;
+import com.spaceclub.global.jwt.service.JwtService;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -77,6 +79,9 @@ class EventControllerTest {
 
     @MockBean
     private EventService eventService;
+
+    @MockBean
+    private JwtService jwtService;
 
     @MockBean
     private S3ImageUploader uploader;
@@ -229,15 +234,16 @@ class EventControllerTest {
     void 행사_신청에_성공한다() throws Exception {
         // given
         doNothing().when(eventService).applyEvent(any(Long.class), any(Long.class));
+        given(jwtService.verifyUserId(any())).willReturn(1L);
+
         Long eventId = 1L;
-        Long userId = 1L;
         EventApplyRequest request = EventApplyRequest.builder()
                 .eventId(eventId)
-                .userId(userId)
                 .build();
 
         // when
         ResultActions result = mvc.perform(post("/api/v1/events/apply")
+                .header("Authorization", "access token")
                 .content(mapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .with(csrf()));
@@ -248,9 +254,11 @@ class EventControllerTest {
                 .andDo(document("event/apply",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName("Authorization").description("액세스 토큰")
+                        ),
                         requestFields(
-                                fieldWithPath("eventId").type(NUMBER).description("이벤트 ID"),
-                                fieldWithPath("userId").type(NUMBER).description("유저 ID")
+                                fieldWithPath("eventId").type(NUMBER).description("이벤트 ID")
                         )));
     }
 
@@ -272,7 +280,7 @@ class EventControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
-                          parameterWithName("eventId").description("행사 ID")
+                                parameterWithName("eventId").description("행사 ID")
                         ),
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
