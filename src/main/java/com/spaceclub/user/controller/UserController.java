@@ -2,8 +2,8 @@ package com.spaceclub.user.controller;
 
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.dto.PageResponse;
-import com.spaceclub.global.jwt.Claims;
 import com.spaceclub.global.jwt.service.JwtService;
+import com.spaceclub.user.controller.dto.UserCodeRequest;
 import com.spaceclub.user.controller.dto.UserEventGetResponse;
 import com.spaceclub.user.controller.dto.UserLoginResponse;
 import com.spaceclub.user.controller.dto.UserProfileImageResponse;
@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,7 +35,9 @@ import static com.spaceclub.user.controller.dto.UserEventGetResponse.from;
 public class UserController {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
+
     private final UserService userService;
+
     private final JwtService jwtService;
 
     @GetMapping("/{userId}/events")
@@ -49,9 +52,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserLoginResponse> getUserRequiredInfo(UserRequiredInfoRequest request) {//유저 찾기
-        User user = userService.findByUser(request.userId(), new UserRequiredInfo(request.name(), request.phoneNumber()));
-
+    public ResponseEntity<UserLoginResponse> updateRequiredInfo(@RequestBody UserRequiredInfoRequest request) {//유저 찾기
+        User user = userService.updateRequiredInfo(request.userId(), new UserRequiredInfo(request.name(), request.phoneNumber()));
         String accessToken = jwtService.createToken(user.getId(), user.getUsername());
 
         return ResponseEntity.created(URI.create("/api/v1/users/" + user.getId()))
@@ -60,8 +62,8 @@ public class UserController {
 
 
     @PostMapping("/oauths")
-    public UserLoginResponse getKaKaoCode(String code) {
-        User kakaoUser = userService.createKakaoUser(code);
+    public UserLoginResponse loginUser(@RequestBody UserCodeRequest userCodeRequest) {
+        User kakaoUser = userService.createKakaoUser(userCodeRequest.code());
 
         // 신규 유저면 빈 access token
         if (kakaoUser.isNewMember()) {
@@ -70,22 +72,23 @@ public class UserController {
 
         // 기존 유저면 jwt
         String accessToken = jwtService.createToken(kakaoUser.getId(), kakaoUser.getUsername());
+
         return UserLoginResponse.from(kakaoUser.getId(), accessToken);
     }
 
 
     @GetMapping("/profiles")
-    public UserProfileResponse getUserProfile(HttpServletRequest request){
-        Claims authorization = jwtService.verifyToken(request.getHeader(AUTHORIZATION_HEADER));
+    public UserProfileResponse getUserProfile(HttpServletRequest request) {
+        Long userId = jwtService.verifyUserId(request);
 
-        return userService.getUserProfile(authorization.getId()).toResponse();
+        return userService.getUserProfile(userId).toResponse();
     }
 
     @GetMapping("/images")
-    public UserProfileImageResponse getUserImage(HttpServletRequest request){
-        Claims authorization = jwtService.verifyToken(request.getHeader(AUTHORIZATION_HEADER));
+    public UserProfileImageResponse getUserImage(HttpServletRequest request) {
+        Long userId = jwtService.verifyUserId(request);
 
-        return new UserProfileImageResponse(userService.getUserProfileImage(authorization.getId()));
+        return new UserProfileImageResponse(userService.getUserProfileImage(userId));
     }
 
 }

@@ -5,6 +5,7 @@ import com.spaceclub.event.repository.EventUserRepository;
 import com.spaceclub.global.oauth.config.KakaoOauthInfoSender;
 import com.spaceclub.global.oauth.config.vo.KakaoTokenInfo;
 import com.spaceclub.global.oauth.config.vo.KakaoUserInfo;
+import com.spaceclub.user.domain.Email;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.repository.UserRepository;
@@ -22,7 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final KakaoOauthInfoSender kakaoOauthInfoSender;
+
     private final EventUserRepository eventUserRepository;
+
     private final UserRepository userRepository;
 
     public Page<Event> findAllEventPages(Long userId, Pageable pageable) {
@@ -39,11 +42,12 @@ public class UserService {
         String accessToken = accessTokenInfo.accessToken();
         KakaoUserInfo userInfo = kakaoOauthInfoSender.getUserInfo(accessToken);
 
-        return userRepository.findByEmailAndOauthUserName(userInfo.email(), Provider.KAKAO.name() + userInfo.id())
+        return userRepository.findByEmailAndOauthUserName(new Email(userInfo.email()), Provider.KAKAO.name() + userInfo.id())
                 .orElseGet(() -> userRepository.save(userInfo.toUser()));
     }
 
-    public User findByUser(Long userId, UserRequiredInfo userRequiredInfo) {
+    @Transactional
+    public User updateRequiredInfo(Long userId, UserRequiredInfo userRequiredInfo) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
         User updatedUser = user.updateRequiredInfo(userRequiredInfo.name(), userRequiredInfo.phoneNumber());
@@ -66,5 +70,3 @@ public class UserService {
     }
 
 }
-
-
