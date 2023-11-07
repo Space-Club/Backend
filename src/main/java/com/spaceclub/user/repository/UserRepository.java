@@ -1,5 +1,6 @@
 package com.spaceclub.user.repository;
 
+import com.spaceclub.user.domain.Email;
 import com.spaceclub.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,9 +12,9 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query("select u from User u where u.email.email = :email and u.oauthUserName = :oauthUsername")
+    @Query("select u from User u where u.email = :email and u.oauthUserName = :oauthUsername")
     Optional<User> findByEmailAndOauthUserName(
-            @Param("email") String email,
+            @Param("email") Email email,
             @Param("oauthUsername") String oauthUsername
     );
 
