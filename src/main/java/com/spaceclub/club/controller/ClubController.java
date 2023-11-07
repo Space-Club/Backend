@@ -12,7 +12,6 @@ import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.global.dto.PageResponse;
-import com.spaceclub.global.jwt.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -55,6 +54,7 @@ public class ClubController {
             Long id = createdClub.getId();
 
             URI location = uriBuilder
+                    .scheme("https")
                     .path("/api/v1/clubs/{id}")
                     .buildAndExpand(id)
                     .toUri();
@@ -135,7 +135,11 @@ public class ClubController {
 
     @PostMapping("/clubs/{clubId}/invite/{uuid}")
     public ResponseEntity<Void> joinClub(@PathVariable Long clubId, @PathVariable String uuid) {
-        return ResponseEntity.noContent().build();
+        boolean isSuccess = service.joinClub(clubId, uuid);
+        if (isSuccess) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
 }

@@ -9,6 +9,8 @@ import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.repository.EventRepository;
+import com.spaceclub.user.domain.User;
+import com.spaceclub.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +31,8 @@ public class ClubService {
     private final EventRepository eventRepository;
 
     private final ClubUserRepository clubUserRepository;
+
+    private final UserRepository userRepository;
 
     private final InvitationCodeGenerator codeGenerator;
 
@@ -95,6 +99,32 @@ public class ClubService {
         }
 
         return invitationCode;
+    }
+
+    public boolean joinClub(Long clubId, String uuid) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
+
+        User user = userRepository.findById(1L)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
+
+        String invitationCode;
+        if ((invitationCode = club.getInvitationCode()) == null) {
+            throw new IllegalArgumentException("존재하지 않는 초대코드 입니다.");
+        }
+
+        if (invitationCode.equals(uuid)) {
+            ClubUser clubUser = ClubUser.builder()
+                    .user(user)
+                    .club(club)
+                    .role(ClubUserRole.MEMBER)
+                    .build();
+            clubUserRepository.save(clubUser);
+
+            return true;
+        }
+
+        return false;
     }
 
 }
