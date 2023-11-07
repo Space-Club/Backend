@@ -16,12 +16,11 @@ spring:
   config:
     activate:
       on-profile: develop
-    import: develop/application-develop.yml, local/application-oauth.yml
+    import: develop/application-develop.yml, global/application-oauth.yml, global/application-s3.yml
 
 ---
 spring:
   config:
     activate:
       on-profile: local
-    import: local/application-local.yml, local/application-oauth.yml
-
+    import: local/application-local.yml, global/application-oauth.yml, global/application-s3.yml
