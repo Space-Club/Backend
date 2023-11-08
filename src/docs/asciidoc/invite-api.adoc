@@ -1,0 +1,45 @@
+== 클럽 초대 링크
+
+:sectnums:
+
+=== 클럽 초대 링크 생성
+:sectnums!:
+==== Request
+
+include::{snippets}/invite/create/http-request.adoc[]
+===== Path Parameter
+
+include::{snippets}/invite/create/path-parameters.adoc[]
+
+===== Request Header
+
+include::{snippets}/invite/create/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/invite/create/http-response.adoc[]
+
+===== Response Body
+
+include::{snippets}/invite/create/response-fields.adoc[]
+
+:sectnums:
+
+=== 초대 링크를 통한 클럽 가입
+:sectnums!:
+==== Request
+
+include::{snippets}/invite/join/http-request.adoc[]
+===== Path Parameter
+
+include::{snippets}/invite/join/path-parameters.adoc[]
+
+===== Request Header
+
+include::{snippets}/invite/join/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/invite/join/http-response.adoc[]
+
+:sectnums:

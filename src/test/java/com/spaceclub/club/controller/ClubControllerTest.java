@@ -2,7 +2,6 @@ package com.spaceclub.club.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
-import com.spaceclub.invite.domain.InviteCodeGenerator;
 import com.spaceclub.club.controller.dto.ClubCreateRequest;
 import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
 import com.spaceclub.club.domain.Club;
@@ -12,6 +11,7 @@ import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.global.jwt.service.JwtService;
+import com.spaceclub.invite.service.InviteService;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.UUID;
 
 import static com.spaceclub.club.ClubTestFixture.club1;
 import static com.spaceclub.club.ClubUserTestFixture.club1User1Manager;
@@ -48,7 +47,6 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -90,7 +88,7 @@ class ClubControllerTest {
     private S3ImageUploader uploader;
 
     @MockBean
-    private InviteCodeGenerator codeGenerator;
+    private InviteService inviteService;
 
     @MockBean
     private JwtService jwtService;
@@ -358,60 +356,6 @@ class ClubControllerTest {
                                 parameterWithName("memberId").description("멤버 아이디")
                         )
                 ));
-    }
-
-    @Test
-    @WithMockUser
-    void 클럽_초대_링크_생성에_성공한다() throws Exception {
-        // given
-        Club club = club1();
-        Long clubId = club.getId();
-
-        given(clubService.getInvitationCode(1L)).willReturn("650d2d91-a8cf-45e7-8a43-a0c798173ecb");
-
-        // when
-        ResultActions actions = mockMvc.perform(post("/api/v1/clubs/{clubId}/invite", clubId)
-                .with(csrf()));
-
-        // then
-        actions.andExpect(status().isOk())
-                .andDo(print())
-                .andDo(document("club/invite",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("clubId").description("클럽 ID")
-                        ),
-                        responseFields(
-                                fieldWithPath("invitationCode").type(STRING).description("클럽 초대 링크")
-                        )
-                ));
-    }
-
-    @Test
-    @WithMockUser
-    void 초대_링크를_통해_클럽_가입에_성공한다() throws Exception {
-        // given
-        Long clubId = 1L;
-        String uuid = UUID.randomUUID().toString();
-
-        given(clubService.joinClub(uuid)).willReturn(true);
-
-        // when
-        ResultActions actions =
-                mockMvc.perform(post("/api/v1/clubs/invite/{uuid}", uuid)
-                        .with(csrf()));
-
-        // then
-        actions.andExpect(status().isNoContent())
-                .andDo(print())
-                .andDo(document("club/join",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("uuid").description("클럽 초대 링크 식별자")
-                        )));
-
     }
 
 }

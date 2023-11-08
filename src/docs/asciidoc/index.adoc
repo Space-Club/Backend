@@ -18,4 +18,6 @@ include::user-api.adoc[]
 
 include::club-api.adoc[]
 
+include::invite-api.adoc[]
+
 include::event-api.adoc[]

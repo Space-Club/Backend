@@ -77,9 +77,10 @@ public class ClubController {
     }
 
     @GetMapping("/clubs/{clubId}")
-    public ResponseEntity<ClubGetResponse> getClub(@PathVariable Long clubId) {
+    public ResponseEntity<ClubGetResponse> getClub(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
         Club club = service.getClub(clubId);
-        String inviteCode = inviteService.getInviteCode(clubId);
+        Long userId = jwtService.verifyUserId(httpServletRequest);
+        String inviteCode = inviteService.getInviteCode(clubId, userId);
 
         ClubGetResponse response = ClubGetResponse.from(club, INVITE_LINK_PREFIX + inviteCode);
 

@@ -29,7 +29,7 @@ public class InviteService {
 
     private final ClubUserRepository clubUserRepository;
 
-    public String getInviteCode(Long clubId) {
+    public String getInviteCode(Long clubId, Long userId) {
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
 

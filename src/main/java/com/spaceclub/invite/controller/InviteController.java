@@ -24,8 +24,10 @@ public class InviteController {
     private final JwtService jwtService;
 
     @PostMapping("/clubs/{clubId}/invite")
-    public ResponseEntity<Map<String, String>> getInviteLink(@PathVariable Long clubId) {
-        String inviteCode = service.getInviteCode(clubId);
+    public ResponseEntity<Map<String, String>> getInviteLink(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
+        Long userId = jwtService.verifyUserId(httpServletRequest);
+
+        String inviteCode = service.getInviteCode(clubId, userId);
 
         String inviteLink = INVITE_LINK_PREFIX + inviteCode;
 
