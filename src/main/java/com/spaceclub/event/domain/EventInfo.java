@@ -16,15 +16,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class EventInfo {
 
-    private final int TITLE_MAX_LENGTH = 30;
+    private static final int TITLE_MAX_LENGTH = 30;
 
-    private final int CONTENT_MAX_LENGTH = 200;
+    private static final int CONTENT_MAX_LENGTH = 200;
 
-    private final int LOCATION_MAX_LENGTH = 30;
+    private static final int LOCATION_MAX_LENGTH = 30;
 
-    private final int CAPACITY_MIN_LENGTH = 1;
+    private static final int CAPACITY_MIN_LENGTH = 1;
 
-    private final int CAPACITY_MAX_LENGTH = 999;
+    private static final int CAPACITY_MAX_LENGTH = 999;
 
     @Getter
     private String title;
