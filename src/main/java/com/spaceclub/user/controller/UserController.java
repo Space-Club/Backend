@@ -1,10 +1,10 @@
 package com.spaceclub.user.controller;
 
-import com.spaceclub.club.controller.ClubGetAllResponse;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.service.JwtService;
+import com.spaceclub.user.controller.dto.UserClubGetResponse;
 import com.spaceclub.user.controller.dto.UserCodeRequest;
 import com.spaceclub.user.controller.dto.UserEventGetResponse;
 import com.spaceclub.user.controller.dto.UserLoginResponse;
@@ -95,12 +95,12 @@ public class UserController {
     }
 
     @GetMapping("/clubs")
-    public ResponseEntity<List<ClubGetAllResponse>> getClubs(HttpServletRequest servletRequest) {
+    public ResponseEntity<List<UserClubGetResponse>> getClubs(HttpServletRequest servletRequest) {
         Long userId = jwtService.verifyUserId(servletRequest);
         List<Club> clubs = userService.getClubs(userId);
 
-        List<ClubGetAllResponse> clubResponses = clubs.stream()
-                .map(ClubGetAllResponse::from)
+        List<UserClubGetResponse> clubResponses = clubs.stream()
+                .map(UserClubGetResponse::from)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(clubResponses);
