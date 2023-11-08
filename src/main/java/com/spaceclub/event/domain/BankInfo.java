@@ -13,9 +13,9 @@ import org.springframework.util.Assert;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BankInfo {
 
-    public static final int BANK_NAME_MAX_LENGTH = 20;
+    private static final int BANK_NAME_MAX_LENGTH = 20;
 
-    public static final int BANK_ACCOUNT_NUMBER_MAX_LENGTH = 30;
+    private static final int BANK_ACCOUNT_NUMBER_MAX_LENGTH = 30;
 
     @Getter
     private String bankName;

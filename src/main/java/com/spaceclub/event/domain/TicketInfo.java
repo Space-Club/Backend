@@ -13,13 +13,13 @@ import org.springframework.util.Assert;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TicketInfo {
 
-    public static final int MAX_TICKET_COUNT_MIN_LENGTH = 1;
+    private static final int MAX_TICKET_COUNT_MIN_LENGTH = 1;
 
-    public static final int MAX_TICKET_COUNT_MAX_LENGTH = 999;
+    private static final int MAX_TICKET_COUNT_MAX_LENGTH = 999;
 
-    public static final int COST_MIN_LENGTH = 1;
+    private static final int COST_MIN_LENGTH = 1;
 
-    public static final int COST_MAX_LENGTH = 1000000;
+    private static final int COST_MAX_LENGTH = 1000000;
 
     @Getter
     private int maxTicketCount;
