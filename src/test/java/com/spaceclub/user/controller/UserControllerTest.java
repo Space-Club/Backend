@@ -98,7 +98,7 @@ class UserControllerTest {
                         .header("Authorization", "access token")
                         .param("page", "1")
                         .param("size", "10")
-                        .param("sort", "startDate,desc")
+                        .param("sort", "id,asc")
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.size()").value(events.size()))
@@ -118,7 +118,7 @@ class UserControllerTest {
                                 queryParameters(
                                         parameterWithName("page").description("페이지"),
                                         parameterWithName("size").description("페이지 내 개수"),
-                                        parameterWithName("sort").description("정렬 방법((ex) id,desc)")
+                                        parameterWithName("sort").description("정렬 방법((ex) id,asc)")
                                 ),
                                 responseFields(
                                         fieldWithPath("data").type(ARRAY).description("페이지 내 이벤트 정보"),
