@@ -36,11 +36,11 @@ public class InviteController {
         );
     }
 
-    @PostMapping("/clubs/invite/{uuid}")
-    public ResponseEntity<Void> joinClub(@PathVariable String uuid, HttpServletRequest httpServletRequest) {
+    @PostMapping("/clubs/invite/{code}")
+    public ResponseEntity<Void> joinClub(@PathVariable String code, HttpServletRequest httpServletRequest) {
         Long userId = jwtService.verifyUserId(httpServletRequest);
 
-        service.joinClub(uuid, userId);
+        service.joinClub(code, userId);
 
         return ResponseEntity.noContent().build();
     }
