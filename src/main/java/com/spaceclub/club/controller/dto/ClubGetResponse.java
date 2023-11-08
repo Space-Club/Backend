@@ -12,8 +12,6 @@ public record ClubGetResponse(
         String inviteUrl
 ) {
 
-    public static final String INVITE_FIXED_URL = "https://spaceclub.site/api/v1/clubs/invite/";
-
     @Builder
     public ClubGetResponse(String name,
                            String logoImageUrl,
@@ -37,7 +35,7 @@ public record ClubGetResponse(
                 .info(club.getInfo())
                 .memberCount(club.getClubUser().size())
                 .coverImageUrl(club.getCoverImageUrl())
-                .inviteUrl(INVITE_FIXED_URL + club.getInvitationCode())
+                .inviteUrl(club.getInviteUrl())
                 .build();
     }
 

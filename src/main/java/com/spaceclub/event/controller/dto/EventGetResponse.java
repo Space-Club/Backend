@@ -19,13 +19,13 @@ public record EventGetResponse(
     public static EventGetResponse from(Event event) {
         return new EventGetResponse(
                 event.getId(),
-                event.getEventInfo().getTitle(),
-                event.getEventInfo().getPosterImageUrl(),
-                event.getEventInfo().getStartDate().toLocalDate(),
-                event.getEventInfo().getStartDate().toLocalTime(),
-                event.getEventInfo().getLocation(),
-                event.getClub().getName(),
-                event.getClub().getLogoImageUrl()
+                event.getTitle(),
+                event.getPosterImageUrl(),
+                event.getStartDate(),
+                event.getStartTime(),
+                event.getLocation(),
+                event.getClubName(),
+                event.getClubLogoImageUrl()
         );
     }
 

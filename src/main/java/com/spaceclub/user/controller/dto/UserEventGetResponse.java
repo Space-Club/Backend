@@ -2,24 +2,26 @@ package com.spaceclub.user.controller.dto;
 
 import com.spaceclub.event.domain.Event;
 
+import java.time.LocalDate;
+
 public record UserEventGetResponse(
         Long id,
         String title,
         String location,
         String clubName,
         String posterImageUrl,
-        String startDate,
+        LocalDate startDate,
         String status
 ) {
 
     public static UserEventGetResponse from(Event event, String eventStatus) {
         return new UserEventGetResponse(
                 event.getId(),
-                event.getEventInfo().getTitle(),
-                event.getEventInfo().getLocation(),
-                event.getClub().getName(),
-                event.getEventInfo().getPosterImageUrl(),
-                event.getEventInfo().getStartDate().toLocalDate().toString(),
+                event.getTitle(),
+                event.getLocation(),
+                event.getClubName(),
+                event.getPosterImageUrl(),
+                event.getStartDate(),
                 eventStatus
         );
     }

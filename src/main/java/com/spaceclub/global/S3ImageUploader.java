@@ -19,18 +19,16 @@ public class S3ImageUploader {
 
     private static final String DOT = ".";
 
-    public static final String SLASH = "/";
-
     private final AmazonS3Client amazonS3Client;
 
-    @Value("${s3.bucket.name}")
-    private String s3BucketName;
+    @Value("${s3.folder.name.event-poster}")
+    private String eventPosterFolder;
 
-    @Value("${s3.bucket.club-name}")
-    private String clubS3BucketName;
+    @Value("${s3.folder.name.club-logo}")
+    private String clubLogoFolder;
 
     public String uploadPosterImage(MultipartFile posterImage) throws IOException {
-        String newFileName = createFileName(posterImage.getOriginalFilename());
+        String fileName = createFileName(posterImage.getOriginalFilename());
 
         ObjectMetadata objectMetaData = new ObjectMetadata();
 
@@ -38,15 +36,15 @@ public class S3ImageUploader {
         objectMetaData.setContentLength(posterImage.getSize());
 
         amazonS3Client.putObject(
-                new PutObjectRequest(s3BucketName, newFileName, posterImage.getInputStream(), objectMetaData)
+                new PutObjectRequest(eventPosterFolder, fileName, posterImage.getInputStream(), objectMetaData)
                         .withCannedAcl(CannedAccessControlList.PublicRead)
         );
 
-        return getSavedFileName(posterImage);
+        return fileName;
     }
 
     public String uploadClubLogoImage(MultipartFile logoImage) throws IOException {
-        String newFileName = createFileName(logoImage.getOriginalFilename());
+        String fileName = createFileName(logoImage.getOriginalFilename());
 
         ObjectMetadata objectMetaData = new ObjectMetadata();
 
@@ -54,20 +52,12 @@ public class S3ImageUploader {
         objectMetaData.setContentLength(logoImage.getSize());
 
         amazonS3Client.putObject(
-                new PutObjectRequest(clubS3BucketName, newFileName, logoImage.getInputStream(), objectMetaData)
+                new PutObjectRequest(clubLogoFolder, fileName, logoImage.getInputStream(), objectMetaData)
                         .withCannedAcl(CannedAccessControlList.PublicRead)
         );
 
-        return getSavedFileName(logoImage);
+        return fileName;
     }
-
-    private String getSavedFileName(MultipartFile posterImage) {
-        String fullImageUrl = amazonS3Client.getUrl(s3BucketName, posterImage.getOriginalFilename()).toString();
-        String[] parts = fullImageUrl.split(SLASH);
-
-        return parts[parts.length - 1];
-    }
-
 
     private String createFileName(String originalName) {
         String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());

@@ -34,8 +34,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
-import static com.spaceclub.club.controller.dto.ClubGetResponse.INVITE_FIXED_URL;
-
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -44,6 +42,8 @@ public class ClubController {
     private final ClubService service;
 
     private final S3ImageUploader uploader;
+
+    private static final String INVITE_FIXED_URL = "https://spaceclub.site/api/v1/clubs/invite/";
 
     @PostMapping(value = "/clubs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> createClub(@RequestPart(value = "request") ClubCreateRequest request,

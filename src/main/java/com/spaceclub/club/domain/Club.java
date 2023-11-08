@@ -27,6 +27,10 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @EqualsAndHashCode(of = "id", callSuper = false)
 public class Club extends BaseTimeEntity {
 
+    private static final String CLUB_LOGO_S3_URL = "https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/club-logo/";
+
+    private static final String INVITE_FIXED_URL = "https://spaceclub.site/api/v1/clubs/invite/";
+
     @Id
     @Column(name = "club_id")
     @Getter
@@ -38,7 +42,6 @@ public class Club extends BaseTimeEntity {
     private String name;
 
     @Lob
-    @Getter
     private String logoImageUrl;
 
     @Lob
@@ -68,7 +71,7 @@ public class Club extends BaseTimeEntity {
     }
 
     @Builder
-    public Club(Long id, String name, String logoImageUrl, String info, String owner, Invitation invitation,String coverImageUrl, List<ClubNotice> notices) {
+    public Club(Long id, String name, String logoImageUrl, String info, String owner, Invitation invitation, String coverImageUrl, List<ClubNotice> notices) {
         Assert.notNull(name, "이름에 null 값이 올 수 없습니다");
         Assert.hasText(name, "이름이 빈 값일 수 없습니다");
         Assert.isTrue(validateNameLength(name), "이름의 길이는 12글자를 넘을 수 없습니다");
@@ -87,10 +90,6 @@ public class Club extends BaseTimeEntity {
         }
     }
 
-    public String getInvitationCode() {
-        return invitation.getInvitationCode();
-    }
-
     public Club assignInvitationCode(String invitationCode) {
         this.invitation = Invitation.builder()
                 .invitationCode(invitationCode)
@@ -98,6 +97,24 @@ public class Club extends BaseTimeEntity {
                 .build();
 
         return this;
+    }
+
+    public String getInvitationCode() {
+        return invitation.getInvitationCode();
+    }
+
+    public String getInviteUrl() {
+        if (invitation.getInvitationCode() == null) {
+            return null;
+        }
+        return INVITE_FIXED_URL + invitation.getInvitationCode();
+    }
+
+    public String getLogoImageUrl() {
+        if (logoImageUrl == null) {
+            return null;
+        }
+        return CLUB_LOGO_S3_URL + logoImageUrl;
     }
 
 }

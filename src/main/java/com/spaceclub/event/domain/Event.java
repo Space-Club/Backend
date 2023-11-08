@@ -32,6 +32,10 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @EqualsAndHashCode(of = "id", callSuper = false)
 public class Event extends BaseTimeEntity {
 
+    private static final String EVENT_POSTER_S3_URL = "https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/event-poster/";
+
+    private static final String CLUB_LOGO_S3_URL = "https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/club-logo/";
+
     @Id
     @Getter
     @Column(name = "event_id")
@@ -96,12 +100,16 @@ public class Event extends BaseTimeEntity {
                 .build();
     }
 
+
     public String getTitle() {
         return eventInfo.getTitle();
     }
 
     public String getPosterImageUrl() {
-        return eventInfo.getPosterImageUrl();
+        if (eventInfo.getPosterImageUrl() == null) {
+            return null;
+        }
+        return EVENT_POSTER_S3_URL + eventInfo.getPosterImageUrl();
     }
 
     public LocalDate getStartDate() {
@@ -125,7 +133,10 @@ public class Event extends BaseTimeEntity {
     }
 
     public String getClubLogoImageUrl() {
-        return club.getLogoImageUrl();
+        if (club.getLogoImageUrl() == null) {
+            return null;
+        }
+        return CLUB_LOGO_S3_URL + club.getLogoImageUrl();
     }
 
     public LocalDateTime getFormOpenDate() {
