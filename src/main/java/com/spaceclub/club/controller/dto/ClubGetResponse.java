@@ -8,8 +8,7 @@ public record ClubGetResponse(
         String logoImageUrl,
         String info,
         int memberCount,
-        String coverImageUrl,
-        String inviteUrl
+        String coverImageUrl
 ) {
 
     @Builder
@@ -17,15 +16,13 @@ public record ClubGetResponse(
                            String logoImageUrl,
                            String info,
                            int memberCount,
-                           String coverImageUrl,
-                           String inviteUrl
+                           String coverImageUrl
     ) {
         this.name = name;
         this.logoImageUrl = logoImageUrl;
         this.info = info;
         this.memberCount = memberCount;
         this.coverImageUrl = coverImageUrl;
-        this.inviteUrl = inviteUrl;
     }
 
     public static ClubGetResponse from(Club club) {
@@ -35,7 +32,6 @@ public record ClubGetResponse(
                 .info(club.getInfo())
                 .memberCount(club.getClubUser().size())
                 .coverImageUrl(club.getCoverImageUrl())
-                .inviteUrl(club.getInviteUrl())
                 .build();
     }
 

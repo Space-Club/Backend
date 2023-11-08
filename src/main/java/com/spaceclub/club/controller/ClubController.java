@@ -34,7 +34,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -46,8 +45,6 @@ public class ClubController {
     private final S3ImageUploader uploader;
 
     private final JwtService jwtService;
-
-    private static final String INVITE_FIXED_URL = "https://spaceclub.site/api/v1/clubs/invite/";
 
     @PostMapping(value = "/clubs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> createClub(@RequestPart(value = "request") ClubCreateRequest request,
@@ -78,6 +75,7 @@ public class ClubController {
     public ResponseEntity<ClubGetResponse> getClub(@PathVariable Long clubId) {
         Club club = service.getClub(clubId);
         ClubGetResponse response = ClubGetResponse.from(club);
+        // response에서 초대코드 받아오기
 
         return ResponseEntity.ok(response);
     }
@@ -123,26 +121,6 @@ public class ClubController {
         service.deleteMember(clubId, memberId);
 
         return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/clubs/{clubId}/invite")
-    public ResponseEntity<Map<String, String>> getInvitationCode(@PathVariable Long clubId) {
-        String uuid = service.getInvitationCode(clubId);
-
-        String invitationCode = INVITE_FIXED_URL + uuid;
-
-        return ResponseEntity.ok(
-                Map.of("invitationCode", invitationCode)
-        );
-    }
-
-    @PostMapping("/clubs/invite/{uuid}")
-    public ResponseEntity<Void> joinClub(@PathVariable String uuid) {
-        boolean isSuccess = service.joinClub(uuid);
-        if (isSuccess) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.badRequest().build();
     }
 
 }

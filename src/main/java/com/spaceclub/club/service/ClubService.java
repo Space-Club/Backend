@@ -1,10 +1,8 @@
 package com.spaceclub.club.service;
 
-import com.spaceclub.club.InvitationCodeGenerator;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.domain.ClubUserRole;
-import com.spaceclub.club.domain.Invitation;
 import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
@@ -34,8 +32,6 @@ public class ClubService {
     private final ClubUserRepository clubUserRepository;
 
     private final UserRepository userRepository;
-
-    private final InvitationCodeGenerator codeGenerator;
 
     public Club createClub(Club club, Long clubId) {
         User user = userRepository.findById(clubId)
@@ -95,48 +91,6 @@ public class ClubService {
 
         return clubUserRepository.findByClub_IdAndUser_Id(clubId, memberId)
                 .orElseThrow(() -> new IllegalArgumentException("클럽의 멤버가 아닙니다"));
-    }
-
-    public String getInvitationCode(Long clubId) {
-        Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
-
-        String invitationCode = club.getInvitationCode();
-        if (invitationCode == null || invitationCode.equals(InvitationCodeGenerator.getInitValue())) {
-            invitationCode = codeGenerator.generateInvitationCode();
-            Club newClub = club.assignInvitationCode(invitationCode);
-
-            clubRepository.save(newClub);
-        }
-
-        return invitationCode;
-    }
-
-    public boolean joinClub(String uuid) {
-        User user = userRepository.findById(1L)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
-
-        Invitation invitation = Invitation.builder()
-                .invitationCode(uuid)
-                .build();
-
-        Club club = clubRepository.findByInvitation(invitation)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 초대코드 입니다"));
-
-        String invitationCode = club.getInvitationCode();
-
-        if (invitationCode.equals(uuid)) {
-            ClubUser clubUser = ClubUser.builder()
-                    .user(user)
-                    .club(club)
-                    .role(ClubUserRole.MEMBER)
-                    .build();
-            clubUserRepository.save(clubUser);
-
-            return true;
-        }
-
-        return false;
     }
 
 }

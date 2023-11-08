@@ -2,7 +2,7 @@ package com.spaceclub.club.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
-import com.spaceclub.club.InvitationCodeGenerator;
+import com.spaceclub.invite.domain.InviteCodeGenerator;
 import com.spaceclub.club.controller.dto.ClubCreateRequest;
 import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
 import com.spaceclub.club.domain.Club;
@@ -90,7 +90,7 @@ class ClubControllerTest {
     private S3ImageUploader uploader;
 
     @MockBean
-    private InvitationCodeGenerator codeGenerator;
+    private InviteCodeGenerator codeGenerator;
 
     @MockBean
     private JwtService jwtService;
