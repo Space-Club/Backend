@@ -13,7 +13,6 @@ public class ClubTestFixture {
                 .name("클럽 명")
                 .logoImageUrl("클럽 이미지 URL")
                 .info("클럽 정보")
-                .owner("클럽 주인")
                 .invitation(invitation())
                 .coverImageUrl("클럽 커버 이미지 URL")
                 .build();
@@ -26,7 +25,6 @@ public class ClubTestFixture {
                 .logoImageUrl("클럽 이미지 URL")
                 .coverImageUrl("클럽 커버 이미지 URL")
                 .info("클럽 정보")
-                .owner("클럽 주인")
                 .invitation(invitation())
                 .build();
     }

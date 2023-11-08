@@ -3,9 +3,15 @@
 :sectnums!:
 ==== Request
 include::{snippets}/club/create/http-request.adoc[]
+===== Request Header
+include::{snippets}/club/create/request-headers.adoc[]
+===== Multipart Form Data
+include::{snippets}/club/create/request-parts.adoc[]
+===== Request Form Data
 include::{snippets}/club/create/request-part-request-fields.adoc[]
 ==== Response
 include::{snippets}/club/create/http-response.adoc[]
+===== Response Header
 include::{snippets}/club/create/response-headers.adoc[]
 :sectnums:
 
