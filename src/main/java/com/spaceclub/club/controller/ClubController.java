@@ -12,7 +12,6 @@ import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.global.dto.PageResponse;
-import com.spaceclub.global.jwt.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +34,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import static com.spaceclub.club.controller.dto.ClubGetResponse.INVITE_FIXED_URL;
+
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -55,6 +56,7 @@ public class ClubController {
             Long id = createdClub.getId();
 
             URI location = uriBuilder
+                    .scheme("https")
                     .path("/api/v1/clubs/{id}")
                     .buildAndExpand(id)
                     .toUri();
@@ -128,14 +130,22 @@ public class ClubController {
 
     @PostMapping("/clubs/{clubId}/invite")
     public ResponseEntity<Map<String, String>> getInvitationCode(@PathVariable Long clubId) {
+        String uuid = service.getInvitationCode(clubId);
+
+        String invitationCode = INVITE_FIXED_URL + uuid;
+
         return ResponseEntity.ok(
-                Map.of("invitationCode", service.getInvitationCode(clubId))
+                Map.of("invitationCode", invitationCode)
         );
     }
 
-    @PostMapping("/clubs/{clubId}/invite/{uuid}")
-    public ResponseEntity<Void> joinClub(@PathVariable Long clubId, @PathVariable String uuid) {
-        return ResponseEntity.noContent().build();
+    @PostMapping("/clubs/invite/{uuid}")
+    public ResponseEntity<Void> joinClub(@PathVariable String uuid) {
+        boolean isSuccess = service.joinClub(uuid);
+        if (isSuccess) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
 }
