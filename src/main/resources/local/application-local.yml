@@ -1,13 +1,13 @@
 spring:
   datasource:
-    url: jdbc:h2:mem://localhost/~/space-club/local
+    url: jdbc:h2:tcp://localhost/~/space-club
     username: sa
     password:
     driver-class-name: org.h2.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     properties:
       hibernate:
         auto_quote_keyword: true
