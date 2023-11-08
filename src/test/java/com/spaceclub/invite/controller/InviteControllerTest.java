@@ -86,14 +86,13 @@ class InviteControllerTest {
     @WithMockUser
     void 초대_링크를_통해_클럽_가입에_성공한다() throws Exception {
         // given
-        Long clubId = 1L;
-        String uuid = UUID.randomUUID().toString();
+        String code = UUID.randomUUID().toString();
 
         doNothing().when(inviteService).joinClub(any(String.class), any(Long.class));
 
         // when
         ResultActions actions =
-                mockMvc.perform(post("/api/v1/clubs/invite/{uuid}", uuid)
+                mockMvc.perform(post("/api/v1/clubs/invite/{code}", code)
                         .header("Authorization", "token")
                         .with(csrf()));
 
@@ -104,7 +103,7 @@ class InviteControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
-                                parameterWithName("uuid").description("클럽 초대 링크 식별자")
+                                parameterWithName("code").description("클럽 초대 링크 식별자")
                         ),
                         requestHeaders(
                                 headerWithName("Authorization").description("유저 액세스 토큰")
