@@ -12,6 +12,8 @@ import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.global.dto.PageResponse;
+import com.spaceclub.global.jwt.service.JwtService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,30 +45,25 @@ public class ClubController {
 
     private final S3ImageUploader uploader;
 
+    private final JwtService jwtService;
+
     private static final String INVITE_FIXED_URL = "https://spaceclub.site/api/v1/clubs/invite/";
 
     @PostMapping(value = "/clubs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> createClub(@RequestPart(value = "request") ClubCreateRequest request,
                                              @RequestPart(value = "logoImage", required = false) MultipartFile logoImage,
-                                             UriComponentsBuilder uriBuilder) throws IOException {
+                                             UriComponentsBuilder uriBuilder,
+                                             HttpServletRequest httpServletRequest) throws IOException {
 
-        if (logoImage == null) {
-            Club newClub = request.toEntity();
-            Club createdClub = service.createClub(newClub);
-            Long id = createdClub.getId();
+        Long userId = jwtService.verifyUserId(httpServletRequest);
 
-            URI location = uriBuilder
-                    .scheme("https")
-                    .path("/api/v1/clubs/{id}")
-                    .buildAndExpand(id)
-                    .toUri();
-
-            return ResponseEntity.created(location).build();
+        String logoImageUrl = null;
+        if (logoImage != null) {
+            logoImageUrl = uploader.uploadClubLogoImage(logoImage);
         }
 
-        String logoImageUrl = uploader.uploadClubLogoImage(logoImage);
         Club newClub = request.toEntity(logoImageUrl);
-        Club createdClub = service.createClub(newClub);
+        Club createdClub = service.createClub(newClub, userId);
         Long id = createdClub.getId();
 
         URI location = uriBuilder

@@ -7,24 +7,13 @@ import java.time.LocalDateTime;
 
 public record ClubCreateRequest(
         String name,
-        String info,
-        String owner
+        String info
 ) {
-
-    public Club toEntity() {
-        return Club.builder()
-                .name(name)
-                .info(info)
-                .owner(owner)
-                .invitation(InvitationCreateRequest.toEntity())
-                .build();
-    }
 
     public Club toEntity(String logoImageUrl) {
         return Club.builder()
                 .name(name)
                 .info(info)
-                .owner(owner)
                 .invitation(InvitationCreateRequest.toEntity())
                 .logoImageUrl(logoImageUrl)
                 .build();

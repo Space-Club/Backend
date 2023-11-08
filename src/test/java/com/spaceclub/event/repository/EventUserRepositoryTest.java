@@ -50,7 +50,6 @@ class EventUserRepositoryTest {
                 .name("클럽 명")
                 .logoImageUrl("클럽 썸네일 이미지 URL")
                 .info("클럽 정보")
-                .owner("클럽 주인")
                 .build();
         clubRepository.save(club);
 

@@ -37,7 +37,17 @@ public class ClubService {
 
     private final InvitationCodeGenerator codeGenerator;
 
-    public Club createClub(Club club) {
+    public Club createClub(Club club, Long clubId) {
+        User user = userRepository.findById(clubId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다"));
+
+        ClubUser clubUser = ClubUser.builder()
+                .club(club)
+                .user(user)
+                .role(ClubUserRole.MANAGER)
+                .build();
+
+        clubUserRepository.save(clubUser);
         return clubRepository.save(club);
     }
 

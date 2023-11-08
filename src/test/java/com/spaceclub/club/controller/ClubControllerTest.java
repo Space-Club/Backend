@@ -11,6 +11,7 @@ import com.spaceclub.club.service.ClubService;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.S3ImageUploader;
+import com.spaceclub.global.jwt.service.JwtService;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
@@ -90,23 +92,25 @@ class ClubControllerTest {
     @MockBean
     private InvitationCodeGenerator codeGenerator;
 
+    @MockBean
+    private JwtService jwtService;
+
     @Test
     @WithMockUser
     void 클럽_생성에_성공한다() throws Exception {
         // given
-        given(clubService.createClub(any(Club.class))).willReturn(
+        given(clubService.createClub(any(Club.class), any(Long.class))).willReturn(
                 Club.builder()
                         .id(1L)
                         .name("연사모")
                         .info("연어를 사랑하는 모임")
-                        .owner("연어대장")
                         .logoImageUrl("연어.jpg")
-                        .build());
+                        .build()
+        );
 
         ClubCreateRequest clubCreateRequest = new ClubCreateRequest(
                 "연사모",
-                "연어를 사랑하는 모임",
-                "연어대장"
+                "연어를 사랑하는 모임"
         );
 
         MockMultipartFile logoImage = new MockMultipartFile(
@@ -127,6 +131,7 @@ class ClubControllerTest {
         ResultActions result = this.mockMvc.perform(multipart("/api/v1/clubs")
                 .file(request)
                 .file(logoImage)
+                .header("Authorization", "token")
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8)
@@ -144,11 +149,13 @@ class ClubControllerTest {
                                 partWithName("request").description("클럽 생성 요청 DTO"),
                                 partWithName("logoImage").description("클럽 썸네일 이미지")
                         ),
+                        requestHeaders(
+                                headerWithName("Authorization").description("유저 액세스 토큰")
+                        ),
                         requestPartFields(
                                 "request",
                                 fieldWithPath("name").type(STRING).description("클럽 이름"),
-                                fieldWithPath("info").type(STRING).description("클럽 소개"),
-                                fieldWithPath("owner").type(STRING).description("클럽 생성자")
+                                fieldWithPath("info").type(STRING).description("클럽 소개")
                         ),
                         responseHeaders(
                                 headerWithName("Location").description("생성된 클럽의 URI")
