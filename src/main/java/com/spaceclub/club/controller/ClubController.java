@@ -13,6 +13,7 @@ import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.service.JwtService;
+import com.spaceclub.invite.service.InviteService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,12 +36,16 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
+import static com.spaceclub.invite.controller.InviteController.INVITE_LINK_PREFIX;
+
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class ClubController {
 
     private final ClubService service;
+
+    private final InviteService inviteService;
 
     private final S3ImageUploader uploader;
 
@@ -74,8 +79,9 @@ public class ClubController {
     @GetMapping("/clubs/{clubId}")
     public ResponseEntity<ClubGetResponse> getClub(@PathVariable Long clubId) {
         Club club = service.getClub(clubId);
-        ClubGetResponse response = ClubGetResponse.from(club);
-        // response에서 초대코드 받아오기
+        String inviteCode = inviteService.getInviteCode(clubId);
+
+        ClubGetResponse response = ClubGetResponse.from(club, INVITE_LINK_PREFIX + inviteCode);
 
         return ResponseEntity.ok(response);
     }

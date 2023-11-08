@@ -187,7 +187,7 @@ class ClubControllerTest {
                                 fieldWithPath("info").type(STRING).description("클럽 소개"),
                                 fieldWithPath("memberCount").type(NUMBER).description("클럽 멤버 수"),
                                 fieldWithPath("coverImageUrl").type(STRING).description("클럽 커버 이미지 Url"),
-                                fieldWithPath("inviteUrl").type(STRING).description("클럽 초대 링크")
+                                fieldWithPath("inviteLink").type(STRING).description("클럽 초대 링크")
                         )));
     }
 

@@ -1,12 +1,12 @@
 package com.spaceclub.invite.service;
 
-import com.spaceclub.club.repository.ClubRepository;
-import com.spaceclub.club.repository.ClubUserRepository;
-import com.spaceclub.invite.domain.InviteCodeGenerator;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.domain.ClubUserRole;
+import com.spaceclub.club.repository.ClubRepository;
+import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.invite.domain.Invite;
+import com.spaceclub.invite.domain.InviteCodeGenerator;
 import com.spaceclub.invite.repository.InviteRepository;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.repository.UserRepository;
@@ -30,7 +30,6 @@ public class InviteService {
     private final ClubUserRepository clubUserRepository;
 
     public String getInviteCode(Long clubId) {
-
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
 
@@ -44,13 +43,9 @@ public class InviteService {
                                 .build()
                 );
 
-        if (!invite.getCode().equals(inviteCode)) {
-            invite = invite.updateCode(inviteCode);
-        }
-
         inviteRepository.save(invite);
 
-        return inviteCode;
+        return invite.getCode();
     }
 
     public void joinClub(String code, Long userId) {

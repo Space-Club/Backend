@@ -17,7 +17,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class InviteController {
 
-    private static final String INVITE_LINK_PREFIX = "https://spaceclub.site/api/v1/clubs/invite/";
+    public static final String INVITE_LINK_PREFIX = "https://spaceclub.site/api/v1/clubs/invite/";
 
     private final InviteService service;
 
