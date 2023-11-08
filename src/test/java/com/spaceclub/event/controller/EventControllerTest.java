@@ -107,18 +107,6 @@ class EventControllerTest {
             )
     );
 
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    private ObjectMapper mapper;
-
-    @MockBean
-    private EventService eventService;
-
-    @MockBean
-    private S3ImageUploader uploader;
-
     @Test
     @WithMockUser
     public void 행사_생성에_성공한다() throws Exception {
