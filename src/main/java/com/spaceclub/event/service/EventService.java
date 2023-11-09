@@ -67,4 +67,8 @@ public class EventService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 행사입니다."));
     }
 
+    @Transactional
+    public void cancelEvent(Long eventId, Long userId) {
+    }
+
 }
