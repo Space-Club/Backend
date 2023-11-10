@@ -5,6 +5,7 @@ import com.spaceclub.form.controller.dto.FormApplicationGetResponse;
 import com.spaceclub.form.controller.dto.FormCreateRequest;
 import com.spaceclub.form.controller.dto.FormGetResponse;
 import com.spaceclub.form.service.FormService;
+import com.spaceclub.form.service.vo.FormCreate;
 import com.spaceclub.global.jwt.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -29,10 +30,16 @@ public class FormController {
 
     private final JwtService jwtService;
 
-    @PostMapping("/formItems")
-    public ResponseEntity<Void> createFormItem(@RequestBody FormCreateRequest request, UriComponentsBuilder uriBuilder, HttpServletRequest servletRequest) {
+    @PostMapping("/forms")
+    public ResponseEntity<Void> createForm(@RequestBody FormCreateRequest request, UriComponentsBuilder uriBuilder, HttpServletRequest servletRequest) {
         Long userId = jwtService.verifyUserId(servletRequest);
-        Long eventId = formService.createForm();
+        Long eventId = formService.createForm(FormCreate.builder()
+                .userId(userId)
+                .eventId(request.eventId())
+                .form(request.toForm())
+                .options(request.toFormOptions())
+                .build()
+        );
 
         URI location = uriBuilder
                 .path("/api/v1/events/{id}")
