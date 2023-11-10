@@ -1,104 +1,114 @@
 == 클럽
+
 === 클럽 개설
 :sectnums!:
 ==== Request
+
 include::{snippets}/club/create/http-request.adoc[]
 ===== Request Header
+
 include::{snippets}/club/create/request-headers.adoc[]
+
 ===== Multipart Form Data
+
 include::{snippets}/club/create/request-parts.adoc[]
+
 ===== Request Form Data
+
 include::{snippets}/club/create/request-part-request-fields.adoc[]
+
 ==== Response
+
 include::{snippets}/club/create/http-response.adoc[]
 ===== Response Header
+
 include::{snippets}/club/create/response-headers.adoc[]
 :sectnums:
 
 === 클럽 행사 조회
 :sectnums!:
 ==== Request
+
 include::{snippets}/club/getAllEvent/http-request.adoc[]
 ===== Path Parameter
+
 include::{snippets}/club/getAllEvent/path-parameters.adoc[]
+
 ===== Query Parameter
+
 include::{snippets}/club/getAllEvent/query-parameters.adoc[]
 
 ==== Response
+
 include::{snippets}/club/getAllEvent/http-response.adoc[]
 ===== Response Body
+
 include::{snippets}/club/getAllEvent/response-fields.adoc[]
 :sectnums:
 
 === 클럽 멤버 조회
 :sectnums!:
 ==== Request
+
 include::{snippets}/club/getAllMember/http-request.adoc[]
 ===== Path Parameter
+
 include::{snippets}/club/getAllMember/path-parameters.adoc[]
 
 ==== Response
+
 include::{snippets}/club/getAllMember/http-response.adoc[]
 ===== Response Body
+
 include::{snippets}/club/getAllMember/response-fields.adoc[]
 :sectnums:
 
 === 클럽 멤버 권한 변경
 :sectnums!:
 ==== Request
+
 include::{snippets}/club/updateMemberRole/http-request.adoc[]
 ===== Request Body
+
 include::{snippets}/club/updateMemberRole/request-body.adoc[]
 include::{snippets}/club/updateMemberRole/request-fields.adoc[]
+
 ===== Path Parameter
+
 include::{snippets}/club/updateMemberRole/path-parameters.adoc[]
 
 ==== Response
+
 include::{snippets}/club/updateMemberRole/http-response.adoc[]
 :sectnums:
 
 === 클럽 멤버 탈퇴
 :sectnums!:
 ==== Request
+
 include::{snippets}/club/deleteMember/http-request.adoc[]
 ===== Path Parameter
+
 include::{snippets}/club/deleteMember/path-parameters.adoc[]
 
 ==== Response
+
 include::{snippets}/club/deleteMember/http-response.adoc[]
-:sectnums:
-
-=== 클럽 초대 링크 생성
-:sectnums!:
-==== Request
-include::{snippets}/club/invite/http-request.adoc[]
-===== Path Parameter
-include::{snippets}/club/invite/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/club/invite/http-response.adoc[]
-:sectnums:
-
-=== 초대 링크를 통한 클럽 가입
-:sectnums!:
-==== Request
-include::{snippets}/club/join/http-request.adoc[]
-===== Path Parameter
-include::{snippets}/club/join/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/club/join/http-response.adoc[]
 :sectnums:
 
 === 클럽 조회
 :sectnums!:
 ==== Request
+
 include::{snippets}/club/get/http-request.adoc[]
 ===== Path Parameter
+
 include::{snippets}/club/get/path-parameters.adoc[]
 
 ==== Response
+
 include::{snippets}/club/get/http-response.adoc[]
 ===== Response Body
+
 include::{snippets}/club/get/response-fields.adoc[]
 :sectnums:

@@ -13,6 +13,7 @@ import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.service.JwtService;
+import com.spaceclub.invite.service.InviteService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,7 +35,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
+
+import static com.spaceclub.invite.controller.InviteController.INVITE_LINK_PREFIX;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -43,11 +45,11 @@ public class ClubController {
 
     private final ClubService service;
 
+    private final InviteService inviteService;
+
     private final S3ImageUploader uploader;
 
     private final JwtService jwtService;
-
-    private static final String INVITE_FIXED_URL = "https://spaceclub.site/api/v1/clubs/invite/";
 
     @PostMapping(value = "/clubs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> createClub(@RequestPart(value = "request") ClubCreateRequest request,
@@ -75,9 +77,12 @@ public class ClubController {
     }
 
     @GetMapping("/clubs/{clubId}")
-    public ResponseEntity<ClubGetResponse> getClub(@PathVariable Long clubId) {
+    public ResponseEntity<ClubGetResponse> getClub(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
         Club club = service.getClub(clubId);
-        ClubGetResponse response = ClubGetResponse.from(club);
+        Long userId = jwtService.verifyUserId(httpServletRequest);
+        String inviteCode = inviteService.getInviteCode(clubId, userId);
+
+        ClubGetResponse response = ClubGetResponse.from(club, INVITE_LINK_PREFIX + inviteCode);
 
         return ResponseEntity.ok(response);
     }
@@ -123,26 +128,6 @@ public class ClubController {
         service.deleteMember(clubId, memberId);
 
         return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/clubs/{clubId}/invite")
-    public ResponseEntity<Map<String, String>> getInvitationCode(@PathVariable Long clubId) {
-        String uuid = service.getInvitationCode(clubId);
-
-        String invitationCode = INVITE_FIXED_URL + uuid;
-
-        return ResponseEntity.ok(
-                Map.of("invitationCode", invitationCode)
-        );
-    }
-
-    @PostMapping("/clubs/invite/{uuid}")
-    public ResponseEntity<Void> joinClub(@PathVariable String uuid) {
-        boolean isSuccess = service.joinClub(uuid);
-        if (isSuccess) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.badRequest().build();
     }
 
 }
