@@ -33,13 +33,7 @@ public class FormController {
     @PostMapping("/forms")
     public ResponseEntity<Void> createForm(@RequestBody FormCreateRequest request, UriComponentsBuilder uriBuilder, HttpServletRequest servletRequest) {
         Long userId = jwtService.verifyUserId(servletRequest);
-        Long eventId = formService.createForm(FormCreate.builder()
-                .userId(userId)
-                .eventId(request.eventId())
-                .form(request.toForm())
-                .options(request.toFormOptions())
-                .build()
-        );
+        Long eventId = formService.createForm(FormCreate.from(request, userId));
 
         URI location = uriBuilder
                 .path("/api/v1/events/{id}")

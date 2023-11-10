@@ -21,7 +21,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 public class FormOption {
 
     @Id
-    @Column(name = "form_item_id")
+    @Column(name = "form_option_id")
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
