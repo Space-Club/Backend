@@ -39,6 +39,25 @@ include::{snippets}/event/apply/request-fields.adoc[]
 include::{snippets}/event/apply/http-response.adoc[]
 :sectnums:
 
+=== 행사 신청 취소
+:sectnums!:
+==== Request
+
+include::{snippets}/event/cancel/http-request.adoc[]
+
+===== Request Header
+
+include::{snippets}/event/cancel/request-headers.adoc[]
+
+===== Path Parameter
+
+include::{snippets}/event/cancel/path-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/event/cancel/http-response.adoc[]
+:sectnums:
+
 === 모든 행사 조회
 :sectnums!:
 ==== Request

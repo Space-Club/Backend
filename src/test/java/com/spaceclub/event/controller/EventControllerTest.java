@@ -39,6 +39,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -294,6 +295,33 @@ class EventControllerTest {
                                 fieldWithPath("formOpenDateTime").type(STRING).description("행사 참여 신청 시작 날짜와 시간"),
                                 fieldWithPath("formCloseDateTime").type(STRING).description("행사 참여 신청 종료 날짜와 시간")
                         )));
+    }
+
+    @Test
+    @WithMockUser
+    void 행사_참여_신청_취소에_성공한다() throws Exception {
+        // given
+        doNothing().when(eventService).cancelEvent(any(Long.class), any(Long.class));
+
+        // when
+        ResultActions actions = mvc.perform(delete("/api/v1/events/{eventId}/cancel", 1L)
+                .header("Authorization", "Access Token")
+                .with(csrf())
+        );
+
+        // then
+        actions.andExpect(status().isNoContent())
+                .andDo(print())
+                .andDo(document("event/cancel",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName("Authorization").description("액세스 토큰")
+                        ),
+                        pathParameters(
+                                parameterWithName("eventId").description("행사 id")
+                        )
+                ));
     }
 
 }
