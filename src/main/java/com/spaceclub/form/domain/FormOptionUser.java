@@ -17,7 +17,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of = "id", callSuper = false)
-public class FormItemUser extends BaseTimeEntity {
+public class FormOptionUser extends BaseTimeEntity {
 
     @Id
     @Column(name = "form_item_user_id")
@@ -26,7 +26,7 @@ public class FormItemUser extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "form_item_id")
-    private FormItem formItem;
+    private FormOption formOption;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

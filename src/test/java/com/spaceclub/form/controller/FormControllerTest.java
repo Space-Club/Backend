@@ -10,7 +10,9 @@ import com.spaceclub.form.controller.dto.FormGetResponse;
 import com.spaceclub.form.controller.dto.FormGetResponse.EventResponse;
 import com.spaceclub.form.controller.dto.FormGetResponse.FormItemResponse;
 import com.spaceclub.form.controller.dto.FormGetResponse.FormResponse;
+import com.spaceclub.form.domain.FormOptionType;
 import com.spaceclub.form.service.FormService;
+import com.spaceclub.form.service.vo.FormCreate;
 import com.spaceclub.global.jwt.service.JwtService;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
@@ -24,7 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static com.spaceclub.form.controller.dto.FormCreateRequest.FormItemRequest;
+import static com.spaceclub.form.controller.dto.FormCreateRequest.FormCreateOptionRequest;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
@@ -39,6 +41,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.JsonFieldType.ARRAY;
+import static org.springframework.restdocs.payload.JsonFieldType.BOOLEAN;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.OBJECT;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
@@ -72,19 +75,19 @@ class FormControllerTest {
     @WithMockUser
     void 관리자가_폼_양식_생성에_성공한다() throws Exception {
         // given
-        FormItemRequest item1 = new FormItemRequest("이름");
-        FormItemRequest item2 = new FormItemRequest("연락처");
-        FormItemRequest item3 = new FormItemRequest("인원 수");
-        List<FormItemRequest> items = List.of(item1, item2, item3);
-        FormCreateRequest formCreateRequest = new FormCreateRequest(1L, "행사에 대한 폼 양식입니다.", items);
+        FormCreateOptionRequest item1 = new FormCreateOptionRequest("이름", FormOptionType.TEXT, true);
+        FormCreateOptionRequest item2 = new FormCreateOptionRequest("연락처", FormOptionType.NUMBER, false);
+        FormCreateOptionRequest item3 = new FormCreateOptionRequest("인원 수", FormOptionType.TEXT, true);
+        List<FormCreateOptionRequest> items = List.of(item1, item2, item3);
+        FormCreateRequest formCreateRequest = new FormCreateRequest(1L, "행사에 대한 폼 양식입니다.", true, items);
 
         Long eventId = 1L;
         Long userId = 1L;
         given(jwtService.verifyUserId(any())).willReturn(userId);
-        given(formService.createForm()).willReturn(eventId);
+        given(formService.createForm(any(FormCreate.class))).willReturn(eventId);
 
         // when, then
-        mvc.perform(post("/api/v1/events/formItems")
+        mvc.perform(post("/api/v1/events/forms")
                         .header("Authorization", "Access Token")
                         .contentType(APPLICATION_JSON)
                         .content(mapper.writeValueAsString(formCreateRequest))
@@ -102,8 +105,11 @@ class FormControllerTest {
                                 requestFields(
                                         fieldWithPath("eventId").type(NUMBER).description("행사 id"),
                                         fieldWithPath("description").type(STRING).description("폼 설명"),
-                                        fieldWithPath("items").type(ARRAY).description("폼 항목 리스트"),
-                                        fieldWithPath("items[].name").type(STRING).description("폼 항목명")
+                                        fieldWithPath("managed").type(BOOLEAN).description("관리 모드 여부"),
+                                        fieldWithPath("options").type(ARRAY).description("감"),
+                                        fieldWithPath("options[].title").type(STRING).description("폼 항목명"),
+                                        fieldWithPath("options[].type").type(STRING).description("폼 항목 타입(TEXT, SELECT, RADIO, NUMBER)"),
+                                        fieldWithPath("options[].visible").type(BOOLEAN).description("폼 조회 공개 여부")
                                 ),
                                 responseHeaders(
                                         headerWithName("Location").description("생성된 폼의 행사 조회 URI")
