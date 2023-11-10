@@ -1,6 +1,6 @@
 package com.spaceclub.form.service;
 
-import com.spaceclub.form.controller.FormApplicationGetResponse;
+import com.spaceclub.form.controller.dto.FormApplicationGetResponse;
 import com.spaceclub.form.controller.dto.FormGetResponse;
 import com.spaceclub.form.repository.FormRepository;
 import lombok.RequiredArgsConstructor;

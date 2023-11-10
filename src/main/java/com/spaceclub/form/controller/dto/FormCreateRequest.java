@@ -4,7 +4,6 @@ import lombok.Builder;
 
 import java.util.List;
 
-@Builder
 public record FormCreateRequest(
         Long eventId,
         String description,
@@ -12,6 +11,9 @@ public record FormCreateRequest(
 ) {
 
     @Builder
+    public FormCreateRequest {
+    }
+
     public record FormItemRequest(String name) {
 
     }

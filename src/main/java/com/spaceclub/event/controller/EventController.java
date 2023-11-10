@@ -79,7 +79,7 @@ public class EventController {
     }
 
     @DeleteMapping("/{eventId}/cancel")
-    public ResponseEntity<Void> applyEvent(@PathVariable Long eventId, HttpServletRequest servletRequest) {
+    public ResponseEntity<Void> cancelEvent(@PathVariable Long eventId, HttpServletRequest servletRequest) {
         Long userId = jwtService.verifyUserId(servletRequest);
 
         eventService.cancelEvent(eventId, userId);

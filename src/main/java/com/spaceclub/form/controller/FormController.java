@@ -1,6 +1,7 @@
 package com.spaceclub.form.controller;
 
 import com.spaceclub.form.controller.dto.FormApplicationCreateRequest;
+import com.spaceclub.form.controller.dto.FormApplicationGetResponse;
 import com.spaceclub.form.controller.dto.FormCreateRequest;
 import com.spaceclub.form.controller.dto.FormGetResponse;
 import com.spaceclub.form.service.FormService;
@@ -28,8 +29,8 @@ public class FormController {
 
     private final JwtService jwtService;
 
-    @PostMapping("/forms")
-    public ResponseEntity<Void> createForm(@RequestBody FormCreateRequest request, UriComponentsBuilder uriBuilder, HttpServletRequest servletRequest) {
+    @PostMapping("/formItems")
+    public ResponseEntity<Void> createFormItem(@RequestBody FormCreateRequest request, UriComponentsBuilder uriBuilder, HttpServletRequest servletRequest) {
         Long userId = jwtService.verifyUserId(servletRequest);
         Long eventId = formService.createForm();
 
@@ -41,8 +42,8 @@ public class FormController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/{eventId}/forms")
-    public ResponseEntity<FormGetResponse> getForm(@PathVariable Long eventId, HttpServletRequest servletRequest) {
+    @GetMapping("/{eventId}/formItems")
+    public ResponseEntity<FormGetResponse> getFormItem(@PathVariable Long eventId, HttpServletRequest servletRequest) {
         Long userId = jwtService.verifyUserId(servletRequest);
         FormGetResponse response = formService.getForm();
 
@@ -50,7 +51,7 @@ public class FormController {
     }
 
     @PostMapping("/forms/applications")
-    public ResponseEntity<Void> createForm(@RequestBody List<FormApplicationCreateRequest> request, HttpServletRequest servletRequest) {
+    public ResponseEntity<Void> createApplicationForm(@RequestBody List<FormApplicationCreateRequest> request, HttpServletRequest servletRequest) {
         Long userId = jwtService.verifyUserId(servletRequest);
         formService.createApplicationForm();
 
@@ -58,7 +59,7 @@ public class FormController {
     }
 
     @GetMapping("/{eventId}/forms/applications")
-    public ResponseEntity<List<FormApplicationGetResponse>> getAllForms(@PathVariable Long eventId, HttpServletRequest servletRequest) {
+    public ResponseEntity<List<FormApplicationGetResponse>> getAllApplicationForm(@PathVariable Long eventId, HttpServletRequest servletRequest) {
         Long userId = jwtService.verifyUserId(servletRequest);
         List<FormApplicationGetResponse> response = formService.getAllForms();
 

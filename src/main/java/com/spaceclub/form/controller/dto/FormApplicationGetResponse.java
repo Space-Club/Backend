@@ -1,10 +1,9 @@
-package com.spaceclub.form.controller;
+package com.spaceclub.form.controller.dto;
 
 import lombok.Builder;
 
 import java.util.List;
 
-@Builder
 public record FormApplicationGetResponse(
         String username,
         String phoneNumber,
@@ -12,6 +11,10 @@ public record FormApplicationGetResponse(
 ) {
 
     @Builder
+    public FormApplicationGetResponse {
+
+    }
+
     public record FormApplicationItemGetResponse(String name, String content) {
 
     }

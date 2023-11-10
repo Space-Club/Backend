@@ -2,8 +2,9 @@ package com.spaceclub.form.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
-import com.spaceclub.form.controller.FormApplicationGetResponse.FormApplicationItemGetResponse;
 import com.spaceclub.form.controller.dto.FormApplicationCreateRequest;
+import com.spaceclub.form.controller.dto.FormApplicationGetResponse;
+import com.spaceclub.form.controller.dto.FormApplicationGetResponse.FormApplicationItemGetResponse;
 import com.spaceclub.form.controller.dto.FormCreateRequest;
 import com.spaceclub.form.controller.dto.FormGetResponse;
 import com.spaceclub.form.controller.dto.FormGetResponse.EventResponse;
@@ -24,7 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static com.spaceclub.form.controller.dto.FormCreateRequest.FormItemRequest;
-import static com.spaceclub.form.controller.dto.FormCreateRequest.builder;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
@@ -71,15 +71,12 @@ class FormControllerTest {
     @Test
     @WithMockUser
     void 관리자가_폼_양식_생성에_성공한다() throws Exception {
-        FormCreateRequest formCreateRequest = builder()
-                .eventId(1L)
-                .description("행사에 대한 폼 양식입니다.")
-                .items(List.of(
-                        FormItemRequest.builder().name("이름").build(),
-                        FormItemRequest.builder().name("연락처").build(),
-                        FormItemRequest.builder().name("인원 수").build()
-                ))
-                .build();
+        // given
+        FormItemRequest item1 = new FormItemRequest("이름");
+        FormItemRequest item2 = new FormItemRequest("연락처");
+        FormItemRequest item3 = new FormItemRequest("인원 수");
+        List<FormItemRequest> items = List.of(item1, item2, item3);
+        FormCreateRequest formCreateRequest = new FormCreateRequest(1L, "행사에 대한 폼 양식입니다.", items);
 
         Long eventId = 1L;
         Long userId = 1L;
@@ -87,7 +84,7 @@ class FormControllerTest {
         given(formService.createForm()).willReturn(eventId);
 
         // when, then
-        mvc.perform(post("/api/v1/events/forms")
+        mvc.perform(post("/api/v1/events/formItems")
                         .header("Authorization", "Access Token")
                         .contentType(APPLICATION_JSON)
                         .content(mapper.writeValueAsString(formCreateRequest))
@@ -118,14 +115,15 @@ class FormControllerTest {
     @Test
     @WithMockUser
     void 폼_양식_조회에_성공한다() throws Exception {
+        // given
+        EventResponse event = new EventResponse("행사 제목", "https://example.com/poster.png");
+        FormResponse form = new FormResponse("폼에 대한 설명", List.of(
+                new FormItemResponse(1L, "이름"),
+                new FormItemResponse(2L, "연락처")
+        ));
         FormGetResponse formGetResponse = FormGetResponse.builder()
-                .event(EventResponse.builder().title("행사 제목").posterImageUrl("행사 포스터 이미지 URL").build())
-                .form(FormResponse.builder()
-                        .description("폼에 대한 설명")
-                        .items(List.of(
-                                FormItemResponse.builder().id(1L).name("이름").build(),
-                                FormItemResponse.builder().id(2L).name("연락처").build()
-                        )).build())
+                .event(event)
+                .form(form)
                 .build();
 
         Long userId = 1L;
@@ -133,7 +131,7 @@ class FormControllerTest {
         given(formService.getForm()).willReturn(formGetResponse);
 
         // when, then
-        mvc.perform(get("/api/v1/events/{eventId}/forms", 1L)
+        mvc.perform(get("/api/v1/events/{eventId}/formItems", 1L)
                         .header("Authorization", "Access Token")
                 )
                 .andExpect(status().isOk())
@@ -164,6 +162,7 @@ class FormControllerTest {
     @Test
     @WithMockUser
     void 폼_제출을_통한_행사_신청에_성공한다() throws Exception {
+        // given
         FormApplicationCreateRequest request = FormApplicationCreateRequest.builder()
                 .id(1L)
                 .name("이름")
@@ -200,12 +199,13 @@ class FormControllerTest {
     @Test
     @WithMockUser
     void 행사의_신청된_모든_폼_조회에_성공한다() throws Exception {
+        // given
         FormApplicationGetResponse response = FormApplicationGetResponse.builder()
                 .username("박가네")
                 .phoneNumber("010-1111-2222")
                 .items(List.of(
-                        FormApplicationItemGetResponse.builder().name("이름").content("박가네").build(),
-                        FormApplicationItemGetResponse.builder().name("전화번호").content("010-1111-2222").build()
+                        new FormApplicationItemGetResponse("이름", "박가네"),
+                        new FormApplicationItemGetResponse("전화번호", "010-1111-2222")
                 ))
                 .build();
 
