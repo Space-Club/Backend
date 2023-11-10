@@ -4,6 +4,7 @@ import com.spaceclub.global.BaseTimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -24,16 +25,18 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 public class Form extends BaseTimeEntity {
 
     @Id
+    @Getter
     @Column(name = "form_id")
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
+    @Getter
     private String description;
 
     private boolean managed;
 
     @Getter
-    @OneToMany(mappedBy = "form", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "form", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private final List<FormOption> options = new ArrayList<>();
 
     @Builder
