@@ -21,3 +21,5 @@ include::club-api.adoc[]
 include::invite-api.adoc[]
 
 include::event-api.adoc[]
+
+include::form-api.adoc[]

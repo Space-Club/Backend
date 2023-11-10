@@ -12,4 +12,10 @@ public class FormService {
 
     private final FormRepository formRepository;
 
+
+    @Transactional
+    public Long createForm() {
+        return 1L;
+    }
+
 }

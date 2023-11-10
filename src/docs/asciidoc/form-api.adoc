@@ -1,0 +1,22 @@
+== 폼
+
+=== 관리자가 폼 양식 설정
+:sectnums!:
+==== Request
+
+include::{snippets}/form/create/http-request.adoc[]
+===== Request Header
+
+include::{snippets}/form/create/request-headers.adoc[]
+
+===== Request Body
+
+include::{snippets}/form/create/request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/form/create/http-response.adoc[]
+===== Response Body
+
+include::{snippets}/form/create/response-headers.adoc[]
+:sectnums:
