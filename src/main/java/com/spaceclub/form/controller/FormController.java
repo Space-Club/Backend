@@ -6,6 +6,8 @@ import com.spaceclub.global.jwt.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +36,14 @@ public class FormController {
                 .toUri();
 
         return ResponseEntity.created(location).build();
+    }
+
+    @GetMapping("/{eventId}/forms")
+    public ResponseEntity<FormGetResponse> getForm(@PathVariable Long eventId, HttpServletRequest servletRequest) {
+        Long userId = jwtService.verifyUserId(servletRequest);
+        FormGetResponse response = formService.getForm();
+
+        return ResponseEntity.ok(response);
     }
 
 }

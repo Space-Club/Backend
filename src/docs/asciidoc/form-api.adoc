@@ -1,6 +1,6 @@
 == 폼
 
-=== 관리자가 폼 양식 설정
+=== 관리자가 행사 폼 양식 설정
 :sectnums!:
 ==== Request
 
@@ -19,4 +19,25 @@ include::{snippets}/form/create/http-response.adoc[]
 ===== Response Body
 
 include::{snippets}/form/create/response-headers.adoc[]
+:sectnums:
+
+=== 행사 폼 양식 조회
+:sectnums!:
+==== Request
+
+include::{snippets}/form/get/http-request.adoc[]
+===== Request Header
+
+include::{snippets}/form/get/request-headers.adoc[]
+
+===== Path Parameter
+
+include::{snippets}/form/get/path-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/form/get/http-response.adoc[]
+===== Response Body
+
+include::{snippets}/form/get/response-fields.adoc[]
 :sectnums:

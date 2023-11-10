@@ -1,5 +1,6 @@
 package com.spaceclub.form.service;
 
+import com.spaceclub.form.controller.FormGetResponse;
 import com.spaceclub.form.repository.FormRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,10 @@ public class FormService {
     @Transactional
     public Long createForm() {
         return 1L;
+    }
+
+    public FormGetResponse getForm() {
+        return FormGetResponse.builder().build();
     }
 
 }

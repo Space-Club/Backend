@@ -2,6 +2,9 @@ package com.spaceclub.form.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
+import com.spaceclub.form.controller.FormGetResponse.EventResponse;
+import com.spaceclub.form.controller.FormGetResponse.FormItemResponse;
+import com.spaceclub.form.controller.FormGetResponse.FormResponse;
 import com.spaceclub.form.controller.dto.FormCreateRequest;
 import com.spaceclub.form.service.FormService;
 import com.spaceclub.global.jwt.service.JwtService;
@@ -25,15 +28,20 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.JsonFieldType.ARRAY;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
+import static org.springframework.restdocs.payload.JsonFieldType.OBJECT;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -97,6 +105,52 @@ class FormControllerTest {
                                 ),
                                 responseHeaders(
                                         headerWithName("Location").description("생성된 폼의 행사 조회 URI")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    @WithMockUser
+    void 폼_양식_조회에_성공한다() throws Exception {
+        FormGetResponse formGetResponse = FormGetResponse.builder()
+                .event(EventResponse.builder().title("행사 제목").posterImageUrl("행사 포스터 이미지 URL").build())
+                .form(FormResponse.builder()
+                        .description("폼에 대한 설명")
+                        .items(List.of(
+                                FormItemResponse.builder().id(1L).name("이름").build(),
+                                FormItemResponse.builder().id(2L).name("연락처").build()
+                        )).build())
+                .build();
+
+        Long userId = 1L;
+        given(jwtService.verifyUserId(any())).willReturn(userId);
+        given(formService.getForm()).willReturn(formGetResponse);
+
+        // when, then
+        mvc.perform(get("/api/v1/events/{eventId}/forms", 1L)
+                        .header("Authorization", "Access Token")
+                )
+                .andExpect(status().isOk())
+                .andDo(
+                        document("form/get",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName("Authorization").description("액세스 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("eventId").description("행사 id")
+                                ),
+                                responseFields(
+                                        fieldWithPath("event").type(OBJECT).description("행사 정보"),
+                                        fieldWithPath("event.title").type(STRING).description("행사 제목"),
+                                        fieldWithPath("event.posterImageUrl").type(STRING).description("행사 포스터 URL"),
+                                        fieldWithPath("form").type(OBJECT).description("폼 정보"),
+                                        fieldWithPath("form.description").type(STRING).description("폼 설명"),
+                                        fieldWithPath("form.items[]").type(ARRAY).description("폼 항목 리스트"),
+                                        fieldWithPath("form.items[].id").type(NUMBER).description("폼 항목 id"),
+                                        fieldWithPath("form.items[].name").type(STRING).description("폼 항목명")
                                 )
                         )
                 );
