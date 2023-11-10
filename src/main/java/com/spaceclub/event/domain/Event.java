@@ -1,6 +1,7 @@
 package com.spaceclub.event.domain;
 
 import com.spaceclub.club.domain.Club;
+import com.spaceclub.form.domain.Form;
 import com.spaceclub.global.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -67,6 +68,9 @@ public class Event extends BaseTimeEntity {
     @Getter
     @OneToMany(mappedBy = "event")
     private List<EventUser> users = new ArrayList<>();
+
+    @OneToMany(mappedBy = "event")
+    private List<Form> forms = new ArrayList<>();
 
     @Builder
     private Event(
