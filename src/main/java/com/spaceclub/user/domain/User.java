@@ -1,6 +1,7 @@
 package com.spaceclub.user.domain;
 
 import com.spaceclub.event.domain.EventUser;
+import com.spaceclub.form.domain.FormItemUser;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -58,6 +59,9 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<EventUser> events = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<FormItemUser> formItemUsers = new ArrayList<>();
 
     @Builder
     private User(
