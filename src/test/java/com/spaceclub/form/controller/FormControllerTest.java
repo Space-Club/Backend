@@ -2,6 +2,7 @@ package com.spaceclub.form.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
+import com.spaceclub.form.controller.FormApplicationGetResponse.FormApplicationItemGetResponse;
 import com.spaceclub.form.controller.dto.FormApplicationCreateRequest;
 import com.spaceclub.form.controller.dto.FormCreateRequest;
 import com.spaceclub.form.controller.dto.FormGetResponse;
@@ -191,6 +192,50 @@ class FormControllerTest {
                                         fieldWithPath("[]").type(ARRAY).description("폼 항목 리스트"),
                                         fieldWithPath("[].id").type(NUMBER).description("폼 항목 id"),
                                         fieldWithPath("[].name").type(STRING).description("폼 항목명")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    @WithMockUser
+    void 행사의_신청된_모든_폼_조회에_성공한다() throws Exception {
+        FormApplicationGetResponse response = FormApplicationGetResponse.builder()
+                .username("박가네")
+                .phoneNumber("010-1111-2222")
+                .items(List.of(
+                        FormApplicationItemGetResponse.builder().name("이름").content("박가네").build(),
+                        FormApplicationItemGetResponse.builder().name("전화번호").content("010-1111-2222").build()
+                ))
+                .build();
+
+
+        Long userId = 1L;
+        given(jwtService.verifyUserId(any())).willReturn(userId);
+        given(formService.getAllForms()).willReturn(List.of(response));
+
+        // when, then
+        mvc.perform(get("/api/v1/events/{eventId}/forms/applications", 1L)
+                        .header("Authorization", "Access Token")
+                )
+                .andExpect(status().isOk())
+                .andDo(
+                        document("form/getAll",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName("Authorization").description("액세스 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("eventId").description("행사 id")
+                                ),
+                                responseFields(
+                                        fieldWithPath("[]").type(ARRAY).description("신청된 폼 리스트"),
+                                        fieldWithPath("[].username").type(STRING).description("유저 이름"),
+                                        fieldWithPath("[].phoneNumber").type(STRING).description("유저 핸드폰 번호"),
+                                        fieldWithPath("[].items[]").type(ARRAY).description("폼 항목 리스트"),
+                                        fieldWithPath("[].items[].name").type(STRING).description("폼 항목명"),
+                                        fieldWithPath("[].items[].content").type(STRING).description("폼 항목 내용")
                                 )
                         )
                 );

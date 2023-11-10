@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/events")
@@ -54,6 +55,14 @@ public class FormController {
         formService.createApplicationForm();
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{eventId}/forms/applications")
+    public ResponseEntity<List<FormApplicationGetResponse>> getAllForms(@PathVariable Long eventId, HttpServletRequest servletRequest) {
+        Long userId = jwtService.verifyUserId(servletRequest);
+        List<FormApplicationGetResponse> response = formService.getAllForms();
+
+        return ResponseEntity.ok(response);
     }
 
 }
