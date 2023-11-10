@@ -3,6 +3,7 @@ package com.spaceclub.invite.service;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.repository.ClubUserRepository;
+import com.spaceclub.invite.domain.Invite;
 import com.spaceclub.invite.repository.InviteRepository;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.repository.UserRepository;
@@ -42,8 +43,10 @@ class InviteServiceTest {
     @Test
     void 클럽_초대_링크가_만료된_경우_클럽_가입에_실패한다() {
         // given
+        Invite expiredInvite = invite1();
+
         given(userRepository.findById(any(Long.class))).willReturn(Optional.of(user1()));
-        given(inviteRepository.findByCode(any(String.class))).willReturn(Optional.of(invite1()));
+        given(inviteRepository.findByCode(any(String.class))).willReturn(Optional.of(expiredInvite));
 
         // when, then
         assertThatThrownBy(() -> inviteService.joinClub("123", 1L))
