@@ -1,6 +1,8 @@
 package com.spaceclub.form.controller;
 
+import com.spaceclub.form.controller.dto.FormApplicationCreateRequest;
 import com.spaceclub.form.controller.dto.FormCreateRequest;
+import com.spaceclub.form.controller.dto.FormGetResponse;
 import com.spaceclub.form.service.FormService;
 import com.spaceclub.global.jwt.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,6 +46,14 @@ public class FormController {
         FormGetResponse response = formService.getForm();
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/forms/applications")
+    public ResponseEntity<Void> createForm(@RequestBody List<FormApplicationCreateRequest> request, HttpServletRequest servletRequest) {
+        Long userId = jwtService.verifyUserId(servletRequest);
+        formService.createApplicationForm();
+
+        return ResponseEntity.noContent().build();
     }
 
 }

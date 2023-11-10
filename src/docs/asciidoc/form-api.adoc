@@ -41,3 +41,23 @@ include::{snippets}/form/get/http-response.adoc[]
 
 include::{snippets}/form/get/response-fields.adoc[]
 :sectnums:
+
+=== 폼 제출을 통한 행사 신청하기
+:sectnums!:
+==== Request
+
+include::{snippets}/form/createApplications/http-request.adoc[]
+
+=====  Request Header
+
+include::{snippets}/form/createApplications/request-headers.adoc[]
+
+=====  Request Body
+
+include::{snippets}/form/createApplications/request-body.adoc[]
+
+==== Response
+
+include::{snippets}/form/createApplications/http-response.adoc[]
+
+:sectnums:

@@ -2,10 +2,12 @@ package com.spaceclub.form.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
-import com.spaceclub.form.controller.FormGetResponse.EventResponse;
-import com.spaceclub.form.controller.FormGetResponse.FormItemResponse;
-import com.spaceclub.form.controller.FormGetResponse.FormResponse;
+import com.spaceclub.form.controller.dto.FormApplicationCreateRequest;
 import com.spaceclub.form.controller.dto.FormCreateRequest;
+import com.spaceclub.form.controller.dto.FormGetResponse;
+import com.spaceclub.form.controller.dto.FormGetResponse.EventResponse;
+import com.spaceclub.form.controller.dto.FormGetResponse.FormItemResponse;
+import com.spaceclub.form.controller.dto.FormGetResponse.FormResponse;
 import com.spaceclub.form.service.FormService;
 import com.spaceclub.global.jwt.service.JwtService;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -23,6 +26,7 @@ import static com.spaceclub.form.controller.dto.FormCreateRequest.FormItemReques
 import static com.spaceclub.form.controller.dto.FormCreateRequest.builder;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -151,6 +155,42 @@ class FormControllerTest {
                                         fieldWithPath("form.items[]").type(ARRAY).description("폼 항목 리스트"),
                                         fieldWithPath("form.items[].id").type(NUMBER).description("폼 항목 id"),
                                         fieldWithPath("form.items[].name").type(STRING).description("폼 항목명")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    @WithMockUser
+    void 폼_제출을_통한_행사_신청에_성공한다() throws Exception {
+        FormApplicationCreateRequest request = FormApplicationCreateRequest.builder()
+                .id(1L)
+                .name("이름")
+                .build();
+
+        Long userId = 1L;
+        given(jwtService.verifyUserId(any())).willReturn(userId);
+        doNothing().when(formService).createApplicationForm();
+
+        // when, then
+        mvc.perform(post("/api/v1/events/forms/applications")
+                        .header("Authorization", "Access Token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(List.of(request)))
+                        .with(csrf())
+                )
+                .andExpect(status().isNoContent())
+                .andDo(
+                        document("form/createApplications",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName("Authorization").description("액세스 토큰")
+                                ),
+                                requestFields(
+                                        fieldWithPath("[]").type(ARRAY).description("폼 항목 리스트"),
+                                        fieldWithPath("[].id").type(NUMBER).description("폼 항목 id"),
+                                        fieldWithPath("[].name").type(STRING).description("폼 항목명")
                                 )
                         )
                 );
