@@ -31,6 +31,8 @@ public class InviteService {
 
     private final ClubUserRepository clubUserRepository;
 
+    private final int INVITE_LINK_VALID_HOURS = 48;
+
     public String getInviteCode(Long clubId, Long userId) {
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
@@ -42,7 +44,7 @@ public class InviteService {
                         Invite.builder()
                                 .code(inviteCode)
                                 .club(club)
-                                .expiredAt(LocalDateTime.now().plusHours(48))
+                                .expiredAt(LocalDateTime.now().plusHours(INVITE_LINK_VALID_HOURS))
                                 .build()
                 );
 
