@@ -195,6 +195,9 @@ include::{snippets}/club/getNotice/request-headers.adoc[]
 
 include::{snippets}/club/getNotice/http-response.adoc[]
 
+===== Response Body
+include::{snippets}/club/getNotice/response-fields.adoc[]
+
 :sectnums:
 === 클럽 공지사항 수정
 :sectnums!:
@@ -208,6 +211,9 @@ include::{snippets}/club/updateNotice/path-parameters.adoc[]
 ===== Request Header
 
 include::{snippets}/club/updateNotice/request-headers.adoc[]
+
+===== Request Body
+include::{snippets}/club/updateNotice/request-fields.adoc[]
 
 ==== Response
 
