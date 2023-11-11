@@ -14,6 +14,7 @@ import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubNotice;
 import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.service.ClubService;
+import com.spaceclub.club.service.vo.ClubNoticeDelete;
 import com.spaceclub.club.service.vo.ClubNoticeUpdate;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Category;
@@ -197,6 +198,13 @@ public class ClubController {
                                              @PathVariable Long noticeId,
                                              HttpServletRequest httpServletRequest) {
         Long userId = jwtService.verifyUserId(httpServletRequest);
+        ClubNoticeDelete deleteVo = ClubNoticeDelete.builder()
+                .clubId(clubId)
+                .noticeId(noticeId)
+                .userId(userId)
+                .build();
+
+        clubService.deleteNotice(deleteVo);
 
         return ResponseEntity.noContent().build();
     }
