@@ -106,8 +106,9 @@ public class ClubController {
     }
 
     @DeleteMapping("/clubs/{clubId}")
-    public ResponseEntity<String> deleteClub(@PathVariable Long clubId) {
-        service.deleteClub(clubId);
+    public ResponseEntity<String> deleteClub(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
+        Long userId = jwtService.verifyUserId(httpServletRequest);
+        service.deleteClub(clubId, userId);
         return ResponseEntity.noContent().build();
     }
 

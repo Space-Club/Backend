@@ -49,10 +49,15 @@ public class ClubService {
 
     public Club getClub(Long clubId) {
         return clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다"));
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
     }
 
-    public void deleteClub(Long clubId) {
+    public void deleteClub(Long clubId, Long userId) {
+        ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 클럽의 멤버가 아닙니다"));
+
+        if (!clubUser.isManager()) throw new IllegalStateException("클럽을 삭제할 권한이 없습니다.");
+
         clubRepository.deleteById(clubId);
     }
 
