@@ -5,6 +5,7 @@ import com.spaceclub.club.controller.dto.ClubEventGetResponse;
 import com.spaceclub.club.controller.dto.ClubGetResponse;
 import com.spaceclub.club.controller.dto.ClubNoticeCreateRequest;
 import com.spaceclub.club.controller.dto.ClubNoticeGetResponse;
+import com.spaceclub.club.controller.dto.ClubNoticeUpdateRequest;
 import com.spaceclub.club.controller.dto.ClubScheduleResponse;
 import com.spaceclub.club.controller.dto.ClubUpdateRequest;
 import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
@@ -12,6 +13,7 @@ import com.spaceclub.club.controller.dto.MemberGetResponse;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.service.ClubService;
+import com.spaceclub.club.service.vo.ClubNoticeUpdate;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Category;
 import com.spaceclub.event.domain.Event;
@@ -171,8 +173,21 @@ public class ClubController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/clubs/{clubId}/notices")
-    public ResponseEntity<Void> updateNotice(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
+    @PatchMapping("/clubs/{clubId}/notices/{noticeId}")
+    public ResponseEntity<Void> updateNotice(@PathVariable Long clubId,
+                                             @PathVariable Long noticeId,
+                                             @RequestBody ClubNoticeUpdateRequest request,
+                                             HttpServletRequest httpServletRequest) {
+        Long userId = jwtService.verifyUserId(httpServletRequest);
+        ClubNoticeUpdate vo = ClubNoticeUpdate.builder()
+                .clubId(clubId)
+                .noticeId(noticeId)
+                .userId(userId)
+                .notice(request.notice())
+                .build();
+
+        clubService.updateNotice(vo);
+
         return ResponseEntity.noContent().build();
     }
 

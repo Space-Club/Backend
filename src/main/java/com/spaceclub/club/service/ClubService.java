@@ -7,6 +7,7 @@ import com.spaceclub.club.domain.ClubUserRole;
 import com.spaceclub.club.repository.ClubNoticeRepository;
 import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.club.repository.ClubUserRepository;
+import com.spaceclub.club.service.vo.ClubNoticeUpdate;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.repository.EventRepository;
@@ -70,7 +71,7 @@ public class ClubService {
     }
 
     public void updateMemberRole(ClubUserUpdate updateVo) {
-        ClubUser clubUser = validateClubMember(updateVo.clubId(), updateVo.memberId());
+        ClubUser clubUser = validateClubAndGetClubUser(updateVo.clubId(), updateVo.memberId());
         ClubUser updateClubUser = clubUser.updateRole(updateVo.role());
 
         clubUserRepository.save(updateClubUser);
@@ -84,7 +85,7 @@ public class ClubService {
     }
 
     public void deleteMember(Long clubId, Long memberId) {
-        ClubUser clubUser = validateClubMember(clubId, memberId);
+        ClubUser clubUser = validateClubAndGetClubUser(clubId, memberId);
 
         int count = clubUserRepository.countByClub_IdAndRole(clubId, ClubUserRole.MANAGER);
         if (count == MANAGER_COUNT) {
@@ -94,17 +95,8 @@ public class ClubService {
         clubUserRepository.delete(clubUser);
     }
 
-    private ClubUser validateClubMember(Long clubId, Long memberId) {
-        clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다"));
-
-        return clubUserRepository.findByClub_IdAndUser_Id(clubId, memberId)
-                .orElseThrow(() -> new IllegalArgumentException("클럽의 멤버가 아닙니다"));
-    }
-
     public void createNotice(String notice, Long clubId, Long userId) {
-        ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 클럽의 멤버가 아닙니다."));
+        ClubUser clubUser = validateClubAndGetClubUser(clubId, userId);
 
         if (!clubUser.isManager()) throw new IllegalStateException("해당 권한이 없습니다.");
 
@@ -119,8 +111,7 @@ public class ClubService {
     }
 
     public List<String> getNotices(Long clubId, Long userId) {
-        ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 클럽의 멤버가 아닙니다."));
+        ClubUser clubUser = validateClubAndGetClubUser(clubId, userId);
 
         if (!clubUser.isManager()) throw new IllegalStateException("해당 권한이 없습니다.");
 
@@ -130,6 +121,39 @@ public class ClubService {
         return club.getNotices().stream()
                 .map(ClubNotice::getNotice)
                 .toList();
+    }
+
+    public void updateNotice(ClubNoticeUpdate updateVo) {
+        Long clubId = updateVo.clubId();
+        Long userId = updateVo.userId();
+        Long noticeId = updateVo.noticeId();
+
+        ClubUser clubUser = validateClubAndGetClubUser(clubId, userId);
+
+        if (!clubUser.isManager()) throw new IllegalStateException("해당 권한이 없습니다.");
+
+        ClubNotice clubNotice = clubNoticeRepository.findById(noticeId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 공지사항이 없습니다."));
+        Club club = clubRepository.findById(clubId).get();
+        List<ClubNotice> notices = club.getNotices();
+
+        for (ClubNotice notice : notices) {
+            if (notice.getId().equals(noticeId)) {
+                notice.updateNotice(updateVo.notice());
+                break;
+            }
+        }
+        ClubNotice newClubNotice = clubNotice.updateNotice(updateVo.notice());
+
+        clubRepository.save(club);
+        clubNoticeRepository.save(newClubNotice);
+    }
+
+    private ClubUser validateClubAndGetClubUser(Long clubId, Long memberId) {
+        if (!clubRepository.existsById(clubId)) throw new IllegalArgumentException("해당하는 클럽이 없습니다.");
+
+        return clubUserRepository.findByClub_IdAndUser_Id(clubId, memberId)
+                .orElseThrow(() -> new IllegalArgumentException("클럽의 멤버가 아닙니다."));
     }
 
 }

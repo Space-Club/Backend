@@ -17,6 +17,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 public class ClubNotice {
 
     @Id
+    @Getter
     @Column(name = "club_notice_id")
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
@@ -31,6 +32,11 @@ public class ClubNotice {
     public ClubNotice(Club club, String notice) {
         this.club = club;
         this.notice = notice;
+    }
+
+    public ClubNotice updateNotice(String notice) {
+        this.notice = notice;
+        return this;
     }
 
 }
