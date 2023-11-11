@@ -34,6 +34,11 @@ public class InviteService {
     private final int INVITE_LINK_VALID_HOURS = 48;
 
     public String getInviteCode(Long clubId, Long userId) {
+        ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 클럽의 멤버가 아닙니다."));
+
+        if (clubUser.isManager()) throw new IllegalStateException("초대링크는 매니저만 생성 가능 합니다.");
+
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
 
@@ -48,6 +53,7 @@ public class InviteService {
                                 .build()
                 );
 
+
         inviteRepository.save(invite);
 
         return invite.getCode();
@@ -60,7 +66,7 @@ public class InviteService {
         Invite invite = inviteRepository.findByCode(code)
                 .orElseThrow(() -> new IllegalStateException("해당 초대코드를 보유한 클럽이 없습니다"));
 
-        if (isExpired(invite)) throw new IllegalStateException("만료된 초대링크 입니다.");
+        if (invite.isExpired()) throw new IllegalStateException("만료된 초대링크 입니다.");
 
         Club club = invite.getClub();
 
@@ -74,13 +80,6 @@ public class InviteService {
                 .build();
 
         clubUserRepository.save(clubUser);
-    }
-
-    private boolean isExpired(Invite invite) {
-        LocalDateTime expiredAt = invite.getExpiredAt();
-        LocalDateTime now = LocalDateTime.now();
-
-        return now.isAfter(expiredAt);
     }
 
 }
