@@ -28,6 +28,4 @@ public class ControllerAdvice {
         return ResponseEntity.internalServerError().body(exception.getMessage());
     }
 
-
-
 }
