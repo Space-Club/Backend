@@ -3,6 +3,7 @@ package com.spaceclub.form.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.form.controller.dto.FormApplicationCreateRequest;
+import com.spaceclub.form.controller.dto.FormApplicationCreateRequest.FormRequest;
 import com.spaceclub.form.controller.dto.FormApplicationGetResponse;
 import com.spaceclub.form.controller.dto.FormApplicationGetResponse.FormApplicationItemGetResponse;
 import com.spaceclub.form.controller.dto.FormCreateRequest;
@@ -168,19 +169,22 @@ class FormControllerTest {
     void 폼_제출을_통한_행사_신청에_성공한다() throws Exception {
         // given
         FormApplicationCreateRequest request = FormApplicationCreateRequest.builder()
-                .id(1L)
-                .name("이름")
+                .eventId(1L)
+                .forms(List.of(
+                        new FormRequest(formOption1().getId(), "박씨"),
+                        new FormRequest(formOption2().getId(), "010-1111-2222")
+                ))
                 .build();
 
         Long userId = 1L;
         given(jwtService.verifyUserId(any())).willReturn(userId);
-        doNothing().when(formService).createApplicationForm();
+        doNothing().when(formService).createApplicationForm(1L, request.eventId(), request.toEntityList());
 
         // when, then
         mvc.perform(post("/api/v1/events/forms/applications")
                         .header("Authorization", "Access Token")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(List.of(request)))
+                        .content(mapper.writeValueAsString(request))
                         .with(csrf())
                 )
                 .andExpect(status().isNoContent())
@@ -192,9 +196,10 @@ class FormControllerTest {
                                         headerWithName("Authorization").description("액세스 토큰")
                                 ),
                                 requestFields(
-                                        fieldWithPath("[]").type(ARRAY).description("폼 항목 리스트"),
-                                        fieldWithPath("[].id").type(NUMBER).description("폼 항목 id"),
-                                        fieldWithPath("[].name").type(STRING).description("폼 항목명")
+                                        fieldWithPath("eventId").type(NUMBER).description("행사 id"),
+                                        fieldWithPath("forms").type(ARRAY).description("폼 리스트"),
+                                        fieldWithPath("forms[].optionId").type(NUMBER).description("폼 항목 id"),
+                                        fieldWithPath("forms[].content").type(STRING).description("폼 항목 답변 내용")
                                 )
                         )
                 );
@@ -231,7 +236,7 @@ class FormControllerTest {
                                         headerWithName("Authorization").description("액세스 토큰")
                                 ),
                                 pathParameters(
-                                        parameterWithName("eventId").description("행사 id")
+                                        parameterWithName("eventId").description("행사 optionId")
                                 ),
                                 responseFields(
                                         fieldWithPath("[]").type(ARRAY).description("신청된 폼 리스트"),
