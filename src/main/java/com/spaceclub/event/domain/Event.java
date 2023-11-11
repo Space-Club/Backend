@@ -168,4 +168,8 @@ public class Event extends BaseTimeEntity {
         return formInfo.getFormCloseDate();
     }
 
+    public Long getFormId() {
+        return form.getId();
+    }
+
 }

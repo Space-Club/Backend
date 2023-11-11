@@ -7,7 +7,6 @@ import lombok.Builder;
 public record FormGet(
         String title,
         Form form
-
 ) {
 
     @Builder
