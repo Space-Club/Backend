@@ -25,6 +25,25 @@ include::{snippets}/club/create/http-response.adoc[]
 include::{snippets}/club/create/response-headers.adoc[]
 :sectnums:
 
+=== 클럽 삭제
+:sectnums!:
+==== Request
+
+include::{snippets}/club/delete/http-request.adoc[]
+===== Path Parameter
+
+include::{snippets}/club/delete/path-parameters.adoc[]
+
+===== Request Header
+
+include::{snippets}/club/delete/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/club/delete/http-response.adoc[]
+
+:sectnums:
+
 === 클럽 행사 조회
 :sectnums!:
 ==== Request

@@ -79,15 +79,18 @@ class ClubServiceTest {
     @Test
     void 클럽_삭제에_성공한다() {
         // given
-        Long id = 1L;
+        Long clubId = 1L;
+        Long userId = 1L;
+        ClubUser clubUser = club1User1Manager();
+
+        given(clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)).willReturn(Optional.of(clubUser));
 
         // when
-        clubService.deleteClub(id);
+        clubService.deleteClub(clubId, userId);
 
         // then
-        assertThatThrownBy(() -> clubService.getClub(id))
+        assertThatThrownBy(() -> clubService.getClub(clubId))
                 .isInstanceOf(IllegalArgumentException.class);
-
     }
 
     @Test

@@ -260,6 +260,7 @@ class ClubControllerTest {
 
         // when
         ResultActions result = this.mockMvc.perform(delete("/api/v1/clubs/{clubId}", clubId)
+                .header("Authorization", "access token")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -268,7 +269,13 @@ class ClubControllerTest {
                 .andDo(print())
                 .andDo(document("club/delete",
                         preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint())
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("clubId").description("클럽 ID")
+                        ),
+                        requestHeaders(
+                                headerWithName("Authorization").description("유저 액세스 토큰")
+                        )
                 ));
     }
 

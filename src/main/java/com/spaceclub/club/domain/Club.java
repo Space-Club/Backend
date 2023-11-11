@@ -1,6 +1,7 @@
 package com.spaceclub.club.domain;
 
 import com.spaceclub.global.BaseTimeEntity;
+import com.spaceclub.invite.domain.Invite;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -8,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -53,8 +55,11 @@ public class Club extends BaseTimeEntity {
     private List<ClubNotice> notices = new ArrayList<>();
 
     @Getter
-    @OneToMany(mappedBy = "club", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "club", orphanRemoval = true)
     private List<ClubUser> clubUser = new ArrayList<>();
+
+    @OneToOne(mappedBy = "club", orphanRemoval = true)
+    private Invite invite;
 
     private boolean validateNameLength(String name) {
         return name.length() <= 12;
