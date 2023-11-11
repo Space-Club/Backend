@@ -7,6 +7,7 @@ import com.spaceclub.club.domain.ClubUserRole;
 import com.spaceclub.club.repository.ClubNoticeRepository;
 import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.club.repository.ClubUserRepository;
+import com.spaceclub.club.service.vo.ClubNoticeDelete;
 import com.spaceclub.club.service.vo.ClubNoticeUpdate;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
@@ -155,6 +156,18 @@ public class ClubService {
 
         return clubUserRepository.findByClub_IdAndUser_Id(clubId, memberId)
                 .orElseThrow(() -> new IllegalArgumentException("클럽의 멤버가 아닙니다."));
+    }
+
+    public void deleteNotice(ClubNoticeDelete deleteVo) {
+        Long userId = deleteVo.userId();
+        Long clubId = deleteVo.clubId();
+        Long noticeId = deleteVo.noticeId();
+
+        ClubUser clubUser = validateClubAndGetClubUser(clubId, userId);
+
+        if (!clubUser.isManager()) throw new IllegalStateException("해당 권한이 없습니다.");
+
+        clubNoticeRepository.deleteById(noticeId);
     }
 
 }
