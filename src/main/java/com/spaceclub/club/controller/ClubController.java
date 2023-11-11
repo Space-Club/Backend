@@ -3,13 +3,22 @@ package com.spaceclub.club.controller;
 import com.spaceclub.club.controller.dto.ClubCreateRequest;
 import com.spaceclub.club.controller.dto.ClubEventGetResponse;
 import com.spaceclub.club.controller.dto.ClubGetResponse;
+import com.spaceclub.club.controller.dto.ClubNoticeCreateRequest;
+import com.spaceclub.club.controller.dto.ClubNoticeGetResponse;
+import com.spaceclub.club.controller.dto.ClubScheduleResponse;
+import com.spaceclub.club.controller.dto.ClubUpdateRequest;
 import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
 import com.spaceclub.club.controller.dto.MemberGetResponse;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.service.ClubService;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
+import com.spaceclub.event.domain.Category;
 import com.spaceclub.event.domain.Event;
+import com.spaceclub.event.domain.EventInfo;
+import com.spaceclub.event.domain.FormInfo;
+import com.spaceclub.event.domain.TicketInfo;
+import com.spaceclub.form.domain.Form;
 import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.service.JwtService;
@@ -34,6 +43,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.spaceclub.invite.controller.InviteController.INVITE_LINK_PREFIX;
@@ -87,6 +97,14 @@ public class ClubController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping(value = "/clubs/{clubId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> updateClub(@PathVariable Long clubId,
+                                           @RequestPart(value = "request") ClubUpdateRequest request,
+                                           @RequestPart(value = "logoImage", required = false) MultipartFile logoImage,
+                                           HttpServletRequest httpServletRequest) {
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("/clubs/{clubId}")
     public ResponseEntity<String> deleteClub(@PathVariable Long clubId) {
         service.deleteClub(clubId);
@@ -128,6 +146,79 @@ public class ClubController {
         service.deleteMember(clubId, memberId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/clubs/{clubId}/notices")
+    public ResponseEntity<Void> createNotice(@PathVariable Long clubId,
+                                             @RequestBody ClubNoticeCreateRequest request,
+                                             HttpServletRequest httpServletRequest) {
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/clubs/{clubId}/notices")
+    public ResponseEntity<ClubNoticeGetResponse> getNotices(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
+        ClubNoticeGetResponse response = new ClubNoticeGetResponse(List.of("notice"));
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/clubs/{clubId}/notices")
+    public ResponseEntity<Void> updateNotice(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/clubs/{clubId}/notices")
+    public ResponseEntity<Void> deleteNotice(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/clubs/{clubId}/schedules")
+    public ResponseEntity<ClubScheduleResponse> getClubSchedule(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
+        Event event = Event.builder()
+                .id(1L)
+                .category(Category.CLUB)
+                .eventInfo(
+                        EventInfo.builder()
+                                .title("행사 제목")
+                                .startDate(LocalDateTime.now())
+                                .location("강남역")
+                                .posterImageUrl("image.jpg")
+                                .capacity(1)
+                                .content("content")
+                                .build()
+                )
+                .formInfo(
+                        FormInfo.builder()
+                                .formOpenDate(LocalDateTime.now())
+                                .formCloseDate(LocalDateTime.now())
+                                .build()
+                )
+                .ticketInfo(
+                        TicketInfo.builder()
+                                .cost(1000)
+                                .maxTicketCount(10)
+                                .build()
+                )
+                .club(
+                        Club.builder()
+                                .id(1L)
+                                .name("클럽")
+                                .logoImageUrl("logo image")
+                                .coverImageUrl("cover image")
+                                .info("club info")
+                                .build()
+                )
+                .form(
+                        Form.builder()
+                                .id(1L)
+                                .description("form description")
+                                .build()
+                )
+                .build();
+        ClubScheduleResponse response = new ClubScheduleResponse(List.of(event));
+
+        return ResponseEntity.ok(response);
     }
 
 }

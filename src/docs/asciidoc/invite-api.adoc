@@ -1,4 +1,6 @@
+:sectnums:
 == 클럽 초대 링크
+:sectnums!:
 
 :sectnums:
 

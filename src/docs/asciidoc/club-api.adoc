@@ -111,4 +111,124 @@ include::{snippets}/club/get/http-response.adoc[]
 ===== Response Body
 
 include::{snippets}/club/get/response-fields.adoc[]
+
 :sectnums:
+
+=== 클럽 수정
+:sectnums!:
+==== Request
+
+include::{snippets}/club/update/http-request.adoc[]
+===== Path Parameter
+
+include::{snippets}/club/update/path-parameters.adoc[]
+
+===== Request Header
+
+include::{snippets}/club/update/request-headers.adoc[]
+
+===== Multipart Form Data
+
+include::{snippets}/club/update/request-parts.adoc[]
+
+===== Request Form Data
+
+include::{snippets}/club/update/request-part-request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/club/update/http-response.adoc[]
+
+:sectnums:
+
+=== 클럽 공지사항 작성
+:sectnums!:
+==== Request
+
+include::{snippets}/club/createNotice/http-request.adoc[]
+===== Path Parameter
+
+include::{snippets}/club/createNotice/path-parameters.adoc[]
+
+===== Request Header
+
+include::{snippets}/club/createNotice/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/club/createNotice/http-response.adoc[]
+
+:sectnums:
+=== 클럽 공지사항 조회
+:sectnums!:
+==== Request
+
+include::{snippets}/club/getNotice/http-request.adoc[]
+===== Path Parameter
+
+include::{snippets}/club/getNotice/path-parameters.adoc[]
+
+===== Request Header
+
+include::{snippets}/club/getNotice/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/club/getNotice/http-response.adoc[]
+
+:sectnums:
+=== 클럽 공지사항 수정
+:sectnums!:
+==== Request
+
+include::{snippets}/club/updateNotice/http-request.adoc[]
+===== Path Parameter
+
+include::{snippets}/club/updateNotice/path-parameters.adoc[]
+
+===== Request Header
+
+include::{snippets}/club/updateNotice/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/club/updateNotice/http-response.adoc[]
+
+:sectnums:
+=== 클럽 공지사항 삭제
+:sectnums!:
+==== Request
+
+include::{snippets}/club/deleteNotice/http-request.adoc[]
+===== Path Parameter
+
+include::{snippets}/club/deleteNotice/path-parameters.adoc[]
+
+===== Request Header
+
+include::{snippets}/club/deleteNotice/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/club/deleteNotice/http-response.adoc[]
+
+:sectnums:
+=== 클럽 일정 확인하기
+:sectnums!:
+==== Request
+
+include::{snippets}/club/getSchedule/http-request.adoc[]
+===== Path Parameter
+
+include::{snippets}/club/getSchedule/path-parameters.adoc[]
+
+===== Request Header
+
+include::{snippets}/club/getSchedule/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/club/getSchedule/http-response.adoc[]
+
+===== Response Body
+include::{snippets}/club/getSchedule/response-fields.adoc[]
