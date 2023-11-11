@@ -11,6 +11,7 @@ import com.spaceclub.club.controller.dto.ClubUpdateRequest;
 import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
 import com.spaceclub.club.controller.dto.MemberGetResponse;
 import com.spaceclub.club.domain.Club;
+import com.spaceclub.club.domain.ClubNotice;
 import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.service.ClubService;
 import com.spaceclub.club.service.vo.ClubNoticeUpdate;
@@ -166,7 +167,7 @@ public class ClubController {
     public ResponseEntity<ClubNoticeGetResponse> getNotices(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
         Long userId = jwtService.verifyUserId(httpServletRequest);
 
-        List<String> notices = clubService.getNotices(clubId, userId);
+        List<ClubNotice> notices = clubService.getNotices(clubId, userId);
 
         ClubNoticeGetResponse response = new ClubNoticeGetResponse(notices);
 
@@ -191,8 +192,12 @@ public class ClubController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/clubs/{clubId}/notices")
-    public ResponseEntity<Void> deleteNotice(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
+    @DeleteMapping("/clubs/{clubId}/notices/{noticeId}")
+    public ResponseEntity<Void> deleteNotice(@PathVariable Long clubId,
+                                             @PathVariable Long noticeId,
+                                             HttpServletRequest httpServletRequest) {
+        Long userId = jwtService.verifyUserId(httpServletRequest);
+
         return ResponseEntity.noContent().build();
     }
 

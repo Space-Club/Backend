@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.controller.dto.ClubCreateRequest;
 import com.spaceclub.club.controller.dto.ClubNoticeCreateRequest;
+import com.spaceclub.club.controller.dto.ClubNoticeUpdateRequest;
 import com.spaceclub.club.controller.dto.ClubUpdateRequest;
 import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubUserRole;
 import com.spaceclub.club.service.ClubService;
+import com.spaceclub.club.service.vo.ClubNoticeUpdate;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.S3ImageUploader;
@@ -32,6 +34,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import static com.spaceclub.club.ClubNoticeTestFixture.clubNotice1;
+import static com.spaceclub.club.ClubNoticeTestFixture.clubNotice2;
 import static com.spaceclub.club.ClubTestFixture.club1;
 import static com.spaceclub.club.ClubUserTestFixture.club1User1Manager;
 import static com.spaceclub.club.ClubUserTestFixture.club1User2Manager;
@@ -467,6 +471,9 @@ class ClubControllerTest {
     void 클럽_공지사항_조회에_성공한다() throws Exception {
         // given
         Long clubId = 1L;
+        given(clubService.getNotices(any(Long.class), any(Long.class))).willReturn(
+                List.of(clubNotice1(), clubNotice2())
+        );
 
         // when
         ResultActions result = this.mockMvc.perform(get("/api/v1/clubs/{clubId}/notices", clubId)
@@ -487,7 +494,9 @@ class ClubControllerTest {
                                 parameterWithName("clubId").description("클럽 아이디")
                         ),
                         responseFields(
-                                fieldWithPath("notices").type(ARRAY).description("공지 사항 리스트")
+                                fieldWithPath("notices").type(ARRAY).description("공지 사항 리스트"),
+                                fieldWithPath("notices.[].id").type(NUMBER).description("공지 사항 항목 ID"),
+                                fieldWithPath("notices.[].notice").type(STRING).description("공지 사항 내용")
                         )
                 ));
     }
@@ -497,10 +506,20 @@ class ClubControllerTest {
     void 클럽_공지사항_수정에_성공한다() throws Exception {
         // given
         Long clubId = 1L;
+        Long noticeId = 1L;
+        ClubNoticeUpdate newNoticeVO = ClubNoticeUpdate.builder()
+                .notice("새로운 공지사항")
+                .userId(1L)
+                .noticeId(noticeId)
+                .clubId(clubId)
+                .build();
+        doNothing().when(clubService).updateNotice(any(ClubNoticeUpdate.class));
 
         // when
-        ResultActions result = this.mockMvc.perform(patch("/api/v1/clubs/{clubId}/notices", clubId)
+        ResultActions result = this.mockMvc.perform(patch("/api/v1/clubs/{clubId}/notices/{noticeId}", clubId, noticeId)
                 .header("Authorization", "access token")
+                .content(mapper.writeValueAsString(new ClubNoticeUpdateRequest("새로운 공지사항")))
+                .contentType(MediaType.APPLICATION_JSON)
                 .with(csrf())
         );
 
@@ -514,7 +533,11 @@ class ClubControllerTest {
                                 headerWithName("Authorization").description("유저 액세스 토큰")
                         ),
                         pathParameters(
-                                parameterWithName("clubId").description("클럽 아이디")
+                                parameterWithName("clubId").description("클럽 아이디"),
+                                parameterWithName("noticeId").description("공지사항 아이디")
+                        ),
+                        requestFields(
+                                fieldWithPath("notice").type(STRING).description("새로운 공지사항")
                         )
                 ));
     }
@@ -524,9 +547,10 @@ class ClubControllerTest {
     void 클럽_공지사항_삭제에_성공한다() throws Exception {
         // given
         Long clubId = 1L;
+        Long noticeId = 1L;
 
         // when
-        ResultActions result = this.mockMvc.perform(delete("/api/v1/clubs/{clubId}/notices", clubId)
+        ResultActions result = this.mockMvc.perform(delete("/api/v1/clubs/{clubId}/notices/{noticeId}", clubId, noticeId)
                 .header("Authorization", "access token")
                 .with(csrf())
         );
@@ -541,7 +565,9 @@ class ClubControllerTest {
                                 headerWithName("Authorization").description("유저 액세스 토큰")
                         ),
                         pathParameters(
-                                parameterWithName("clubId").description("클럽 아이디")
+                                parameterWithName("clubId").description("클럽 아이디"),
+                                parameterWithName("noticeId").description("공지사항 아이디")
+
                         )
                 ));
     }

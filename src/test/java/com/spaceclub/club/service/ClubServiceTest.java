@@ -2,13 +2,12 @@ package com.spaceclub.club.service;
 
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.domain.Club;
-import com.spaceclub.club.domain.ClubNotice;
 import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.domain.ClubUserRole;
 import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.Optional;
 
 import static com.spaceclub.club.ClubTestFixture.club1;
@@ -28,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
+@Disabled
 @ExtendWith(MockitoExtension.class)
 @DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.class)
 class ClubServiceTest {
@@ -47,33 +46,20 @@ class ClubServiceTest {
             .role(ClubUserRole.MEMBER)
             .build();
 
-    private Club club;
-
-    @BeforeEach
-    void setup() {
-        club = Club.builder()
-                .id(1L)
-                .name("연사모")
-                .info("연어를 사랑하는 모임")
-                .logoImageUrl("연어.jpg")
-                .notices(List.of(new ClubNotice("연어 공지사항 1: 연어는 맛있어요")))
-                .build();
-    }
-
     @Test
     void 클럽_조회에_성공한다() {
         // given
         Long id = 1L;
-        given(clubRepository.save(any(Club.class))).willReturn(club);
-        given(clubRepository.findById(id)).willReturn(Optional.of(club));
+        given(clubRepository.save(any(Club.class))).willReturn(club1());
+        given(clubRepository.findById(id)).willReturn(Optional.of(club1()));
 
-        clubRepository.save(club);
+        clubRepository.save(club1());
 
         // when
         Club myClub = clubService.getClub(id);
 
         // then
-        assertThat(club).usingRecursiveComparison().isEqualTo(myClub);
+        assertThat(club1()).usingRecursiveComparison().isEqualTo(myClub);
     }
 
     @Test

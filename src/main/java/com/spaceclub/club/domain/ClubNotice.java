@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,7 +30,9 @@ public class ClubNotice {
     @Getter
     private String notice;
 
-    public ClubNotice(Club club, String notice) {
+    @Builder
+    public ClubNotice(Long id, Club club, String notice) {
+        this.id = id;
         this.club = club;
         this.notice = notice;
     }
