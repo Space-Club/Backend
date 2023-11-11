@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -69,8 +70,9 @@ public class Event extends BaseTimeEntity {
     @OneToMany(mappedBy = "event")
     private List<EventUser> users = new ArrayList<>();
 
-    @OneToMany(mappedBy = "event")
-    private List<Form> forms = new ArrayList<>();
+    @OneToOne
+    @JoinColumn(name = "form_id")
+    private Form form;
 
     @Builder
     private Event(
@@ -80,7 +82,8 @@ public class Event extends BaseTimeEntity {
             BankInfo bankInfo,
             TicketInfo ticketInfo,
             FormInfo formInfo,
-            Club club
+            Club club,
+            Form form
     ) {
         Assert.notNull(category, "행사 카테고리는 필수 값입니다.");
         this.id = id;
@@ -90,6 +93,7 @@ public class Event extends BaseTimeEntity {
         this.ticketInfo = ticketInfo;
         this.formInfo = formInfo;
         this.club = club;
+        this.form = form;
     }
 
     public Event registerClub(Club club) {
@@ -104,6 +108,18 @@ public class Event extends BaseTimeEntity {
                 .build();
     }
 
+    public Event registerForm(Form form) {
+        return Event.builder()
+                .id(this.id)
+                .category(this.category)
+                .eventInfo(this.eventInfo)
+                .bankInfo(this.bankInfo)
+                .ticketInfo(this.ticketInfo)
+                .formInfo(this.formInfo)
+                .club(this.club)
+                .form(form)
+                .build();
+    }
 
     public String getTitle() {
         return eventInfo.getTitle();
