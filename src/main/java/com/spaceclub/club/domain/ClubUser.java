@@ -71,4 +71,8 @@ public class ClubUser extends BaseTimeEntity {
         return user.getProfileImageUrl();
     }
 
+    public boolean isManager() {
+        return this.role.equals(ClubUserRole.MANAGER);
+    }
+
 }

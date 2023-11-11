@@ -50,4 +50,11 @@ public class Invite extends BaseTimeEntity {
         return this;
     }
 
+    public boolean isExpired() {
+        LocalDateTime expiredAt = this.expiredAt;
+        LocalDateTime now = LocalDateTime.now();
+
+        return now.isAfter(expiredAt);
+    }
+
 }
