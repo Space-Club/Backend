@@ -53,7 +53,7 @@ import static com.spaceclub.invite.controller.InviteController.INVITE_LINK_PREFI
 @RequiredArgsConstructor
 public class ClubController {
 
-    private final ClubService service;
+    private final ClubService clubService;
 
     private final InviteService inviteService;
 
@@ -75,7 +75,7 @@ public class ClubController {
         }
 
         Club newClub = request.toEntity(logoImageUrl);
-        Club createdClub = service.createClub(newClub, userId);
+        Club createdClub = clubService.createClub(newClub, userId);
         Long id = createdClub.getId();
 
         URI location = uriBuilder
@@ -88,7 +88,7 @@ public class ClubController {
 
     @GetMapping("/clubs/{clubId}")
     public ResponseEntity<ClubGetResponse> getClub(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
-        Club club = service.getClub(clubId);
+        Club club = clubService.getClub(clubId);
         Long userId = jwtService.verifyUserId(httpServletRequest);
         String inviteCode = inviteService.getInviteCode(clubId, userId);
 
@@ -108,13 +108,13 @@ public class ClubController {
     @DeleteMapping("/clubs/{clubId}")
     public ResponseEntity<String> deleteClub(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
         Long userId = jwtService.verifyUserId(httpServletRequest);
-        service.deleteClub(clubId, userId);
+        clubService.deleteClub(clubId, userId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/clubs/{clubId}/events")
     public ResponseEntity<PageResponse<ClubEventGetResponse, Event>> getClubEvents(@PathVariable Long clubId, Pageable pageable) {
-        Page<Event> events = service.getClubEvents(clubId, pageable);
+        Page<Event> events = clubService.getClubEvents(clubId, pageable);
 
         List<ClubEventGetResponse> clubEventGetResponses = events.getContent()
                 .stream()
@@ -126,14 +126,14 @@ public class ClubController {
 
     @PatchMapping("/clubs/{clubId}/members/{memberId}")
     public ResponseEntity<Void> updateMemberRole(@PathVariable Long clubId, @PathVariable Long memberId, @RequestBody ClubUserUpdateRequest request) {
-        service.updateMemberRole(new ClubUserUpdate(clubId, memberId, request.role()));
+        clubService.updateMemberRole(new ClubUserUpdate(clubId, memberId, request.role()));
 
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/clubs/{clubId}/members")
     public ResponseEntity<List<MemberGetResponse>> getMembers(@PathVariable Long clubId) {
-        List<ClubUser> clubUsers = service.getMembers(clubId);
+        List<ClubUser> clubUsers = clubService.getMembers(clubId);
 
         List<MemberGetResponse> response = clubUsers.stream()
                 .map(MemberGetResponse::from)
@@ -144,7 +144,7 @@ public class ClubController {
 
     @DeleteMapping("/clubs/{clubId}/members/{memberId}")
     public ResponseEntity<Void> deleteMember(@PathVariable Long clubId, @PathVariable Long memberId) {
-        service.deleteMember(clubId, memberId);
+        clubService.deleteMember(clubId, memberId);
 
         return ResponseEntity.noContent().build();
     }
@@ -153,13 +153,20 @@ public class ClubController {
     public ResponseEntity<Void> createNotice(@PathVariable Long clubId,
                                              @RequestBody ClubNoticeCreateRequest request,
                                              HttpServletRequest httpServletRequest) {
+        Long userId = jwtService.verifyUserId(httpServletRequest);
+
+        clubService.createNotice(request.notice(), clubId, userId);
 
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/clubs/{clubId}/notices")
     public ResponseEntity<ClubNoticeGetResponse> getNotices(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
-        ClubNoticeGetResponse response = new ClubNoticeGetResponse(List.of("notice"));
+        Long userId = jwtService.verifyUserId(httpServletRequest);
+
+        List<String> notices = clubService.getNotices(clubId, userId);
+
+        ClubNoticeGetResponse response = new ClubNoticeGetResponse(notices);
 
         return ResponseEntity.ok(response);
     }

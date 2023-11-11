@@ -1,8 +1,10 @@
 package com.spaceclub.club.service;
 
 import com.spaceclub.club.domain.Club;
+import com.spaceclub.club.domain.ClubNotice;
 import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.domain.ClubUserRole;
+import com.spaceclub.club.repository.ClubNoticeRepository;
 import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
@@ -32,6 +34,8 @@ public class ClubService {
     private final ClubUserRepository clubUserRepository;
 
     private final UserRepository userRepository;
+
+    private final ClubNoticeRepository clubNoticeRepository;
 
     public Club createClub(Club club, Long clubId) {
         User user = userRepository.findById(clubId)
@@ -96,6 +100,36 @@ public class ClubService {
 
         return clubUserRepository.findByClub_IdAndUser_Id(clubId, memberId)
                 .orElseThrow(() -> new IllegalArgumentException("클럽의 멤버가 아닙니다"));
+    }
+
+    public void createNotice(String notice, Long clubId, Long userId) {
+        ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 클럽의 멤버가 아닙니다."));
+
+        if (!clubUser.isManager()) throw new IllegalStateException("해당 권한이 없습니다.");
+
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
+
+        ClubNotice clubNotice = new ClubNotice(club, notice);
+
+        club.getNotices().add(clubNotice);
+        clubRepository.save(club);
+        clubNoticeRepository.save(clubNotice);
+    }
+
+    public List<String> getNotices(Long clubId, Long userId) {
+        ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 클럽의 멤버가 아닙니다."));
+
+        if (!clubUser.isManager()) throw new IllegalStateException("해당 권한이 없습니다.");
+
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
+
+        return club.getNotices().stream()
+                .map(ClubNotice::getNotice)
+                .toList();
     }
 
 }

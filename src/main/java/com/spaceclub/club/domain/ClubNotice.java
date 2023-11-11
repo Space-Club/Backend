@@ -28,7 +28,8 @@ public class ClubNotice {
     @Getter
     private String notice;
 
-    public ClubNotice(String notice) {
+    public ClubNotice(Club club, String notice) {
+        this.club = club;
         this.notice = notice;
     }
 
