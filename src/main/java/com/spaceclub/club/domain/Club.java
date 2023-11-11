@@ -55,7 +55,7 @@ public class Club extends BaseTimeEntity {
     private List<ClubNotice> notices = new ArrayList<>();
 
     @Getter
-    @OneToMany(mappedBy = "club", orphanRemoval = true)
+    @OneToMany(mappedBy = "club", fetch = FetchType.EAGER, orphanRemoval = true)
     private List<ClubUser> clubUser = new ArrayList<>();
 
     @OneToOne(mappedBy = "club", orphanRemoval = true)

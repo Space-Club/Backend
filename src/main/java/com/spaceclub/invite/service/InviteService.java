@@ -37,7 +37,7 @@ public class InviteService {
         ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 클럽의 멤버가 아닙니다."));
 
-        if (clubUser.isManager()) throw new IllegalStateException("초대링크는 매니저만 생성 가능 합니다.");
+        if (!clubUser.isManager()) throw new IllegalStateException("초대링크는 매니저만 생성 가능 합니다.");
 
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
