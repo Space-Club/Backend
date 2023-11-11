@@ -13,6 +13,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -33,10 +35,14 @@ public class Invite extends BaseTimeEntity {
     @JoinColumn(name = "club_id", unique = true)
     private Club club;
 
+    @Getter
+    private LocalDateTime expiredAt;
+
     @Builder
-    public Invite(String code, Club club) {
+    public Invite(String code, Club club, LocalDateTime expiredAt) {
         this.code = code;
         this.club = club;
+        this.expiredAt = expiredAt;
     }
 
     public Invite updateCode(String code) {
