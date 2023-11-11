@@ -53,9 +53,10 @@ public class FormController {
     }
 
     @PostMapping("/forms/applications")
-    public ResponseEntity<Void> createApplicationForm(@RequestBody List<FormApplicationCreateRequest> request, HttpServletRequest servletRequest) {
+    public ResponseEntity<Void> createApplicationForm(@RequestBody FormApplicationCreateRequest request, HttpServletRequest servletRequest) {
         Long userId = jwtService.verifyUserId(servletRequest);
-        formService.createApplicationForm();
+
+        formService.createApplicationForm(userId, request.eventId(), request.toEntityList());
 
         return ResponseEntity.noContent().build();
     }

@@ -9,7 +9,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -24,6 +26,7 @@ public class FormOptionUser extends BaseTimeEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
+    @Getter
     @ManyToOne
     @JoinColumn(name = "form_item_id")
     private FormOption formOption;
@@ -33,5 +36,22 @@ public class FormOptionUser extends BaseTimeEntity {
     private User user;
 
     private String content;
+
+    @Builder
+    public FormOptionUser(Long id, FormOption formOption, User user, String content) {
+        this.id = id;
+        this.formOption = formOption;
+        this.user = user;
+        this.content = content;
+    }
+
+    public FormOptionUser registerFormOptionAndUser(FormOption formOption, User user) {
+        return FormOptionUser.builder()
+                .id(this.id)
+                .formOption(formOption)
+                .user(user)
+                .content(this.content)
+                .build();
+    }
 
 }
