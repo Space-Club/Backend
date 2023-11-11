@@ -6,13 +6,11 @@ import com.spaceclub.form.controller.dto.FormApplicationCreateRequest;
 import com.spaceclub.form.controller.dto.FormApplicationGetResponse;
 import com.spaceclub.form.controller.dto.FormApplicationGetResponse.FormApplicationItemGetResponse;
 import com.spaceclub.form.controller.dto.FormCreateRequest;
-import com.spaceclub.form.controller.dto.FormGetResponse;
-import com.spaceclub.form.controller.dto.FormGetResponse.EventResponse;
-import com.spaceclub.form.controller.dto.FormGetResponse.FormItemResponse;
-import com.spaceclub.form.controller.dto.FormGetResponse.FormResponse;
+import com.spaceclub.form.domain.Form;
 import com.spaceclub.form.domain.FormOptionType;
 import com.spaceclub.form.service.FormService;
 import com.spaceclub.form.service.vo.FormCreate;
+import com.spaceclub.form.service.vo.FormGet;
 import com.spaceclub.global.jwt.service.JwtService;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
@@ -26,6 +24,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static com.spaceclub.form.FormTestFixture.form;
+import static com.spaceclub.form.FormTestFixture.formOption1;
+import static com.spaceclub.form.FormTestFixture.formOption2;
 import static com.spaceclub.form.controller.dto.FormCreateRequest.FormCreateOptionRequest;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -122,22 +123,19 @@ class FormControllerTest {
     @WithMockUser
     void 폼_양식_조회에_성공한다() throws Exception {
         // given
-        EventResponse event = new EventResponse("행사 제목", "https://example.com/poster.png");
-        FormResponse form = new FormResponse("폼에 대한 설명", List.of(
-                new FormItemResponse(1L, "이름"),
-                new FormItemResponse(2L, "연락처")
-        ));
-        FormGetResponse formGetResponse = FormGetResponse.builder()
-                .event(event)
+        Form form = form();
+        form.addItems(List.of(formOption1(), formOption2()));
+        FormGet formGet = FormGet.builder()
+                .title("행사 제목")
                 .form(form)
                 .build();
 
         Long userId = 1L;
         given(jwtService.verifyUserId(any())).willReturn(userId);
-        given(formService.getForm()).willReturn(formGetResponse);
+        given(formService.getForm(any(Long.class), any(Long.class))).willReturn(formGet);
 
         // when, then
-        mvc.perform(get("/api/v1/events/{eventId}/formItems", 1L)
+        mvc.perform(get("/api/v1/events/{eventId}/forms", 1L)
                         .header("Authorization", "Access Token")
                 )
                 .andExpect(status().isOk())
@@ -154,12 +152,12 @@ class FormControllerTest {
                                 responseFields(
                                         fieldWithPath("event").type(OBJECT).description("행사 정보"),
                                         fieldWithPath("event.title").type(STRING).description("행사 제목"),
-                                        fieldWithPath("event.posterImageUrl").type(STRING).description("행사 포스터 URL"),
                                         fieldWithPath("form").type(OBJECT).description("폼 정보"),
                                         fieldWithPath("form.description").type(STRING).description("폼 설명"),
-                                        fieldWithPath("form.items[]").type(ARRAY).description("폼 항목 리스트"),
-                                        fieldWithPath("form.items[].id").type(NUMBER).description("폼 항목 id"),
-                                        fieldWithPath("form.items[].name").type(STRING).description("폼 항목명")
+                                        fieldWithPath("form.options[]").type(ARRAY).description("폼 항목 리스트"),
+                                        fieldWithPath("form.options[].id").type(NUMBER).description("폼 항목 id"),
+                                        fieldWithPath("form.options[].title").type(STRING).description("폼 항목명"),
+                                        fieldWithPath("form.options[].type").type(STRING).description("폼 항목 타입(TEXT, SELECT, RADIO, NUMBER)")
                                 )
                         )
                 );

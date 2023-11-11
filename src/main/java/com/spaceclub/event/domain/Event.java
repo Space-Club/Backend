@@ -70,6 +70,7 @@ public class Event extends BaseTimeEntity {
     @OneToMany(mappedBy = "event")
     private List<EventUser> users = new ArrayList<>();
 
+    @Getter
     @OneToOne
     @JoinColumn(name = "form_id")
     private Form form;
@@ -165,6 +166,10 @@ public class Event extends BaseTimeEntity {
 
     public LocalDateTime getFormCloseDate() {
         return formInfo.getFormCloseDate();
+    }
+
+    public Long getFormId() {
+        return form.getId();
     }
 
 }

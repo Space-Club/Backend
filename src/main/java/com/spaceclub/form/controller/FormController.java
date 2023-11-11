@@ -6,6 +6,7 @@ import com.spaceclub.form.controller.dto.FormCreateRequest;
 import com.spaceclub.form.controller.dto.FormGetResponse;
 import com.spaceclub.form.service.FormService;
 import com.spaceclub.form.service.vo.FormCreate;
+import com.spaceclub.form.service.vo.FormGet;
 import com.spaceclub.global.jwt.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -43,12 +44,12 @@ public class FormController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/{eventId}/formItems")
+    @GetMapping("/{eventId}/forms")
     public ResponseEntity<FormGetResponse> getFormItem(@PathVariable Long eventId, HttpServletRequest servletRequest) {
         Long userId = jwtService.verifyUserId(servletRequest);
-        FormGetResponse response = formService.getForm();
+        FormGet formGetVo = formService.getForm(userId, eventId);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(FormGetResponse.from(formGetVo));
     }
 
     @PostMapping("/forms/applications")

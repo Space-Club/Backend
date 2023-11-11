@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -21,12 +22,15 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 public class FormOption {
 
     @Id
+    @Getter
     @Column(name = "form_option_id")
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
+    @Getter
     private String title;
 
+    @Getter
     @Enumerated(EnumType.STRING)
     private FormOptionType type;
 
