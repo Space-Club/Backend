@@ -2,6 +2,7 @@ package com.spaceclub.invite.controller;
 
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.domain.Club;
+import com.spaceclub.club.service.ClubService;
 import com.spaceclub.global.jwt.service.JwtService;
 import com.spaceclub.invite.service.InviteService;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -24,9 +25,11 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
@@ -46,6 +49,9 @@ class InviteControllerTest {
 
     @MockBean
     private InviteService inviteService;
+
+    @MockBean
+    private ClubService clubService;
 
     @MockBean
     private JwtService jwtService;
@@ -88,8 +94,6 @@ class InviteControllerTest {
         // given
         String code = UUID.randomUUID().toString();
 
-        doNothing().when(inviteService).joinClub(any(String.class), any(Long.class));
-
         // when
         ResultActions actions =
                 mockMvc.perform(post("/api/v1/clubs/invite/{code}", code)
@@ -97,7 +101,7 @@ class InviteControllerTest {
                         .with(csrf()));
 
         // then
-        actions.andExpect(status().isNoContent())
+        actions.andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("invite/join",
                         preprocessRequest(prettyPrint()),
@@ -107,6 +111,44 @@ class InviteControllerTest {
                         ),
                         requestHeaders(
                                 headerWithName("Authorization").description("유저 액세스 토큰")
+                        ),
+                        responseFields(
+                                fieldWithPath("clubId").type(NUMBER).description("클럽 ID")
+                        )
+                ));
+
+    }
+
+    @Test
+    @WithMockUser
+    void 초대_링크를_통해_클럽_가입전_가입_의사를_묻는데_성공한다() throws Exception {
+        // given
+        String code = UUID.randomUUID().toString();
+        given(inviteService.askForJoinClub(any(String.class), any(Long.class))).willReturn(club1());
+
+        // when
+        ResultActions actions =
+                mockMvc.perform(get("/api/v1/clubs/invite/{code}", code)
+                        .header("Authorization", "token"));
+
+        // then
+        actions.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("invite/askForJoin",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("code").description("클럽 초대 링크 식별자")
+                        ),
+                        requestHeaders(
+                                headerWithName("Authorization").description("유저 액세스 토큰")
+                        ),
+                        responseFields(
+                                fieldWithPath("clubId").type(NUMBER).description("클럽 ID"),
+                                fieldWithPath("name").type(STRING).description("클럽 이름"),
+                                fieldWithPath("info").type(STRING).description("클럽 소개"),
+                                fieldWithPath("memberCount").type(NUMBER).description("클럽 구성원 수"),
+                                fieldWithPath("logoImageUrl").type(STRING).description("클럽 로고 이미지 URL")
                         )
                 ));
 
