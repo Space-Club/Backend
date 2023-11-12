@@ -172,4 +172,8 @@ public class Event extends BaseTimeEntity {
         return form.getId();
     }
 
+    public String getContent() {
+        return this.eventInfo.getContent();
+    }
+
 }
