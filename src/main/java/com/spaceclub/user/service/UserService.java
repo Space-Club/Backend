@@ -86,15 +86,10 @@ public class UserService {
     }
 
     public Page<Event> findAllBookmarkedEventPages(Long userId, Pageable pageable) {
-        return null; //TODO
-    }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
-    public void cancelBookmark(List<Long> eventIds, Long userId) {
-        return;//TODO
-    }
-
-    public boolean findBookmarkStatus(Long userId, Event event) {
-        return false;//TODO
+        return eventUserRepository.findBookmarkedEventPages(user, pageable);
     }
 
 }

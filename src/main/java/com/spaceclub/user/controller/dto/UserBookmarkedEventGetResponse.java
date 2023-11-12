@@ -14,7 +14,7 @@ public record UserBookmarkedEventGetResponse(
         boolean bookmark
 ) {
 
-        public static UserBookmarkedEventGetResponse of(Event event, boolean bookmarkStatus) {
+        public static UserBookmarkedEventGetResponse from(Event event) {
             return new UserBookmarkedEventGetResponse(
                     event.getId(),
                     event.getTitle(),
@@ -22,7 +22,7 @@ public record UserBookmarkedEventGetResponse(
                     event.getClubName(),
                     event.getPosterImageUrl(),
                     event.getStartDate(),
-                    bookmarkStatus
+                    true
             );
         }
 
