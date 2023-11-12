@@ -581,7 +581,6 @@ class ClubControllerTest {
         // when
         ResultActions result = this.mockMvc.perform(get("/api/v1/clubs/{clubId}/schedules", clubId)
                 .header("Authorization", "access token")
-                .with(csrf())
         );
 
         // then
@@ -597,40 +596,10 @@ class ClubControllerTest {
                                 parameterWithName("clubId").description("클럽 아이디")
                         ),
                         responseFields(
-                                fieldWithPath("schedules").type(ARRAY).description("클럽 일정"),
-                                fieldWithPath("schedules.[].id").type(NUMBER).description("일정 ID"),
-                                fieldWithPath("schedules.[].category").type(STRING).description("일정 종류 (클럽)"),
-                                fieldWithPath("schedules.[].eventInfo").type(OBJECT).description("행사 정보"),
-                                fieldWithPath("schedules.[].eventInfo.title").type(STRING).description("행사 제목"),
-                                fieldWithPath("schedules.[].eventInfo.content").type(STRING).description("행사 내용"),
-                                fieldWithPath("schedules.[].eventInfo.startDate").type(STRING).description("행사 시작 날짜"),
-                                fieldWithPath("schedules.[].eventInfo.location").type(STRING).description("행사 장소"),
-                                fieldWithPath("schedules.[].eventInfo.capacity").type(NUMBER).description("행사 최대 인원수"),
-                                fieldWithPath("schedules.[].eventInfo.posterImageUrl").type(STRING).description("행사 포스터 이미지 URL"),
-                                fieldWithPath("schedules.[].club").type(OBJECT).description("클럽"),
-                                fieldWithPath("schedules.[].club.id").type(NUMBER).description("클럽 ID"),
-                                fieldWithPath("schedules.[].club.name").type(STRING).description("클럽 이름"),
-                                fieldWithPath("schedules.[].club.logoImageUrl").type(STRING).description("로고 이미지 URL"),
-                                fieldWithPath("schedules.[].club.coverImageUrl").type(STRING).description("커버 이미지 URL"),
-                                fieldWithPath("schedules.[].club.info").type(STRING).description("클럽 소개"),
-                                fieldWithPath("schedules.[].club.notices").type(ARRAY).description("클럽 공지사항"),
-                                fieldWithPath("schedules.[].club.clubUser").type(ARRAY).description("클럽 멤버 목록"),
-                                fieldWithPath("schedules.[].users").type(ARRAY).description("이벤트 참가 인원"),
-                                fieldWithPath("schedules.[].form").type(OBJECT).description("폼"),
-                                fieldWithPath("schedules.[].form.id").type(NUMBER).description("폼 ID"),
-                                fieldWithPath("schedules.[].form.description").type(STRING).description("폼 설명"),
-                                fieldWithPath("schedules.[].form.options").type(ARRAY).description("폼 옵션"),
-                                fieldWithPath("schedules.[].location").type(STRING).description("행사 장소"),
-                                fieldWithPath("schedules.[].clubId").type(NUMBER).description("클럽 ID"),
-                                fieldWithPath("schedules.[].formId").type(NUMBER).description("폼 ID"),
-                                fieldWithPath("schedules.[].title").type(STRING).description("행사 제목"),
-                                fieldWithPath("schedules.[].startTime").type(STRING).description("행사 시작 시간"),
-                                fieldWithPath("schedules.[].startDate").type(STRING).description("행사 시작 날짜"),
-                                fieldWithPath("schedules.[].clubName").type(STRING).description("클럽 이름"),
-                                fieldWithPath("schedules.[].formOpenDate").type(STRING).description("폼 여는 시간"),
-                                fieldWithPath("schedules.[].formCloseDate").type(STRING).description("폼 닫는 시간"),
-                                fieldWithPath("schedules.[].clubLogoImageUrl").type(STRING).description("클럽 로고 이미지 URL"),
-                                fieldWithPath("schedules.[].posterImageUrl").type(STRING).description("포스터 이미지 URL")
+                                fieldWithPath("schedules").type(ARRAY).description("클럽 일정 목록"),
+                                fieldWithPath("schedules.[].title").type(STRING).description("일정 제목"),
+                                fieldWithPath("schedules.[].content").type(STRING).description("일정 내용"),
+                                fieldWithPath("schedules.[].startDateTime").type(STRING).description("일정 시작 날짜와 시간")
                         )
                 ));
     }
