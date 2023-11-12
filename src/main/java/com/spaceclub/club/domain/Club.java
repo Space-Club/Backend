@@ -90,4 +90,18 @@ public class Club extends BaseTimeEntity {
         return CLUB_LOGO_S3_URL + logoImageUrl;
     }
 
+    public Club update(Club newClub) {
+        if (newClub.getName() != null) {
+            this.name = newClub.getName();
+        }
+        if (newClub.getInfo() != null) {
+            this.info = newClub.getInfo();
+        }
+        if (newClub.getLogoImageUrl() != null) {
+            this.logoImageUrl = newClub.getLogoImageUrl();
+        }
+
+        return this;
+    }
+
 }

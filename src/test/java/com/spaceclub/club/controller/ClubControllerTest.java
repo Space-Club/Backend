@@ -243,7 +243,7 @@ class ClubControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestParts(
                                 partWithName("request").description("클럽 수정 요청 DTO"),
-                                partWithName("logoImage").description("클럽 썸네일 이미지")
+                                partWithName("logoImage").description("새로운 클럽 로고 이미지")
                         ),
                         pathParameters(
                                 parameterWithName("clubId").description("클럽 ID")
