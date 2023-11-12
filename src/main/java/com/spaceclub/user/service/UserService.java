@@ -89,4 +89,8 @@ public class UserService {
         return null; //TODO
     }
 
+    public void cancelBookmark(List<Long> eventIds, Long userId) {
+        return;//TODO
+    }
+
 }
