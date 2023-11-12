@@ -140,18 +140,3 @@ include::{snippets}/user/getAllBookmarkedEvents/http-response.adoc[]
 ===== Response Body
 include::{snippets}/user/getAllBookmarkedEvents/response-fields.adoc[]
 :sectnums:
-
-=== 유저의 북마크 페이지에서 행사 북마크 소
-:sectnums!:
-==== Request
-include::{snippets}/user/cancelBookmarkedEvents/http-request.adoc[]
-
-===== Request Header
-include::{snippets}/user/cancelBookmarkedEvents/request-headers.adoc[]
-
-===== Request Body
-include::{snippets}/user/cancelBookmarkedEvents/request-fields.adoc[]
-
-==== Response
-include::{snippets}/user/cancelBookmarkedEvents/http-response.adoc[]
-:sectnums:

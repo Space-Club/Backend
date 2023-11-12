@@ -14,7 +14,7 @@ public record UserBookmarkedEventGetResponse(
         boolean bookmark
 ) {
 
-        public static UserBookmarkedEventGetResponse from(Event event) {
+        public static UserBookmarkedEventGetResponse of(Event event) {
             return new UserBookmarkedEventGetResponse(
                     event.getId(),
                     event.getTitle(),

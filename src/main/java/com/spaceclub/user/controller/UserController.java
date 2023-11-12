@@ -4,7 +4,6 @@ import com.spaceclub.club.domain.Club;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.service.JwtService;
-import com.spaceclub.user.controller.dto.UserBookmarkedEventDeleteRequest;
 import com.spaceclub.user.controller.dto.UserBookmarkedEventGetResponse;
 import com.spaceclub.user.controller.dto.UserClubGetResponse;
 import com.spaceclub.user.controller.dto.UserCodeRequest;
@@ -21,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -120,17 +118,6 @@ public class UserController {
                 .toList();
 
         return new PageResponse<>(bookmarkedEvents, eventPages);
-    }
-
-    @DeleteMapping("/bookmarked-events")
-    public ResponseEntity<Void> cancelBookmarkedEvents(
-            @RequestBody UserBookmarkedEventDeleteRequest request,
-            HttpServletRequest servletRequest
-    ) {
-        Long userId = jwtService.verifyUserId(servletRequest);
-        userService.cancelBookmark(request.data(), userId);
-
-        return ResponseEntity.ok().build();
     }
 
 }
