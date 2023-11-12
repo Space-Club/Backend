@@ -33,6 +33,7 @@ public class Form extends BaseTimeEntity {
     @Getter
     private String description;
 
+    @Getter
     private boolean managed;
 
     @Getter

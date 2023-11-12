@@ -2,14 +2,14 @@ package com.spaceclub.form.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
+import com.spaceclub.form.FormTestFixture;
 import com.spaceclub.form.controller.dto.FormApplicationCreateRequest;
 import com.spaceclub.form.controller.dto.FormApplicationCreateRequest.FormRequest;
-import com.spaceclub.form.controller.dto.FormApplicationGetResponse;
-import com.spaceclub.form.controller.dto.FormApplicationGetResponse.FormApplicationItemGetResponse;
 import com.spaceclub.form.controller.dto.FormCreateRequest;
 import com.spaceclub.form.domain.Form;
 import com.spaceclub.form.domain.FormOptionType;
 import com.spaceclub.form.service.FormService;
+import com.spaceclub.form.service.vo.FormApplicationGetInfo;
 import com.spaceclub.form.service.vo.FormCreate;
 import com.spaceclub.form.service.vo.FormGet;
 import com.spaceclub.global.jwt.service.JwtService;
@@ -25,13 +25,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static com.spaceclub.form.FormTestFixture.form;
-import static com.spaceclub.form.FormTestFixture.formOption1;
-import static com.spaceclub.form.FormTestFixture.formOption2;
+import static com.spaceclub.event.EventTestFixture.eventUser;
 import static com.spaceclub.form.controller.dto.FormCreateRequest.FormCreateOptionRequest;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -108,7 +107,7 @@ class FormControllerTest {
                                         fieldWithPath("eventId").type(NUMBER).description("행사 id"),
                                         fieldWithPath("description").type(STRING).description("폼 설명"),
                                         fieldWithPath("managed").type(BOOLEAN).description("관리 모드 여부"),
-                                        fieldWithPath("options").type(ARRAY).description("감"),
+                                        fieldWithPath("options[]").type(ARRAY).description("감"),
                                         fieldWithPath("options[].title").type(STRING).description("폼 항목명"),
                                         fieldWithPath("options[].type").type(STRING).description("폼 항목 타입(TEXT, SELECT, RADIO, NUMBER)"),
                                         fieldWithPath("options[].visible").type(BOOLEAN).description("폼 조회 공개 여부")
@@ -124,8 +123,8 @@ class FormControllerTest {
     @WithMockUser
     void 폼_양식_조회에_성공한다() throws Exception {
         // given
-        Form form = form();
-        form.addItems(List.of(formOption1(), formOption2()));
+        Form form = FormTestFixture.form();
+        form.addItems(List.of(FormTestFixture.formOption1(), FormTestFixture.formOption2()));
         FormGet formGet = FormGet.builder()
                 .title("행사 제목")
                 .form(form)
@@ -171,8 +170,8 @@ class FormControllerTest {
         FormApplicationCreateRequest request = FormApplicationCreateRequest.builder()
                 .eventId(1L)
                 .forms(List.of(
-                        new FormRequest(formOption1().getId(), "박씨"),
-                        new FormRequest(formOption2().getId(), "010-1111-2222")
+                        new FormRequest(FormTestFixture.formOption1().getId(), "박씨"),
+                        new FormRequest(FormTestFixture.formOption2().getId(), "010-1111-2222")
                 ))
                 .build();
 
@@ -197,7 +196,7 @@ class FormControllerTest {
                                 ),
                                 requestFields(
                                         fieldWithPath("eventId").type(NUMBER).description("행사 id"),
-                                        fieldWithPath("forms").type(ARRAY).description("폼 리스트"),
+                                        fieldWithPath("forms[]").type(ARRAY).description("폼 리스트"),
                                         fieldWithPath("forms[].optionId").type(NUMBER).description("폼 항목 id"),
                                         fieldWithPath("forms[].content").type(STRING).description("폼 항목 답변 내용")
                                 )
@@ -209,43 +208,42 @@ class FormControllerTest {
     @WithMockUser
     void 행사의_신청된_모든_폼_조회에_성공한다() throws Exception {
         // given
-        FormApplicationGetResponse response = FormApplicationGetResponse.builder()
-                .username("박가네")
-                .phoneNumber("010-1111-2222")
-                .items(List.of(
-                        new FormApplicationItemGetResponse("이름", "박가네"),
-                        new FormApplicationItemGetResponse("전화번호", "010-1111-2222")
-                ))
-                .build();
-
+        Form form = FormTestFixture.form();
+        form.addItems(List.of(FormTestFixture.formOption1(), FormTestFixture.formOption2()));
+        FormApplicationGetInfo formApplicationGetInfo = new FormApplicationGetInfo(form, List.of(FormTestFixture.formOptionUser1(), FormTestFixture.formOptionUser2()), List.of(eventUser()));
 
         Long userId = 1L;
         given(jwtService.verifyUserId(any())).willReturn(userId);
-        given(formService.getAllForms()).willReturn(List.of(response));
+        given(formService.getApplicationForms(userId, 1L)).willReturn(formApplicationGetInfo);
 
         // when, then
         mvc.perform(get("/api/v1/events/{eventId}/forms/applications", 1L)
-                        .header("Authorization", "Access Token")
+                        .header(AUTHORIZATION, "Access Token")
                 )
                 .andExpect(status().isOk())
                 .andDo(
-                        document("form/getAll",
+                        document("form/getAllApplications",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 requestHeaders(
-                                        headerWithName("Authorization").description("액세스 토큰")
+                                        headerWithName(AUTHORIZATION).description("액세스 토큰")
                                 ),
                                 pathParameters(
                                         parameterWithName("eventId").description("행사 optionId")
                                 ),
                                 responseFields(
-                                        fieldWithPath("[]").type(ARRAY).description("신청된 폼 리스트"),
-                                        fieldWithPath("[].username").type(STRING).description("유저 이름"),
-                                        fieldWithPath("[].phoneNumber").type(STRING).description("유저 핸드폰 번호"),
-                                        fieldWithPath("[].items[]").type(ARRAY).description("폼 항목 리스트"),
-                                        fieldWithPath("[].items[].name").type(STRING).description("폼 항목명"),
-                                        fieldWithPath("[].items[].content").type(STRING).description("폼 항목 내용")
+                                        fieldWithPath("formInfo").type(OBJECT).description("폼 정보"),
+                                        fieldWithPath("formInfo.count").type(NUMBER).description("폼 개수"),
+                                        fieldWithPath("formInfo.optionTitles[]").type(ARRAY).description("폼 옵션명 리스트"),
+                                        fieldWithPath("formInfo.managed").type(BOOLEAN).description("관리 모드 여부"),
+                                        fieldWithPath("userForms[]").type(ARRAY).description("유저 폼 리스트"),
+                                        fieldWithPath("userForms[].id").type(NUMBER).description("폼 id"),
+                                        fieldWithPath("userForms[].options[]").type(ARRAY).description("폼 옵션 리스트"),
+                                        fieldWithPath("userForms[].options[].title").type(STRING).description("폼 옵션명"),
+                                        fieldWithPath("userForms[].options[].content").type(STRING).description("폼 옵션 내용"),
+                                        fieldWithPath("userForms[].applicationStatus").type(STRING).description("신청 상태")
                                 )
+
                         )
                 );
     }

@@ -24,14 +24,15 @@ import static lombok.AccessLevel.PROTECTED;
 public class EventUser extends BaseTimeEntity {
 
     @Id
+    @Getter
     @Column(name = "event_user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Getter
     @Enumerated(EnumType.STRING)
-    private EventStatus status;
-
+    private ApplicationStatus status;
+    @Getter
     @ManyToOne(fetch = EAGER, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -41,7 +42,7 @@ public class EventUser extends BaseTimeEntity {
     private Event event;
 
     @Builder
-    private EventUser(Long id, EventStatus status, User user, Event event) {
+    private EventUser(Long id, ApplicationStatus status, User user, Event event) {
         validate(user, event);
         this.id = id;
         this.status = status;
@@ -52,6 +53,10 @@ public class EventUser extends BaseTimeEntity {
     private void validate(User user, Event event) {
         Assert.notNull(user, "유저는 필수입니다.");
         Assert.notNull(event, "이벤트는 필수입니다.");
+    }
+
+    public Long getUserId() {
+        return user.getId();
     }
 
 }

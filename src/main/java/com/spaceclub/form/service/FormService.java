@@ -3,13 +3,13 @@ package com.spaceclub.form.service;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.repository.EventRepository;
 import com.spaceclub.event.service.EventService;
-import com.spaceclub.form.controller.dto.FormApplicationGetResponse;
 import com.spaceclub.form.domain.Form;
 import com.spaceclub.form.domain.FormOption;
 import com.spaceclub.form.domain.FormOptionUser;
 import com.spaceclub.form.repository.FormOptionRepository;
 import com.spaceclub.form.repository.FormOptionUserRepository;
 import com.spaceclub.form.repository.FormRepository;
+import com.spaceclub.form.service.vo.FormApplicationGetInfo;
 import com.spaceclub.form.service.vo.FormCreate;
 import com.spaceclub.form.service.vo.FormGet;
 import com.spaceclub.user.domain.User;
@@ -50,8 +50,7 @@ public class FormService {
     }
 
     public FormGet getForm(Long userId, Long eventId) {
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new IllegalStateException("존재하지 않는 행사입니댜."));
-        if (event.getForm() == null) throw new IllegalStateException("폼이 없는 행사입니다.");
+        Event event = validateEventAndForm(eventId);
         Form form = formRepository.findById(event.getFormId()).orElseThrow(() -> new IllegalStateException("존재하지 않는 폼입니댜."));
 
         return FormGet.from(event, form);
@@ -75,8 +74,20 @@ public class FormService {
     }
 
 
-    public List<FormApplicationGetResponse> getAllForms() {
-        return List.of(FormApplicationGetResponse.builder().build());
+    public FormApplicationGetInfo getApplicationForms(Long userId, Long eventId) {
+        Event event = validateEventAndForm(eventId);
+        Form form = event.getForm();
+
+        List<FormOptionUser> formOptionUsers = formOptionUserRepository.findByFormOption_Form_Id(form.getId());
+
+        return new FormApplicationGetInfo(form, formOptionUsers, event.getEventUsers());
+    }
+
+    private Event validateEventAndForm(Long eventId) {
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new IllegalStateException("존재하지 않는 행사입니댜."));
+        if (event.getForm() == null) throw new IllegalStateException("폼이 없는 행사입니다.");
+
+        return event;
     }
 
 }

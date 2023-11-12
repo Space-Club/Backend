@@ -8,6 +8,7 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -67,8 +68,8 @@ public class Event extends BaseTimeEntity {
     private Club club;
 
     @Getter
-    @OneToMany(mappedBy = "event")
-    private List<EventUser> users = new ArrayList<>();
+    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
+    private List<EventUser> eventUsers = new ArrayList<>();
 
     @Getter
     @OneToOne

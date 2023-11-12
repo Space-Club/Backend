@@ -2,8 +2,8 @@ package com.spaceclub.event.service;
 
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.repository.ClubRepository;
+import com.spaceclub.event.domain.ApplicationStatus;
 import com.spaceclub.event.domain.Event;
-import com.spaceclub.event.domain.EventStatus;
 import com.spaceclub.event.domain.EventUser;
 import com.spaceclub.event.repository.EventRepository;
 import com.spaceclub.event.repository.EventUserRepository;
@@ -57,7 +57,7 @@ public class EventService {
         EventUser newEventUser = EventUser.builder()
                 .user(user)
                 .event(event)
-                .status(EventStatus.PENDING)
+                .status(ApplicationStatus.PENDING)
                 .build();
 
         eventUserRepository.save(newEventUser);

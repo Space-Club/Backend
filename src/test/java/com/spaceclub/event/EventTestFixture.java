@@ -1,15 +1,18 @@
 package com.spaceclub.event;
 
+import com.spaceclub.event.domain.ApplicationStatus;
 import com.spaceclub.event.domain.BankInfo;
 import com.spaceclub.event.domain.Category;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventInfo;
+import com.spaceclub.event.domain.EventUser;
 import com.spaceclub.event.domain.FormInfo;
 import com.spaceclub.event.domain.TicketInfo;
 
 import java.time.LocalDateTime;
 
 import static com.spaceclub.club.ClubTestFixture.club1;
+import static com.spaceclub.user.UserTestFixture.user1;
 
 public class EventTestFixture {
 
@@ -78,6 +81,15 @@ public class EventTestFixture {
                 .bankInfo(bankInfo())
                 .formInfo(formInfo())
                 .club(club1())
+                .build();
+    }
+
+    public static EventUser eventUser() {
+        return EventUser.builder()
+                .id(1L)
+                .status(ApplicationStatus.PENDING)
+                .user(user1())
+                .event(event1())
                 .build();
     }
 

@@ -3,7 +3,6 @@ package com.spaceclub.event.repository;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.event.domain.Event;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

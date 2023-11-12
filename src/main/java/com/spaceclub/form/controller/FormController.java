@@ -5,6 +5,7 @@ import com.spaceclub.form.controller.dto.FormApplicationGetResponse;
 import com.spaceclub.form.controller.dto.FormCreateRequest;
 import com.spaceclub.form.controller.dto.FormGetResponse;
 import com.spaceclub.form.service.FormService;
+import com.spaceclub.form.service.vo.FormApplicationGetInfo;
 import com.spaceclub.form.service.vo.FormCreate;
 import com.spaceclub.form.service.vo.FormGet;
 import com.spaceclub.global.jwt.service.JwtService;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/events")
@@ -62,11 +62,11 @@ public class FormController {
     }
 
     @GetMapping("/{eventId}/forms/applications")
-    public ResponseEntity<List<FormApplicationGetResponse>> getAllApplicationForm(@PathVariable Long eventId, HttpServletRequest servletRequest) {
+    public ResponseEntity<FormApplicationGetResponse> getApplicationForms(@PathVariable Long eventId, HttpServletRequest servletRequest) {
         Long userId = jwtService.verifyUserId(servletRequest);
-        List<FormApplicationGetResponse> response = formService.getAllForms();
+        FormApplicationGetInfo formApplicationGetInfo = formService.getApplicationForms(userId, eventId);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(FormApplicationGetResponse.from(formApplicationGetInfo));
     }
 
 }
