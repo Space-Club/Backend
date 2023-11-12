@@ -31,10 +31,12 @@ public class FormOptionUser extends BaseTimeEntity {
     @JoinColumn(name = "form_item_id")
     private FormOption formOption;
 
+    @Getter
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Getter
     private String content;
 
     @Builder
@@ -52,6 +54,14 @@ public class FormOptionUser extends BaseTimeEntity {
                 .user(user)
                 .content(this.content)
                 .build();
+    }
+
+    public Long getUserId() {
+        return user.getId();
+    }
+
+    public String getOptionTitle() {
+        return formOption.getTitle();
     }
 
 }
