@@ -92,4 +92,8 @@ public class UserService {
         return eventUserRepository.findBookmarkedEventPages(user, pageable);
     }
 
+    public void cancelBookmark(List<Long> eventIds, Long userId) {
+        return;//TODO
+    }
+
 }
