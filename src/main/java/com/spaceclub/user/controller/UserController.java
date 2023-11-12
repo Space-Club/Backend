@@ -41,6 +41,8 @@ import static com.spaceclub.user.controller.dto.UserEventGetResponse.from;
 @RequiredArgsConstructor
 public class UserController {
 
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+
     private final UserService userService;
 
     private final JwtService jwtService;
