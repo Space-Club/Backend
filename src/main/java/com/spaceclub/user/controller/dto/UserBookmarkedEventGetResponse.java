@@ -14,16 +14,16 @@ public record UserBookmarkedEventGetResponse(
         boolean bookmark
 ) {
 
-        public static UserBookmarkedEventGetResponse of(Event event) {
-            return new UserBookmarkedEventGetResponse(
-                    event.getId(),
-                    event.getTitle(),
-                    event.getLocation(),
-                    event.getClubName(),
-                    event.getPosterImageUrl(),
-                    event.getStartDate(),
-                    true
-            );
-        }
+    public static UserBookmarkedEventGetResponse from(Event event) {
+        return new UserBookmarkedEventGetResponse(
+                event.getId(),
+                event.getTitle(),
+                event.getLocation(),
+                event.getClubName(),
+                event.getPosterImageUrl(),
+                event.getStartDate(),
+                true
+        );
+    }
 
 }

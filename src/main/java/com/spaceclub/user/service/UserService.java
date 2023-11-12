@@ -92,8 +92,4 @@ public class UserService {
         return eventUserRepository.findBookmarkedEventPages(user, pageable);
     }
 
-    public boolean findBookmarkStatus(Long userId, Event event) {
-        return false;//TODO
-    }
-
 }

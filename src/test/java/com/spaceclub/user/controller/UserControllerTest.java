@@ -350,7 +350,6 @@ class UserControllerTest {
         Long userId = 1L;
         given(jwtService.verifyUserId(any())).willReturn(userId);
         given(userService.findAllBookmarkedEventPages(any(Long.class), any(Pageable.class))).willReturn(eventPages);
-        given(userService.findBookmarkStatus(any(Long.class), any(Event.class))).willReturn(true);
 
         // when, then
         mvc.perform(get("/api/v1/users/bookmarked-events")
