@@ -4,6 +4,7 @@ import com.spaceclub.club.domain.Club;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.service.JwtService;
+import com.spaceclub.user.controller.dto.UserBookmarkedEventGetResponse;
 import com.spaceclub.user.controller.dto.UserClubGetResponse;
 import com.spaceclub.user.controller.dto.UserCodeRequest;
 import com.spaceclub.user.controller.dto.UserEventGetResponse;
@@ -104,6 +105,21 @@ public class UserController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(clubResponses);
+    }
+
+    @GetMapping("/bookmarked-events")
+    public PageResponse<UserBookmarkedEventGetResponse, Event> getAllBookmarkedEvents(
+            Pageable pageable,
+            HttpServletRequest servletRequest
+    ) {
+        Long userId = jwtService.verifyUserId(servletRequest);
+        Page<Event> eventPages = userService.findAllBookmarkedEventPages(userId, pageable);
+
+        List<UserBookmarkedEventGetResponse> bookmarkedEvents = eventPages.getContent().stream()
+                .map(UserBookmarkedEventGetResponse::from)
+                .toList();
+
+        return new PageResponse<>(bookmarkedEvents, eventPages);
     }
 
 }

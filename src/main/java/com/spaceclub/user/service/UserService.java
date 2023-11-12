@@ -85,4 +85,8 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    public Page<Event> findAllBookmarkedEventPages(Long userId, Pageable pageable) {
+        return null; //TODO
+    }
+
 }
