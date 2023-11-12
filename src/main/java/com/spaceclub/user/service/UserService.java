@@ -106,4 +106,8 @@ public class UserService {
         bookmarkRepository.save(bookmark);
     }
 
+    public void cancelBookmark(List<Long> eventIds, Long userId) {
+        return;//TODO
+    }
+
 }
