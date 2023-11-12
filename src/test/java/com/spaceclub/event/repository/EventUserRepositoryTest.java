@@ -28,9 +28,10 @@ import static com.spaceclub.user.domain.Status.NOT_REGISTERED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.data.domain.Sort.Direction.DESC;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DataJpaTest
-@DirtiesContext
+@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.class)
 class EventUserRepositoryTest {
 
@@ -75,18 +76,21 @@ class EventUserRepositoryTest {
                 .user(user)
                 .event(event1())
                 .status(ApplicationStatus.CONFIRMED)
+                .bookmarkStatus(true)
                 .build();
         EventUser eventUser2 = EventUser.builder()
                 .id(2L)
                 .user(user)
                 .event(event2())
                 .status(ApplicationStatus.PENDING)
+                .bookmarkStatus(false)
                 .build();
         EventUser eventUser3 = EventUser.builder()
                 .id(3L)
                 .user(user)
                 .event(event3())
                 .status(ApplicationStatus.CANCEL_REQUESTED)
+                .bookmarkStatus(true)
                 .build();
         eventUserRepository.saveAll(List.of(eventUser1, eventUser2, eventUser3));
     }
@@ -111,6 +115,25 @@ class EventUserRepositoryTest {
                         .containsExactlyInAnyOrder(1L, 2L, 3L),
                 () -> assertThat(list)
                         .containsExactlyInAnyOrder("CONFIRMED", "PENDING", "CANCEL_REQUESTED")
+        );
+    }
+
+    @Test
+    void 유저의_북마크_이벤트_조회에_성공한다() {
+        // given
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(DESC, "id"));
+
+        // when
+        User user = userRepository.findById(1L).orElseThrow();
+        Page<Event> bookmarkedEventPages = eventUserRepository.findBookmarkedEventPages(user, pageRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(bookmarkedEventPages.getTotalElements())
+                        .isEqualTo(2),
+                () -> assertThat(bookmarkedEventPages.getContent())
+                        .extracting(Event::getId)
+                        .containsExactlyInAnyOrder(1L, 3L)
         );
     }
 

@@ -32,7 +32,9 @@ public class EventUser extends BaseTimeEntity {
     @Getter
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
-    @Getter
+
+    private boolean bookmarkStatus;
+
     @ManyToOne(fetch = EAGER, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -42,12 +44,13 @@ public class EventUser extends BaseTimeEntity {
     private Event event;
 
     @Builder
-    private EventUser(Long id, ApplicationStatus status, User user, Event event) {
+    private EventUser(Long id, ApplicationStatus status, User user, Event event, boolean bookmarkStatus) {
         validate(user, event);
         this.id = id;
         this.status = status;
         this.user = user;
         this.event = event;
+        this.bookmarkStatus = bookmarkStatus;
     }
 
     private void validate(User user, Event event) {

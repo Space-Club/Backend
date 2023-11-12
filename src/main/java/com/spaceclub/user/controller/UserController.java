@@ -114,7 +114,7 @@ public class UserController {
         Page<Event> eventPages = userService.findAllBookmarkedEventPages(userId, pageable);
 
         List<UserBookmarkedEventGetResponse> bookmarkedEvents = eventPages.getContent().stream()
-                .map(event -> UserBookmarkedEventGetResponse.of(event, userService.findBookmarkStatus(userId, event)))
+                .map(UserBookmarkedEventGetResponse::from)
                 .toList();
 
         return new PageResponse<>(bookmarkedEvents, eventPages);
