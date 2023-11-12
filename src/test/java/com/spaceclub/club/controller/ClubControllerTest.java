@@ -5,6 +5,8 @@ import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.controller.dto.ClubCreateRequest;
 import com.spaceclub.club.controller.dto.ClubNoticeCreateRequest;
 import com.spaceclub.club.controller.dto.ClubNoticeUpdateRequest;
+import com.spaceclub.club.controller.dto.ClubScheduleGetResponse;
+import com.spaceclub.club.controller.dto.ClubScheduleGetResponse.ClubScheduleGetResponseInfo;
 import com.spaceclub.club.controller.dto.ClubUpdateRequest;
 import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
 import com.spaceclub.club.domain.Club;
@@ -32,6 +34,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.spaceclub.club.ClubNoticeTestFixture.clubNotice1;
@@ -577,6 +580,20 @@ class ClubControllerTest {
     void 클럽_일정_조회에_성공한다() throws Exception {
         // given
         Long clubId = 1L;
+        given(clubService.getClubSchedules(any(Long.class), any(Long.class))).willReturn(
+                List.of(
+                        new ClubScheduleGetResponseInfo(
+                                "클럽 일정 제목 1",
+                                "클럽 일정 내용 1",
+                                LocalDateTime.now()
+                        ),
+                        new ClubScheduleGetResponseInfo(
+                                "클럽 일정 제목 2",
+                                "클럽 일정 내용 2",
+                                LocalDateTime.now()
+                        )
+                )
+        );
 
         // when
         ResultActions result = this.mockMvc.perform(get("/api/v1/clubs/{clubId}/schedules", clubId)
