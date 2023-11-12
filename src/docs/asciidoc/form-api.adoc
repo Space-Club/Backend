@@ -66,21 +66,21 @@ include::{snippets}/form/createApplications/http-response.adoc[]
 :sectnums!:
 ==== Request
 
-include::{snippets}/form/getAll/http-request.adoc[]
+include::{snippets}/form/getAllApplications/http-request.adoc[]
 
 =====  Request Header
 
-include::{snippets}/form/getAll/request-headers.adoc[]
+include::{snippets}/form/getAllApplications/request-headers.adoc[]
 
 ===== Path Parameter
 
-include::{snippets}/form/getAll/path-parameters.adoc[]
+include::{snippets}/form/getAllApplications/path-parameters.adoc[]
 
 ==== Response
 
-include::{snippets}/form/getAll/http-response.adoc[]
+include::{snippets}/form/getAllApplications/http-response.adoc[]
 =====  Response Body
 
-include::{snippets}/form/getAll/response-body.adoc[]
+include::{snippets}/form/getAllApplications/response-fields.adoc[]
 
 :sectnums:

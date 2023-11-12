@@ -3,8 +3,9 @@ package com.spaceclub.form;
 import com.spaceclub.form.domain.Form;
 import com.spaceclub.form.domain.FormOption;
 import com.spaceclub.form.domain.FormOptionType;
+import com.spaceclub.form.domain.FormOptionUser;
 
-import java.util.List;
+import static com.spaceclub.user.UserTestFixture.user1;
 
 public class FormTestFixture {
 
@@ -31,6 +32,24 @@ public class FormTestFixture {
                 .title("연락처")
                 .type(FormOptionType.TEXT)
                 .visible(true)
+                .build();
+    }
+
+    public static FormOptionUser formOptionUser1() {
+        return FormOptionUser.builder()
+                .id(1L)
+                .formOption(formOption1())
+                .user(user1())
+                .content("박가네")
+                .build();
+    }
+
+    public static FormOptionUser formOptionUser2() {
+        return FormOptionUser.builder()
+                .id(2L)
+                .formOption(formOption2())
+                .user(user1())
+                .content("010-1111-2222")
                 .build();
     }
 

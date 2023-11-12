@@ -3,8 +3,8 @@ package com.spaceclub.event.repository;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.repository.ClubRepository;
+import com.spaceclub.event.domain.ApplicationStatus;
 import com.spaceclub.event.domain.Event;
-import com.spaceclub.event.domain.EventStatus;
 import com.spaceclub.event.domain.EventUser;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
@@ -36,10 +36,13 @@ class EventUserRepositoryTest {
 
     @Autowired
     private EventUserRepository eventUserRepository;
+
     @Autowired
     private EventRepository eventRepository;
+
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private ClubRepository clubRepository;
 
@@ -71,19 +74,19 @@ class EventUserRepositoryTest {
                 .id(1L)
                 .user(user)
                 .event(event1())
-                .status(EventStatus.CONFIRMED)
+                .status(ApplicationStatus.CONFIRMED)
                 .build();
         EventUser eventUser2 = EventUser.builder()
                 .id(2L)
                 .user(user)
                 .event(event2())
-                .status(EventStatus.PENDING)
+                .status(ApplicationStatus.PENDING)
                 .build();
         EventUser eventUser3 = EventUser.builder()
                 .id(3L)
                 .user(user)
                 .event(event3())
-                .status(EventStatus.CANCEL_REQUESTED)
+                .status(ApplicationStatus.CANCEL_REQUESTED)
                 .build();
         eventUserRepository.saveAll(List.of(eventUser1, eventUser2, eventUser3));
     }
