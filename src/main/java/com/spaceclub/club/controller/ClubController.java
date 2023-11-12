@@ -7,6 +7,7 @@ import com.spaceclub.club.controller.dto.ClubNoticeCreateRequest;
 import com.spaceclub.club.controller.dto.ClubNoticeGetResponse;
 import com.spaceclub.club.controller.dto.ClubNoticeUpdateRequest;
 import com.spaceclub.club.controller.dto.ClubScheduleGetResponse;
+import com.spaceclub.club.controller.dto.ClubScheduleGetResponse.ClubScheduleGetResponseInfo;
 import com.spaceclub.club.controller.dto.ClubUpdateRequest;
 import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
 import com.spaceclub.club.controller.dto.MemberGetResponse;
@@ -42,7 +43,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.URI;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.spaceclub.invite.controller.InviteController.INVITE_LINK_PREFIX;
@@ -208,23 +208,9 @@ public class ClubController {
     public ResponseEntity<ClubScheduleGetResponse> getClubSchedule(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
         Long userId = jwtService.verifyUserId(httpServletRequest);
 
-        ClubScheduleGetResponse response =
-                new ClubScheduleGetResponse(
-                        List.of(
-                                new ClubScheduleGetResponse.ClubScheduleResponseInfo(
-                                        "일정 제목 1",
-                                        "일정 내용 1",
-                                        LocalDateTime.now()
-                                ),
-                                new ClubScheduleGetResponse.ClubScheduleResponseInfo(
-                                        "일정 제목 2",
-                                        "일정 내용 2",
-                                        LocalDateTime.now()
-                                )
-                        )
-                );
+        List<ClubScheduleGetResponseInfo> schedules = clubService.getClubSchedules(clubId, userId);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(new ClubScheduleGetResponse(schedules));
     }
 
 }

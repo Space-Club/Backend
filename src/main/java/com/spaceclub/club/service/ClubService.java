@@ -1,5 +1,6 @@
 package com.spaceclub.club.service;
 
+import com.spaceclub.club.controller.dto.ClubScheduleGetResponse.ClubScheduleGetResponseInfo;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubNotice;
 import com.spaceclub.club.domain.ClubUser;
@@ -10,6 +11,7 @@ import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.club.service.vo.ClubNoticeDelete;
 import com.spaceclub.club.service.vo.ClubNoticeUpdate;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
+import com.spaceclub.event.domain.Category;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.repository.EventRepository;
 import com.spaceclub.user.domain.User;
@@ -168,6 +170,18 @@ public class ClubService {
         if (!clubUser.isManager()) throw new IllegalStateException("해당 권한이 없습니다.");
 
         clubNoticeRepository.deleteById(noticeId);
+    }
+
+    public List<ClubScheduleGetResponseInfo> getClubSchedules(Long clubId, Long userId) {
+        ClubUser clubUser = validateClubAndGetClubUser(clubId, userId);
+
+        if (!clubUser.isManager()) throw new IllegalStateException("해당 권한이 없습니다.");
+
+        List<Event> events = eventRepository.findAllByClub_IdAndCategory(clubId, Category.CLUB);
+
+        return events.stream()
+                .map(ClubScheduleGetResponseInfo::new)
+                .toList();
     }
 
 }
