@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import static com.spaceclub.user.controller.UserController.AUTHORIZATION_HEADER;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +20,7 @@ public class JwtService {
     }
 
     public Long verifyUserId(HttpServletRequest request) {
-        String header = request.getHeader(AUTHORIZATION_HEADER);
+        String header = request.getHeader(AUTHORIZATION);
 
         Assert.notNull(header, "토큰이 필수입니다.");
         Assert.isTrue(header.startsWith("Bearer "), "토큰이 유효하지 않은 형식입니다.");
