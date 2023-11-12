@@ -106,8 +106,4 @@ public class UserService {
         bookmarkRepository.save(bookmark);
     }
 
-    public boolean findBookmarkStatus(Long userId, Event event) {
-        return false;//TODO
-    }
-
 }
