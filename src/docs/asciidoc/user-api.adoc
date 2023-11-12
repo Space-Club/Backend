@@ -122,3 +122,21 @@ include::{snippets}/user/getAllClubs/http-response.adoc[]
 
 include::{snippets}/user/getAllClubs/response-fields.adoc[]
 :sectnums:
+
+=== 유저가 북마크한 행사 확인
+:sectnums!:
+==== Request
+include::{snippets}/user/getAllBookmarkedEvents/http-request.adoc[]
+
+===== Request Header
+include::{snippets}/user/getAllBookmarkedEvents/request-headers.adoc[]
+
+===== Query Parameter
+include::{snippets}/user/getAllBookmarkedEvents/query-parameters.adoc[]
+
+==== Response
+include::{snippets}/user/getAllBookmarkedEvents/http-response.adoc[]
+
+===== Response Body
+include::{snippets}/user/getAllBookmarkedEvents/response-fields.adoc[]
+:sectnums:

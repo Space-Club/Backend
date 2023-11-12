@@ -85,4 +85,16 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    public Page<Event> findAllBookmarkedEventPages(Long userId, Pageable pageable) {
+        return null; //TODO
+    }
+
+    public void cancelBookmark(List<Long> eventIds, Long userId) {
+        return;//TODO
+    }
+
+    public boolean findBookmarkStatus(Long userId, Event event) {
+        return false;//TODO
+    }
+
 }

@@ -2,11 +2,13 @@ package com.spaceclub.event.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
+import com.spaceclub.event.controller.dto.BookmarkedEventRequest;
 import com.spaceclub.event.controller.dto.EventApplyRequest;
 import com.spaceclub.event.controller.dto.EventCreateRequest;
 import com.spaceclub.event.domain.Category;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.service.EventService;
+import com.spaceclub.event.service.vo.EventBookmarkInfo;
 import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.global.jwt.service.JwtService;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -18,7 +20,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,6 +36,11 @@ import static com.spaceclub.event.EventTestFixture.event3;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
@@ -42,6 +48,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
@@ -115,13 +122,13 @@ class EventControllerTest {
         MockMultipartFile posterImage = new MockMultipartFile(
                 "posterImage",
                 "image.png",
-                MediaType.IMAGE_JPEG_VALUE,
+                IMAGE_JPEG_VALUE,
                 "<<jpeg data>>".getBytes());
 
         MockMultipartFile request = new MockMultipartFile(
                 "request",
                 "",
-                MediaType.APPLICATION_JSON_VALUE,
+                APPLICATION_JSON_VALUE,
                 mapper.writeValueAsBytes(eventCreateRequest)
         );
 
@@ -134,7 +141,7 @@ class EventControllerTest {
                 .file(posterImage)
                 .file(request)
                 .with(csrf())
-                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                .contentType(MULTIPART_FORM_DATA_VALUE)
         );
 
         // then
@@ -146,9 +153,9 @@ class EventControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestParts(
                                 partWithName("request").description("행사 생성 관련 정보")
-                                        .attributes(key("content-type").value(MediaType.APPLICATION_JSON_VALUE)),
+                                        .attributes(key("content-type").value(APPLICATION_JSON_VALUE)),
                                 partWithName("posterImage").description("포스터 사진")
-                                        .attributes(key("content-type").value(MediaType.IMAGE_JPEG_VALUE))
+                                        .attributes(key("content-type").value(IMAGE_JPEG_VALUE))
                         ),
                         requestPartFields("request",
                                 fieldWithPath("category").type(STRING).description("카테고리"),
@@ -246,7 +253,7 @@ class EventControllerTest {
         ResultActions result = mvc.perform(post("/api/v1/events/apply")
                 .header("Authorization", "access token")
                 .content(mapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
                 .with(csrf()));
 
         // then
@@ -320,6 +327,37 @@ class EventControllerTest {
                         ),
                         pathParameters(
                                 parameterWithName("eventId").description("행사 id")
+                        )
+                ));
+    }
+
+    @Test
+    @WithMockUser
+    void 개별_행사_북마크_상태_변경에_성공한다() throws Exception {
+        // given
+        Long userId = 1L;
+        given(jwtService.verifyUserId(any())).willReturn(userId);
+        doNothing().when(eventService).bookmarkEvent(any(EventBookmarkInfo.class));
+        BookmarkedEventRequest bookmarkedEventRequest = new BookmarkedEventRequest(true);
+
+        // when, then
+        mvc.perform(patch("/api/v1/events/{eventId}", 1L)
+                        .header(AUTHORIZATION, "Access Token")
+                        .content(mapper.writeValueAsString(bookmarkedEventRequest))
+                        .contentType(APPLICATION_JSON)
+                        .with(csrf())
+                ).andExpect(status().isOk())
+                .andDo(document("event/bookmark",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("액세스 토큰")
+                        ),
+                        pathParameters(
+                                parameterWithName("eventId").description("행사 아이디")
+                        ),
+                        requestFields(
+                                fieldWithPath("bookmark").type(BOOLEAN).description("북마크 상태")
                         )
                 ));
     }

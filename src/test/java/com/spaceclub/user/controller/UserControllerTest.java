@@ -2,8 +2,6 @@ package com.spaceclub.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
-import com.spaceclub.event.EventTestFixture;
-import com.spaceclub.event.domain.Category;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.jwt.service.JwtService;
 import com.spaceclub.user.UserTestFixture;
@@ -21,14 +19,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -40,11 +35,11 @@ import static com.spaceclub.event.EventTestFixture.event3;
 import static com.spaceclub.user.domain.Status.NOT_REGISTERED;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
-import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -343,6 +338,66 @@ class UserControllerTest {
                                 fieldWithPath("[].name").type(STRING).description("클럽 이름")
                         )
                 ));
+    }
+
+    @Test
+    @WithMockUser
+    void 유저가_북마크한_이벤트_조회에_성공한다() throws Exception {
+        // given
+        List<Event> events = List.of(event1(), event2(), event3());
+        Page<Event> eventPages = new PageImpl<>(events);
+
+        Long userId = 1L;
+        given(jwtService.verifyUserId(any())).willReturn(userId);
+        given(userService.findAllBookmarkedEventPages(any(Long.class), any(Pageable.class))).willReturn(eventPages);
+        given(userService.findBookmarkStatus(any(Long.class), any(Event.class))).willReturn(true);
+
+        // when, then
+        mvc.perform(get("/api/v1/users/bookmarked-events")
+                        .header(AUTHORIZATION, "access token")
+                        .param("page", "1")
+                        .param("size", "10")
+                        .param("sort", "id,asc")
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.size()").value(events.size()))
+                .andExpect(jsonPath("$.pageData.first").value(true))
+                .andExpect(jsonPath("$.pageData.last").value(true))
+                .andExpect(jsonPath("$.pageData.pageNumber").value(0))
+                .andExpect(jsonPath("$.pageData.size").value(3))
+                .andExpect(jsonPath("$.pageData.totalPages").value(1))
+                .andExpect(jsonPath("$.pageData.totalElements").value(events.size()))
+                .andDo(
+                        document("user/getAllBookmarkedEvents",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName(AUTHORIZATION).description("액세스 토큰")
+                                ),
+                                queryParameters(
+                                        parameterWithName("page").description("페이지"),
+                                        parameterWithName("size").description("페이지 내 개수"),
+                                        parameterWithName("sort").description("정렬 방법((ex) id,asc)")
+                                ),
+                                responseFields(
+                                        fieldWithPath("data").type(ARRAY).description("페이지 내 이벤트 정보"),
+                                        fieldWithPath("data[].id").type(NUMBER).description("이벤트 아이디"),
+                                        fieldWithPath("data[].title").type(STRING).description("이벤트 제목"),
+                                        fieldWithPath("data[].location").type(STRING).description("이벤트 위치"),
+                                        fieldWithPath("data[].clubName").type(STRING).description("이벤트 주최자"),
+                                        fieldWithPath("data[].posterImageUrl").type(STRING).description("포스터 URL"),
+                                        fieldWithPath("data[].startDate").type(STRING).description("이벤트 시작일"),
+                                        fieldWithPath("data[].bookmark").type(BOOLEAN).description("북마크 상태"),
+                                        fieldWithPath("pageData").type(OBJECT).description("페이지 정보"),
+                                        fieldWithPath("pageData.first").type(BOOLEAN).description("첫 페이지 여부"),
+                                        fieldWithPath("pageData.last").type(BOOLEAN).description("마지막 페이지 여부"),
+                                        fieldWithPath("pageData.pageNumber").type(NUMBER).description("현재 페이지 번호"),
+                                        fieldWithPath("pageData.size").type(NUMBER).description("페이지 내 개수"),
+                                        fieldWithPath("pageData.totalPages").type(NUMBER).description("총 페이지 개수"),
+                                        fieldWithPath("pageData.totalElements").type(NUMBER).description("총 이벤트 개수")
+                                )
+                        )
+                );
     }
 
 }
