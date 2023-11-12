@@ -20,7 +20,6 @@ import java.util.UUID;
 import static com.spaceclub.club.ClubTestFixture.club1;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -124,7 +123,7 @@ class InviteControllerTest {
     void 초대_링크를_통해_클럽_가입전_가입_의사를_묻는데_성공한다() throws Exception {
         // given
         String code = UUID.randomUUID().toString();
-        given(inviteService.askForJoinClub(any(String.class), any(Long.class))).willReturn(club1());
+        given(inviteService.requestToJoinClub(any(String.class), any(Long.class))).willReturn(club1());
 
         // when
         ResultActions actions =

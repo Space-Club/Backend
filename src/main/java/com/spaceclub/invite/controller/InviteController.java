@@ -3,7 +3,7 @@ package com.spaceclub.invite.controller;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.service.ClubService;
 import com.spaceclub.global.jwt.service.JwtService;
-import com.spaceclub.invite.controller.dto.ClubAskForJoinResponse;
+import com.spaceclub.invite.controller.dto.ClubRequestToJoinResponse;
 import com.spaceclub.invite.service.InviteService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -54,14 +54,14 @@ public class InviteController {
     }
 
     @GetMapping("/clubs/invite/{code}")
-    public ResponseEntity<ClubAskForJoinResponse> askForJoinClub(@PathVariable String code, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<ClubRequestToJoinResponse> requestToJoinClub(@PathVariable String code, HttpServletRequest httpServletRequest) {
         Long userId = jwtService.verifyUserId(httpServletRequest);
 
-        Club club = service.askForJoinClub(code, userId);
+        Club club = service.requestToJoinClub(code, userId);
 
         Long memberCount = clubService.countMember(club);
 
-        ClubAskForJoinResponse response = ClubAskForJoinResponse.from(club, memberCount);
+        ClubRequestToJoinResponse response = ClubRequestToJoinResponse.from(club, memberCount);
 
         return ResponseEntity.ok(response);
     }

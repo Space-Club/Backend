@@ -84,7 +84,7 @@ public class InviteService {
         return club.getId();
     }
 
-    public Club askForJoinClub(String code, Long userId) {
+    public Club requestToJoinClub(String code, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
         Invite invite = inviteRepository.findByCode(code)
