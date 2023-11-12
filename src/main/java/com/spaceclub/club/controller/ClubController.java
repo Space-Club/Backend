@@ -6,7 +6,7 @@ import com.spaceclub.club.controller.dto.ClubGetResponse;
 import com.spaceclub.club.controller.dto.ClubNoticeCreateRequest;
 import com.spaceclub.club.controller.dto.ClubNoticeGetResponse;
 import com.spaceclub.club.controller.dto.ClubNoticeUpdateRequest;
-import com.spaceclub.club.controller.dto.ClubScheduleResponse;
+import com.spaceclub.club.controller.dto.ClubScheduleGetResponse;
 import com.spaceclub.club.controller.dto.ClubUpdateRequest;
 import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
 import com.spaceclub.club.controller.dto.MemberGetResponse;
@@ -17,12 +17,7 @@ import com.spaceclub.club.service.ClubService;
 import com.spaceclub.club.service.vo.ClubNoticeDelete;
 import com.spaceclub.club.service.vo.ClubNoticeUpdate;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
-import com.spaceclub.event.domain.Category;
 import com.spaceclub.event.domain.Event;
-import com.spaceclub.event.domain.EventInfo;
-import com.spaceclub.event.domain.FormInfo;
-import com.spaceclub.event.domain.TicketInfo;
-import com.spaceclub.form.domain.Form;
 import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.service.JwtService;
@@ -210,49 +205,24 @@ public class ClubController {
     }
 
     @GetMapping("/clubs/{clubId}/schedules")
-    public ResponseEntity<ClubScheduleResponse> getClubSchedule(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
-        Event event = Event.builder()
-                .id(1L)
-                .category(Category.CLUB)
-                .eventInfo(
-                        EventInfo.builder()
-                                .title("행사 제목")
-                                .startDate(LocalDateTime.now())
-                                .location("강남역")
-                                .posterImageUrl("image.jpg")
-                                .capacity(1)
-                                .content("content")
-                                .build()
-                )
-                .formInfo(
-                        FormInfo.builder()
-                                .formOpenDate(LocalDateTime.now())
-                                .formCloseDate(LocalDateTime.now())
-                                .build()
-                )
-                .ticketInfo(
-                        TicketInfo.builder()
-                                .cost(1000)
-                                .maxTicketCount(10)
-                                .build()
-                )
-                .club(
-                        Club.builder()
-                                .id(1L)
-                                .name("클럽")
-                                .logoImageUrl("logo image")
-                                .coverImageUrl("cover image")
-                                .info("club info")
-                                .build()
-                )
-                .form(
-                        Form.builder()
-                                .id(1L)
-                                .description("form description")
-                                .build()
-                )
-                .build();
-        ClubScheduleResponse response = new ClubScheduleResponse(List.of(event));
+    public ResponseEntity<ClubScheduleGetResponse> getClubSchedule(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
+        Long userId = jwtService.verifyUserId(httpServletRequest);
+
+        ClubScheduleGetResponse response =
+                new ClubScheduleGetResponse(
+                        List.of(
+                                new ClubScheduleGetResponse.ClubScheduleResponseInfo(
+                                        "일정 제목 1",
+                                        "일정 내용 1",
+                                        LocalDateTime.now()
+                                ),
+                                new ClubScheduleGetResponse.ClubScheduleResponseInfo(
+                                        "일정 제목 2",
+                                        "일정 내용 2",
+                                        LocalDateTime.now()
+                                )
+                        )
+                );
 
         return ResponseEntity.ok(response);
     }
