@@ -5,7 +5,6 @@ import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.jwt.service.JwtService;
 import com.spaceclub.user.UserTestFixture;
-import com.spaceclub.user.controller.dto.UserBookmarkedEventDeleteRequest;
 import com.spaceclub.user.controller.dto.UserRequiredInfoRequest;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
@@ -36,14 +35,12 @@ import static com.spaceclub.event.EventTestFixture.event3;
 import static com.spaceclub.user.domain.Status.NOT_REGISTERED;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -400,5 +397,4 @@ class UserControllerTest {
                         )
                 );
     }
-
 }
