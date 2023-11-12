@@ -333,7 +333,7 @@ class EventControllerTest {
 
     @Test
     @WithMockUser
-    void 개별_행사_북마크_상태_변경에_성공한다() throws Exception {
+    void 개별_행사_북마크_상태를_변경에_성공한다() throws Exception {
         // given
         Long userId = 1L;
         given(jwtService.verifyUserId(any())).willReturn(userId);

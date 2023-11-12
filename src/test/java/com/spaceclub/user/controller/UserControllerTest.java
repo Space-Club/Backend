@@ -5,6 +5,7 @@ import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.jwt.service.JwtService;
 import com.spaceclub.user.UserTestFixture;
+import com.spaceclub.user.controller.dto.UserBookmarkedEventDeleteRequest;
 import com.spaceclub.user.controller.dto.UserRequiredInfoRequest;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
@@ -35,12 +36,14 @@ import static com.spaceclub.event.EventTestFixture.event3;
 import static com.spaceclub.user.domain.Status.NOT_REGISTERED;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -350,7 +353,6 @@ class UserControllerTest {
         Long userId = 1L;
         given(jwtService.verifyUserId(any())).willReturn(userId);
         given(userService.findAllBookmarkedEventPages(any(Long.class), any(Pageable.class))).willReturn(eventPages);
-        given(userService.findBookmarkStatus(any(Long.class), any(Event.class))).willReturn(true);
 
         // when, then
         mvc.perform(get("/api/v1/users/bookmarked-events")
@@ -387,7 +389,6 @@ class UserControllerTest {
                                         fieldWithPath("data[].clubName").type(STRING).description("이벤트 주최자"),
                                         fieldWithPath("data[].posterImageUrl").type(STRING).description("포스터 URL"),
                                         fieldWithPath("data[].startDate").type(STRING).description("이벤트 시작일"),
-                                        fieldWithPath("data[].bookmark").type(BOOLEAN).description("북마크 상태"),
                                         fieldWithPath("pageData").type(OBJECT).description("페이지 정보"),
                                         fieldWithPath("pageData.first").type(BOOLEAN).description("첫 페이지 여부"),
                                         fieldWithPath("pageData.last").type(BOOLEAN).description("마지막 페이지 여부"),
