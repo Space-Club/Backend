@@ -1,11 +1,13 @@
 package com.spaceclub.event.controller;
 
+import com.spaceclub.event.controller.dto.BookmarkedEventRequest;
 import com.spaceclub.event.controller.dto.EventApplyRequest;
 import com.spaceclub.event.controller.dto.EventCreateRequest;
 import com.spaceclub.event.controller.dto.EventDetailGetResponse;
 import com.spaceclub.event.controller.dto.EventGetResponse;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.service.EventService;
+import com.spaceclub.event.service.vo.EventBookmarkInfo;
 import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.service.JwtService;
@@ -18,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -87,5 +90,15 @@ public class EventController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{eventId}")
+    public ResponseEntity<Void> bookmarkEvent(@PathVariable Long eventId,
+                              @RequestBody BookmarkedEventRequest request,
+                              HttpServletRequest servletRequest
+    ){
+        Long userId = jwtService.verifyUserId(servletRequest);
+        eventService.bookmarkEvent(EventBookmarkInfo.of(eventId, userId, request.bookmark()));
+
+        return ResponseEntity.ok().build();
+    }
 
 }
