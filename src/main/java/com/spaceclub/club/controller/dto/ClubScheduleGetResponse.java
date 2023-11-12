@@ -16,9 +16,11 @@ public record ClubScheduleGetResponse(
     ) {
 
         public ClubScheduleGetResponseInfo(Event event) {
-            this(event.getTitle(),
+            this(
+                    event.getTitle(),
                     event.getContent(),
-                    LocalDateTime.of(event.getStartDate(), event.getStartTime()));
+                    LocalDateTime.of(event.getStartDate(), event.getStartTime())
+            );
         }
 
     }
