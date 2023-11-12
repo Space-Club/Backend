@@ -55,4 +55,8 @@ public class EventUser extends BaseTimeEntity {
         Assert.notNull(event, "이벤트는 필수입니다.");
     }
 
+    public Long getUserId() {
+        return user.getId();
+    }
+
 }

@@ -64,9 +64,9 @@ public class FormController {
     @GetMapping("/{eventId}/forms/applications")
     public ResponseEntity<FormApplicationGetResponse> getApplicationForms(@PathVariable Long eventId, HttpServletRequest servletRequest) {
         Long userId = jwtService.verifyUserId(servletRequest);
-        FormApplicationGetInfo formApplicationVo = formService.getApplicationForms(userId, eventId);
+        FormApplicationGetInfo formApplicationGetInfo = formService.getApplicationForms(userId, eventId);
 
-        return ResponseEntity.ok(FormApplicationGetResponse.fromVo(formApplicationVo));
+        return ResponseEntity.ok(FormApplicationGetResponse.from(formApplicationGetInfo));
     }
 
 }

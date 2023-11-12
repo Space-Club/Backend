@@ -50,7 +50,7 @@ public class FormService {
     }
 
     public FormGet getForm(Long userId, Long eventId) {
-        Event event = validateEventAndCheckFormValidation(eventId);
+        Event event = validateEventAndForm(eventId);
         Form form = formRepository.findById(event.getFormId()).orElseThrow(() -> new IllegalStateException("존재하지 않는 폼입니댜."));
 
         return FormGet.from(event, form);
@@ -75,7 +75,7 @@ public class FormService {
 
 
     public FormApplicationGetInfo getApplicationForms(Long userId, Long eventId) {
-        Event event = validateEventAndCheckFormValidation(eventId);
+        Event event = validateEventAndForm(eventId);
         Form form = event.getForm();
 
         List<FormOptionUser> formOptionUsers = formOptionUserRepository.findByFormOption_Form_Id(form.getId());
@@ -83,7 +83,7 @@ public class FormService {
         return new FormApplicationGetInfo(form, formOptionUsers, event.getEventUsers());
     }
 
-    private Event validateEventAndCheckFormValidation(Long eventId) {
+    private Event validateEventAndForm(Long eventId) {
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new IllegalStateException("존재하지 않는 행사입니댜."));
         if (event.getForm() == null) throw new IllegalStateException("폼이 없는 행사입니다.");
 

@@ -6,7 +6,6 @@ import com.spaceclub.form.domain.Form;
 import com.spaceclub.form.domain.FormOption;
 import com.spaceclub.form.domain.FormOptionUser;
 import com.spaceclub.form.service.vo.FormApplicationGetInfo;
-import lombok.Builder;
 
 import java.util.List;
 
@@ -15,12 +14,7 @@ public record FormApplicationGetResponse(
         List<UserFormResponse> userForms
 ) {
 
-    @Builder
-    public FormApplicationGetResponse {
-
-    }
-
-    public static FormApplicationGetResponse fromVo(FormApplicationGetInfo vo) {
+    public static FormApplicationGetResponse from(FormApplicationGetInfo vo) {
         Form form = vo.form();
         List<EventUser> eventUsers = vo.eventUsers();
         List<FormOptionUser> formOptionUsers = vo.formOptionUsers();
@@ -32,16 +26,13 @@ public record FormApplicationGetResponse(
         FormInfoResponse formInfoResponse = new FormInfoResponse(eventUsers.size(), optionTitles, form.isManaged());
         List<UserFormResponse> userForms = generateUserFormResponses(eventUsers, formOptionUsers);
 
-        return FormApplicationGetResponse.builder()
-                .formInfo(formInfoResponse)
-                .userForms(userForms)
-                .build();
+        return new FormApplicationGetResponse(formInfoResponse, userForms);
     }
 
     private static List<UserFormResponse> generateUserFormResponses(List<EventUser> eventUsers, List<FormOptionUser> formOptionUsers) {
         return eventUsers.stream()
                 .map(eventUser -> {
-                    Long userId = eventUser.getUser().getId();
+                    Long userId = eventUser.getUserId();
 
                     List<UserFormOptionResponse> options = formOptionUsers.stream()
                             .filter(formOptionUser -> formOptionUser.getUserId().equals(userId))
@@ -53,7 +44,7 @@ public record FormApplicationGetResponse(
                 .toList();
     }
 
-    public record FormInfoResponse(int count, List<String> optionTitles, boolean managed) {
+    private record FormInfoResponse(int count, List<String> optionTitles, boolean managed) {
 
     }
 
@@ -65,7 +56,7 @@ public record FormApplicationGetResponse(
 
     }
 
-    public record UserFormOptionResponse(String title, String content) {
+    private record UserFormOptionResponse(String title, String content) {
 
     }
 

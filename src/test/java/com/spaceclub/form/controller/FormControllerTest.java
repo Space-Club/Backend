@@ -107,7 +107,7 @@ class FormControllerTest {
                                         fieldWithPath("eventId").type(NUMBER).description("행사 id"),
                                         fieldWithPath("description").type(STRING).description("폼 설명"),
                                         fieldWithPath("managed").type(BOOLEAN).description("관리 모드 여부"),
-                                        fieldWithPath("options").type(ARRAY).description("감"),
+                                        fieldWithPath("options[]").type(ARRAY).description("감"),
                                         fieldWithPath("options[].title").type(STRING).description("폼 항목명"),
                                         fieldWithPath("options[].type").type(STRING).description("폼 항목 타입(TEXT, SELECT, RADIO, NUMBER)"),
                                         fieldWithPath("options[].visible").type(BOOLEAN).description("폼 조회 공개 여부")
@@ -196,7 +196,7 @@ class FormControllerTest {
                                 ),
                                 requestFields(
                                         fieldWithPath("eventId").type(NUMBER).description("행사 id"),
-                                        fieldWithPath("forms").type(ARRAY).description("폼 리스트"),
+                                        fieldWithPath("forms[]").type(ARRAY).description("폼 리스트"),
                                         fieldWithPath("forms[].optionId").type(NUMBER).description("폼 항목 id"),
                                         fieldWithPath("forms[].content").type(STRING).description("폼 항목 답변 내용")
                                 )
@@ -236,9 +236,9 @@ class FormControllerTest {
                                         fieldWithPath("formInfo.count").type(NUMBER).description("폼 개수"),
                                         fieldWithPath("formInfo.optionTitles[]").type(ARRAY).description("폼 옵션명 리스트"),
                                         fieldWithPath("formInfo.managed").type(BOOLEAN).description("관리 모드 여부"),
-                                        fieldWithPath("userForms").type(ARRAY).description("유저 폼 리스트"),
+                                        fieldWithPath("userForms[]").type(ARRAY).description("유저 폼 리스트"),
                                         fieldWithPath("userForms[].id").type(NUMBER).description("폼 id"),
-                                        fieldWithPath("userForms[].options").type(ARRAY).description("폼 옵션 리스트"),
+                                        fieldWithPath("userForms[].options[]").type(ARRAY).description("폼 옵션 리스트"),
                                         fieldWithPath("userForms[].options[].title").type(STRING).description("폼 옵션명"),
                                         fieldWithPath("userForms[].options[].content").type(STRING).description("폼 옵션 내용"),
                                         fieldWithPath("userForms[].applicationStatus").type(STRING).description("신청 상태")
