@@ -100,7 +100,18 @@ public class ClubController {
     public ResponseEntity<Void> updateClub(@PathVariable Long clubId,
                                            @RequestPart(value = "request") ClubUpdateRequest request,
                                            @RequestPart(value = "logoImage", required = false) MultipartFile logoImage,
-                                           HttpServletRequest httpServletRequest) {
+                                           HttpServletRequest httpServletRequest) throws IOException {
+        Long userId = jwtService.verifyUserId(httpServletRequest);
+        clubService.validateClubManager(clubId, userId);
+
+        String logoImageUrl = null;
+        if (logoImage != null) {
+            logoImageUrl = uploader.uploadClubLogoImage(logoImage);
+        }
+
+        Club newClub = request.toEntity(logoImageUrl);
+        clubService.updateClub(clubId, newClub);
+
         return ResponseEntity.noContent().build();
     }
 

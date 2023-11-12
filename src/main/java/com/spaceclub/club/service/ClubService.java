@@ -184,4 +184,20 @@ public class ClubService {
                 .toList();
     }
 
+    public void validateClubManager(Long clubId, Long userId) {
+        ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
+                .orElseThrow(() -> new IllegalArgumentException("클럽의 멤버가 아닙니다."));
+
+        if (!clubUser.isManager()) throw new IllegalStateException("해당 권한이 없습니다.");
+    }
+
+    public void updateClub(Long clubId, Club newClub) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
+
+        Club updatedClub = club.update(newClub);
+
+        clubRepository.save(updatedClub);
+    }
+
 }
