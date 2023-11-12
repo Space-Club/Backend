@@ -96,4 +96,8 @@ public class UserService {
         return;//TODO
     }
 
+    public boolean findBookmarkStatus(Long userId, Event event) {
+        return false;//TODO
+    }
+
 }

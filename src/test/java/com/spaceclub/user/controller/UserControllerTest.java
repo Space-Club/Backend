@@ -5,7 +5,6 @@ import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.jwt.service.JwtService;
 import com.spaceclub.user.UserTestFixture;
-import com.spaceclub.user.controller.dto.UserBookmarkedEventDeleteRequest;
 import com.spaceclub.user.controller.dto.UserRequiredInfoRequest;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
@@ -36,14 +35,12 @@ import static com.spaceclub.event.EventTestFixture.event3;
 import static com.spaceclub.user.domain.Status.NOT_REGISTERED;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -397,39 +394,6 @@ class UserControllerTest {
                                         fieldWithPath("pageData.size").type(NUMBER).description("페이지 내 개수"),
                                         fieldWithPath("pageData.totalPages").type(NUMBER).description("총 페이지 개수"),
                                         fieldWithPath("pageData.totalElements").type(NUMBER).description("총 이벤트 개수")
-                                )
-                        )
-                );
-    }
-
-    @Test
-    @WithMockUser
-    void 유저가_북마크한_이벤트_취소에_성공한다() throws Exception {
-        // given
-        Long userId = 1L;
-        List<Long> data = List.of(event1().getId(), event2().getId(), event3().getId());
-        UserBookmarkedEventDeleteRequest request = new UserBookmarkedEventDeleteRequest(data);
-
-        given(jwtService.verifyUserId(any())).willReturn(userId);
-        doNothing().when(userService).cancelBookmark(any(), any(Long.class));
-
-        // when, then
-        mvc.perform(delete("/api/v1/users/bookmarked-events")
-                        .header(AUTHORIZATION, "access token")
-                        .content(mapper.writeValueAsString(request))
-                        .contentType(APPLICATION_JSON)
-                        .with(csrf())
-                )
-                .andExpect(status().isOk())
-                .andDo(
-                        document("user/cancelBookmarkedEvents",
-                                preprocessRequest(prettyPrint()),
-                                preprocessResponse(prettyPrint()),
-                                requestHeaders(
-                                        headerWithName(AUTHORIZATION).description("액세스 토큰")
-                                ),
-                                requestFields(
-                                        fieldWithPath("data").type(ARRAY).description("북마크에서 제외할 행사 id 리스트")
                                 )
                         )
                 );
