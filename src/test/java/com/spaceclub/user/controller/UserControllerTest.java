@@ -6,6 +6,7 @@ import com.spaceclub.event.controller.dto.BookmarkedEventRequest;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.jwt.service.JwtService;
 import com.spaceclub.user.UserTestFixture;
+import com.spaceclub.user.controller.dto.UserBookmarkedEventDeleteRequest;
 import com.spaceclub.user.controller.dto.UserRequiredInfoRequest;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
@@ -44,6 +45,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -391,7 +393,6 @@ class UserControllerTest {
                                         fieldWithPath("data[].clubName").type(STRING).description("이벤트 주최자"),
                                         fieldWithPath("data[].posterImageUrl").type(STRING).description("포스터 URL"),
                                         fieldWithPath("data[].startDate").type(STRING).description("이벤트 시작일"),
-                                        fieldWithPath("data[].bookmark").type(BOOLEAN).description("북마크 상태"),
                                         fieldWithPath("pageData").type(OBJECT).description("페이지 정보"),
                                         fieldWithPath("pageData.first").type(BOOLEAN).description("첫 페이지 여부"),
                                         fieldWithPath("pageData.last").type(BOOLEAN).description("마지막 페이지 여부"),
