@@ -10,19 +10,17 @@ public record UserBookmarkedEventGetResponse(
         String location,
         String clubName,
         String posterImageUrl,
-        LocalDate startDate,
-        boolean bookmark
+        LocalDate startDate
 ) {
 
-        public static UserBookmarkedEventGetResponse of(Event event, boolean bookmarkStatus) {
+        public static UserBookmarkedEventGetResponse from(Event event) {
             return new UserBookmarkedEventGetResponse(
                     event.getId(),
                     event.getTitle(),
                     event.getLocation(),
                     event.getClubName(),
                     event.getPosterImageUrl(),
-                    event.getStartDate(),
-                    bookmarkStatus
+                    event.getStartDate()
             );
         }
 
