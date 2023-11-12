@@ -72,8 +72,18 @@ public class EventService {
     public void cancelEvent(Long eventId, Long userId) {
     }
 
-    public void bookmarkEvent(EventBookmarkInfo eventBookmarkInfo) {
-        return; // TODO
+    @Transactional
+    public void changeBookmarkStatus(EventBookmarkInfo eventBookmarkInfo) {
+        Event event = eventRepository.findById(eventBookmarkInfo.eventId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 행사입니다."));
+        User user = userRepository.findById(eventBookmarkInfo.userId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+        EventUser bookmarkedEventUser = eventUserRepository.findByUserAndEvent(user, event)
+                .orElseThrow(() -> new IllegalArgumentException("연관되어 있지 않는 유저와 행사입니다."))
+                .bookmark(eventBookmarkInfo.bookmarkStatus());
+
+        eventUserRepository.save(bookmarkedEventUser);
     }
 
 }

@@ -337,7 +337,7 @@ class EventControllerTest {
         // given
         Long userId = 1L;
         given(jwtService.verifyUserId(any())).willReturn(userId);
-        doNothing().when(eventService).bookmarkEvent(any(EventBookmarkInfo.class));
+        doNothing().when(eventService).changeBookmarkStatus(any(EventBookmarkInfo.class));
         BookmarkedEventRequest bookmarkedEventRequest = new BookmarkedEventRequest(true);
 
         // when, then

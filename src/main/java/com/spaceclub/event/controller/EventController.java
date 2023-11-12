@@ -96,7 +96,7 @@ public class EventController {
                               HttpServletRequest servletRequest
     ){
         Long userId = jwtService.verifyUserId(servletRequest);
-        eventService.bookmarkEvent(EventBookmarkInfo.of(eventId, userId, request.bookmark()));
+        eventService.changeBookmarkStatus(EventBookmarkInfo.of(eventId, userId, request.bookmark()));
 
         return ResponseEntity.ok().build();
     }
