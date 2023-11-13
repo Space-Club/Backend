@@ -7,7 +7,6 @@ import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventUser;
 import com.spaceclub.event.repository.EventRepository;
 import com.spaceclub.event.repository.EventUserRepository;
-import com.spaceclub.event.service.vo.EventBookmarkInfo;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -70,10 +69,6 @@ public class EventService {
 
     @Transactional
     public void cancelEvent(Long eventId, Long userId) {
-    }
-
-    public void bookmarkEvent(EventBookmarkInfo eventBookmarkInfo) {
-        return; // TODO
     }
 
 }
