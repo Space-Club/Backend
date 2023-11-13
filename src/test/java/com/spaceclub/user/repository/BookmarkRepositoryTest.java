@@ -1,16 +1,13 @@
-package com.spaceclub.event.repository;
+package com.spaceclub.user.repository;
 
-import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.repository.ClubRepository;
-import com.spaceclub.event.domain.ApplicationStatus;
 import com.spaceclub.event.domain.Event;
-import com.spaceclub.event.domain.EventUser;
+import com.spaceclub.event.repository.EventRepository;
+import com.spaceclub.user.domain.Bookmark;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
-import com.spaceclub.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -32,17 +29,16 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 
 @DataJpaTest
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
-@DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.class)
-class EventUserRepositoryTest {
+class BookmarkRepositoryTest {
 
     @Autowired
-    private EventUserRepository eventUserRepository;
-
-    @Autowired
-    private EventRepository eventRepository;
+    private BookmarkRepository bookmarkRepository;
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private EventRepository eventRepository;
 
     @Autowired
     private ClubRepository clubRepository;
@@ -71,47 +67,43 @@ class EventUserRepositoryTest {
 
         eventRepository.saveAll(List.of(event1(), event2(), event3()));
 
-        EventUser eventUser1 = EventUser.builder()
+        Bookmark bookmarkEvent1 = Bookmark.builder()
                 .id(1L)
                 .user(user)
                 .event(event1())
-                .status(ApplicationStatus.CONFIRMED)
+                .bookmarkStatus(true)
                 .build();
-        EventUser eventUser2 = EventUser.builder()
+        Bookmark bookmarkEvent2 = Bookmark.builder()
                 .id(2L)
                 .user(user)
                 .event(event2())
-                .status(ApplicationStatus.PENDING)
+                .bookmarkStatus(false)
                 .build();
-        EventUser eventUser3 = EventUser.builder()
+        Bookmark bookmarkEvent3 = Bookmark.builder()
                 .id(3L)
                 .user(user)
                 .event(event3())
-                .status(ApplicationStatus.CANCEL_REQUESTED)
+                .bookmarkStatus(true)
                 .build();
-        eventUserRepository.saveAll(List.of(eventUser1, eventUser2, eventUser3));
+        bookmarkRepository.saveAll(List.of(bookmarkEvent1, bookmarkEvent2, bookmarkEvent3));
     }
 
     @Test
-    void 유저의_모든_이벤트_조회에_성공한다() {
+    void 유저의_북마크_이벤트_조회에_성공한다() {
         // given
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(DESC, "id"));
 
         // when
-        Page<Event> eventPages = eventUserRepository.findAllByUserId(1L, pageRequest);
-        List<String> list = eventPages.getContent().stream()
-                .map(event -> eventUserRepository.findEventStatusByUserId(1L, event))
-                .toList();
+        User user = userRepository.findById(1L).orElseThrow();
+        Page<Event> bookmarkedEventPages = bookmarkRepository.findBookmarkedEventPages(user, pageRequest);
 
         // then
         assertAll(
-                () -> assertThat(eventPages.getTotalElements())
-                        .isEqualTo(3),
-                () -> assertThat(eventPages.getContent())
+                () -> assertThat(bookmarkedEventPages.getTotalElements())
+                        .isEqualTo(2),
+                () -> assertThat(bookmarkedEventPages.getContent())
                         .extracting(Event::getId)
-                        .containsExactlyInAnyOrder(1L, 2L, 3L),
-                () -> assertThat(list)
-                        .containsExactlyInAnyOrder("CONFIRMED", "PENDING", "CANCEL_REQUESTED")
+                        .containsExactlyInAnyOrder(1L, 3L)
         );
     }
 

@@ -94,7 +94,7 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
-        return eventUserRepository.findBookmarkedEventPages(user, pageable);
+        return bookmarkRepository.findBookmarkedEventPages(user, pageable);
     }
 
     @Transactional
