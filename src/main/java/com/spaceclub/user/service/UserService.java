@@ -106,4 +106,11 @@ public class UserService {
         bookmarkRepository.save(bookmark);
     }
 
+    public void logout(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+        kakaoOauthInfoSender.logout(user);
+    }
+
 }

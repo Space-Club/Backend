@@ -118,6 +118,11 @@ public class User {
         return requiredInfo.getPhoneNumber();
     }
 
+    public String getOauthId() {
+        final String blank = "";
+        return this.oauthUserName.replace(provider.name(), blank);
+    }
+
     public User updateRequiredInfo(String name, String phoneNumber) {
         this.requiredInfo = generateRequiredInfo(name, phoneNumber);
         this.status = REGISTERED;

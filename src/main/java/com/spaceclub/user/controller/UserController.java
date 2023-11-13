@@ -143,4 +143,12 @@ public class UserController {
 
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest servletRequest) {
+        Long userId = jwtService.verifyUserId(servletRequest);
+        userService.logout(userId);
+
+        return ResponseEntity.ok().build();
+    }
 }

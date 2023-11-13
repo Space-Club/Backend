@@ -469,4 +469,26 @@ class UserControllerTest {
                 ));
     }
 
+    @Test
+    @WithMockUser
+    void 유저의_로그아웃에_성공한다() throws Exception {
+        // given
+        Long userId = 1L;
+        given(jwtService.verifyUserId(any())).willReturn(userId);
+        doNothing().when(userService).logout(any(Long.class));
+
+        // when, then
+        mvc.perform(post("/api/v1/users/logout")
+                        .header(AUTHORIZATION, "Access Token")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andDo(document("user/logout",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("액세스 토큰")
+                        )
+                ));
+    }
+
 }
