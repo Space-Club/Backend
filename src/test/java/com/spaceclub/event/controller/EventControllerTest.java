@@ -31,6 +31,7 @@ import java.util.List;
 import static com.spaceclub.event.EventTestFixture.event1;
 import static com.spaceclub.event.EventTestFixture.event2;
 import static com.spaceclub.event.EventTestFixture.event3;
+import static com.spaceclub.event.domain.ApplicationStatus.CANCELED;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
@@ -304,16 +305,16 @@ class EventControllerTest {
     @WithMockUser
     void 행사_참여_신청_취소에_성공한다() throws Exception {
         // given
-        doNothing().when(eventService).cancelEvent(any(Long.class), any(Long.class));
+        given(eventService.cancelEvent(any(Long.class), any(Long.class))).willReturn(CANCELED);
 
         // when
-        ResultActions actions = mvc.perform(delete("/api/v1/events/{eventId}/cancel", 1L)
+        ResultActions actions = mvc.perform(delete("/api/v1/events/{eventId}/applications", 1L)
                 .header(AUTHORIZATION, "Access Token")
                 .with(csrf())
         );
 
         // then
-        actions.andExpect(status().isNoContent())
+        actions.andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("event/cancel",
                         preprocessRequest(prettyPrint()),
@@ -323,6 +324,9 @@ class EventControllerTest {
                         ),
                         pathParameters(
                                 parameterWithName("eventId").description("행사 id")
+                        ),
+                        responseFields(
+                                fieldWithPath("applicationStatus").type(STRING).description("행사 신청 상태(ex. CANCELED, CANCEL_REQUESTED)")
                         )
                 ));
     }

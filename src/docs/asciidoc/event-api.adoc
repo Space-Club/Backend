@@ -56,6 +56,9 @@ include::{snippets}/event/cancel/path-parameters.adoc[]
 ==== Response
 
 include::{snippets}/event/cancel/http-response.adoc[]
+===== Response Body
+
+include::{snippets}/event/cancel/response-fields.adoc[]
 :sectnums:
 
 === 모든 행사 조회
