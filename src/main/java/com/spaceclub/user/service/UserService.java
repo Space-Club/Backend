@@ -62,10 +62,10 @@ public class UserService {
     @Transactional
     public User updateRequiredInfo(Long userId, UserRequiredInfo userRequiredInfo) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
-        User updatedUser = user.updateRequiredInfo(userRequiredInfo.name(), userRequiredInfo.phoneNumber());
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."))
+                .updateRequiredInfo(userRequiredInfo.name(), userRequiredInfo.phoneNumber());
 
-        return userRepository.save(updatedUser);
+        return userRepository.save(user);
     }
 
     public UserProfileInfo getUserProfile(Long userId) {
