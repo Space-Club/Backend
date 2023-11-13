@@ -89,6 +89,21 @@ include::{snippets}/user/getUserProfile/http-response.adoc[]
 include::{snippets}/user/getUserProfile/response-fields.adoc[]
 :sectnums:
 
+=== 유저 사용자 정보 변경
+:sectnums!:
+==== Request
+include::{snippets}/user/updateUserProfile/http-request.adoc[]
+
+===== Request Header
+include::{snippets}/user/updateUserProfile/request-headers.adoc[]
+
+===== Request Body
+include::{snippets}/user/updateUserProfile/request-fields.adoc[]
+
+==== Response
+include::{snippets}/user/updateUserProfile/http-response.adoc[]
+:sectnums:
+
 === 유저 프로필 이미지 확인
 :sectnums!:
 ==== Request

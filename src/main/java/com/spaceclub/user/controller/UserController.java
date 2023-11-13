@@ -11,6 +11,7 @@ import com.spaceclub.user.controller.dto.UserCodeRequest;
 import com.spaceclub.user.controller.dto.UserEventGetResponse;
 import com.spaceclub.user.controller.dto.UserLoginResponse;
 import com.spaceclub.user.controller.dto.UserProfileImageResponse;
+import com.spaceclub.user.controller.dto.UserProfileRequest;
 import com.spaceclub.user.controller.dto.UserProfileResponse;
 import com.spaceclub.user.controller.dto.UserRequiredInfoRequest;
 import com.spaceclub.user.domain.User;
@@ -90,6 +91,14 @@ public class UserController {
         Long userId = jwtService.verifyUserId(request);
 
         return userService.getUserProfile(userId).toResponse();
+    }
+
+    @PostMapping("/profiles")
+    public ResponseEntity<Void> updateUserProfile(@RequestBody UserProfileRequest request, HttpServletRequest servletRequest) {
+        Long userId = jwtService.verifyUserId(servletRequest);
+        userService.updateUserProfile(userId, request);
+
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/images")
