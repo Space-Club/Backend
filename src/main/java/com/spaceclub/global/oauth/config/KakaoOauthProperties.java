@@ -12,6 +12,7 @@ public class KakaoOauthProperties {
     private final String clientId;
     private final String redirectUrl;
     private final String clientSecret;
+    private final String adminKey;
 
 }
 

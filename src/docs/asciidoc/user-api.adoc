@@ -173,3 +173,15 @@ include::{snippets}/user/bookmark/request-fields.adoc[]
 ===== Response Body
 include::{snippets}/user/bookmark/http-response.adoc[]
 :sectnums:
+
+=== 유저 로그아웃
+:sectnums!:
+==== Request
+include::{snippets}/user/logout/http-request.adoc[]
+
+===== Request Header
+include::{snippets}/user/logout/request-headers.adoc[]
+
+===== Response Body
+include::{snippets}/user/bookmark/http-response.adoc[]
+:sectnums:

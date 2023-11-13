@@ -2,6 +2,7 @@ package com.spaceclub.global.oauth.config;
 
 import com.spaceclub.global.oauth.config.vo.KakaoTokenInfo;
 import com.spaceclub.global.oauth.config.vo.KakaoUserInfo;
+import com.spaceclub.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +21,8 @@ public class KakaoOauthInfoSender {
     private static final String REQUEST_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
     private static final String REQUEST_INFO_URL = "https://kapi.kakao.com/v2/user/me";
     private static final String GRANT_TYPE = "authorization_code";
+    private static final String LOGOUT_URL = "https://kapi.kakao.com/v1/user/logout";
+    private static final String ADMIN_KEY_PREFIX = "KakaoaAK ";
 
     private final RestTemplate restTemplate;
     private final KakaoOauthProperties kakaoProperties;
@@ -58,6 +61,28 @@ public class KakaoOauthInfoSender {
                 requestEntity,
                 KakaoTokenInfo.class
         ).getBody();
+    }
+
+    public void logout(User user) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(APPLICATION_FORM_URLENCODED);
+        httpHeaders.set(HttpHeaders.AUTHORIZATION, ADMIN_KEY_PREFIX + kakaoProperties.getAdminKey());
+
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("target_id_type", "user_id");
+        body.add("target_id", user.getOauthId());
+
+        HttpEntity<Object> requestEntity = new HttpEntity<>(body, httpHeaders);
+
+        Long id = restTemplate.exchange(
+                LOGOUT_URL,
+                POST,
+                requestEntity,
+                Long.class
+        ).getBody();
+
+        if (id == null) throw new IllegalArgumentException("로그아웃 실패");
+        if (id != Long.parseLong(user.getOauthId())) throw new IllegalArgumentException("로그아웃 실패");
     }
 
 }
