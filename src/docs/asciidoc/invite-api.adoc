@@ -58,10 +58,6 @@ include::{snippets}/invite/requestToJoin/http-request.adoc[]
 
 include::{snippets}/invite/requestToJoin/path-parameters.adoc[]
 
-===== Request Header
-
-include::{snippets}/invite/requestToJoin/request-headers.adoc[]
-
 ==== Response
 
 include::{snippets}/invite/requestToJoin/http-response.adoc[]
