@@ -73,7 +73,6 @@ public class FormService {
         eventService.applyEvent(eventId, userId);
     }
 
-
     public FormApplicationGetInfo getApplicationForms(Long userId, Long eventId) {
         Event event = validateEventAndForm(eventId);
         Form form = event.getForm();

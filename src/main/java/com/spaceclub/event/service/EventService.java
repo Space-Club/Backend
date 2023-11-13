@@ -68,7 +68,17 @@ public class EventService {
     }
 
     @Transactional
-    public void cancelEvent(Long eventId, Long userId) {
+    public ApplicationStatus cancelEvent(Long eventId, Long userId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 행사입니다."));
+
+        EventUser eventUser = eventUserRepository.findByEvent_IdAndUser_Id(eventId, userId);
+
+        EventUser updateEventUser = eventUser.setStatusByManaged(event.isFormManaged());
+
+        eventUserRepository.save(updateEventUser);
+
+        return updateEventUser.getStatus();
     }
 
 }

@@ -16,4 +16,5 @@ public interface EventUserRepository extends JpaRepository<EventUser, Long> {
     @Query("select eu.status from EventUser eu where eu.user.id = :userId and eu.event = :event")
     String findEventStatusByUserId(@Param("userId") Long userId, @Param("event") Event event);
 
+    EventUser findByEvent_IdAndUser_Id(Long eventId, Long userId);
 }
