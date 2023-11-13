@@ -23,8 +23,8 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -123,24 +123,20 @@ class InviteControllerTest {
     void 초대_링크를_통해_클럽_가입전_가입_의사를_묻는데_성공한다() throws Exception {
         // given
         String code = UUID.randomUUID().toString();
-        given(inviteService.requestToJoinClub(any(String.class), any(Long.class))).willReturn(club1());
+        given(inviteService.requestToJoinClub(any(String.class))).willReturn(club1());
 
         // when
         ResultActions actions =
-                mockMvc.perform(get("/api/v1/clubs/invite/{code}", code)
-                        .header("Authorization", "token"));
+                mockMvc.perform(get("/api/v1/clubs/invite/{code}", code));
 
         // then
         actions.andExpect(status().isOk())
                 .andDo(print())
-                .andDo(document("invite/askForJoin",
+                .andDo(document("invite/requestToJoin",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("code").description("클럽 초대 링크 식별자")
-                        ),
-                        requestHeaders(
-                                headerWithName("Authorization").description("유저 액세스 토큰")
                         ),
                         responseFields(
                                 fieldWithPath("clubId").type(NUMBER).description("클럽 ID"),

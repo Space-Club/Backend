@@ -44,27 +44,30 @@ include::{snippets}/invite/join/request-headers.adoc[]
 
 include::{snippets}/invite/join/http-response.adoc[]
 
+===== Response Body
+include::{snippets}/invite/join/response-fields.adoc[]
+
 :sectnums:
 
 === 초대 링크를 통한 클럽 가입 전 의사 확인
 :sectnums!:
 ==== Request
 
-include::{snippets}/invite/askForJoin/http-request.adoc[]
+include::{snippets}/invite/requestToJoin/http-request.adoc[]
 ===== Path Parameter
 
-include::{snippets}/invite/askForJoin/path-parameters.adoc[]
+include::{snippets}/invite/requestToJoin/path-parameters.adoc[]
 
 ===== Request Header
 
-include::{snippets}/invite/askForJoin/request-headers.adoc[]
+include::{snippets}/invite/requestToJoin/request-headers.adoc[]
 
 ==== Response
 
-include::{snippets}/invite/askForJoin/http-response.adoc[]
+include::{snippets}/invite/requestToJoin/http-response.adoc[]
 
 ===== Response Body
 
-include::{snippets}/invite/askForJoin/response-fields.adoc[]
+include::{snippets}/invite/requestToJoin/response-fields.adoc[]
 
 :sectnums:

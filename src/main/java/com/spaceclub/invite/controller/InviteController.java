@@ -54,10 +54,8 @@ public class InviteController {
     }
 
     @GetMapping("/clubs/invite/{code}")
-    public ResponseEntity<ClubRequestToJoinResponse> requestToJoinClub(@PathVariable String code, HttpServletRequest httpServletRequest) {
-        Long userId = jwtService.verifyUserId(httpServletRequest);
-
-        Club club = service.requestToJoinClub(code, userId);
+    public ResponseEntity<ClubRequestToJoinResponse> requestToJoinClub(@PathVariable String code) {
+        Club club = service.requestToJoinClub(code);
 
         Long memberCount = clubService.countMember(club);
 
