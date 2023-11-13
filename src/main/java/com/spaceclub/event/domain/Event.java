@@ -37,8 +37,6 @@ public class Event extends BaseTimeEntity {
 
     private static final String EVENT_POSTER_S3_URL = "https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/event-poster/";
 
-    private static final String CLUB_LOGO_S3_URL = "https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/club-logo/";
-
     @Id
     @Getter
     @Column(name = "event_id")
@@ -155,18 +153,31 @@ public class Event extends BaseTimeEntity {
     }
 
     public String getClubLogoImageUrl() {
-        if (club.getLogoImageUrl() == null) {
-            return null;
-        }
-        return CLUB_LOGO_S3_URL + club.getLogoImageUrl();
+        return club.getLogoImageUrl();
     }
 
-    public LocalDateTime getFormOpenDate() {
+    public LocalDateTime getFormOpenDateTime() {
         return formInfo.getFormOpenDate();
     }
 
-    public LocalDateTime getFormCloseDate() {
+    public LocalDateTime getFormCloseDateTime() {
         return formInfo.getFormCloseDate();
+    }
+
+    public LocalDate getFormOpenDate() {
+        return formInfo.getFormOpenDate().toLocalDate();
+    }
+
+    public LocalTime getFormCloseDate() {
+        return formInfo.getFormCloseDate().toLocalTime();
+    }
+
+    public LocalDate getFormOpenTime() {
+        return formInfo.getFormOpenDate().toLocalDate();
+    }
+
+    public LocalTime getFormCloseTime() {
+        return formInfo.getFormCloseDate().toLocalTime();
     }
 
     public Long getFormId() {

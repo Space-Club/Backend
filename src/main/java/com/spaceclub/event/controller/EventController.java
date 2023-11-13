@@ -4,6 +4,7 @@ import com.spaceclub.event.controller.dto.EventApplyRequest;
 import com.spaceclub.event.controller.dto.EventCreateRequest;
 import com.spaceclub.event.controller.dto.EventDetailGetResponse;
 import com.spaceclub.event.controller.dto.EventGetResponse;
+import com.spaceclub.event.controller.dto.EventSearchGetResponse;
 import com.spaceclub.event.domain.ApplicationStatus;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.service.EventService;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,6 +58,18 @@ public class EventController {
         List<EventGetResponse> eventGetResponses = events.getContent().stream().map(EventGetResponse::from).toList();
 
         return ResponseEntity.ok(new PageResponse<>(eventGetResponses, events));
+    }
+
+    @GetMapping("/searches")
+    public ResponseEntity<PageResponse<EventSearchGetResponse, Event>> getSearchEvents(@RequestParam String keyword, Pageable pageable) {
+        Page<Event> events = eventService.getSearchEvents(keyword, pageable);
+
+        List<EventSearchGetResponse> eventSearchGetResponses = events.getContent()
+                .stream()
+                .map(EventSearchGetResponse::from)
+                .toList();
+
+        return ResponseEntity.ok(new PageResponse<>(eventSearchGetResponses, events));
     }
 
     @PostMapping("/apply")

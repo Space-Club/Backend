@@ -16,4 +16,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     List<Event> findAllByClub_IdAndCategory(Long clubId, Category category);
 
+    Page<Event> findByEventInfo_TitleContainsIgnoreCase(String searchWord, Pageable pageable);
+
 }

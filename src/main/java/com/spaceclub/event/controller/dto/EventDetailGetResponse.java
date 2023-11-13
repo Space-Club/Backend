@@ -34,8 +34,8 @@ public record EventDetailGetResponse(
                 .location(event.getLocation())
                 .clubName(event.getClubName())
                 .clubLogoImageUrl(event.getClubLogoImageUrl())
-                .formOpenDateTime(event.getFormOpenDate())
-                .formCloseDateTime(event.getFormCloseDate())
+                .formOpenDateTime(event.getFormOpenDateTime())
+                .formCloseDateTime(event.getFormCloseDateTime())
                 .build();
 
     }
