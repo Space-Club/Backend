@@ -43,6 +43,10 @@ public class EventService {
         return eventRepository.findAll(pageable);
     }
 
+    public Page<Event> getSearchEvents(String keyword, Pageable pageable) {
+        return eventRepository.findByEventInfo_TitleContainsIgnoreCase(keyword, pageable);
+    }
+
     @Transactional
     public void applyEvent(Long eventId, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
