@@ -65,6 +65,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<FormOptionUser> formOptionUsers = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<Bookmark> bookmarks = new ArrayList<>();
+
     @Builder
     private User(
             Long id,

@@ -106,12 +106,13 @@ public class UserService {
         bookmarkRepository.save(bookmark);
     }
 
-    public void cancelBookmark(List<Long> eventIds, Long userId) {
-        return;//TODO
-    }
+    @Transactional
+    public void changeBookmarkStatus(UserBookmarkInfo userBookmarkInfo) {
+        Bookmark bookmark = bookmarkRepository.findByUserIdAndEventId(userBookmarkInfo.userId(), userBookmarkInfo.eventId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 북마크입니다."))
+                .changeBookmarkStatus(userBookmarkInfo.bookmarkStatus());
 
-    public boolean findBookmarkStatus(Long userId, Event event) {
-        return false;//TODO
+        bookmarkRepository.save(bookmark);
     }
 
 }

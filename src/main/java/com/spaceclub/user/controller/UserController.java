@@ -3,6 +3,7 @@ package com.spaceclub.user.controller;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.event.controller.dto.BookmarkedEventRequest;
 import com.spaceclub.event.domain.Event;
+import com.spaceclub.user.service.vo.UserBookmarkInfo;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.service.JwtService;
 import com.spaceclub.user.controller.dto.UserBookmarkedEventGetResponse;
