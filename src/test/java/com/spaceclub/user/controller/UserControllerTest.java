@@ -6,7 +6,7 @@ import com.spaceclub.event.controller.dto.BookmarkedEventRequest;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.jwt.service.JwtService;
 import com.spaceclub.user.UserTestFixture;
-import com.spaceclub.user.controller.dto.UserBookmarkedEventDeleteRequest;
+import com.spaceclub.user.controller.dto.UserProfileUpdateRequest;
 import com.spaceclub.user.controller.dto.UserRequiredInfoRequest;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
@@ -45,7 +45,6 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -263,7 +262,7 @@ class UserControllerTest {
         final User user = UserTestFixture.user1();
         UserProfileInfo userProfileInfo = new UserProfileInfo("멤버명", "010-1234-5678", "www.image.com");
 
-        given(jwtService.verifyUserId(any())).willReturn(1L);
+        given(jwtService.verifyUserId(any())).willReturn(user.getId());
         given(userService.getUserProfile(any())).willReturn(userProfileInfo);
 
         // when, then
@@ -286,6 +285,39 @@ class UserControllerTest {
                         )
                 );
     }
+    @Test
+    @WithMockUser
+    void 유저의_프로필_수정에_성공한다() throws Exception {
+        //given
+        final User user = UserTestFixture.user1();
+        UserProfileUpdateRequest request = new UserProfileUpdateRequest("멤버명1", "010-1234-6789");
+
+        given(jwtService.verifyUserId(any())).willReturn(user.getId());
+        given(userService.updateRequiredInfo(any(Long.class), any(UserRequiredInfo.class))).willReturn(user);
+
+        // when, then
+        mvc.perform(patch("/api/v1/users/required-infos")
+                        .header(AUTHORIZATION, "access token")
+                        .content(mapper.writeValueAsString(request))
+                        .contentType(APPLICATION_JSON)
+                        .with(csrf())
+                )
+                .andExpect(status().isNoContent())
+                .andDo(
+                        document("user/updateUserProfile",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName(AUTHORIZATION).description("access token")
+                                ),
+                                requestFields(
+                                        fieldWithPath("name").type(STRING).description("유저 이름"),
+                                        fieldWithPath("phoneNumber").type(STRING).description("유저 전화번호")
+                                )
+                        )
+                );
+    }
+
 
     @Test
     @WithMockUser
@@ -294,7 +326,7 @@ class UserControllerTest {
         final User user = UserTestFixture.user1();
         final String profileImageUrl = "www.image.com";
 
-        given(jwtService.verifyUserId(any())).willReturn(1L);
+        given(jwtService.verifyUserId(any())).willReturn(user.getId());
         given(userService.getUserProfileImage(any())).willReturn(profileImageUrl);
 
         // when, then
@@ -393,6 +425,7 @@ class UserControllerTest {
                                         fieldWithPath("data[].clubName").type(STRING).description("이벤트 주최자"),
                                         fieldWithPath("data[].posterImageUrl").type(STRING).description("포스터 URL"),
                                         fieldWithPath("data[].startDate").type(STRING).description("이벤트 시작일"),
+                                        fieldWithPath("data[].bookmark").type(BOOLEAN).description("북마크 상태"),
                                         fieldWithPath("pageData").type(OBJECT).description("페이지 정보"),
                                         fieldWithPath("pageData.first").type(BOOLEAN).description("첫 페이지 여부"),
                                         fieldWithPath("pageData.last").type(BOOLEAN).description("마지막 페이지 여부"),

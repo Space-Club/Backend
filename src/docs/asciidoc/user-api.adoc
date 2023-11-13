@@ -89,7 +89,7 @@ include::{snippets}/user/getUserProfile/http-response.adoc[]
 include::{snippets}/user/getUserProfile/response-fields.adoc[]
 :sectnums:
 
-=== 유저 사용자 정보 변경
+=== 유저 필수 정보 변경 (닉네임, 휴대폰 번호)
 :sectnums!:
 ==== Request
 include::{snippets}/user/updateUserProfile/http-request.adoc[]

@@ -1,7 +1,7 @@
 package com.spaceclub.user.controller.dto;
 
-public record UserProfileRequest(
-        String username,
+public record UserProfileUpdateRequest(
+        String name,
         String phoneNumber
 ) {
 

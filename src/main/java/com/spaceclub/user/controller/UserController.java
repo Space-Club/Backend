@@ -11,7 +11,7 @@ import com.spaceclub.user.controller.dto.UserCodeRequest;
 import com.spaceclub.user.controller.dto.UserEventGetResponse;
 import com.spaceclub.user.controller.dto.UserLoginResponse;
 import com.spaceclub.user.controller.dto.UserProfileImageResponse;
-import com.spaceclub.user.controller.dto.UserProfileRequest;
+import com.spaceclub.user.controller.dto.UserProfileUpdateRequest;
 import com.spaceclub.user.controller.dto.UserProfileResponse;
 import com.spaceclub.user.controller.dto.UserRequiredInfoRequest;
 import com.spaceclub.user.domain.User;
@@ -41,8 +41,6 @@ import static com.spaceclub.user.controller.dto.UserEventGetResponse.from;
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
-
-    public static final String AUTHORIZATION_HEADER = "Authorization";
 
     private final UserService userService;
 
@@ -93,12 +91,12 @@ public class UserController {
         return userService.getUserProfile(userId).toResponse();
     }
 
-    @PostMapping("/profiles")
-    public ResponseEntity<Void> updateUserProfile(@RequestBody UserProfileRequest request, HttpServletRequest servletRequest) {
+    @PatchMapping("/required-infos")
+    public ResponseEntity<Void> updateUserProfile(@RequestBody UserProfileUpdateRequest request, HttpServletRequest servletRequest) {
         Long userId = jwtService.verifyUserId(servletRequest);
-        userService.updateUserProfile(userId, request);
+        userService.updateRequiredInfo(userId, new UserRequiredInfo(request.name(), request.phoneNumber()));
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/images")
