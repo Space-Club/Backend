@@ -45,6 +45,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -483,6 +484,28 @@ class UserControllerTest {
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andDo(document("user/logout",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("액세스 토큰")
+                        )
+                ));
+    }
+
+    @Test
+    @WithMockUser
+    void 유저_회원_탈퇴에_성공한다() throws Exception {
+        // given
+        Long userId = 1L;
+        given(jwtService.verifyUserId(any())).willReturn(userId);
+        doNothing().when(userService).deleteUser(any(Long.class));
+
+        // when, then
+        mvc.perform(delete("/api/v1/users")
+                        .header(AUTHORIZATION, "Access Token")
+                        .with(csrf()))
+                .andExpect(status().isNoContent())
+                .andDo(document("user/delete",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(

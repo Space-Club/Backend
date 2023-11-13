@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -151,4 +152,13 @@ public class UserController {
 
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteUser(HttpServletRequest servletRequest) {
+        Long userId = jwtService.verifyUserId(servletRequest);
+        userService.deleteUser(userId);
+
+        return ResponseEntity.noContent().build();
+    }
+
 }
