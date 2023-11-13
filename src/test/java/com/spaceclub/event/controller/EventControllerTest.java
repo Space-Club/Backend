@@ -331,4 +331,68 @@ class EventControllerTest {
                 ));
     }
 
+    @Test
+    @WithMockUser
+    public void 행사_검색에_성공한다() throws Exception {
+        // given
+        List<Event> events = List.of(event1(), event2(), event3());
+        Page<Event> eventPages = new PageImpl<>(events);
+
+        given(eventService.getSearchEvents(any(String.class), any(Pageable.class))).willReturn(eventPages);
+
+        // when
+        ResultActions actions = mvc.perform(get("/api/v1/events/searches")
+                .param("keyword", "title")
+                .param("page", "1")
+                .param("size", "3")
+                .param("sort", "id,desc")
+        );
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.size()").value(events.size()))
+                .andExpect(jsonPath("$.pageData.first").value(true))
+                .andExpect(jsonPath("$.pageData.last").value(true))
+                .andExpect(jsonPath("$.pageData.pageNumber").value(0))
+                .andExpect(jsonPath("$.pageData.size").value(3))
+                .andExpect(jsonPath("$.pageData.totalPages").value(1))
+                .andExpect(jsonPath("$.pageData.totalElements").value(events.size()))
+                .andDo(document("event/search",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        queryParameters(
+                                parameterWithName("keyword").description("검색어"),
+                                parameterWithName("page").description("페이지"),
+                                parameterWithName("size").description("페이지 내 개수"),
+                                parameterWithName("sort").description("정렬 방법((ex) id,desc)")
+                        ),
+                        responseFields(
+                                fieldWithPath("data").type(ARRAY).description("페이지 내 행사 정보"),
+                                fieldWithPath("data[].id").type(NUMBER).description("행사 id"),
+                                fieldWithPath("data[].eventInfo").type(OBJECT).description("행사 정보"),
+                                fieldWithPath("data[].eventInfo.title").type(STRING).description("행사 제목"),
+                                fieldWithPath("data[].eventInfo.posterImageUrl").type(STRING).description("포스터 URL"),
+                                fieldWithPath("data[].eventInfo.location").type(STRING).description("행사 위치"),
+                                fieldWithPath("data[].eventInfo.startDate").type(STRING).description("행사 시작 날짜"),
+                                fieldWithPath("data[].eventInfo.startTime").type(STRING).description("행사 시작 시간"),
+                                fieldWithPath("data[].formInfo").type(OBJECT).description("폼 정보"),
+                                fieldWithPath("data[].formInfo.startDate").type(STRING).description("폼 시작 날짜"),
+                                fieldWithPath("data[].formInfo.startTime").type(STRING).description("폼 시작 시간"),
+                                fieldWithPath("data[].formInfo.endDate").type(STRING).description("폼 종료 날짜"),
+                                fieldWithPath("data[].formInfo.endTime").type(STRING).description("폼 종료 시간"),
+                                fieldWithPath("data[].clubInfo").type(OBJECT).description("클럽 정보"),
+                                fieldWithPath("data[].clubInfo.name").type(STRING).description("클럽 명"),
+                                fieldWithPath("data[].clubInfo.logoImageUrl").type(STRING).description("클럽 이미지 Url"),
+                                fieldWithPath("pageData").type(OBJECT).description("페이지 정보"),
+                                fieldWithPath("pageData.first").type(BOOLEAN).description("첫 페이지 여부"),
+                                fieldWithPath("pageData.last").type(BOOLEAN).description("마지막 페이지 여부"),
+                                fieldWithPath("pageData.pageNumber").type(NUMBER).description("현재 페이지 번호"),
+                                fieldWithPath("pageData.size").type(NUMBER).description("페이지 내 개수"),
+                                fieldWithPath("pageData.totalPages").type(NUMBER).description("총 페이지 개수"),
+                                fieldWithPath("pageData.totalElements").type(NUMBER).description("총 행사 개수")
+                        ))
+                );
+    }
+
 }

@@ -78,6 +78,23 @@ include::{snippets}/event/getAll/http-response.adoc[]
 include::{snippets}/event/getAll/response-fields.adoc[]
 :sectnums:
 
+=== 행사 검색
+:sectnums!:
+==== Request
+
+include::{snippets}/event/search/http-request.adoc[]
+===== Query Parameter
+
+include::{snippets}/event/search/query-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/event/search/http-response.adoc[]
+===== Response Body
+
+include::{snippets}/event/search/response-fields.adoc[]
+:sectnums:
+
 === 행사 상세 조회
 :sectnums!:
 ==== Request
@@ -93,4 +110,27 @@ include::{snippets}/event/get/http-response.adoc[]
 ===== Response Body
 
 include::{snippets}/event/get/response-fields.adoc[]
+:sectnums:
+
+=== 행사 북마크 상태 변경
+:sectnums!:
+==== Request
+
+include::{snippets}/event/bookmark/http-request.adoc[]
+
+===== Path Parameter
+
+include::{snippets}/event/bookmark/path-parameters.adoc[]
+
+===== Request Header
+
+include::{snippets}/event/bookmark/request-headers.adoc[]
+
+==== Request Body
+
+include::{snippets}/event/bookmark/request-fields.adoc[]
+
+===== Response Body
+
+include::{snippets}/event/bookmark/http-response.adoc[]
 :sectnums:
