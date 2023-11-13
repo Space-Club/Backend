@@ -56,7 +56,8 @@ public class Club extends BaseTimeEntity {
     @OneToMany(
             mappedBy = "club",
             fetch = FetchType.EAGER,
-            cascade = CascadeType.REMOVE
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true
     )
     private List<ClubNotice> notices = new ArrayList<>();
 
@@ -64,19 +65,18 @@ public class Club extends BaseTimeEntity {
     @OneToMany(
             mappedBy = "club",
             fetch = FetchType.EAGER,
-            cascade = CascadeType.REMOVE
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true
     )
     private List<ClubUser> clubUser = new ArrayList<>();
 
     @OneToOne(
             mappedBy = "club",
             fetch = FetchType.LAZY,
-            cascade = CascadeType.REMOVE
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true
     )
     private Invite invite;
-
-    @OneToMany(mappedBy = "club", cascade = CascadeType.REMOVE)
-    private List<Event> event = new ArrayList<>();
 
     private boolean validateNameLength(String name) {
         return name.length() <= 12;
