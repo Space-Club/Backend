@@ -8,10 +8,13 @@ import com.spaceclub.event.repository.EventUserRepository;
 import com.spaceclub.global.oauth.config.KakaoOauthInfoSender;
 import com.spaceclub.global.oauth.config.vo.KakaoTokenInfo;
 import com.spaceclub.global.oauth.config.vo.KakaoUserInfo;
+import com.spaceclub.user.domain.Bookmark;
 import com.spaceclub.user.domain.Email;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
+import com.spaceclub.user.repository.BookmarkRepository;
 import com.spaceclub.user.repository.UserRepository;
+import com.spaceclub.user.service.vo.UserBookmarkInfo;
 import com.spaceclub.user.service.vo.UserProfileInfo;
 import com.spaceclub.user.service.vo.UserRequiredInfo;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +38,8 @@ public class UserService {
     private final ClubUserRepository clubUserRepository;
 
     private final UserRepository userRepository;
+
+    private final BookmarkRepository bookmarkRepository;
 
     public Page<Event> findAllEventPages(Long userId, Pageable pageable) {
         return eventUserRepository.findAllByUserId(userId, pageable);
@@ -92,12 +97,13 @@ public class UserService {
         return eventUserRepository.findBookmarkedEventPages(user, pageable);
     }
 
-    public void cancelBookmark(List<Long> eventIds, Long userId) {
-        return;//TODO
-    }
+    @Transactional
+    public void changeBookmarkStatus(UserBookmarkInfo userBookmarkInfo) {
+        Bookmark bookmark = bookmarkRepository.findByUserIdAndEventId(userBookmarkInfo.userId(), userBookmarkInfo.eventId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 북마크입니다."))
+                .changeBookmarkStatus(userBookmarkInfo.bookmarkStatus());
 
-    public boolean findBookmarkStatus(Long userId, Event event) {
-        return false;//TODO
+        bookmarkRepository.save(bookmark);
     }
 
 }

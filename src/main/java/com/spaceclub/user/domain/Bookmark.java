@@ -1,13 +1,9 @@
-package com.spaceclub.event.domain;
+package com.spaceclub.user.domain;
 
-import com.spaceclub.global.BaseTimeEntity;
-import com.spaceclub.user.domain.User;
+import com.spaceclub.event.domain.Event;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -17,21 +13,20 @@ import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
 import static jakarta.persistence.FetchType.EAGER;
+import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @NoArgsConstructor(access = PROTECTED)
-public class EventUser extends BaseTimeEntity {
+public class Bookmark {
 
     @Id
     @Getter
-    @Column(name = "event_user_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "bookmark_id")
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @Getter
-    @Enumerated(EnumType.STRING)
-    private ApplicationStatus status;
+    private boolean bookmarkStatus;
 
     @ManyToOne(fetch = EAGER, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -42,10 +37,10 @@ public class EventUser extends BaseTimeEntity {
     private Event event;
 
     @Builder
-    private EventUser(Long id, ApplicationStatus status, User user, Event event) {
+    private Bookmark(Long id, boolean bookmarkStatus, User user, Event event) {
         validate(user, event);
         this.id = id;
-        this.status = status;
+        this.bookmarkStatus = bookmarkStatus;
         this.user = user;
         this.event = event;
     }
@@ -55,8 +50,9 @@ public class EventUser extends BaseTimeEntity {
         Assert.notNull(event, "이벤트는 필수입니다.");
     }
 
-    public Long getUserId() {
-        return user.getId();
+    public Bookmark changeBookmarkStatus(boolean bookmarkStatus) {
+        this.bookmarkStatus = bookmarkStatus;
+        return this;
     }
 
 }

@@ -140,3 +140,21 @@ include::{snippets}/user/getAllBookmarkedEvents/http-response.adoc[]
 ===== Response Body
 include::{snippets}/user/getAllBookmarkedEvents/response-fields.adoc[]
 :sectnums:
+
+=== 행사 북마크 상태 변경
+:sectnums!:
+==== Request
+include::{snippets}/user/bookmark/http-request.adoc[]
+
+===== Path Parameter
+include::{snippets}/user/bookmark/path-parameters.adoc[]
+
+===== Request Header
+include::{snippets}/user/bookmark/request-headers.adoc[]
+
+==== Request Body
+include::{snippets}/user/bookmark/request-fields.adoc[]
+
+===== Response Body
+include::{snippets}/user/bookmark/http-response.adoc[]
+:sectnums:

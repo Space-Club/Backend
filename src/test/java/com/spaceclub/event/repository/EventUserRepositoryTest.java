@@ -76,21 +76,18 @@ class EventUserRepositoryTest {
                 .user(user)
                 .event(event1())
                 .status(ApplicationStatus.CONFIRMED)
-                .bookmarkStatus(true)
                 .build();
         EventUser eventUser2 = EventUser.builder()
                 .id(2L)
                 .user(user)
                 .event(event2())
                 .status(ApplicationStatus.PENDING)
-                .bookmarkStatus(false)
                 .build();
         EventUser eventUser3 = EventUser.builder()
                 .id(3L)
                 .user(user)
                 .event(event3())
                 .status(ApplicationStatus.CANCEL_REQUESTED)
-                .bookmarkStatus(true)
                 .build();
         eventUserRepository.saveAll(List.of(eventUser1, eventUser2, eventUser3));
     }

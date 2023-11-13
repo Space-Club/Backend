@@ -1,7 +1,9 @@
 package com.spaceclub.user.controller;
 
 import com.spaceclub.club.domain.Club;
+import com.spaceclub.event.controller.dto.BookmarkedEventRequest;
 import com.spaceclub.event.domain.Event;
+import com.spaceclub.user.service.vo.UserBookmarkInfo;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.service.JwtService;
 import com.spaceclub.user.controller.dto.UserBookmarkedEventGetResponse;
@@ -21,6 +23,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -114,10 +118,20 @@ public class UserController {
         Page<Event> eventPages = userService.findAllBookmarkedEventPages(userId, pageable);
 
         List<UserBookmarkedEventGetResponse> bookmarkedEvents = eventPages.getContent().stream()
-                .map(event -> UserBookmarkedEventGetResponse.of(event, userService.findBookmarkStatus(userId, event)))
+                .map(UserBookmarkedEventGetResponse::from)
                 .toList();
 
         return new PageResponse<>(bookmarkedEvents, eventPages);
     }
 
+    @PatchMapping("/events/{eventId}")
+    public ResponseEntity<Void> bookmarkEvent(@PathVariable Long eventId,
+                                              @RequestBody BookmarkedEventRequest request,
+                                              HttpServletRequest servletRequest
+    ){
+        Long userId = jwtService.verifyUserId(servletRequest);
+        userService.changeBookmarkStatus(UserBookmarkInfo.of(eventId, userId, request.bookmark()));
+
+        return ResponseEntity.ok().build();
+    }
 }

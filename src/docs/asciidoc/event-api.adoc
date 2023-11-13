@@ -91,21 +91,3 @@ include::{snippets}/event/get/http-response.adoc[]
 
 include::{snippets}/event/get/response-fields.adoc[]
 :sectnums:
-
-=== 행사 북마크 상태 변경
-:sectnums!:
-==== Request
-include::{snippets}/event/bookmark/http-request.adoc[]
-
-===== Path Parameter
-include::{snippets}/event/bookmark/path-parameters.adoc[]
-
-===== Request Header
-include::{snippets}/event/bookmark/request-headers.adoc[]
-
-==== Request Body
-include::{snippets}/event/bookmark/request-fields.adoc[]
-
-===== Response Body
-include::{snippets}/event/bookmark/http-response.adoc[]
-:sectnums:
