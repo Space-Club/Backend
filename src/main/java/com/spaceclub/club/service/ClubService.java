@@ -200,4 +200,8 @@ public class ClubService {
         clubRepository.save(updatedClub);
     }
 
+    public Long countMember(Club club) {
+        return clubUserRepository.countByClub(club);
+    }
+
 }

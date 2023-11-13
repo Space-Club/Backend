@@ -59,7 +59,7 @@ public class InviteService {
         return invite.getCode();
     }
 
-    public void joinClub(String code, Long userId) {
+    public Long joinClub(String code, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
 
@@ -80,6 +80,17 @@ public class InviteService {
                 .build();
 
         clubUserRepository.save(clubUser);
+
+        return club.getId();
+    }
+
+    public Club requestToJoinClub(String code, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
+        Invite invite = inviteRepository.findByCode(code)
+                .orElseThrow(() -> new IllegalStateException("해당 초대코드를 보유한 클럽이 없습니다"));
+
+        return invite.getClub();
     }
 
 }

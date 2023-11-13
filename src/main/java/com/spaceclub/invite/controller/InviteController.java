@@ -1,10 +1,14 @@
 package com.spaceclub.invite.controller;
 
+import com.spaceclub.club.domain.Club;
+import com.spaceclub.club.service.ClubService;
 import com.spaceclub.global.jwt.service.JwtService;
+import com.spaceclub.invite.controller.dto.ClubRequestToJoinResponse;
 import com.spaceclub.invite.service.InviteService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +24,8 @@ public class InviteController {
     public static final String INVITE_LINK_PREFIX = "https://spaceclub.site/api/v1/clubs/invite/";
 
     private final InviteService service;
+
+    private final ClubService clubService;
 
     private final JwtService jwtService;
 
@@ -37,12 +43,27 @@ public class InviteController {
     }
 
     @PostMapping("/clubs/invite/{code}")
-    public ResponseEntity<Void> joinClub(@PathVariable String code, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<Map<String, Long>> joinClub(@PathVariable String code, HttpServletRequest httpServletRequest) {
         Long userId = jwtService.verifyUserId(httpServletRequest);
 
-        service.joinClub(code, userId);
+        Long clubId = service.joinClub(code, userId);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(
+                Map.of("clubId", clubId)
+        );
+    }
+
+    @GetMapping("/clubs/invite/{code}")
+    public ResponseEntity<ClubRequestToJoinResponse> requestToJoinClub(@PathVariable String code, HttpServletRequest httpServletRequest) {
+        Long userId = jwtService.verifyUserId(httpServletRequest);
+
+        Club club = service.requestToJoinClub(code, userId);
+
+        Long memberCount = clubService.countMember(club);
+
+        ClubRequestToJoinResponse response = ClubRequestToJoinResponse.from(club, memberCount);
+
+        return ResponseEntity.ok(response);
     }
 
 }
