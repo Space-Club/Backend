@@ -177,4 +177,12 @@ public class Event extends BaseTimeEntity {
         return this.eventInfo.getContent();
     }
 
+    public boolean isFormManaged() {
+        if (form == null || !form.isManaged()) {
+            return false;
+
+        }
+        return form.isManaged();
+    }
+
 }

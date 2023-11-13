@@ -4,6 +4,7 @@ import com.spaceclub.event.controller.dto.EventApplyRequest;
 import com.spaceclub.event.controller.dto.EventCreateRequest;
 import com.spaceclub.event.controller.dto.EventDetailGetResponse;
 import com.spaceclub.event.controller.dto.EventGetResponse;
+import com.spaceclub.event.domain.ApplicationStatus;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.service.EventService;
 import com.spaceclub.global.S3ImageUploader;
@@ -52,10 +53,7 @@ public class EventController {
     public ResponseEntity<PageResponse<EventGetResponse, Event>> getEvents(Pageable pageable) {
         Page<Event> events = eventService.getAll(pageable);
 
-        List<EventGetResponse> eventGetResponses = events.getContent()
-                .stream()
-                .map(EventGetResponse::from)
-                .toList();
+        List<EventGetResponse> eventGetResponses = events.getContent().stream().map(EventGetResponse::from).toList();
 
         return ResponseEntity.ok(new PageResponse<>(eventGetResponses, events));
     }
@@ -78,13 +76,13 @@ public class EventController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{eventId}/cancel")
-    public ResponseEntity<Void> cancelEvent(@PathVariable Long eventId, HttpServletRequest servletRequest) {
+    @DeleteMapping("/{eventId}/applications")
+    public ResponseEntity<EventApplicationDeleteResponse> cancelEvent(@PathVariable Long eventId, HttpServletRequest servletRequest) {
         Long userId = jwtService.verifyUserId(servletRequest);
 
-        eventService.cancelEvent(eventId, userId);
+        ApplicationStatus status = eventService.cancelEvent(eventId, userId);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(new EventApplicationDeleteResponse(status));
     }
 
 }

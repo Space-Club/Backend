@@ -16,6 +16,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
+import static com.spaceclub.event.domain.ApplicationStatus.CANCELED;
+import static com.spaceclub.event.domain.ApplicationStatus.CANCEL_REQUESTED;
 import static jakarta.persistence.FetchType.EAGER;
 import static lombok.AccessLevel.PROTECTED;
 
@@ -33,6 +35,7 @@ public class EventUser extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
 
+    @Getter
     @ManyToOne(fetch = EAGER, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -57,6 +60,24 @@ public class EventUser extends BaseTimeEntity {
 
     public Long getUserId() {
         return user.getId();
+    }
+
+    public EventUser setStatusByManaged(boolean managed) {
+        if (managed) {
+            return EventUser.builder()
+                    .id(this.id)
+                    .status(CANCEL_REQUESTED)
+                    .user(this.user)
+                    .event(this.event)
+                    .build();
+        }
+
+        return EventUser.builder()
+                .id(this.id)
+                .status(CANCELED)
+                .user(this.user)
+                .event(this.event)
+                .build();
     }
 
 }
