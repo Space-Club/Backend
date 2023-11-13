@@ -3,8 +3,10 @@ oauth:
   kakao:
     access:
       client-id: ENC(1HPXzg0UKdo61X7AAZeCMZXT1/gU0rhRhDPO3XucG+9yI3uAxIewoZT/E1ybGvsT)
-      redirect-url: https://spaceclub.vercel.app/oauths/kakao/callback
+#      redirect-url: https://spaceclub.vercel.app/oauths/kakao/callback
+      redirect-url: http://localhost:5173/
       client-secret: ENC(azg1Eb4DTVE7mvByLggSse6ZZGAseZKavbcdVHmux7Oob1fnk2+VlVvwdJB61VcJ)
+      admin-key: ENC(sUWeu9FC4Ha8cfXJWA2LRPWCakRV9IZs7U4ieD5MDF2b7KrJnkIcbURsgDCzGxnJ)
 
 jwt:
   header: access-token
