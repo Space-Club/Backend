@@ -60,6 +60,14 @@ public class EventController {
         return ResponseEntity.ok(new PageResponse<>(eventGetResponses, events));
     }
 
+    @DeleteMapping("/{eventId}")
+    public ResponseEntity<Void> deleteEvent(@PathVariable Long eventId, HttpServletRequest servletRequest) {
+        Long userId = jwtService.verifyUserId(servletRequest);
+        eventService.delete(eventId, userId);
+
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/searches")
     public ResponseEntity<PageResponse<EventSearchGetResponse, Event>> getSearchEvents(@RequestParam String keyword, Pageable pageable) {
         Page<Event> events = eventService.getSearchEvents(keyword, pageable);

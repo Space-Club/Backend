@@ -1,7 +1,6 @@
 package com.spaceclub.form.domain;
 
 import com.spaceclub.global.BaseTimeEntity;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,6 +16,8 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jakarta.persistence.CascadeType.PERSIST;
+import static jakarta.persistence.CascadeType.REMOVE;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -37,7 +38,7 @@ public class Form extends BaseTimeEntity {
     private boolean managed;
 
     @Getter
-    @OneToMany(mappedBy = "form", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "form", cascade = {PERSIST, REMOVE}, fetch = FetchType.EAGER)
     private final List<FormOption> options = new ArrayList<>();
 
     @Builder

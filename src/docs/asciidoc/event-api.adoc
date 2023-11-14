@@ -112,6 +112,25 @@ include::{snippets}/event/get/http-response.adoc[]
 include::{snippets}/event/get/response-fields.adoc[]
 :sectnums:
 
+=== 행사 삭제
+:sectnums!:
+==== Request
+
+include::{snippets}/event/delete/http-request.adoc[]
+===== Path Parameter
+
+include::{snippets}/event/delete/path-parameters.adoc[]
+
+===== Request Header
+
+include::{snippets}/event/delete/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/event/delete/http-response.adoc[]
+
+:sectnums:
+
 === 행사 북마크 상태 변경
 :sectnums!:
 ==== Request

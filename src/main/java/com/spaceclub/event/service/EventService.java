@@ -48,6 +48,11 @@ public class EventService {
     }
 
     @Transactional
+    public void delete(Long eventId, Long userId) {
+        eventRepository.deleteById(eventId);
+    }
+
+    @Transactional
     public void applyEvent(Long eventId, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 회원입니다.")

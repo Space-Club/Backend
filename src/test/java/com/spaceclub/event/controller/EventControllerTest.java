@@ -395,4 +395,32 @@ class EventControllerTest {
                 );
     }
 
+    @Test
+    @WithMockUser
+    public void 행사_삭제에_성공한다() throws Exception {
+        // given
+        given(jwtService.verifyUserId(any())).willReturn(1L);
+        doNothing().when(eventService).delete(any(Long.class), any(Long.class));
+
+        // when
+        ResultActions actions = mvc.perform(delete("/api/v1/events/{eventId}", 1L)
+                .header(AUTHORIZATION, "Access Token")
+                .with(csrf())
+        );
+
+        // then
+        actions
+                .andExpect(status().isNoContent())
+                .andDo(document("event/delete",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("액세스 토큰")
+                        ),
+                        pathParameters(
+                                parameterWithName("eventId").description("행사 ID")
+                        ))
+                );
+    }
+
 }
