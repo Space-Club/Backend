@@ -11,6 +11,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 
@@ -22,6 +23,7 @@ public class KakaoOauthInfoSender {
     private static final String REQUEST_INFO_URL = "https://kapi.kakao.com/v2/user/me";
     private static final String GRANT_TYPE = "authorization_code";
     private static final String LOGOUT_URL = "https://kapi.kakao.com/v1/user/logout";
+    private static final String UNLINK_URL = "https://kapi.kakao.com/v1/user/unlink";
     private static final String ADMIN_KEY_PREFIX = "KakaoaAK ";
 
     private final RestTemplate restTemplate;
@@ -64,15 +66,7 @@ public class KakaoOauthInfoSender {
     }
 
     public void logout(User user) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(APPLICATION_FORM_URLENCODED);
-        httpHeaders.set(HttpHeaders.AUTHORIZATION, ADMIN_KEY_PREFIX + kakaoProperties.getAdminKey());
-
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("target_id_type", "user_id");
-        body.add("target_id", user.getOauthId());
-
-        HttpEntity<Object> requestEntity = new HttpEntity<>(body, httpHeaders);
+        HttpEntity<Object> requestEntity = generateRequest(user);
 
         Long id = restTemplate.exchange(
                 LOGOUT_URL,
@@ -83,6 +77,32 @@ public class KakaoOauthInfoSender {
 
         if (id == null) throw new IllegalArgumentException("로그아웃 실패");
         if (id != Long.parseLong(user.getOauthId())) throw new IllegalArgumentException("로그아웃 실패");
+    }
+
+    public void unlink(User user) {
+        HttpEntity<Object> requestEntity = generateRequest(user);
+
+        Long id = restTemplate.exchange(
+                UNLINK_URL,
+                POST,
+                requestEntity,
+                Long.class
+        ).getBody();
+
+        if (id == null) throw new IllegalArgumentException("카카오 계정 연결 끊기에 실패했습니다.");
+        if (id != Long.parseLong(user.getOauthId())) throw new IllegalArgumentException("카카오 계정 연결 끊기에 실패했습니다.");
+    }
+
+    private HttpEntity<Object> generateRequest(User user) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(APPLICATION_FORM_URLENCODED);
+        httpHeaders.set(AUTHORIZATION, ADMIN_KEY_PREFIX + kakaoProperties.getAdminKey());
+
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("target_id_type", "user_id");
+        body.add("target_id", user.getOauthId());
+
+        return new HttpEntity<>(body, httpHeaders);
     }
 
 }
