@@ -116,9 +116,8 @@ public class Club extends BaseTimeEntity {
         this.id = club.getId();
         this.logoImageUrl = club.getLogoImageUrl();
         this.coverImageUrl = club.getCoverImageUrl();
-        this.name = club.getName().equals(name) ? club.getName() : name;
-        this.info = club.getInfo().equals(info) ? club.getInfo() : info;
-
+        this.name = name;
+        this.info = info;
         this.createdAt = club.getCreatedAt();
     }
 
