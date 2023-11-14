@@ -126,6 +126,14 @@ public class User {
     public User updateRequiredInfo(String name, String phoneNumber) {
         this.requiredInfo = generateRequiredInfo(name, phoneNumber);
         this.status = REGISTERED;
+
+        return this;
+    }
+
+    public User changeProfileImageUrl(String profileUrl) {
+        if (profileUrl != null) throw new IllegalArgumentException("프로필 이미지는 null이 될 수 없습니다.");
+        this.profileImageUrl = profileUrl;
+
         return this;
     }
 

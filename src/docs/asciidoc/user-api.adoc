@@ -183,7 +183,7 @@ include::{snippets}/user/delete/http-request.adoc[]
 include::{snippets}/user/delete/request-headers.adoc[]
 
 ===== Response Body
-include::{snippets}/user/bookmark/http-response.adoc[]
+include::{snippets}/user/delete/http-response.adoc[]
 :sectnums:
 
 === 유저 로그아웃
@@ -195,5 +195,20 @@ include::{snippets}/user/logout/http-request.adoc[]
 include::{snippets}/user/logout/request-headers.adoc[]
 
 ===== Response Body
-include::{snippets}/user/bookmark/http-response.adoc[]
+include::{snippets}/user/logout/http-response.adoc[]
+:sectnums:
+
+=== 유저 프로필 이미지 변경
+:sectnums!:
+==== Request
+include::{snippets}/user/changeProfileImage/http-request.adoc[]
+
+===== Request Header
+include::{snippets}/user/changeProfileImage/request-headers.adoc[]
+
+===== Request Part
+include::{snippets}/user/changeProfileImage/request-parts.adoc[]
+
+===== Response Body
+include::{snippets}/user/changeProfileImage/http-response.adoc[]
 :sectnums:

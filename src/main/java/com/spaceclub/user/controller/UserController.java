@@ -11,8 +11,8 @@ import com.spaceclub.user.controller.dto.UserCodeRequest;
 import com.spaceclub.user.controller.dto.UserEventGetResponse;
 import com.spaceclub.user.controller.dto.UserLoginResponse;
 import com.spaceclub.user.controller.dto.UserProfileImageResponse;
-import com.spaceclub.user.controller.dto.UserProfileUpdateRequest;
 import com.spaceclub.user.controller.dto.UserProfileResponse;
+import com.spaceclub.user.controller.dto.UserProfileUpdateRequest;
 import com.spaceclub.user.controller.dto.UserRequiredInfoRequest;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.service.UserService;
@@ -22,6 +22,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +31,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.util.List;
@@ -157,6 +160,17 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(HttpServletRequest servletRequest) {
         Long userId = jwtService.verifyUserId(servletRequest);
         userService.deleteUser(userId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping(value = "/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> changeUserProfileImage(
+            @RequestPart MultipartFile userImage,
+            HttpServletRequest servletRequest
+    ) {
+        Long userId = jwtService.verifyUserId(servletRequest);
+        userService.changeUserProfileImage(userImage, userId);
 
         return ResponseEntity.noContent().build();
     }

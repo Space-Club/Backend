@@ -5,6 +5,7 @@ import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.repository.EventUserRepository;
+import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.global.oauth.config.KakaoOauthInfoSender;
 import com.spaceclub.global.oauth.config.vo.KakaoTokenInfo;
 import com.spaceclub.global.oauth.config.vo.KakaoUserInfo;
@@ -22,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,6 +42,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final BookmarkRepository bookmarkRepository;
+
+    private final S3ImageUploader imageUploader;
 
     public Page<Event> findAllEventPages(Long userId, Pageable pageable) {
         return eventUserRepository.findAllByUserId(userId, pageable);
@@ -69,15 +73,13 @@ public class UserService {
     }
 
     public UserProfileInfo getUserProfile(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        User user = getUser(userId);
 
         return new UserProfileInfo(user.getUsername(), user.getPhoneNumber(), user.getProfileImageUrl());
     }
 
     public String getUserProfileImage(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        User user = getUser(userId);
 
         return user.getProfileImageUrl();
     }
@@ -91,8 +93,7 @@ public class UserService {
     }
 
     public Page<Event> findAllBookmarkedEventPages(Long userId, Pageable pageable) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        User user = getUser(userId);
 
         return bookmarkRepository.findBookmarkedEventPages(user, pageable);
     }
@@ -107,20 +108,30 @@ public class UserService {
     }
 
     public void logout(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        User user = getUser(userId);
 
         kakaoOauthInfoSender.logout(user);
     }
 
     @Transactional
     public void deleteUser(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        User user = getUser(userId);
 
         userRepository.delete(user); // 추후 정책 반영에 따라 수정 예정
 
         kakaoOauthInfoSender.unlink(user);
+    }
+
+    @Transactional
+    public void changeUserProfileImage(MultipartFile userImage, Long userId) {
+        String profileUrl = imageUploader.uploadUserProfileImage(userImage);
+        User user = getUser(userId);
+        userRepository.save(user.changeProfileImageUrl(profileUrl));
+    }
+
+    private User getUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
     }
 
 }

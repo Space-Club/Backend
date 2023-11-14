@@ -18,7 +18,7 @@ import java.util.Date;
 public class S3ImageUploader {
 
     private static final String DOT = ".";
-    public static final String DATE_FORMAT = "yyyyMMdd_HHmmss";
+    private static final String DATE_FORMAT = "yyyyMMdd_HHmmss";
 
     private final AmazonS3Client amazonS3Client;
 
@@ -43,19 +43,19 @@ public class S3ImageUploader {
         return upload(userImage, userProfileImageFolder);
     }
 
-    private String upload(MultipartFile userImage, String userProfileImageFolder) {
-        String originalFilename = userImage.getOriginalFilename();
+    private String upload(MultipartFile image, String folder) {
+        String originalFilename = image.getOriginalFilename();
         if (originalFilename == null) throw new IllegalArgumentException("파일 이름이 존재하지 않습니다.");
 
         String fileName = createFileName(originalFilename);
         ObjectMetadata objectMetaData = new ObjectMetadata();
 
-        objectMetaData.setContentType(userImage.getContentType());
-        objectMetaData.setContentLength(userImage.getSize());
+        objectMetaData.setContentType(image.getContentType());
+        objectMetaData.setContentLength(image.getSize());
 
         try {
             amazonS3Client.putObject(
-                    new PutObjectRequest(userProfileImageFolder, fileName, userImage.getInputStream(), objectMetaData)
+                    new PutObjectRequest(folder, fileName, image.getInputStream(), objectMetaData)
                             .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (IOException e) {
             throw new IllegalStateException("파일 업로드에 실패했습니다.");
