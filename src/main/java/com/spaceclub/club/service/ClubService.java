@@ -14,6 +14,7 @@ import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Category;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.repository.EventRepository;
+import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -41,9 +44,18 @@ public class ClubService {
 
     private final ClubNoticeRepository clubNoticeRepository;
 
-    public Club createClub(Club club, Long clubId) {
+    private final S3ImageUploader imageUploader;
+
+    private static final String CLUB_LOGO_S3_URL = "https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/club-logo/";
+
+    public Club createClub(Club club, Long clubId, MultipartFile logoImage) throws IOException {
         User user = userRepository.findById(clubId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다"));
+
+        if (logoImage != null) {
+            String logoImageUrl = CLUB_LOGO_S3_URL + imageUploader.uploadClubLogoImage(logoImage);
+            club = club.addLogoImageUrl(logoImageUrl);
+        }
 
         ClubUser clubUser = ClubUser.builder()
                 .club(club)
@@ -132,13 +144,16 @@ public class ClubService {
         Long userId = updateVo.userId();
         Long noticeId = updateVo.noticeId();
 
-        ClubUser clubUser = validateClubAndGetClubUser(clubId, userId);
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
+
+        ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
+                .orElseThrow(() -> new IllegalArgumentException("클럽의 멤버가 아닙니다."));
 
         if (!clubUser.isManager()) throw new IllegalStateException("해당 권한이 없습니다.");
 
         ClubNotice clubNotice = clubNoticeRepository.findById(noticeId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 공지사항이 없습니다."));
-        Club club = clubRepository.findById(clubId).get();
         List<ClubNotice> notices = club.getNotices();
 
         for (ClubNotice notice : notices) {
@@ -185,15 +200,23 @@ public class ClubService {
     }
 
     public void validateClubManager(Long clubId, Long userId) {
-        ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
-                .orElseThrow(() -> new IllegalArgumentException("클럽의 멤버가 아닙니다."));
+        ClubUser clubUser = validateClubAndGetClubUser(clubId, userId);
 
         if (!clubUser.isManager()) throw new IllegalStateException("해당 권한이 없습니다.");
     }
 
-    public void updateClub(Long clubId, Club newClub) {
+    public void updateClub(Club newClub, Long userId, MultipartFile logoImage) throws IOException {
+        Long clubId = newClub.getId();
+
+        validateClubManager(clubId, userId);
+
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
+
+        if (logoImage != null) {
+            String logoImageUrl = CLUB_LOGO_S3_URL + imageUploader.uploadClubLogoImage(logoImage);
+            club = club.addLogoImageUrl(logoImageUrl);
+        }
 
         Club updatedClub = club.update(newClub);
 

@@ -7,11 +7,11 @@ public record ClubUpdateRequest(
         String info
 ) {
 
-    public Club toEntity(String logoImageUrl) {
+    public Club toEntity(Long clubId) {
         return Club.builder()
+                .id(clubId)
                 .name(name)
                 .info(info)
-                .logoImageUrl(logoImageUrl)
                 .build();
     }
 

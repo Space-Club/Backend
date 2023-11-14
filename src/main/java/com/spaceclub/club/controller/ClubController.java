@@ -19,7 +19,6 @@ import com.spaceclub.club.service.vo.ClubNoticeDelete;
 import com.spaceclub.club.service.vo.ClubNoticeUpdate;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
-import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.service.JwtService;
 import com.spaceclub.invite.service.InviteService;
@@ -56,8 +55,6 @@ public class ClubController {
 
     private final InviteService inviteService;
 
-    private final S3ImageUploader uploader;
-
     private final JwtService jwtService;
 
     @PostMapping(value = "/clubs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -67,14 +64,9 @@ public class ClubController {
                                              HttpServletRequest httpServletRequest) throws IOException {
 
         Long userId = jwtService.verifyUserId(httpServletRequest);
+        Club newClub = request.toEntity();
 
-        String logoImageUrl = null;
-        if (logoImage != null) {
-            logoImageUrl = uploader.uploadClubLogoImage(logoImage);
-        }
-
-        Club newClub = request.toEntity(logoImageUrl);
-        Club createdClub = clubService.createClub(newClub, userId);
+        Club createdClub = clubService.createClub(newClub, userId, logoImage);
         Long id = createdClub.getId();
 
         URI location = uriBuilder
@@ -102,15 +94,9 @@ public class ClubController {
                                            @RequestPart(value = "logoImage", required = false) MultipartFile logoImage,
                                            HttpServletRequest httpServletRequest) throws IOException {
         Long userId = jwtService.verifyUserId(httpServletRequest);
-        clubService.validateClubManager(clubId, userId);
 
-        String logoImageUrl = null;
-        if (logoImage != null) {
-            logoImageUrl = uploader.uploadClubLogoImage(logoImage);
-        }
-
-        Club newClub = request.toEntity(logoImageUrl);
-        clubService.updateClub(clubId, newClub);
+        Club newClub = request.toEntity(clubId);
+        clubService.updateClub(newClub, userId, logoImage);
 
         return ResponseEntity.noContent().build();
     }
