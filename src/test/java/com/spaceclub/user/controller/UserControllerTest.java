@@ -23,12 +23,18 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.spaceclub.club.ClubTestFixture.club1;
 import static com.spaceclub.club.ClubTestFixture.club2;
@@ -40,13 +46,17 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -61,8 +71,10 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -286,6 +298,7 @@ class UserControllerTest {
                         )
                 );
     }
+
     @Test
     @WithMockUser
     void 유저의_프로필_수정에_성공한다() throws Exception {
@@ -510,6 +523,49 @@ class UserControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestHeaders(
                                 headerWithName(AUTHORIZATION).description("액세스 토큰")
+                        )
+                ));
+    }
+
+    @Test
+    @WithMockUser
+    void 유저의_이미지_변경에_성공한다() throws Exception {
+        // given
+        Long userId = 1L;
+        given(jwtService.verifyUserId(any())).willReturn(userId);
+        doNothing().when(userService).changeUserProfileImage(any(MultipartFile.class), any(Long.class));
+
+        MockMultipartFile userImage = new MockMultipartFile(
+                "userImage",
+                "image.png",
+                IMAGE_JPEG_VALUE,
+                UUID.randomUUID().toString().getBytes()
+        );
+
+        MockMultipartHttpServletRequestBuilder requestBuilder = multipart("/api/v1/users/images");
+        requestBuilder.with(request -> {
+            request.setMethod(HttpMethod.PATCH.name());
+            return request;
+        });
+
+        // when, then
+        mvc.perform(requestBuilder
+                        .file(userImage)
+                        .contentType(MULTIPART_FORM_DATA_VALUE)
+                        .header(AUTHORIZATION, "Access Token")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .with(csrf()))
+                .andDo(print())
+                .andExpect(status().isNoContent())
+                .andDo(document("user/changeProfileImage",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestParts(
+                                partWithName("userImage").description("유저 프로필 이미지")
+                        ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("액세스 토큰"),
+                                headerWithName(CONTENT_TYPE).description(MULTIPART_FORM_DATA_VALUE)
                         )
                 ));
     }
