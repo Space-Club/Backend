@@ -12,20 +12,20 @@ public class ControllerAdvice {
     @ExceptionHandler(value = IllegalArgumentException.class)
     public ResponseEntity<String> illegalArgumentException(IllegalArgumentException exception) {
         return ResponseEntity.badRequest()
-                .body(exception.getMessage());
+                .body(exception.getClass() + " : " + exception.getMessage());
     }
 
     @Order(2)
     @ExceptionHandler(value = IllegalStateException.class)
     public ResponseEntity<String> illegalStateException(IllegalStateException exception) {
         return ResponseEntity.badRequest()
-                .body(exception.getMessage());
+                .body(exception.getClass() + " : " + exception.getMessage());
     }
 
     @Order(3)
     @ExceptionHandler
     public ResponseEntity<String> exceptionHandler(Exception exception) {
-        return ResponseEntity.internalServerError().body(exception.getMessage());
+        return ResponseEntity.internalServerError().body(exception.getClass() + " : " + exception.getMessage());
     }
 
 }

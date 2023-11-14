@@ -144,13 +144,16 @@ public class ClubService {
         Long userId = updateVo.userId();
         Long noticeId = updateVo.noticeId();
 
-        ClubUser clubUser = validateClubAndGetClubUser(clubId, userId);
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
+
+        ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
+                .orElseThrow(() -> new IllegalArgumentException("클럽의 멤버가 아닙니다."));
 
         if (!clubUser.isManager()) throw new IllegalStateException("해당 권한이 없습니다.");
 
         ClubNotice clubNotice = clubNoticeRepository.findById(noticeId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 공지사항이 없습니다."));
-        Club club = clubRepository.findById(clubId).get();
         List<ClubNotice> notices = club.getNotices();
 
         for (ClubNotice notice : notices) {
