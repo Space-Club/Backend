@@ -3,6 +3,7 @@ package com.spaceclub.event.domain;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.form.domain.Form;
 import com.spaceclub.global.BaseTimeEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -66,11 +67,11 @@ public class Event extends BaseTimeEntity {
     private Club club;
 
     @Getter
-    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<EventUser> eventUsers = new ArrayList<>();
 
     @Getter
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "form_id")
     private Form form;
 
