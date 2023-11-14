@@ -22,13 +22,13 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 public class FormOptionUser extends BaseTimeEntity {
 
     @Id
-    @Column(name = "form_item_user_id")
+    @Column(name = "form_option_user_id")
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @Getter
     @ManyToOne
-    @JoinColumn(name = "form_item_id")
+    @JoinColumn(name = "form_option_id")
     private FormOption formOption;
 
     @Getter
@@ -62,6 +62,10 @@ public class FormOptionUser extends BaseTimeEntity {
 
     public String getOptionTitle() {
         return formOption.getTitle();
+    }
+
+    public Long getFormOptionId() {
+        return formOption.getId();
     }
 
 }

@@ -43,7 +43,7 @@ public class EventService {
         return eventRepository.findAll(pageable);
     }
 
-    public Page<Event> getSearchEvents(String keyword, Pageable pageable) {
+    public Page<Event> getSearchEvents(String keyword, Pageable pageable, Long userId) {
         return eventRepository.findByEventInfo_TitleContainsIgnoreCase(keyword, pageable);
     }
 

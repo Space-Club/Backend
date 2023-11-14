@@ -69,8 +69,9 @@ public class EventController {
     }
 
     @GetMapping("/searches")
-    public ResponseEntity<PageResponse<EventSearchGetResponse, Event>> getSearchEvents(@RequestParam String keyword, Pageable pageable) {
-        Page<Event> events = eventService.getSearchEvents(keyword, pageable);
+    public ResponseEntity<PageResponse<EventSearchGetResponse, Event>> getSearchEvents(@RequestParam String keyword, Pageable pageable, HttpServletRequest servletRequest) {
+        Long userId = jwtService.verifyUserId(servletRequest);
+        Page<Event> events = eventService.getSearchEvents(keyword, pageable, userId);
 
         List<EventSearchGetResponse> eventSearchGetResponses = events.getContent()
                 .stream()
