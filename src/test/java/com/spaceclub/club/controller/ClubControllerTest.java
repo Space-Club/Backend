@@ -5,7 +5,6 @@ import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.controller.dto.ClubCreateRequest;
 import com.spaceclub.club.controller.dto.ClubNoticeCreateRequest;
 import com.spaceclub.club.controller.dto.ClubNoticeUpdateRequest;
-import com.spaceclub.club.controller.dto.ClubScheduleGetResponse;
 import com.spaceclub.club.controller.dto.ClubScheduleGetResponse.ClubScheduleGetResponseInfo;
 import com.spaceclub.club.controller.dto.ClubUpdateRequest;
 import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
@@ -15,7 +14,6 @@ import com.spaceclub.club.service.ClubService;
 import com.spaceclub.club.service.vo.ClubNoticeUpdate;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
-import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.global.jwt.service.JwtService;
 import com.spaceclub.invite.service.InviteService;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -32,6 +30,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -95,9 +94,6 @@ class ClubControllerTest {
     private ClubService clubService;
 
     @MockBean
-    private S3ImageUploader uploader;
-
-    @MockBean
     private InviteService inviteService;
 
     @MockBean
@@ -107,7 +103,7 @@ class ClubControllerTest {
     @WithMockUser
     void 클럽_생성에_성공한다() throws Exception {
         // given
-        given(clubService.createClub(any(Club.class), any(Long.class))).willReturn(
+        given(clubService.createClub(any(Club.class), any(Long.class), any(MultipartFile.class))).willReturn(
                 Club.builder()
                         .id(1L)
                         .name("연사모")

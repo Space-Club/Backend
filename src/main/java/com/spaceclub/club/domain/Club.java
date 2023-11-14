@@ -1,6 +1,5 @@
 package com.spaceclub.club.domain;
 
-import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.BaseTimeEntity;
 import com.spaceclub.invite.domain.Invite;
 import jakarta.persistence.CascadeType;
@@ -29,8 +28,6 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @EqualsAndHashCode(of = "id", callSuper = false)
 public class Club extends BaseTimeEntity {
 
-    private static final String CLUB_LOGO_S3_URL = "https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/club-logo/";
-
     @Id
     @Column(name = "club_id")
     @Getter
@@ -42,6 +39,7 @@ public class Club extends BaseTimeEntity {
     private String name;
 
     @Lob
+    @Getter
     private String logoImageUrl;
 
     @Lob
@@ -100,25 +98,36 @@ public class Club extends BaseTimeEntity {
         }
     }
 
-    public String getLogoImageUrl() {
-        if (logoImageUrl == null) {
-            return null;
+    private Club(Club club, String logoImageUrl) {
+        this.id = club.getId();
+        this.name = club.getName();
+        this.info = club.getInfo();
+        this.logoImageUrl = logoImageUrl;
+        this.coverImageUrl = club.getCoverImageUrl();
+
+        if (club.getNotices() != null) {
+            this.notices = club.getNotices();
         }
-        return CLUB_LOGO_S3_URL + logoImageUrl;
+
+        this.createdAt = club.getCreatedAt();
+    }
+
+    private Club(Club club, String name, String info) {
+        this.id = club.getId();
+        this.logoImageUrl = club.getLogoImageUrl();
+        this.coverImageUrl = club.getCoverImageUrl();
+        this.name = club.getName().equals(name) ? club.getName() : name;
+        this.info = club.getInfo().equals(info) ? club.getInfo() : info;
+
+        this.createdAt = club.getCreatedAt();
     }
 
     public Club update(Club newClub) {
-        if (newClub.getName() != null) {
-            this.name = newClub.getName();
-        }
-        if (newClub.getInfo() != null) {
-            this.info = newClub.getInfo();
-        }
-        if (newClub.getLogoImageUrl() != null) {
-            this.logoImageUrl = newClub.getLogoImageUrl();
-        }
+        return new Club(this, newClub.getName(), newClub.getInfo());
+    }
 
-        return this;
+    public Club addLogoImageUrl(String logoImageUrl) {
+        return new Club(this, logoImageUrl);
     }
 
 }
