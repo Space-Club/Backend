@@ -118,7 +118,9 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
-        userRepository.delete(user);
+        userRepository.delete(user); // 추후 정책 반영에 따라 수정 예정
+
+        kakaoOauthInfoSender.unlink(user);
     }
 
 }
