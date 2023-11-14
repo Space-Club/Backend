@@ -83,6 +83,10 @@ include::{snippets}/event/getAll/response-fields.adoc[]
 ==== Request
 
 include::{snippets}/event/search/http-request.adoc[]
+===== Request Header
+
+include::{snippets}/event/search/request-headers.adoc[]
+
 ===== Query Parameter
 
 include::{snippets}/event/search/query-parameters.adoc[]
