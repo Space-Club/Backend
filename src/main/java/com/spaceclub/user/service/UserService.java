@@ -113,4 +113,12 @@ public class UserService {
         kakaoOauthInfoSender.logout(user);
     }
 
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+        userRepository.delete(user);
+    }
+
 }
