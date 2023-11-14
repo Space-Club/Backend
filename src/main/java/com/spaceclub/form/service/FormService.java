@@ -60,16 +60,16 @@ public class FormService {
     public void createApplicationForm(Long userId, Long eventId, List<FormOptionUser> formOptionUsers) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
 
-        List<FormOptionUser> updatedFormOptionUsers = formOptionUsers.stream()
-                .map(formOptionUser -> {
-                    FormOption formOption = formOptionRepository.findById(formOptionUser.getFormOption().getId())
-                            .orElseThrow(() -> new IllegalStateException("존재하지 않는 폼 옵션 입니다."));
+        for (FormOptionUser formOptionUser : formOptionUsers) {
+            FormOption formOption = formOptionRepository.findById(formOptionUser.getFormOptionId())
+                    .orElseThrow(() -> new IllegalStateException("존재하지 않는 폼 옵션 입니다."));
 
-                    return formOptionUser.registerFormOptionAndUser(formOption, user);
-                })
-                .toList();
+            FormOptionUser registeredFormOptionUser = formOptionUser.registerFormOptionAndUser(formOption, user);
+            formOptionUserRepository.save(registeredFormOptionUser);
+            formOption.addFormOptionUser(registeredFormOptionUser);
+            formOptionRepository.save(formOption);
+        }
 
-        formOptionUserRepository.saveAll(updatedFormOptionUsers);
         eventService.applyEvent(eventId, userId);
     }
 

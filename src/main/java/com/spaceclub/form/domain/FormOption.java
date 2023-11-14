@@ -69,4 +69,8 @@ public class FormOption {
                 .build();
     }
 
+    public void addFormOptionUser(FormOptionUser optionUser) {
+        optionUsers.add(optionUser);
+    }
+
 }
