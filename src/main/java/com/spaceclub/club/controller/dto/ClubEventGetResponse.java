@@ -1,7 +1,7 @@
 package com.spaceclub.club.controller.dto;
 
-import com.spaceclub.event.domain.Category;
 import com.spaceclub.event.domain.Event;
+import com.spaceclub.event.domain.EventCategory;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -31,7 +31,7 @@ public record ClubEventGetResponse(
                 event.getLocation(),
                 event.getClubName(),
                 event.getClubLogoImageUrl(),
-                event.getCategory().equals(Category.CLUB) ? "CLUB" : "ALL"
+                event.getCategory().equals(EventCategory.CLUB) ? "CLUB" : "ALL"
         );
     }
 

@@ -11,8 +11,8 @@ import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.club.service.vo.ClubNoticeDelete;
 import com.spaceclub.club.service.vo.ClubNoticeUpdate;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
-import com.spaceclub.event.domain.Category;
 import com.spaceclub.event.domain.Event;
+import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.repository.EventRepository;
 import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.user.domain.User;
@@ -192,7 +192,7 @@ public class ClubService {
 
         if (!clubUser.isManager()) throw new IllegalStateException("해당 권한이 없습니다.");
 
-        List<Event> events = eventRepository.findAllByClub_IdAndCategory(clubId, Category.CLUB);
+        List<Event> events = eventRepository.findAllByClub_IdAndCategory(clubId, EventCategory.CLUB);
 
         return events.stream()
                 .map(ClubScheduleGetResponseInfo::new)

@@ -46,7 +46,7 @@ public class Event extends BaseTimeEntity {
 
     @Getter
     @Enumerated(EnumType.STRING)
-    private Category category;
+    private EventCategory category;
 
     @Getter
     @Embedded
@@ -78,7 +78,7 @@ public class Event extends BaseTimeEntity {
     @Builder
     private Event(
             Long id,
-            Category category,
+            EventCategory category,
             EventInfo eventInfo,
             BankInfo bankInfo,
             TicketInfo ticketInfo,
