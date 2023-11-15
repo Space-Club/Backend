@@ -2,7 +2,6 @@ package com.spaceclub.event;
 
 import com.spaceclub.event.domain.ApplicationStatus;
 import com.spaceclub.event.domain.BankInfo;
-import com.spaceclub.event.domain.Category;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventInfo;
 import com.spaceclub.event.domain.EventUser;
@@ -12,6 +11,8 @@ import com.spaceclub.event.domain.TicketInfo;
 import java.time.LocalDateTime;
 
 import static com.spaceclub.club.ClubTestFixture.club1;
+import static com.spaceclub.event.domain.EventCategory.CLUB;
+import static com.spaceclub.event.domain.EventCategory.SHOW;
 import static com.spaceclub.user.UserTestFixture.user1;
 
 public class EventTestFixture {
@@ -51,7 +52,7 @@ public class EventTestFixture {
     public static Event event1() {
         return Event.builder()
                 .id(1L)
-                .category(Category.SHOW)
+                .category(SHOW)
                 .eventInfo(eventInfo())
                 .ticketInfo(ticketInfo())
                 .bankInfo(bankInfo())
@@ -63,7 +64,7 @@ public class EventTestFixture {
     public static Event event2() {
         return Event.builder()
                 .id(2L)
-                .category(Category.SHOW)
+                .category(SHOW)
                 .eventInfo(eventInfo())
                 .ticketInfo(ticketInfo())
                 .bankInfo(bankInfo())
@@ -75,7 +76,7 @@ public class EventTestFixture {
     public static Event event3() {
         return Event.builder()
                 .id(3L)
-                .category(Category.CLUB)
+                .category(CLUB)
                 .eventInfo(eventInfo())
                 .ticketInfo(ticketInfo())
                 .bankInfo(bankInfo())
