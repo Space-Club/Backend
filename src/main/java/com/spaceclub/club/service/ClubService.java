@@ -1,6 +1,5 @@
 package com.spaceclub.club.service;
 
-import com.spaceclub.club.controller.dto.ClubScheduleGetResponse.ClubScheduleGetResponseInfo;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubNotice;
 import com.spaceclub.club.domain.ClubUser;
@@ -187,16 +186,12 @@ public class ClubService {
         clubNoticeRepository.deleteById(noticeId);
     }
 
-    public List<ClubScheduleGetResponseInfo> getClubSchedules(Long clubId, Long userId) {
+    public List<Event> getClubSchedules(Long clubId, Long userId) {
         ClubUser clubUser = validateClubAndGetClubUser(clubId, userId);
 
         if (!clubUser.isManager()) throw new IllegalStateException("해당 권한이 없습니다.");
 
-        List<Event> events = eventRepository.findAllByClub_IdAndCategory(clubId, EventCategory.CLUB);
-
-        return events.stream()
-                .map(ClubScheduleGetResponseInfo::new)
-                .toList();
+        return eventRepository.findAllByClub_IdAndCategory(clubId, EventCategory.CLUB);
     }
 
     public void validateClubManager(Long clubId, Long userId) {
@@ -225,6 +220,16 @@ public class ClubService {
 
     public Long countMember(Club club) {
         return clubUserRepository.countByClub(club);
+    }
+
+    public String getManagerProfileImageUrl(Long clubId) {
+        ClubUser clubUser = clubUserRepository.findByClub_IdAndRole(clubId, ClubUserRole.MANAGER);
+        Long userId = clubUser.getUserId();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
+
+        return user.getProfileImageUrl();
     }
 
 }

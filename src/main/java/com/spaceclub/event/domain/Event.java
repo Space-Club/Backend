@@ -169,12 +169,12 @@ public class Event extends BaseTimeEntity {
         return formInfo.getFormOpenDate().toLocalDate();
     }
 
-    public LocalTime getFormCloseDate() {
-        return formInfo.getFormCloseDate().toLocalTime();
+    public LocalDate getFormCloseDate() {
+        return formInfo.getFormCloseDate().toLocalDate();
     }
 
-    public LocalDate getFormOpenTime() {
-        return formInfo.getFormOpenDate().toLocalDate();
+    public LocalTime getFormOpenTime() {
+        return formInfo.getFormOpenDate().toLocalTime();
     }
 
     public LocalTime getFormCloseTime() {
@@ -187,6 +187,10 @@ public class Event extends BaseTimeEntity {
 
     public String getContent() {
         return this.eventInfo.getContent();
+    }
+
+    public String getManagerName() {
+        return this.eventInfo.getManagerName();
     }
 
     public boolean isFormManaged() {

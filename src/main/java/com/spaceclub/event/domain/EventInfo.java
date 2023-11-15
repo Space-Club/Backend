@@ -53,6 +53,7 @@ public class EventInfo {
 
     private String recruitmentTarget;
 
+    @Getter
     private String managerName;
 
     @Builder
