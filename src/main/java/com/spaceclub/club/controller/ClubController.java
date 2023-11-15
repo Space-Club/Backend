@@ -90,10 +90,14 @@ public class ClubController {
 
     @PatchMapping(value = "/clubs/{clubId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateClub(@PathVariable Long clubId,
-                                           @RequestPart(value = "request") ClubUpdateRequest request,
+                                           @RequestPart(value = "request", required = false) ClubUpdateRequest request,
                                            @RequestPart(value = "logoImage", required = false) MultipartFile logoImage,
                                            HttpServletRequest httpServletRequest) throws IOException {
         Long userId = jwtService.verifyUserId(httpServletRequest);
+
+        if (request == null) {
+            request = new ClubUpdateRequest();
+        }
 
         Club newClub = request.toEntity(clubId);
         clubService.updateClub(newClub, userId, logoImage);

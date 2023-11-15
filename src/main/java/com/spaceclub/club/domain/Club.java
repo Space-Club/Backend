@@ -81,9 +81,11 @@ public class Club extends BaseTimeEntity {
     }
 
     @Builder
-    public Club(Long id, String name, String logoImageUrl, String info, String coverImageUrl, List<ClubNotice> notices) {
-        Assert.notNull(name, "이름에 null 값이 올 수 없습니다");
-        Assert.hasText(name, "이름이 빈 값일 수 없습니다");
+    public Club(Long id, String name, String logoImageUrl, String info, String coverImageUrl, List<ClubNotice> notices, boolean isUpdate) {
+        if (!isUpdate) {
+            Assert.notNull(name, "이름에 null 값이 올 수 없습니다");
+            Assert.hasText(name, "이름이 빈 값일 수 없습니다");
+        }
         Assert.isTrue(validateNameLength(name), "이름의 길이는 12글자를 넘을 수 없습니다");
         Assert.isTrue(name.equals(name.trim()), "이름의 맨앞과 맨뒤에는 공백이 추가될 수 없습니다");
 
@@ -96,6 +98,12 @@ public class Club extends BaseTimeEntity {
         if (notices != null) {
             this.notices = new ArrayList<>(notices);
         }
+    }
+
+    @Builder
+    public Club(String name, String info) {
+        this.name = name;
+        this.info = info;
     }
 
     private Club(Club club, String logoImageUrl) {
@@ -116,8 +124,8 @@ public class Club extends BaseTimeEntity {
         this.id = club.getId();
         this.logoImageUrl = club.getLogoImageUrl();
         this.coverImageUrl = club.getCoverImageUrl();
-        this.name = name;
-        this.info = info;
+        this.name = name.isEmpty() ? club.getName() : name;
+        this.info = info.isEmpty() ? club.getInfo() : info;
         this.createdAt = club.getCreatedAt();
     }
 

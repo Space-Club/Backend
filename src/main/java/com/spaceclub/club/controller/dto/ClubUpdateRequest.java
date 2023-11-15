@@ -7,11 +7,16 @@ public record ClubUpdateRequest(
         String info
 ) {
 
+    public ClubUpdateRequest() {
+        this("", "");
+    }
+
     public Club toEntity(Long clubId) {
         return Club.builder()
                 .id(clubId)
                 .name(name)
                 .info(info)
+                .isUpdate(true)
                 .build();
     }
 
