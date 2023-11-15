@@ -76,9 +76,9 @@ class FormControllerTest {
     @WithMockUser
     void 관리자가_폼_양식_생성에_성공한다() throws Exception {
         // given
-        FormCreateOptionRequest item1 = new FormCreateOptionRequest("이름", FormOptionType.TEXT, true);
-        FormCreateOptionRequest item2 = new FormCreateOptionRequest("연락처", FormOptionType.NUMBER, false);
-        FormCreateOptionRequest item3 = new FormCreateOptionRequest("인원 수", FormOptionType.TEXT, true);
+        FormCreateOptionRequest item1 = new FormCreateOptionRequest("이름", FormOptionType.TEXT);
+        FormCreateOptionRequest item2 = new FormCreateOptionRequest("연락처", FormOptionType.NUMBER);
+        FormCreateOptionRequest item3 = new FormCreateOptionRequest("인원 수", FormOptionType.TEXT);
         List<FormCreateOptionRequest> items = List.of(item1, item2, item3);
         FormCreateRequest formCreateRequest = new FormCreateRequest(1L, "행사에 대한 폼 양식입니다.", true, items);
 
@@ -109,8 +109,7 @@ class FormControllerTest {
                                         fieldWithPath("managed").type(BOOLEAN).description("관리 모드 여부"),
                                         fieldWithPath("options[]").type(ARRAY).description("감"),
                                         fieldWithPath("options[].title").type(STRING).description("폼 항목명"),
-                                        fieldWithPath("options[].type").type(STRING).description("폼 항목 타입(TEXT, SELECT, RADIO, NUMBER)"),
-                                        fieldWithPath("options[].visible").type(BOOLEAN).description("폼 조회 공개 여부")
+                                        fieldWithPath("options[].type").type(STRING).description("폼 항목 타입(TEXT, SELECT, RADIO, NUMBER)")
                                 ),
                                 responseHeaders(
                                         headerWithName("Location").description("생성된 폼의 행사 조회 URI")

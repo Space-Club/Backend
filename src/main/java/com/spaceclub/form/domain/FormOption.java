@@ -40,8 +40,6 @@ public class FormOption {
     @Enumerated(EnumType.STRING)
     private FormOptionType type;
 
-    private boolean visible;
-
     @ManyToOne
     @JoinColumn(name = "form_id")
     private Form form;
@@ -51,11 +49,10 @@ public class FormOption {
     private final List<FormOptionUser> optionUsers = new ArrayList<>();
 
     @Builder
-    public FormOption(Long id, String title, FormOptionType type, boolean visible, Form form) {
+    public FormOption(Long id, String title, FormOptionType type, Form form) {
         this.id = id;
         this.title = title;
         this.type = type;
-        this.visible = visible;
         this.form = form;
     }
 
@@ -64,7 +61,6 @@ public class FormOption {
                 .id(id)
                 .title(title)
                 .type(type)
-                .visible(visible)
                 .form(form)
                 .build();
     }
