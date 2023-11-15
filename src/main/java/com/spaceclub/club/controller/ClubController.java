@@ -88,7 +88,7 @@ public class ClubController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping(value = "/clubs/{clubId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PatchMapping(value = "/clubs/{clubId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateClub(@PathVariable Long clubId,
                                            @RequestPart(value = "request") ClubUpdateRequest request,
                                            @RequestPart(value = "logoImage", required = false) MultipartFile logoImage,
