@@ -11,6 +11,10 @@ import com.spaceclub.event.controller.dto.createRequest.ClubEventCreateRequest;
 import com.spaceclub.event.controller.dto.createRequest.PromotionEventCreateRequest;
 import com.spaceclub.event.controller.dto.createRequest.RecruitmentEventCreateRequest;
 import com.spaceclub.event.controller.dto.createRequest.ShowEventCreateRequest;
+import com.spaceclub.event.controller.dto.updateRequest.ClubEventUpdateRequest;
+import com.spaceclub.event.controller.dto.updateRequest.PromotionEventUpdateRequest;
+import com.spaceclub.event.controller.dto.updateRequest.RecruitmentEventUpdateRequest;
+import com.spaceclub.event.controller.dto.updateRequest.ShowEventUpdateRequest;
 import com.spaceclub.event.domain.ApplicationStatus;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
@@ -27,6 +31,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -104,6 +109,48 @@ public class EventController {
         List<EventGetResponse> eventGetResponses = events.getContent().stream().map(EventGetResponse::from).toList();
 
         return ResponseEntity.ok(new PageResponse<>(eventGetResponses, events));
+    }
+
+    @PatchMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> updateEvent(
+            @RequestPart MultipartFile posterImage,
+            @RequestPart String request,
+            @RequestPart String category,
+            HttpServletRequest servletRequest
+    ) throws IOException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
+        String posterImageUrl = uploader.uploadPosterImage(posterImage);
+        EventCategory eventCategory = EventCategory.valueOf(category);
+
+        Event event;
+
+        switch (category) {
+            case "SHOW" -> {
+                ShowEventUpdateRequest showEventUpdateRequest = objectMapper.readValue(request, ShowEventUpdateRequest.class);
+                event = showEventUpdateRequest.toEntity(eventCategory, posterImageUrl);
+            }
+            case "PROMOTION" -> {
+                PromotionEventUpdateRequest promotionEventUpdateRequest = objectMapper.readValue(request, PromotionEventUpdateRequest.class);
+                event = promotionEventUpdateRequest.toEntity(eventCategory, posterImageUrl);
+            }
+            case "RECRUITMENT" -> {
+                RecruitmentEventUpdateRequest recruitmentEventUpdateRequest = objectMapper.readValue(request, RecruitmentEventUpdateRequest.class);
+                event = recruitmentEventUpdateRequest.toEntity(eventCategory, posterImageUrl);
+            }
+            case "CLUB" -> {
+                ClubEventUpdateRequest clubEventUpdateRequest = objectMapper.readValue(request, ClubEventUpdateRequest.class);
+                event = clubEventUpdateRequest.toEntity(eventCategory, posterImageUrl);
+            }
+            default -> throw new IllegalArgumentException("존재하지 않는 행사의 카테고리입니다");
+        }
+
+        Long userId = jwtService.verifyUserId(servletRequest);
+        eventService.update(event, userId);
+
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{eventId}")

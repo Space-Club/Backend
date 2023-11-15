@@ -100,6 +100,94 @@ include::{snippets}/event/create/club/http-response.adoc[]
 include::{snippets}/event/create/club/response-fields.adoc[]
 :sectnums:
 
+=== 행사 수정 (공연)
+:sectnums!:
+==== Request
+
+include::{snippets}/event/update/show/http-request.adoc[]
+===== Request Header
+
+include::{snippets}/event/update/show/request-headers.adoc[]
+
+===== Multipart Form Data
+
+include::{snippets}/event/update/show/request-parts.adoc[]
+
+===== Request Form Data
+
+include::{snippets}/event/update/show/request-part-request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/event/update/show/http-response.adoc[]
+:sectnums:
+
+=== 행사 수정 (홍보)
+:sectnums!:
+==== Request
+
+include::{snippets}/event/update/promotion/http-request.adoc[]
+===== Request Header
+
+include::{snippets}/event/update/promotion/request-headers.adoc[]
+
+===== Multipart Form Data
+
+include::{snippets}/event/update/promotion/request-parts.adoc[]
+
+===== Request Form Data
+
+include::{snippets}/event/update/promotion/request-part-request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/event/update/promotion/http-response.adoc[]
+:sectnums:
+
+=== 행사 수정 (모집 공고)
+:sectnums!:
+==== Request
+
+include::{snippets}/event/update/recruitment/http-request.adoc[]
+===== Request Header
+
+include::{snippets}/event/update/recruitment/request-headers.adoc[]
+
+===== Multipart Form Data
+
+include::{snippets}/event/update/recruitment/request-parts.adoc[]
+
+===== Request Form Data
+
+include::{snippets}/event/update/recruitment/request-part-request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/event/update/recruitment/http-response.adoc[]
+:sectnums:
+
+=== 행사 수정 (클럽 일정)
+:sectnums!:
+==== Request
+
+include::{snippets}/event/update/club/http-request.adoc[]
+===== Request Header
+
+include::{snippets}/event/update/club/request-headers.adoc[]
+
+===== Multipart Form Data
+
+include::{snippets}/event/update/club/request-parts.adoc[]
+
+===== Request Form Data
+
+include::{snippets}/event/update/club/request-part-request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/event/update/club/http-response.adoc[]
+:sectnums:
+
 === 행사 신청
 :sectnums!:
 ==== Request

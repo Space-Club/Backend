@@ -7,6 +7,10 @@ import com.spaceclub.event.controller.dto.createRequest.ClubEventCreateRequest;
 import com.spaceclub.event.controller.dto.createRequest.PromotionEventCreateRequest;
 import com.spaceclub.event.controller.dto.createRequest.RecruitmentEventCreateRequest;
 import com.spaceclub.event.controller.dto.createRequest.ShowEventCreateRequest;
+import com.spaceclub.event.controller.dto.updateRequest.ClubEventUpdateRequest;
+import com.spaceclub.event.controller.dto.updateRequest.PromotionEventUpdateRequest;
+import com.spaceclub.event.controller.dto.updateRequest.RecruitmentEventUpdateRequest;
+import com.spaceclub.event.controller.dto.updateRequest.ShowEventUpdateRequest;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.service.EventService;
 import com.spaceclub.global.S3ImageUploader;
@@ -20,10 +24,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
@@ -457,6 +463,373 @@ class EventControllerTest {
                                 fieldWithPath("eventId").type(NUMBER).description("생성된 행사 id")
                         ))
                 );
+    }
+
+    @Test
+    @WithMockUser
+    public void 공연_행사_수정에_성공한다() throws Exception {
+        // given
+        ShowEventUpdateRequest showEventUpdateRequest = new ShowEventUpdateRequest(
+                1L,
+                new ShowEventUpdateRequest.EventInfoRequest(
+                        "행사 제목",
+                        "행사 내용",
+                        LocalDate.of(2023, 11, 15),
+                        LocalTime.of(14, 0),
+                        "행사 장소",
+                        100
+                ),
+                new ShowEventUpdateRequest.TicketInfoRequest(20000, 2),
+                new ShowEventUpdateRequest.BankInfoRequest("은행 명", "은행 계좌번호"),
+                new ShowEventUpdateRequest.FormInfoRequest(
+                        LocalDate.of(2023, 11, 1),
+                        LocalTime.of(9, 0),
+                        LocalDate.of(2023, 11, 10),
+                        LocalTime.of(18, 0)
+                )
+        );
+        MockMultipartFile request = new MockMultipartFile(
+                "request",
+                "",
+                APPLICATION_JSON_VALUE,
+                mapper.writeValueAsBytes(showEventUpdateRequest)
+        );
+
+        MockMultipartFile category = new MockMultipartFile(
+                "category",
+                "",
+                TEXT_PLAIN_VALUE,
+                SHOW.name().getBytes(StandardCharsets.UTF_8)
+        );
+
+        final String posterImageUrl = "image.jpeg";
+        given(uploader.uploadPosterImage(any(MultipartFile.class))).willReturn(posterImageUrl);
+        given(eventService.create(any(Event.class), any(Long.class), any(Long.class))).willReturn(1L);
+
+        // when
+        MockMultipartHttpServletRequestBuilder requestBuilder = multipart("/api/v1/events");
+        requestBuilder.with(req -> {
+            req.setMethod(HttpMethod.PATCH.name());
+            return req;
+        });
+
+        ResultActions actions = mvc.perform(requestBuilder
+                .file(posterImage)
+                .file(request)
+                .file(category)
+                .header(AUTHORIZATION, "Access Token")
+                .with(csrf())
+                .contentType(MULTIPART_FORM_DATA_VALUE)
+        );
+
+        // then
+        actions
+                .andExpect(status().isNoContent())
+                .andDo(document("event/update/show",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestParts(
+                                partWithName("posterImage").description("포스터 사진")
+                                        .attributes(key("content-type").value(IMAGE_JPEG_VALUE)),
+                                partWithName("request").description("행사 생성 관련 정보")
+                                        .attributes(key("content-type").value(APPLICATION_JSON_VALUE)),
+                                partWithName("category").description("행사 카테고리")
+                                        .attributes(key("content-type").value(TEXT_PLAIN_VALUE))
+                        ),
+                        requestPartFields("request",
+                                fieldWithPath("eventId").type(NUMBER).description("행사 id"),
+                                fieldWithPath("eventInfo.title").type(STRING).description("행사 정보"),
+                                fieldWithPath("eventInfo.content").type(STRING).description("행사 내용"),
+                                fieldWithPath("eventInfo.startDate").type(STRING).description("행사 날짜"),
+                                fieldWithPath("eventInfo.startTime").type(STRING).description("행사 시간"),
+                                fieldWithPath("eventInfo.location").type(STRING).description("행사 장소"),
+                                fieldWithPath("eventInfo.capacity").type(NUMBER).description("행사 정원"),
+                                fieldWithPath("ticketInfo.cost").type(NUMBER).description("행사 비용"),
+                                fieldWithPath("ticketInfo.maxTicketCount").type(NUMBER).description("인당 예매 가능 수"),
+                                fieldWithPath("bankInfo.name").type(STRING).description("은행 명"),
+                                fieldWithPath("bankInfo.accountNumber").type(STRING).description("은행 계좌 번호"),
+                                fieldWithPath("formInfo.openDate").type(STRING).description("폼 오픈 날짜"),
+                                fieldWithPath("formInfo.openTime").type(STRING).description("폼 오픈 시간"),
+                                fieldWithPath("formInfo.closeDate").type(STRING).description("폼 마감 날짜"),
+                                fieldWithPath("formInfo.closeTime").type(STRING).description("폼 마감 시간")
+                        ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
+                        )
+                ));
+    }
+
+    @Test
+    @WithMockUser
+    public void 홍보_행사_수정에_성공한다() throws Exception {
+        // given
+        PromotionEventUpdateRequest promotionEventCreateRequest = new PromotionEventUpdateRequest(
+                1L,
+                new PromotionEventUpdateRequest.EventInfoRequest(
+                        "행사 제목",
+                        "행사 내용",
+                        LocalDate.of(2023, 11, 15),
+                        LocalTime.of(14, 0),
+                        "행사 장소",
+                        100
+                ),
+                new PromotionEventUpdateRequest.FormInfoRequest(
+                        LocalDate.of(2023, 11, 1),
+                        LocalTime.of(9, 0),
+                        LocalDate.of(2023, 11, 10),
+                        LocalTime.of(18, 0)
+                )
+        );
+
+        MockMultipartFile request = new MockMultipartFile(
+                "request",
+                "",
+                APPLICATION_JSON_VALUE,
+                mapper.writeValueAsBytes(promotionEventCreateRequest)
+        );
+
+        MockMultipartFile category = new MockMultipartFile(
+                "category",
+                "",
+                TEXT_PLAIN_VALUE,
+                PROMOTION.name().getBytes(StandardCharsets.UTF_8)
+        );
+
+        final String posterImageUrl = "image.jpeg";
+        given(uploader.uploadPosterImage(any(MultipartFile.class))).willReturn(posterImageUrl);
+        given(eventService.create(any(Event.class), any(Long.class), any(Long.class))).willReturn(1L);
+
+        // when
+        MockMultipartHttpServletRequestBuilder requestBuilder = multipart("/api/v1/events");
+        requestBuilder.with(req -> {
+            req.setMethod(HttpMethod.PATCH.name());
+            return req;
+        });
+
+        ResultActions actions = mvc.perform(requestBuilder
+                .file(posterImage)
+                .file(request)
+                .file(category)
+                .header(AUTHORIZATION, "Access Token")
+                .with(csrf())
+                .contentType(MULTIPART_FORM_DATA_VALUE)
+        );
+
+        // then
+        actions
+                .andExpect(status().isNoContent())
+                .andDo(document("event/update/promotion",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestParts(
+                                partWithName("posterImage").description("포스터 사진")
+                                        .attributes(key("content-type").value(IMAGE_JPEG_VALUE)),
+                                partWithName("request").description("행사 생성 관련 정보")
+                                        .attributes(key("content-type").value(APPLICATION_JSON_VALUE)),
+                                partWithName("category").description("행사 카테고리")
+                                        .attributes(key("content-type").value(TEXT_PLAIN_VALUE))
+                        ),
+                        requestPartFields("request",
+                                fieldWithPath("eventId").type(NUMBER).description("행사 id"),
+                                fieldWithPath("eventInfo.title").type(STRING).description("행사 정보"),
+                                fieldWithPath("eventInfo.content").type(STRING).description("행사 내용"),
+                                fieldWithPath("eventInfo.startDate").type(STRING).description("행사 날짜"),
+                                fieldWithPath("eventInfo.startTime").type(STRING).description("행사 시간"),
+                                fieldWithPath("eventInfo.location").type(STRING).description("행사 장소"),
+                                fieldWithPath("eventInfo.capacity").type(NUMBER).description("행사 정원"),
+                                fieldWithPath("formInfo.openDate").type(STRING).description("폼 오픈 날짜"),
+                                fieldWithPath("formInfo.openTime").type(STRING).description("폼 오픈 시간"),
+                                fieldWithPath("formInfo.closeDate").type(STRING).description("폼 마감 날짜"),
+                                fieldWithPath("formInfo.closeTime").type(STRING).description("폼 마감 시간")
+                        ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
+                        )
+                ));
+    }
+
+    @Test
+    @WithMockUser
+    public void 모집_공고_행사_수정에_성공한다() throws Exception {
+        // given
+        RecruitmentEventUpdateRequest recruitmentEventUpdateRequest = new RecruitmentEventUpdateRequest(
+                1L,
+                new RecruitmentEventUpdateRequest.EventInfoRequest(
+                        "행사 제목",
+                        "행사 내용",
+                        "활동 지역",
+                        "모집 대상",
+                        100
+                ),
+                new RecruitmentEventUpdateRequest.FormInfoRequest(
+                        LocalDate.of(2023, 11, 1),
+                        LocalTime.of(9, 0),
+                        LocalDate.of(2023, 11, 10),
+                        LocalTime.of(18, 0)
+                )
+        );
+
+        MockMultipartFile request = new MockMultipartFile(
+                "request",
+                "",
+                APPLICATION_JSON_VALUE,
+                mapper.writeValueAsBytes(recruitmentEventUpdateRequest)
+        );
+
+        MockMultipartFile category = new MockMultipartFile(
+                "category",
+                "",
+                TEXT_PLAIN_VALUE,
+                RECRUITMENT.name().getBytes(StandardCharsets.UTF_8)
+        );
+
+        final String posterImageUrl = "image.jpeg";
+        given(uploader.uploadPosterImage(any(MultipartFile.class))).willReturn(posterImageUrl);
+        given(eventService.create(any(Event.class), any(Long.class), any(Long.class))).willReturn(1L);
+
+        // when
+        MockMultipartHttpServletRequestBuilder requestBuilder = multipart("/api/v1/events");
+        requestBuilder.with(req -> {
+            req.setMethod(HttpMethod.PATCH.name());
+            return req;
+        });
+
+        ResultActions actions = mvc.perform(requestBuilder
+                .file(posterImage)
+                .file(request)
+                .file(category)
+                .header(AUTHORIZATION, "Access Token")
+                .with(csrf())
+                .contentType(MULTIPART_FORM_DATA_VALUE)
+        );
+
+        // then
+        actions
+                .andExpect(status().isNoContent())
+                .andDo(document("event/update/recruitment",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestParts(
+                                partWithName("posterImage").description("포스터 사진")
+                                        .attributes(key("content-type").value(IMAGE_JPEG_VALUE)),
+                                partWithName("request").description("행사 생성 관련 정보")
+                                        .attributes(key("content-type").value(APPLICATION_JSON_VALUE)),
+                                partWithName("category").description("행사 카테고리")
+                                        .attributes(key("content-type").value(TEXT_PLAIN_VALUE))
+                        ),
+                        requestPartFields("request",
+                                fieldWithPath("eventId").type(NUMBER).description("행사 id"),
+                                fieldWithPath("eventInfo.title").type(STRING).description("행사 정보"),
+                                fieldWithPath("eventInfo.content").type(STRING).description("행사 내용"),
+                                fieldWithPath("eventInfo.activityArea").type(STRING).description("활동 지역"),
+                                fieldWithPath("eventInfo.recruitmentTarget").type(STRING).description("모집 대상"),
+                                fieldWithPath("eventInfo.capacity").type(NUMBER).description("행사 정원"),
+                                fieldWithPath("formInfo.openDate").type(STRING).description("폼 오픈 날짜"),
+                                fieldWithPath("formInfo.openTime").type(STRING).description("폼 오픈 시간"),
+                                fieldWithPath("formInfo.closeDate").type(STRING).description("폼 마감 날짜"),
+                                fieldWithPath("formInfo.closeTime").type(STRING).description("폼 마감 시간")
+                        ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
+                        )
+                ));
+    }
+
+    @Test
+    @WithMockUser
+    public void 클럽_일정_행사_수정에_성공한다() throws Exception {
+        // given
+        ClubEventUpdateRequest clubEventUpdateRequest = new ClubEventUpdateRequest(
+                1L,
+                new ClubEventUpdateRequest.EventInfoRequest(
+                        "행사 제목",
+                        "행사 내용",
+                        LocalDate.of(2023, 11, 15),
+                        LocalTime.of(14, 0),
+                        LocalDate.of(2023, 11, 16),
+                        LocalTime.of(18, 0),
+                        "행사 장소",
+                        100,
+                        5000,
+                        "담당자 이름"
+                ),
+                new ClubEventUpdateRequest.FormInfoRequest(
+                        LocalDate.of(2023, 11, 1),
+                        LocalTime.of(9, 0),
+                        LocalDate.of(2023, 11, 10),
+                        LocalTime.of(18, 0)
+                )
+        );
+
+        MockMultipartFile request = new MockMultipartFile(
+                "request",
+                "",
+                APPLICATION_JSON_VALUE,
+                mapper.writeValueAsBytes(clubEventUpdateRequest)
+        );
+
+        MockMultipartFile category = new MockMultipartFile(
+                "category",
+                "",
+                TEXT_PLAIN_VALUE,
+                CLUB.name().getBytes(StandardCharsets.UTF_8)
+        );
+
+        final String posterImageUrl = "image.jpeg";
+        given(uploader.uploadPosterImage(any(MultipartFile.class))).willReturn(posterImageUrl);
+        given(eventService.create(any(Event.class), any(Long.class), any(Long.class))).willReturn(1L);
+
+        // when
+        MockMultipartHttpServletRequestBuilder requestBuilder = multipart("/api/v1/events");
+        requestBuilder.with(req -> {
+            req.setMethod(HttpMethod.PATCH.name());
+            return req;
+        });
+
+        ResultActions actions = mvc.perform(requestBuilder
+                .file(posterImage)
+                .file(request)
+                .file(category)
+                .header(AUTHORIZATION, "Access Token")
+                .with(csrf())
+                .contentType(MULTIPART_FORM_DATA_VALUE)
+        );
+
+        // then
+        actions
+                .andExpect(status().isNoContent())
+                .andDo(document("event/update/club",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestParts(
+                                partWithName("posterImage").description("포스터 사진")
+                                        .attributes(key("content-type").value(IMAGE_JPEG_VALUE)),
+                                partWithName("request").description("행사 생성 관련 정보")
+                                        .attributes(key("content-type").value(APPLICATION_JSON_VALUE)),
+                                partWithName("category").description("행사 카테고리")
+                                        .attributes(key("content-type").value(TEXT_PLAIN_VALUE))
+                        ),
+                        requestPartFields("request",
+                                fieldWithPath("eventId").type(NUMBER).description("행사 id"),
+                                fieldWithPath("eventInfo.title").type(STRING).description("행사 정보"),
+                                fieldWithPath("eventInfo.content").type(STRING).description("행사 내용"),
+                                fieldWithPath("eventInfo.startDate").type(STRING).description("행사 시작 날짜"),
+                                fieldWithPath("eventInfo.startTime").type(STRING).description("행사 시작 시간"),
+                                fieldWithPath("eventInfo.endDate").type(STRING).description("행사 종료 날짜"),
+                                fieldWithPath("eventInfo.endTime").type(STRING).description("행사 종료 시간"),
+                                fieldWithPath("eventInfo.location").type(STRING).description("행사 장소"),
+                                fieldWithPath("eventInfo.capacity").type(NUMBER).description("행사 정원"),
+                                fieldWithPath("eventInfo.dues").type(NUMBER).description("행사 회비"),
+                                fieldWithPath("eventInfo.managerName").type(STRING).description("담당자 이름"),
+                                fieldWithPath("formInfo.openDate").type(STRING).description("폼 오픈 날짜"),
+                                fieldWithPath("formInfo.openTime").type(STRING).description("폼 오픈 시간"),
+                                fieldWithPath("formInfo.closeDate").type(STRING).description("폼 마감 날짜"),
+                                fieldWithPath("formInfo.closeTime").type(STRING).description("폼 마감 시간")
+                        ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
+                        )
+                ));
     }
 
     @Test
