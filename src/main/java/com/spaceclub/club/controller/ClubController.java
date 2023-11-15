@@ -205,7 +205,20 @@ public class ClubController {
     public ResponseEntity<ClubScheduleGetResponse> getClubSchedule(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
         Long userId = jwtService.verifyUserId(httpServletRequest);
 
-        List<ClubScheduleGetResponseInfo> schedules = clubService.getClubSchedules(clubId, userId);
+        List<Event> events = clubService.getClubSchedules(clubId, userId);
+
+        String profileImageUrl = clubService.getManagerProfileImageUrl(clubId);
+
+        List<ClubScheduleGetResponseInfo> schedules = events.stream()
+                .map((event -> ClubScheduleGetResponseInfo.builder()
+                        .eventId(event.getId())
+                        .title(event.getTitle())
+                        .startDateTime(event.getFormOpenDateTime())
+                        .endDateTime(event.getFormCloseDateTime())
+                        .manager(event.getManagerName())
+                        .profileImageUrl(profileImageUrl)
+                        .build()))
+                .toList();
 
         return ResponseEntity.ok(new ClubScheduleGetResponse(schedules));
     }

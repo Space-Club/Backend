@@ -22,8 +22,8 @@ public record EventSearchGetResponse(Long id,
                 ),
                 new FormInfoResponse(
                         event.getFormOpenDate(),
-                        event.getFormCloseDate(),
                         event.getFormOpenTime(),
+                        event.getFormCloseDate(),
                         event.getFormCloseTime()
                 ),
                 new ClubInfoResponse(

@@ -25,6 +25,7 @@ public class EventTestFixture {
                 .location("위치")
                 .capacity(100)
                 .posterImageUrl("www.aaa.com")
+                .managerName("행사 생성자 이름")
                 .build();
     }
 

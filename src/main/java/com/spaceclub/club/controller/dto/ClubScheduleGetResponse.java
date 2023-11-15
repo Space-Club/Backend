@@ -1,6 +1,6 @@
 package com.spaceclub.club.controller.dto;
 
-import com.spaceclub.event.domain.Event;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,17 +10,16 @@ public record ClubScheduleGetResponse(
 ) {
 
     public record ClubScheduleGetResponseInfo(
+            Long eventId,
             String title,
-            String content,
-            LocalDateTime startDateTime
+            LocalDateTime startDateTime,
+            LocalDateTime endDateTime,
+            String manager,
+            String profileImageUrl
     ) {
 
-        public ClubScheduleGetResponseInfo(Event event) {
-            this(
-                    event.getTitle(),
-                    event.getContent(),
-                    LocalDateTime.of(event.getStartDate(), event.getStartTime())
-            );
+        @Builder
+        public ClubScheduleGetResponseInfo {
         }
 
     }
