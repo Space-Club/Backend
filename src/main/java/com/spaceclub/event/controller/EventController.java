@@ -3,7 +3,7 @@ package com.spaceclub.event.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.spaceclub.event.controller.dto.EventApplyRequest;
-import com.spaceclub.event.controller.dto.EventCreateResponseDto;
+import com.spaceclub.event.controller.dto.EventCreateResponse;
 import com.spaceclub.event.controller.dto.EventDetailGetResponse;
 import com.spaceclub.event.controller.dto.EventGetResponse;
 import com.spaceclub.event.controller.dto.EventSearchGetResponse;
@@ -38,11 +38,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-import static com.spaceclub.event.domain.EventCategory.CLUB;
-import static com.spaceclub.event.domain.EventCategory.PROMOTION;
-import static com.spaceclub.event.domain.EventCategory.RECRUITMENT;
-import static com.spaceclub.event.domain.EventCategory.SHOW;
-
 @Controller
 @RequestMapping("/api/v1/events")
 @RequiredArgsConstructor
@@ -55,7 +50,7 @@ public class EventController {
     private final JwtService jwtService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<EventCreateResponseDto> create(
+    public ResponseEntity<EventCreateResponse> create(
             @RequestPart MultipartFile posterImage,
             @RequestPart String request,
             @RequestPart String category,
@@ -71,30 +66,34 @@ public class EventController {
         Long clubId;
         Event event;
 
-        if (category.equals(SHOW.name())) {
-            ShowEventCreateRequest showEventCreateRequest = objectMapper.readValue(request, ShowEventCreateRequest.class);
-            event = showEventCreateRequest.toEntity(eventCategory, posterImageUrl);
-            clubId = showEventCreateRequest.clubId();
-        } else if (category.equals(PROMOTION.name())) {
-            PromotionEventCreateRequest promotionEventCreateRequest = objectMapper.readValue(request, PromotionEventCreateRequest.class);
-            event = promotionEventCreateRequest.toEntity(eventCategory, posterImageUrl);
-            clubId = promotionEventCreateRequest.clubId();
-        } else if (category.equals(RECRUITMENT.name())) {
-            RecruitmentEventCreateRequest recruitmentEventCreateRequest = objectMapper.readValue(request, RecruitmentEventCreateRequest.class);
-            event = recruitmentEventCreateRequest.toEntity(eventCategory, posterImageUrl);
-            clubId = recruitmentEventCreateRequest.clubId();
-        } else if (category.equals(CLUB.name())) {
-            ClubEventCreateRequest clubEventCreateRequest = objectMapper.readValue(request, ClubEventCreateRequest.class);
-            event = clubEventCreateRequest.toEntity(eventCategory, posterImageUrl);
-            clubId = clubEventCreateRequest.clubId();
-        } else {
-            throw new IllegalArgumentException("존재하지 않는 행사의 카테고리입니다");
+        switch (EventCategory.valueOf(category)) {
+            case SHOW -> {
+                ShowEventCreateRequest showEventCreateRequest = objectMapper.readValue(request, ShowEventCreateRequest.class);
+                event = showEventCreateRequest.toEntity(eventCategory, posterImageUrl);
+                clubId = showEventCreateRequest.clubId();
+            }
+            case PROMOTION -> {
+                PromotionEventCreateRequest promotionEventCreateRequest = objectMapper.readValue(request, PromotionEventCreateRequest.class);
+                event = promotionEventCreateRequest.toEntity(eventCategory, posterImageUrl);
+                clubId = promotionEventCreateRequest.clubId();
+            }
+            case RECRUITMENT -> {
+                RecruitmentEventCreateRequest recruitmentEventCreateRequest = objectMapper.readValue(request, RecruitmentEventCreateRequest.class);
+                event = recruitmentEventCreateRequest.toEntity(eventCategory, posterImageUrl);
+                clubId = recruitmentEventCreateRequest.clubId();
+            }
+            case CLUB -> {
+                ClubEventCreateRequest clubEventCreateRequest = objectMapper.readValue(request, ClubEventCreateRequest.class);
+                event = clubEventCreateRequest.toEntity(eventCategory, posterImageUrl);
+                clubId = clubEventCreateRequest.clubId();
+            }
+            default -> throw new IllegalArgumentException("존재하지 않는 행사의 카테고리입니다");
         }
 
         Long userId = jwtService.verifyUserId(servletRequest);
         Long eventId = eventService.create(event, clubId, userId);
 
-        return ResponseEntity.ok(new EventCreateResponseDto(eventId));
+        return ResponseEntity.ok(new EventCreateResponse(eventId));
     }
 
 
