@@ -8,7 +8,7 @@ public record ClubUpdateRequest(
 ) {
 
     public ClubUpdateRequest() {
-        this("", "");
+        this(null, null);
     }
 
     public Club toEntity(Long clubId) {
