@@ -3,8 +3,10 @@ package com.spaceclub.event.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.event.controller.dto.EventApplyRequest;
-import com.spaceclub.event.controller.dto.EventCreateRequest;
-import com.spaceclub.event.domain.Category;
+import com.spaceclub.event.controller.dto.createRequest.ClubEventCreateRequest;
+import com.spaceclub.event.controller.dto.createRequest.PromotionEventCreateRequest;
+import com.spaceclub.event.controller.dto.createRequest.RecruitmentEventCreateRequest;
+import com.spaceclub.event.controller.dto.createRequest.ShowEventCreateRequest;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.service.EventService;
 import com.spaceclub.global.S3ImageUploader;
@@ -24,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -32,6 +35,10 @@ import static com.spaceclub.event.EventTestFixture.event1;
 import static com.spaceclub.event.EventTestFixture.event2;
 import static com.spaceclub.event.EventTestFixture.event3;
 import static com.spaceclub.event.domain.ApplicationStatus.CANCELED;
+import static com.spaceclub.event.domain.EventCategory.CLUB;
+import static com.spaceclub.event.domain.EventCategory.PROMOTION;
+import static com.spaceclub.event.domain.EventCategory.RECRUITMENT;
+import static com.spaceclub.event.domain.EventCategory.SHOW;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
@@ -39,9 +46,9 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
+import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -67,7 +74,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -91,71 +97,79 @@ class EventControllerTest {
     @MockBean
     private S3ImageUploader uploader;
 
-    private final EventCreateRequest eventCreateRequest = new EventCreateRequest(
-            Category.SHOW,
-            1L,
-            new EventCreateRequest.EventInfoRequest(
-                    "행사 제목",
-                    "행사 내용",
-                    LocalDate.of(2023, 11, 15),
-                    LocalTime.of(14, 0),
-                    "행사 장소",
-                    100
-            ),
-            new EventCreateRequest.TicketInfoRequest(20000, 2),
-            new EventCreateRequest.BankInfoRequest("은행 명", "은행 계좌번호"),
-            new EventCreateRequest.FormInfoRequest(
-                    LocalDate.of(2023, 11, 1),
-                    LocalTime.of(9, 0),
-                    LocalDate.of(2023, 11, 10),
-                    LocalTime.of(18, 0)
-            )
-    );
+    private final MockMultipartFile posterImage = new MockMultipartFile(
+            "posterImage",
+            "image.png",
+            IMAGE_JPEG_VALUE,
+            "<<jpeg data>>".getBytes());
+
 
     @Test
     @WithMockUser
-    public void 행사_생성에_성공한다() throws Exception {
+    public void 공연_행사_생성에_성공한다() throws Exception {
         // given
-        MockMultipartFile posterImage = new MockMultipartFile(
-                "posterImage",
-                "image.png",
-                IMAGE_JPEG_VALUE,
-                "<<jpeg data>>".getBytes());
-
+        ShowEventCreateRequest showEventCreateRequest = new ShowEventCreateRequest(
+                1L,
+                new ShowEventCreateRequest.EventInfoRequest(
+                        "행사 제목",
+                        "행사 내용",
+                        LocalDate.of(2023, 11, 15),
+                        LocalTime.of(14, 0),
+                        "행사 장소",
+                        100
+                ),
+                new ShowEventCreateRequest.TicketInfoRequest(20000, 2),
+                new ShowEventCreateRequest.BankInfoRequest("은행 명", "은행 계좌번호"),
+                new ShowEventCreateRequest.FormInfoRequest(
+                        LocalDate.of(2023, 11, 1),
+                        LocalTime.of(9, 0),
+                        LocalDate.of(2023, 11, 10),
+                        LocalTime.of(18, 0)
+                )
+        );
         MockMultipartFile request = new MockMultipartFile(
                 "request",
                 "",
                 APPLICATION_JSON_VALUE,
-                mapper.writeValueAsBytes(eventCreateRequest)
+                mapper.writeValueAsBytes(showEventCreateRequest)
+        );
+
+        MockMultipartFile category = new MockMultipartFile(
+                "category",
+                "",
+                TEXT_PLAIN_VALUE,
+                SHOW.name().getBytes(StandardCharsets.UTF_8)
         );
 
         final String posterImageUrl = "image.jpeg";
         given(uploader.uploadPosterImage(any(MultipartFile.class))).willReturn(posterImageUrl);
-        given(eventService.create(any(Event.class), any(Long.class))).willReturn(1L);
+        given(eventService.create(any(Event.class), any(Long.class), any(Long.class))).willReturn(1L);
 
         // when
         ResultActions actions = mvc.perform(multipart("/api/v1/events")
                 .file(posterImage)
                 .file(request)
+                .file(category)
+                .header(AUTHORIZATION, "Access Token")
                 .with(csrf())
                 .contentType(MULTIPART_FORM_DATA_VALUE)
         );
 
         // then
         actions
-                .andExpect(status().isCreated())
-                .andExpect(header().stringValues("Location", "/api/v1/events/1"))
-                .andDo(document("event/create",
+                .andExpect(status().isOk())
+                .andDo(document("event/create/show",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestParts(
+                                partWithName("posterImage").description("포스터 사진")
+                                        .attributes(key("content-type").value(IMAGE_JPEG_VALUE)),
                                 partWithName("request").description("행사 생성 관련 정보")
                                         .attributes(key("content-type").value(APPLICATION_JSON_VALUE)),
-                                partWithName("posterImage").description("포스터 사진")
-                                        .attributes(key("content-type").value(IMAGE_JPEG_VALUE))
+                                partWithName("category").description("행사 카테고리")
+                                        .attributes(key("content-type").value(TEXT_PLAIN_VALUE))
                         ),
                         requestPartFields("request",
-                                fieldWithPath("category").type(STRING).description("카테고리"),
                                 fieldWithPath("clubId").type(NUMBER).description("클럽 id"),
                                 fieldWithPath("eventInfo.title").type(STRING).description("행사 정보"),
                                 fieldWithPath("eventInfo.content").type(STRING).description("행사 내용"),
@@ -172,10 +186,277 @@ class EventControllerTest {
                                 fieldWithPath("formInfo.closeDate").type(STRING).description("폼 마감 날짜"),
                                 fieldWithPath("formInfo.closeTime").type(STRING).description("폼 마감 시간")
                         ),
-                        responseHeaders(
-                                headerWithName("Location").description("해당 행사 조회 URI")
-                        )
-                ));
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
+                        ),
+                        responseFields(
+                                fieldWithPath("eventId").type(NUMBER).description("생성된 행사 id")
+                        ))
+                );
+    }
+
+    @Test
+    @WithMockUser
+    public void 홍보_행사_생성에_성공한다() throws Exception {
+        // given
+        PromotionEventCreateRequest promotionEventCreateRequest = new PromotionEventCreateRequest(
+                1L,
+                new PromotionEventCreateRequest.EventInfoRequest(
+                        "행사 제목",
+                        "행사 내용",
+                        LocalDate.of(2023, 11, 15),
+                        LocalTime.of(14, 0),
+                        "행사 장소",
+                        100
+                ),
+                new PromotionEventCreateRequest.FormInfoRequest(
+                        LocalDate.of(2023, 11, 1),
+                        LocalTime.of(9, 0),
+                        LocalDate.of(2023, 11, 10),
+                        LocalTime.of(18, 0)
+                )
+        );
+
+        MockMultipartFile request = new MockMultipartFile(
+                "request",
+                "",
+                APPLICATION_JSON_VALUE,
+                mapper.writeValueAsBytes(promotionEventCreateRequest)
+        );
+
+        MockMultipartFile category = new MockMultipartFile(
+                "category",
+                "",
+                TEXT_PLAIN_VALUE,
+                PROMOTION.name().getBytes(StandardCharsets.UTF_8)
+        );
+
+        final String posterImageUrl = "image.jpeg";
+        given(uploader.uploadPosterImage(any(MultipartFile.class))).willReturn(posterImageUrl);
+        given(eventService.create(any(Event.class), any(Long.class), any(Long.class))).willReturn(1L);
+
+        // when
+        ResultActions actions = mvc.perform(multipart("/api/v1/events")
+                .file(posterImage)
+                .file(request)
+                .file(category)
+                .header(AUTHORIZATION, "Access Token")
+                .with(csrf())
+                .contentType(MULTIPART_FORM_DATA_VALUE)
+        );
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andDo(document("event/create/promotion",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestParts(
+                                partWithName("posterImage").description("포스터 사진")
+                                        .attributes(key("content-type").value(IMAGE_JPEG_VALUE)),
+                                partWithName("request").description("행사 생성 관련 정보")
+                                        .attributes(key("content-type").value(APPLICATION_JSON_VALUE)),
+                                partWithName("category").description("행사 카테고리")
+                                        .attributes(key("content-type").value(TEXT_PLAIN_VALUE))
+                        ),
+                        requestPartFields("request",
+                                fieldWithPath("clubId").type(NUMBER).description("클럽 id"),
+                                fieldWithPath("eventInfo.title").type(STRING).description("행사 정보"),
+                                fieldWithPath("eventInfo.content").type(STRING).description("행사 내용"),
+                                fieldWithPath("eventInfo.startDate").type(STRING).description("행사 날짜"),
+                                fieldWithPath("eventInfo.startTime").type(STRING).description("행사 시간"),
+                                fieldWithPath("eventInfo.location").type(STRING).description("행사 장소"),
+                                fieldWithPath("eventInfo.capacity").type(NUMBER).description("행사 정원"),
+                                fieldWithPath("formInfo.openDate").type(STRING).description("폼 오픈 날짜"),
+                                fieldWithPath("formInfo.openTime").type(STRING).description("폼 오픈 시간"),
+                                fieldWithPath("formInfo.closeDate").type(STRING).description("폼 마감 날짜"),
+                                fieldWithPath("formInfo.closeTime").type(STRING).description("폼 마감 시간")
+                        ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
+                        ),
+                        responseFields(
+                                fieldWithPath("eventId").type(NUMBER).description("생성된 행사 id")
+                        ))
+                );
+    }
+
+    @Test
+    @WithMockUser
+    public void 모집_공고_행사_생성에_성공한다() throws Exception {
+        // given
+        RecruitmentEventCreateRequest recruitmentEventCreateRequest = new RecruitmentEventCreateRequest(
+                1L,
+                new RecruitmentEventCreateRequest.EventInfoRequest(
+                        "행사 제목",
+                        "행사 내용",
+                        "활동 지역",
+                        "모집 대상",
+                        100
+                ),
+                new RecruitmentEventCreateRequest.FormInfoRequest(
+                        LocalDate.of(2023, 11, 1),
+                        LocalTime.of(9, 0),
+                        LocalDate.of(2023, 11, 10),
+                        LocalTime.of(18, 0)
+                )
+        );
+
+        MockMultipartFile request = new MockMultipartFile(
+                "request",
+                "",
+                APPLICATION_JSON_VALUE,
+                mapper.writeValueAsBytes(recruitmentEventCreateRequest)
+        );
+
+        MockMultipartFile category = new MockMultipartFile(
+                "category",
+                "",
+                TEXT_PLAIN_VALUE,
+                RECRUITMENT.name().getBytes(StandardCharsets.UTF_8)
+        );
+
+        final String posterImageUrl = "image.jpeg";
+        given(uploader.uploadPosterImage(any(MultipartFile.class))).willReturn(posterImageUrl);
+        given(eventService.create(any(Event.class), any(Long.class), any(Long.class))).willReturn(1L);
+
+        // when
+        ResultActions actions = mvc.perform(multipart("/api/v1/events")
+                .file(posterImage)
+                .file(request)
+                .file(category)
+                .header(AUTHORIZATION, "Access Token")
+                .with(csrf())
+                .contentType(MULTIPART_FORM_DATA_VALUE)
+        );
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andDo(document("event/create/recruitment",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestParts(
+                                partWithName("posterImage").description("포스터 사진")
+                                        .attributes(key("content-type").value(IMAGE_JPEG_VALUE)),
+                                partWithName("request").description("행사 생성 관련 정보")
+                                        .attributes(key("content-type").value(APPLICATION_JSON_VALUE)),
+                                partWithName("category").description("행사 카테고리")
+                                        .attributes(key("content-type").value(TEXT_PLAIN_VALUE))
+                        ),
+                        requestPartFields("request",
+                                fieldWithPath("clubId").type(NUMBER).description("클럽 id"),
+                                fieldWithPath("eventInfo.title").type(STRING).description("행사 정보"),
+                                fieldWithPath("eventInfo.content").type(STRING).description("행사 내용"),
+                                fieldWithPath("eventInfo.activityArea").type(STRING).description("활동 지역"),
+                                fieldWithPath("eventInfo.recruitmentTarget").type(STRING).description("모집 대상"),
+                                fieldWithPath("eventInfo.capacity").type(NUMBER).description("행사 정원"),
+                                fieldWithPath("formInfo.openDate").type(STRING).description("폼 오픈 날짜"),
+                                fieldWithPath("formInfo.openTime").type(STRING).description("폼 오픈 시간"),
+                                fieldWithPath("formInfo.closeDate").type(STRING).description("폼 마감 날짜"),
+                                fieldWithPath("formInfo.closeTime").type(STRING).description("폼 마감 시간")
+                        ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
+                        ),
+                        responseFields(
+                                fieldWithPath("eventId").type(NUMBER).description("생성된 행사 id")
+                        ))
+                );
+    }
+
+    @Test
+    @WithMockUser
+    public void 클럽_일정_행사_생성에_성공한다() throws Exception {
+        // given
+        ClubEventCreateRequest clubEventCreateRequest = new ClubEventCreateRequest(
+                1L,
+                new ClubEventCreateRequest.EventInfoRequest(
+                        "행사 제목",
+                        "행사 내용",
+                        LocalDate.of(2023, 11, 15),
+                        LocalTime.of(14, 0),
+                        LocalDate.of(2023, 11, 16),
+                        LocalTime.of(18, 0),
+                        "행사 장소",
+                        100,
+                        5000,
+                        "담당자 이름"
+                ),
+                new ClubEventCreateRequest.FormInfoRequest(
+                        LocalDate.of(2023, 11, 1),
+                        LocalTime.of(9, 0),
+                        LocalDate.of(2023, 11, 10),
+                        LocalTime.of(18, 0)
+                )
+        );
+
+        MockMultipartFile request = new MockMultipartFile(
+                "request",
+                "",
+                APPLICATION_JSON_VALUE,
+                mapper.writeValueAsBytes(clubEventCreateRequest)
+        );
+
+        MockMultipartFile category = new MockMultipartFile(
+                "category",
+                "",
+                TEXT_PLAIN_VALUE,
+                CLUB.name().getBytes(StandardCharsets.UTF_8)
+        );
+
+        final String posterImageUrl = "image.jpeg";
+        given(uploader.uploadPosterImage(any(MultipartFile.class))).willReturn(posterImageUrl);
+        given(eventService.create(any(Event.class), any(Long.class), any(Long.class))).willReturn(1L);
+
+        // when
+        ResultActions actions = mvc.perform(multipart("/api/v1/events")
+                .file(posterImage)
+                .file(request)
+                .file(category)
+                .header(AUTHORIZATION, "Access Token")
+                .with(csrf())
+                .contentType(MULTIPART_FORM_DATA_VALUE)
+        );
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andDo(document("event/create/club",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestParts(
+                                partWithName("posterImage").description("포스터 사진")
+                                        .attributes(key("content-type").value(IMAGE_JPEG_VALUE)),
+                                partWithName("request").description("행사 생성 관련 정보")
+                                        .attributes(key("content-type").value(APPLICATION_JSON_VALUE)),
+                                partWithName("category").description("행사 카테고리")
+                                        .attributes(key("content-type").value(TEXT_PLAIN_VALUE))
+                        ),
+                        requestPartFields("request",
+                                fieldWithPath("clubId").type(NUMBER).description("클럽 id"),
+                                fieldWithPath("eventInfo.title").type(STRING).description("행사 정보"),
+                                fieldWithPath("eventInfo.content").type(STRING).description("행사 내용"),
+                                fieldWithPath("eventInfo.startDate").type(STRING).description("행사 시작 날짜"),
+                                fieldWithPath("eventInfo.startTime").type(STRING).description("행사 시작 시간"),
+                                fieldWithPath("eventInfo.endDate").type(STRING).description("행사 종료 날짜"),
+                                fieldWithPath("eventInfo.endTime").type(STRING).description("행사 종료 시간"),
+                                fieldWithPath("eventInfo.location").type(STRING).description("행사 장소"),
+                                fieldWithPath("eventInfo.capacity").type(NUMBER).description("행사 정원"),
+                                fieldWithPath("eventInfo.dues").type(NUMBER).description("행사 회비"),
+                                fieldWithPath("eventInfo.managerName").type(STRING).description("담당자 이름"),
+                                fieldWithPath("formInfo.openDate").type(STRING).description("폼 오픈 날짜"),
+                                fieldWithPath("formInfo.openTime").type(STRING).description("폼 오픈 시간"),
+                                fieldWithPath("formInfo.closeDate").type(STRING).description("폼 마감 날짜"),
+                                fieldWithPath("formInfo.closeTime").type(STRING).description("폼 마감 시간")
+                        ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
+                        ),
+                        responseFields(
+                                fieldWithPath("eventId").type(NUMBER).description("생성된 행사 id")
+                        ))
+                );
     }
 
     @Test
