@@ -5,7 +5,6 @@ import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.controller.dto.ClubCreateRequest;
 import com.spaceclub.club.controller.dto.ClubNoticeCreateRequest;
 import com.spaceclub.club.controller.dto.ClubNoticeUpdateRequest;
-import com.spaceclub.club.controller.dto.ClubScheduleGetResponse.ClubScheduleGetResponseInfo;
 import com.spaceclub.club.controller.dto.ClubUpdateRequest;
 import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
 import com.spaceclub.club.domain.Club;
@@ -35,7 +34,6 @@ import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequ
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.spaceclub.club.ClubNoticeTestFixture.clubNotice1;
@@ -585,19 +583,9 @@ class ClubControllerTest {
         // given
         Long clubId = 1L;
         given(clubService.getClubSchedules(any(Long.class), any(Long.class))).willReturn(
-                List.of(
-                        new ClubScheduleGetResponseInfo(
-                                "클럽 일정 제목 1",
-                                "클럽 일정 내용 1",
-                                LocalDateTime.now()
-                        ),
-                        new ClubScheduleGetResponseInfo(
-                                "클럽 일정 제목 2",
-                                "클럽 일정 내용 2",
-                                LocalDateTime.now()
-                        )
-                )
+                List.of(event3())
         );
+        given(clubService.getManagerProfileImageUrl(any(Long.class))).willReturn("profileImageUrl");
 
         // when
         ResultActions result = this.mockMvc.perform(get("/api/v1/clubs/{clubId}/schedules", clubId)
@@ -618,9 +606,12 @@ class ClubControllerTest {
                         ),
                         responseFields(
                                 fieldWithPath("schedules").type(ARRAY).description("클럽 일정 목록"),
+                                fieldWithPath("schedules.[].eventId").type(NUMBER).description("이벤트 ID"),
                                 fieldWithPath("schedules.[].title").type(STRING).description("일정 제목"),
-                                fieldWithPath("schedules.[].content").type(STRING).description("일정 내용"),
-                                fieldWithPath("schedules.[].startDateTime").type(STRING).description("일정 시작 날짜와 시간")
+                                fieldWithPath("schedules.[].startDateTime").type(STRING).description("일정 시작 날짜와 시간"),
+                                fieldWithPath("schedules.[].endDateTime").type(STRING).description("일정 종료 날짜와 시간"),
+                                fieldWithPath("schedules.[].manager").type(STRING).description("일정 생성자"),
+                                fieldWithPath("schedules.[].profileImageUrl").type(STRING).description("일정 생성자의 프사 URL")
                         )
                 ));
     }
