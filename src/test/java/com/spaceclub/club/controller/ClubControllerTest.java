@@ -25,11 +25,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
@@ -220,8 +222,14 @@ class ClubControllerTest {
                 mapper.writeValueAsString(clubCreateRequest).getBytes(StandardCharsets.UTF_8)
         );
 
+        MockMultipartHttpServletRequestBuilder requestBuilder = multipart("/api/v1/clubs/{clubId}", clubId);
+        requestBuilder.with(servletRequest -> {
+            servletRequest.setMethod(HttpMethod.PATCH.name());
+            return servletRequest;
+        });
+
         // when
-        ResultActions result = this.mockMvc.perform(multipart("/api/v1/clubs/{clubId}", clubId)
+        ResultActions result = this.mockMvc.perform(requestBuilder
                 .file(request)
                 .file(logoImage)
                 .header("Authorization", "token")
