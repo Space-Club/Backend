@@ -200,7 +200,7 @@ public class ClubService {
         if (!clubUser.isManager()) throw new IllegalStateException("해당 권한이 없습니다.");
     }
 
-    public void updateClub(Club newClub, Long userId, MultipartFile logoImage) throws IOException {
+    public void updateClub(Club newClub, Long userId, MultipartFile logoImage) {
         Long clubId = newClub.getId();
 
         validateClubManager(clubId, userId);
