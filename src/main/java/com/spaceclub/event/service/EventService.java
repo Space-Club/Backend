@@ -38,6 +38,14 @@ public class EventService {
         return eventRepository.save(registeredEvent).getId();
     }
 
+    @Transactional
+    public void update(Event event, Long userId) {
+        eventRepository.findById(event.getId()).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 행사입니다.")
+        );
+
+        eventRepository.save(event);
+    }
 
     public Page<Event> getAll(Pageable pageable) {
         return eventRepository.findAll(pageable);
