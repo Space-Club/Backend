@@ -13,28 +13,28 @@ import org.springframework.util.Assert;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TicketInfo {
 
-    private static final int MAX_TICKET_COUNT_MIN_LENGTH = 1;
+    private static final Integer MAX_TICKET_COUNT_MIN_LENGTH = 1;
 
-    private static final int MAX_TICKET_COUNT_MAX_LENGTH = 999;
+    private static final Integer MAX_TICKET_COUNT_MAX_LENGTH = 999;
 
-    private static final int COST_MIN_LENGTH = 1;
+    private static final Integer COST_MIN_LENGTH = 1;
 
-    private static final int COST_MAX_LENGTH = 1000000;
-
-    @Getter
-    private int maxTicketCount;
+    private static final Integer COST_MAX_LENGTH = 1000000;
 
     @Getter
-    private int cost;
+    private Integer maxTicketCount;
+
+    @Getter
+    private Integer cost;
 
     @Builder
-    public TicketInfo(int maxTicketCount, int cost) {
+    public TicketInfo(Integer maxTicketCount, Integer cost) {
         validate(maxTicketCount, cost);
         this.maxTicketCount = maxTicketCount;
         this.cost = cost;
     }
 
-    private void validate(int maxTicketCount, int cost) {
+    private void validate(Integer maxTicketCount, Integer cost) {
         Assert.isTrue(maxTicketCount >= MAX_TICKET_COUNT_MIN_LENGTH && maxTicketCount <= MAX_TICKET_COUNT_MAX_LENGTH, "인 당 예매 가능 수는 1이상 999이하의 값입니다.");
         Assert.isTrue(cost >= COST_MIN_LENGTH && cost <= COST_MAX_LENGTH, "비용은 1이상 100만원이하의 값입니다.");
     }

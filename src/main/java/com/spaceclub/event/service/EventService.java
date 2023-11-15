@@ -29,7 +29,7 @@ public class EventService {
     private final EventUserRepository eventUserRepository;
 
     @Transactional
-    public Long create(Event event, Long clubId) {
+    public Long create(Event event, Long clubId, Long userId) {
         Club club = clubRepository.findById(clubId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 클럽입니다.")
         );
