@@ -7,6 +7,7 @@
 
 ### ✅ PR시 확인 사항
 - [ ] Linear History 여부
+- [ ] Postman QA 여부
   <br>
 
 ### 📢 리뷰어 전달 사항
