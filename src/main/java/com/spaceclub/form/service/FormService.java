@@ -52,8 +52,9 @@ public class FormService {
     public FormGet getForm(Long userId, Long eventId) {
         Event event = validateEventAndForm(eventId);
         Form form = formRepository.findById(event.getFormId()).orElseThrow(() -> new IllegalStateException("존재하지 않는 폼입니댜."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니댜."));
 
-        return FormGet.from(event, form);
+        return FormGet.from(event, user, form);
     }
 
     @Transactional
