@@ -217,4 +217,8 @@ public class Event extends BaseTimeEntity {
         return this.eventInfo.getRecruitmentTarget();
     }
 
+    public String getActivityArea() {
+        return this.eventInfo.getActivityArea();
+    }
+
 }

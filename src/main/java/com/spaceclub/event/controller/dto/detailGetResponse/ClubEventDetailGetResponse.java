@@ -18,6 +18,7 @@ public record ClubEventDetailGetResponse(
         LocalDateTime formCloseDateTime,
         String clubName,
         String clubLogoImageUrl,
+        Boolean isBookmarked,
         String eventCategory
 ) {
 
@@ -25,7 +26,7 @@ public record ClubEventDetailGetResponse(
     public ClubEventDetailGetResponse {
     }
 
-    public static ClubEventDetailGetResponse from(Event event) {
+    public static ClubEventDetailGetResponse from(Event event, Boolean isBookmarked) {
         return ClubEventDetailGetResponse.builder()
                 .id(event.getId())
                 .title(event.getTitle())
@@ -37,6 +38,8 @@ public record ClubEventDetailGetResponse(
                 .clubLogoImageUrl(event.getClubLogoImageUrl())
                 .formOpenDateTime(event.getFormOpenDateTime())
                 .formCloseDateTime(event.getFormCloseDateTime())
+                .isBookmarked(isBookmarked)
+                .eventCategory(event.getCategory().toString())
                 .build();
     }
 

@@ -13,11 +13,12 @@ public record RecruitmentEventDetailGetResponse(
         String posterImageUrl,
         String recruitmentTarget,
         Integer capacity,
-        String location,
+        String activityArea,
         String clubName,
         String clubLogoImageUrl,
         LocalDateTime formOpenDateTime,
         LocalDateTime formCloseDateTime,
+        Boolean isBookmarked,
         String eventCategory
 ) {
 
@@ -25,18 +26,19 @@ public record RecruitmentEventDetailGetResponse(
     public RecruitmentEventDetailGetResponse {
     }
 
-    public static RecruitmentEventDetailGetResponse from(Event event) {
+    public static RecruitmentEventDetailGetResponse from(Event event, Boolean isBookmarked) {
         return RecruitmentEventDetailGetResponse.builder()
                 .id(event.getId())
                 .title(event.getTitle())
                 .posterImageUrl(event.getPosterImageUrl())
                 .recruitmentTarget(event.getRecruitmentTarget())
                 .capacity(event.getCapacity())
-                .location(event.getLocation())
+                .activityArea(event.getActivityArea())
                 .clubName(event.getClubName())
                 .clubLogoImageUrl(event.getClubLogoImageUrl())
                 .formOpenDateTime(event.getFormOpenDateTime())
                 .formCloseDateTime(event.getFormCloseDateTime())
+                .isBookmarked(isBookmarked)
                 .eventCategory(event.getCategory().toString())
                 .build();
     }

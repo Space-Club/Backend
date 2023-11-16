@@ -30,6 +30,7 @@ public class EventTestFixture {
                 .managerName("행사 생성자 이름")
                 .dues(5000)
                 .recruitmentTarget("연어를 좋아하는 사람 누구나")
+                .activityArea("홍대입구역 근처")
                 .build();
     }
 

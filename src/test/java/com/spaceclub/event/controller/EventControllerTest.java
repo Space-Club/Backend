@@ -895,7 +895,7 @@ class EventControllerTest {
 
     @Test
     @WithMockUser
-    void 행사_상세_조회에_성공한다_공연 () throws Exception {
+    void 행사_상세_조회에_성공한다_공연() throws Exception {
         // given
         Event event = event1();
 
@@ -935,7 +935,7 @@ class EventControllerTest {
 
     @Test
     @WithMockUser
-    void 행사_상세_조회에_성공한다_홍보 () throws Exception {
+    void 행사_상세_조회에_성공한다_홍보() throws Exception {
         // given
         Event event = event_promotion();
 
@@ -960,11 +960,10 @@ class EventControllerTest {
                                 fieldWithPath("startDate").type(STRING).description("행사 시작 날짜"),
                                 fieldWithPath("startTime").type(STRING).description("행사 시작 시각"),
                                 fieldWithPath("location").type(STRING).description("행사 위치"),
-                                fieldWithPath("dues").type(NUMBER).description("참가 회비"),
-                                fieldWithPath("clubName").type(STRING).description("행사 주최 클럽 이름"),
-                                fieldWithPath("clubLogoImageUrl").type(STRING).description("행사 주최 클럽 로고 이미지 Url"),
                                 fieldWithPath("formOpenDateTime").type(STRING).description("행사 참여 신청 시작 날짜와 시간"),
                                 fieldWithPath("formCloseDateTime").type(STRING).description("행사 참여 신청 종료 날짜와 시간"),
+                                fieldWithPath("clubName").type(STRING).description("행사 주최 클럽 이름"),
+                                fieldWithPath("clubLogoImageUrl").type(STRING).description("행사 주최 클럽 로고 이미지 Url"),
                                 fieldWithPath("isBookmarked").type(BOOLEAN).description("북마크 여부"),
                                 fieldWithPath("applicants").type(NUMBER).description("신청자 수"),
                                 fieldWithPath("capacity").type(NUMBER).description("신청 정원"),
@@ -975,7 +974,7 @@ class EventControllerTest {
 
     @Test
     @WithMockUser
-    void 행사_상세_조회에_성공한다_모집_공고 () throws Exception {
+    void 행사_상세_조회에_성공한다_모집_공고() throws Exception {
         // given
         Event event = event_recruitment();
 
@@ -997,25 +996,21 @@ class EventControllerTest {
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
                                 fieldWithPath("title").type(STRING).description("행사 제목"),
                                 fieldWithPath("posterImageUrl").type(STRING).description("행사 포스터 URL"),
-                                fieldWithPath("startDate").type(STRING).description("행사 시작 날짜"),
-                                fieldWithPath("startTime").type(STRING).description("행사 시작 시각"),
-                                fieldWithPath("location").type(STRING).description("행사 위치"),
-                                fieldWithPath("dues").type(NUMBER).description("참가 회비"),
+                                fieldWithPath("recruitmentTarget").type(STRING).description("모집 대상"),
+                                fieldWithPath("capacity").type(NUMBER).description("모집 인원"),
+                                fieldWithPath("activityArea").type(STRING).description("활동 위치"),
                                 fieldWithPath("clubName").type(STRING).description("행사 주최 클럽 이름"),
                                 fieldWithPath("clubLogoImageUrl").type(STRING).description("행사 주최 클럽 로고 이미지 Url"),
                                 fieldWithPath("formOpenDateTime").type(STRING).description("행사 참여 신청 시작 날짜와 시간"),
                                 fieldWithPath("formCloseDateTime").type(STRING).description("행사 참여 신청 종료 날짜와 시간"),
                                 fieldWithPath("isBookmarked").type(BOOLEAN).description("북마크 여부"),
-                                fieldWithPath("applicants").type(NUMBER).description("신청자 수"),
-                                fieldWithPath("capacity").type(NUMBER).description("신청 정원"),
                                 fieldWithPath("eventCategory").type(STRING).description("이벤트 종류")
-
                         )));
     }
 
     @Test
     @WithMockUser
-    void 행사_상세_조회에_성공한다_클럽_일정 () throws Exception {
+    void 행사_상세_조회에_성공한다_클럽_일정() throws Exception {
         // given
         Event event = event_club();
 
@@ -1040,16 +1035,12 @@ class EventControllerTest {
                                 fieldWithPath("startDate").type(STRING).description("행사 시작 날짜"),
                                 fieldWithPath("startTime").type(STRING).description("행사 시작 시각"),
                                 fieldWithPath("location").type(STRING).description("행사 위치"),
-                                fieldWithPath("dues").type(NUMBER).description("참가 회비"),
-                                fieldWithPath("clubName").type(STRING).description("행사 주최 클럽 이름"),
-                                fieldWithPath("clubLogoImageUrl").type(STRING).description("행사 주최 클럽 로고 이미지 Url"),
                                 fieldWithPath("formOpenDateTime").type(STRING).description("행사 참여 신청 시작 날짜와 시간"),
                                 fieldWithPath("formCloseDateTime").type(STRING).description("행사 참여 신청 종료 날짜와 시간"),
+                                fieldWithPath("clubName").type(STRING).description("행사 주최 클럽 이름"),
+                                fieldWithPath("clubLogoImageUrl").type(STRING).description("행사 주최 클럽 로고 이미지 Url"),
                                 fieldWithPath("isBookmarked").type(BOOLEAN).description("북마크 여부"),
-                                fieldWithPath("applicants").type(NUMBER).description("신청자 수"),
-                                fieldWithPath("capacity").type(NUMBER).description("신청 정원"),
                                 fieldWithPath("eventCategory").type(STRING).description("이벤트 종류")
-
                         )));
     }
 

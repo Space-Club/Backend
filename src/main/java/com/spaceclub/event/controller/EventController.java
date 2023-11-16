@@ -188,7 +188,7 @@ public class EventController {
                 return ResponseEntity.ok(response);
             }
             case CLUB -> {
-                ClubEventDetailGetResponse response = ClubEventDetailGetResponse.from(event);
+                ClubEventDetailGetResponse response = ClubEventDetailGetResponse.from(event, true);
                 return ResponseEntity.ok(response);
             }
             case PROMOTION -> {
@@ -196,7 +196,7 @@ public class EventController {
                 return ResponseEntity.ok(response);
             }
             case RECRUITMENT -> {
-                RecruitmentEventDetailGetResponse response = RecruitmentEventDetailGetResponse.from(event);
+                RecruitmentEventDetailGetResponse response = RecruitmentEventDetailGetResponse.from(event, true);
                 return ResponseEntity.ok(response);
             }
             default -> throw new IllegalArgumentException("존재하지 않는 행사의 카테고리입니다.");

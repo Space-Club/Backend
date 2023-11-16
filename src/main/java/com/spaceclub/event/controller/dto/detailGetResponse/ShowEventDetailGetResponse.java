@@ -44,9 +44,9 @@ public record ShowEventDetailGetResponse(
                 .clubLogoImageUrl(event.getClubLogoImageUrl())
                 .formOpenDateTime(event.getFormOpenDateTime())
                 .formCloseDateTime(event.getFormCloseDateTime())
-                .isBookmarked(isBookmarked)
                 .applicants(applicants)
                 .capacity(event.getCapacity())
+                .isBookmarked(isBookmarked)
                 .eventCategory(event.getCategory().toString())
                 .build();
     }

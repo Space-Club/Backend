@@ -40,9 +40,9 @@ public record PromotionEventDetailGetResponse(
                 .formCloseDateTime(event.getFormCloseDateTime())
                 .clubName(event.getClubName())
                 .clubLogoImageUrl(event.getClubLogoImageUrl())
-                .isBookmarked(isBookmarked)
                 .applicants(applicants)
                 .capacity(event.getCapacity())
+                .isBookmarked(isBookmarked)
                 .eventCategory(event.getCategory().toString())
                 .build();
     }
