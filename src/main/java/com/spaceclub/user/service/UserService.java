@@ -4,6 +4,7 @@ import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.event.domain.Event;
+import com.spaceclub.event.repository.EventRepository;
 import com.spaceclub.event.repository.EventUserRepository;
 import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.global.oauth.config.KakaoOauthInfoSender;
@@ -44,6 +45,8 @@ public class UserService {
     private final BookmarkRepository bookmarkRepository;
 
     private final S3ImageUploader imageUploader;
+
+    private final EventRepository eventRepository;
 
     public Page<Event> findAllEventPages(Long userId, Pageable pageable) {
         return eventUserRepository.findAllByUserId(userId, pageable);
@@ -100,11 +103,24 @@ public class UserService {
 
     @Transactional
     public void changeBookmarkStatus(UserBookmarkInfo userBookmarkInfo) {
-        Bookmark bookmark = bookmarkRepository.findByUserIdAndEventId(userBookmarkInfo.userId(), userBookmarkInfo.eventId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 북마크입니다."))
-                .changeBookmarkStatus(userBookmarkInfo.bookmarkStatus());
+        Event event = eventRepository.findById(userBookmarkInfo.eventId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이벤트입니다."));
+        User user = getUser(userBookmarkInfo.userId());
 
-        bookmarkRepository.save(bookmark);
+        if (userBookmarkInfo.bookmarkStatus()) {
+            Bookmark build = Bookmark.builder()
+                    .user(user)
+                    .event(event)
+                    .bookmarkStatus(true)
+                    .build();
+            bookmarkRepository.save(build);
+            return;
+        }
+
+        Bookmark bookmark = bookmarkRepository.findByUserIdAndEventId(userBookmarkInfo.userId(), userBookmarkInfo.eventId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 북마크입니다."));
+
+        bookmarkRepository.delete(bookmark);
     }
 
     public void logout(Long userId) {
