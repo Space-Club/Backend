@@ -81,9 +81,10 @@ public class ClubController {
     public ResponseEntity<ClubGetResponse> getClub(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
         Club club = clubService.getClub(clubId);
         Long userId = jwtService.verifyUserId(httpServletRequest);
-        String inviteCode = inviteService.getInviteCode(clubId, userId);
 
-        ClubGetResponse response = ClubGetResponse.from(club, INVITE_LINK_PREFIX + inviteCode);
+        String inviteCode = inviteService.getInviteCode(clubId, userId);
+        String role = clubService.getUserRole(clubId, userId);
+        ClubGetResponse response = ClubGetResponse.from(club, INVITE_LINK_PREFIX + inviteCode, role);
 
         return ResponseEntity.ok(response);
     }

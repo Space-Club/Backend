@@ -232,4 +232,11 @@ public class ClubService {
         return user.getProfileImageUrl();
     }
 
+    public String getUserRole(Long clubId, Long userId) {
+        ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
+
+        return clubUser.getRole().name();
+    }
+
 }

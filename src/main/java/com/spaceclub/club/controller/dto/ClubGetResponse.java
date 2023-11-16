@@ -9,7 +9,8 @@ public record ClubGetResponse(
         String info,
         int memberCount,
         String coverImageUrl,
-        String inviteLink
+        String inviteLink,
+        String role
 ) {
 
     @Builder
@@ -18,7 +19,8 @@ public record ClubGetResponse(
                            String info,
                            int memberCount,
                            String coverImageUrl,
-                           String inviteLink
+                           String inviteLink,
+                           String role
     ) {
         this.name = name;
         this.logoImageUrl = logoImageUrl;
@@ -26,9 +28,10 @@ public record ClubGetResponse(
         this.memberCount = memberCount;
         this.coverImageUrl = coverImageUrl;
         this.inviteLink = inviteLink;
+        this.role = role;
     }
 
-    public static ClubGetResponse from(Club club, String inviteLink) {
+    public static ClubGetResponse from(Club club, String inviteLink, String role){
         return ClubGetResponse.builder()
                 .name(club.getName())
                 .logoImageUrl(club.getLogoImageUrl())
@@ -36,6 +39,7 @@ public record ClubGetResponse(
                 .memberCount(club.getClubUser().size())
                 .coverImageUrl(club.getCoverImageUrl())
                 .inviteLink(inviteLink)
+                .role(role)
                 .build();
     }
 
