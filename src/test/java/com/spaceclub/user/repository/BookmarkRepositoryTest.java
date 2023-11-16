@@ -71,19 +71,16 @@ class BookmarkRepositoryTest {
                 .id(1L)
                 .user(user)
                 .event(event1())
-                .bookmarkStatus(true)
                 .build();
         Bookmark bookmarkEvent2 = Bookmark.builder()
                 .id(2L)
                 .user(user)
                 .event(event2())
-                .bookmarkStatus(false)
                 .build();
         Bookmark bookmarkEvent3 = Bookmark.builder()
                 .id(3L)
                 .user(user)
                 .event(event3())
-                .bookmarkStatus(true)
                 .build();
         bookmarkRepository.saveAll(List.of(bookmarkEvent1, bookmarkEvent2, bookmarkEvent3));
     }
@@ -100,10 +97,10 @@ class BookmarkRepositoryTest {
         // then
         assertAll(
                 () -> assertThat(bookmarkedEventPages.getTotalElements())
-                        .isEqualTo(2),
+                        .isEqualTo(3),
                 () -> assertThat(bookmarkedEventPages.getContent())
                         .extracting(Event::getId)
-                        .containsExactlyInAnyOrder(1L, 3L)
+                        .containsExactlyInAnyOrder(1L, 2L, 3L)
         );
     }
 

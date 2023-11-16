@@ -108,12 +108,11 @@ public class UserService {
         User user = getUser(userBookmarkInfo.userId());
 
         if (userBookmarkInfo.bookmarkStatus()) {
-            Bookmark build = Bookmark.builder()
+            Bookmark bookmark = Bookmark.builder()
                     .user(user)
                     .event(event)
-                    .bookmarkStatus(true)
                     .build();
-            bookmarkRepository.save(build);
+            bookmarkRepository.save(bookmark);
             return;
         }
 
