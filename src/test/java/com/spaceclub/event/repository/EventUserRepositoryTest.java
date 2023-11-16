@@ -12,6 +12,8 @@ import com.spaceclub.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
@@ -115,4 +117,21 @@ class EventUserRepositoryTest {
         );
     }
 
+    @ParameterizedTest
+    @CsvSource(value = {
+            "1,1,true",
+            "1,2,true",
+            "1,3,true",
+            "1,4,false",
+            "2,1,false",
+    }, delimiter = ',')
+    void 유저의_이벤트_존재_여부_확인에_성공한다(Long userId, Long eventId, boolean expected) {
+        // when
+        boolean exists = eventUserRepository.existsByEventIdAndUserId(eventId, userId);
+
+        // then
+        assertThat(exists).isEqualTo(expected);
+    }
+
 }
+

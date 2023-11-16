@@ -83,10 +83,9 @@ public class EventService {
     }
 
     private void validateIfEventUserExists(Long eventId, Long userId) {
-        eventUserRepository.findByEventIdAndUserId(eventId, userId)
-                .ifPresent(eventUser -> {
-                    throw new IllegalArgumentException("이미 신청한 행사입니다.");
-                });
+        if (eventUserRepository.existsByEventIdAndUserId(eventId, userId)) {
+            throw new IllegalArgumentException("이미 신청한 행사입니다.");
+        }
     }
 
     public Event get(Long eventId) {

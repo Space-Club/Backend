@@ -21,4 +21,7 @@ public interface EventUserRepository extends JpaRepository<EventUser, Long> {
     @Query("select eu from EventUser eu where eu.event.id = :eventId and eu.user.id = :userId")
     Optional<EventUser> findByEventIdAndUserId(@Param("eventId") Long eventId, @Param("userId") Long userId);
 
+    @Query("select exists (select eu from EventUser eu where eu.event.id = :eventId and eu.user.id = :userId)")
+    boolean existsByEventIdAndUserId(@Param("eventId") Long eventId, @Param("userId") Long userId);
+
 }
