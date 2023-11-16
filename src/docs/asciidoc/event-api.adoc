@@ -268,21 +268,72 @@ include::{snippets}/event/search/http-response.adoc[]
 include::{snippets}/event/search/response-fields.adoc[]
 :sectnums:
 
-=== 행사 상세 조회
+=== 행사 상세 조회 (공연)
 :sectnums!:
 ==== Request
 
-include::{snippets}/event/get/http-request.adoc[]
+include::{snippets}/event/getShowEvent/http-request.adoc[]
 ===== Path Parameter
 
-include::{snippets}/event/get/path-parameters.adoc[]
+include::{snippets}/event/getShowEvent/path-parameters.adoc[]
 
 ==== Response
 
-include::{snippets}/event/get/http-response.adoc[]
+include::{snippets}/event/getShowEvent/http-response.adoc[]
 ===== Response Body
 
-include::{snippets}/event/get/response-fields.adoc[]
+include::{snippets}/event/getShowEvent/response-fields.adoc[]
+:sectnums:
+
+=== 행사 상세 조회 (홍보)
+:sectnums!:
+==== Request
+
+include::{snippets}/event/getPromotionEvent/http-request.adoc[]
+===== Path Parameter
+
+include::{snippets}/event/getPromotionEvent/path-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/event/getPromotionEvent/http-response.adoc[]
+===== Response Body
+
+include::{snippets}/event/getPromotionEvent/response-fields.adoc[]
+:sectnums:
+
+=== 행사 상세 조회 (모집 공고)
+:sectnums!:
+==== Request
+
+include::{snippets}/event/getRecruitmentEvent/http-request.adoc[]
+===== Path Parameter
+
+include::{snippets}/event/getRecruitmentEvent/path-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/event/getRecruitmentEvent/http-response.adoc[]
+===== Response Body
+
+include::{snippets}/event/getRecruitmentEvent/response-fields.adoc[]
+:sectnums:
+
+=== 행사 상세 조회 (클럽 일정)
+:sectnums!:
+==== Request
+
+include::{snippets}/event/getClubEvent/http-request.adoc[]
+===== Path Parameter
+
+include::{snippets}/event/getClubEvent/path-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/event/getClubEvent/http-response.adoc[]
+===== Response Body
+
+include::{snippets}/event/getClubEvent/response-fields.adoc[]
 :sectnums:
 
 === 행사 삭제
