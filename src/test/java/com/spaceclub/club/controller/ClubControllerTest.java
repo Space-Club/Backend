@@ -8,7 +8,6 @@ import com.spaceclub.club.controller.dto.ClubNoticeUpdateRequest;
 import com.spaceclub.club.controller.dto.ClubUpdateRequest;
 import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
 import com.spaceclub.club.domain.Club;
-import com.spaceclub.club.domain.ClubUserRole;
 import com.spaceclub.club.service.ClubService;
 import com.spaceclub.club.service.vo.ClubNoticeUpdate;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
@@ -41,12 +40,14 @@ import static com.spaceclub.club.ClubNoticeTestFixture.clubNotice2;
 import static com.spaceclub.club.ClubTestFixture.club1;
 import static com.spaceclub.club.ClubUserTestFixture.club1User1Manager;
 import static com.spaceclub.club.ClubUserTestFixture.club1User2Manager;
+import static com.spaceclub.club.domain.ClubUserRole.MANAGER;
 import static com.spaceclub.event.EventTestFixture.event1;
 import static com.spaceclub.event.EventTestFixture.event2;
 import static com.spaceclub.event.EventTestFixture.event3;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
@@ -171,10 +172,14 @@ class ClubControllerTest {
     @WithMockUser
     void 클럽_조회에_성공한다() throws Exception {
         // given
+        Long userId = 1L;
         given(clubService.getClub(any(Long.class))).willReturn(club1());
+        given(jwtService.verifyUserId(any())).willReturn(userId);
+        given(clubService.getUserRole(any(Long.class), any(Long.class))).willReturn(MANAGER.name());
 
         // when
         ResultActions result = this.mockMvc.perform(get("/api/v1/clubs/{clubId}", club1().getId())
+                .header(AUTHORIZATION, "Acess Token")
                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
@@ -185,14 +190,20 @@ class ClubControllerTest {
                         preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("clubId").description("클럽 아이디")),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("Access Token")
+                        ),
                         responseFields(
                                 fieldWithPath("name").type(STRING).description("클럽 이름"),
                                 fieldWithPath("logoImageUrl").type(STRING).description("클럽 이미지 Url"),
                                 fieldWithPath("info").type(STRING).description("클럽 소개"),
                                 fieldWithPath("memberCount").type(NUMBER).description("클럽 멤버 수"),
                                 fieldWithPath("coverImageUrl").type(STRING).description("클럽 커버 이미지 Url"),
-                                fieldWithPath("inviteLink").type(STRING).description("클럽 초대 링크")
+                                fieldWithPath("inviteLink").type(STRING).description("클럽 초대 링크"),
+                                fieldWithPath("inviteLink").type(STRING).description("클럽 초대 링크"),
+                                fieldWithPath("role").type(STRING).description("유저의 클럽 ROLE")
                         )));
+
     }
 
     @Test
@@ -382,7 +393,7 @@ class ClubControllerTest {
         // given
         Long clubId = 1L;
         Long memberId = 1L;
-        ClubUserUpdateRequest request = new ClubUserUpdateRequest(ClubUserRole.MANAGER);
+        ClubUserUpdateRequest request = new ClubUserUpdateRequest(MANAGER);
 
         doNothing().when(clubService).updateMemberRole(any(ClubUserUpdate.class));
 
