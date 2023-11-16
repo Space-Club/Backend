@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface EventUserRepository extends JpaRepository<EventUser, Long> {
 
     @Query("select eu.event from EventUser eu where eu.user.id = :userId")
@@ -16,5 +18,7 @@ public interface EventUserRepository extends JpaRepository<EventUser, Long> {
     @Query("select eu.status from EventUser eu where eu.user.id = :userId and eu.event = :event")
     String findEventStatusByUserId(@Param("userId") Long userId, @Param("event") Event event);
 
-    EventUser findByEvent_IdAndUser_Id(Long eventId, Long userId);
+    @Query("select eu from EventUser eu where eu.event.id = :eventId and eu.user.id = :userId")
+    Optional<EventUser> findByEventIdAndUserId(@Param("eventId") Long eventId, @Param("userId") Long userId);
+
 }
