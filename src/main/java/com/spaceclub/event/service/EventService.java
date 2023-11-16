@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.spaceclub.event.domain.ApplicationStatus.*;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -69,14 +71,21 @@ public class EventService {
         Event event = eventRepository.findById(eventId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 행사입니다.")
         );
+        validateIfEventUserExists(eventId, userId);
 
         EventUser newEventUser = EventUser.builder()
                 .user(user)
                 .event(event)
-                .status(ApplicationStatus.PENDING)
+                .status(PENDING)
                 .build();
 
         eventUserRepository.save(newEventUser);
+    }
+
+    private void validateIfEventUserExists(Long eventId, Long userId) {
+        if (eventUserRepository.existsByEventIdAndUserId(eventId, userId)) {
+            throw new IllegalArgumentException("이미 신청한 행사입니다.");
+        }
     }
 
     public Event get(Long eventId) {
@@ -89,7 +98,8 @@ public class EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 행사입니다."));
 
-        EventUser eventUser = eventUserRepository.findByEvent_IdAndUser_Id(eventId, userId);
+        EventUser eventUser = eventUserRepository.findByEventIdAndUserId(eventId, userId)
+                .orElseThrow(() -> new IllegalArgumentException("신청한 이력이 없는 행사입니다."));
 
         EventUser updateEventUser = eventUser.setStatusByManaged(event.isFormManaged());
 
