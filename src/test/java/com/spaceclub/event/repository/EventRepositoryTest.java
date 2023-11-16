@@ -18,7 +18,7 @@ import static com.spaceclub.club.ClubTestFixture.club1;
 import static com.spaceclub.club.ClubTestFixture.club2;
 import static com.spaceclub.event.EventTestFixture.event1;
 import static com.spaceclub.event.EventTestFixture.event2;
-import static com.spaceclub.event.EventTestFixture.event3;
+import static com.spaceclub.event.EventTestFixture.event_club;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -39,7 +39,7 @@ class EventRepositoryTest {
         // given
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(DESC, "id"));
         clubRepository.saveAll(List.of(club1(), club2()));
-        eventRepository.saveAll(List.of(event1(), event2(), event3().registerClub(club2())));
+        eventRepository.saveAll(List.of(event1(), event2(), event_club().registerClub(club2())));
 
         // when
         Page<Event> eventPages = eventRepository.findByClub_Id(club1().getId(), pageRequest);

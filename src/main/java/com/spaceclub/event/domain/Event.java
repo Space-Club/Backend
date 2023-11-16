@@ -201,4 +201,16 @@ public class Event extends BaseTimeEntity {
         return form.isManaged();
     }
 
+    public Integer getDues() {
+        return this.eventInfo.getDues();
+    }
+
+    public Integer getCapacity() {
+        return this.eventInfo.getCapacity();
+    }
+
+    public String getRecruitmentTarget() {
+        return this.eventInfo.getRecruitmentTarget();
+    }
+
 }

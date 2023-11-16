@@ -23,7 +23,7 @@ import java.util.List;
 
 import static com.spaceclub.event.EventTestFixture.event1;
 import static com.spaceclub.event.EventTestFixture.event2;
-import static com.spaceclub.event.EventTestFixture.event3;
+import static com.spaceclub.event.EventTestFixture.event_club;
 import static com.spaceclub.user.domain.Status.NOT_REGISTERED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -69,7 +69,7 @@ class EventUserRepositoryTest {
                 .build();
         userRepository.save(user);
 
-        eventRepository.saveAll(List.of(event1(), event2(), event3()));
+        eventRepository.saveAll(List.of(event1(), event2(), event_club()));
 
         EventUser eventUser1 = EventUser.builder()
                 .id(1L)
@@ -86,7 +86,7 @@ class EventUserRepositoryTest {
         EventUser eventUser3 = EventUser.builder()
                 .id(3L)
                 .user(user)
-                .event(event3())
+                .event(event_club())
                 .status(ApplicationStatus.CANCEL_REQUESTED)
                 .build();
         eventUserRepository.saveAll(List.of(eventUser1, eventUser2, eventUser3));
