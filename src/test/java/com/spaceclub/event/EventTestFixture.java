@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 
 import static com.spaceclub.club.ClubTestFixture.club1;
 import static com.spaceclub.event.domain.EventCategory.CLUB;
+import static com.spaceclub.event.domain.EventCategory.PROMOTION;
+import static com.spaceclub.event.domain.EventCategory.RECRUITMENT;
 import static com.spaceclub.event.domain.EventCategory.SHOW;
 import static com.spaceclub.user.UserTestFixture.user1;
 
@@ -26,6 +28,8 @@ public class EventTestFixture {
                 .capacity(100)
                 .posterImageUrl("www.aaa.com")
                 .managerName("행사 생성자 이름")
+                .dues(5000)
+                .recruitmentTarget("연어를 좋아하는 사람 누구나")
                 .build();
     }
 
@@ -74,10 +78,34 @@ public class EventTestFixture {
                 .build();
     }
 
-    public static Event event3() {
+    public static Event event_club() {
         return Event.builder()
                 .id(3L)
                 .category(CLUB)
+                .eventInfo(eventInfo())
+                .ticketInfo(ticketInfo())
+                .bankInfo(bankInfo())
+                .formInfo(formInfo())
+                .club(club1())
+                .build();
+    }
+
+    public static Event event_promotion() {
+        return Event.builder()
+                .id(4L)
+                .category(PROMOTION)
+                .eventInfo(eventInfo())
+                .ticketInfo(ticketInfo())
+                .bankInfo(bankInfo())
+                .formInfo(formInfo())
+                .club(club1())
+                .build();
+    }
+
+    public static Event event_recruitment() {
+        return Event.builder()
+                .id(5L)
+                .category(RECRUITMENT)
                 .eventInfo(eventInfo())
                 .ticketInfo(ticketInfo())
                 .bankInfo(bankInfo())

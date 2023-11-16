@@ -37,6 +37,7 @@ public class EventInfo {
 
     private LocalDateTime endDateTime;
 
+    @Getter
     private Integer dues;
 
     @Getter
@@ -49,8 +50,10 @@ public class EventInfo {
     @Getter
     private String posterImageUrl;
 
+    @Getter
     private String activityArea;
 
+    @Getter
     private String recruitmentTarget;
 
     @Getter
