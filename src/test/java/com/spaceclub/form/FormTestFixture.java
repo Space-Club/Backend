@@ -22,7 +22,6 @@ public class FormTestFixture {
                 .id(1L)
                 .title("이름")
                 .type(FormOptionType.TEXT)
-                .visible(true)
                 .build();
     }
 
@@ -31,7 +30,6 @@ public class FormTestFixture {
                 .id(2L)
                 .title("연락처")
                 .type(FormOptionType.TEXT)
-                .visible(true)
                 .build();
     }
 

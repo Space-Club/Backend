@@ -9,6 +9,7 @@ import java.util.List;
 
 public record FormGetResponse(
         EventResponse event,
+        UserResponse user,
         FormResponse form
 ) {
 
@@ -16,22 +17,28 @@ public record FormGetResponse(
     public FormGetResponse {
     }
 
-    public record EventResponse(String title) {
+    private record EventResponse(String title) {
 
     }
 
-    public record FormItemResponse(Long id, String title, FormOptionType type) {
+    private record UserResponse(String name, String phoneNumber) {
 
     }
 
-    public record FormResponse(String description, List<FormItemResponse> options) {
+
+    private record FormItemResponse(Long id, String title, FormOptionType type) {
+
+    }
+
+    private record FormResponse(String description, List<FormItemResponse> options) {
 
     }
 
     public static FormGetResponse from(FormGet vo) {
         return FormGetResponse.builder()
                 .event(new EventResponse(vo.title()))
-                .form(new FormResponse(vo.form().getDescription(), from(vo.form().getOptions())))
+                .user(new UserResponse(vo.getUsername(), vo.getPhoneNumber()))
+                .form(new FormResponse(vo.getFormDescription(), from(vo.getFormOptions())))
                 .build();
     }
 

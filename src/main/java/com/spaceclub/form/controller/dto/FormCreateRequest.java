@@ -18,7 +18,7 @@ public record FormCreateRequest(
     public FormCreateRequest {
     }
 
-    public record FormCreateOptionRequest(String title, FormOptionType type, boolean visible) {
+    public record FormCreateOptionRequest(String title, FormOptionType type) {
 
     }
 
@@ -27,7 +27,6 @@ public record FormCreateRequest(
                 .map(option -> FormOption.builder()
                         .title(option.title)
                         .type(option.type)
-                        .visible(option.visible)
                         .build())
                 .toList();
     }
