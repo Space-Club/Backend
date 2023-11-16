@@ -15,7 +15,7 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
         Optional<Bookmark> findByUserIdAndEventId(Long userId, Long eventId);
 
-        @Query("select b.event from Bookmark b where b.user = :user and b.bookmarkStatus = true")
+        @Query("select b.event from Bookmark b where b.user = :user")
         Page<Event> findBookmarkedEventPages(@Param("user") User user, Pageable pageable);
 
 }

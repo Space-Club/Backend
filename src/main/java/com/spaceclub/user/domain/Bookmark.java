@@ -26,8 +26,6 @@ public class Bookmark {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    private boolean bookmarkStatus;
-
     @ManyToOne(fetch = EAGER, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -37,10 +35,9 @@ public class Bookmark {
     private Event event;
 
     @Builder
-    private Bookmark(Long id, boolean bookmarkStatus, User user, Event event) {
+    private Bookmark(Long id, User user, Event event) {
         validate(user, event);
         this.id = id;
-        this.bookmarkStatus = bookmarkStatus;
         this.user = user;
         this.event = event;
     }
@@ -48,11 +45,6 @@ public class Bookmark {
     private void validate(User user, Event event) {
         Assert.notNull(user, "유저는 필수입니다.");
         Assert.notNull(event, "이벤트는 필수입니다.");
-    }
-
-    public Bookmark changeBookmarkStatus(boolean bookmarkStatus) {
-        this.bookmarkStatus = bookmarkStatus;
-        return this;
     }
 
 }
