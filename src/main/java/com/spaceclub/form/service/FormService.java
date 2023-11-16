@@ -2,11 +2,8 @@ package com.spaceclub.form.service;
 
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.repository.EventRepository;
-import com.spaceclub.event.service.EventService;
 import com.spaceclub.form.domain.Form;
-import com.spaceclub.form.domain.FormOption;
 import com.spaceclub.form.domain.FormOptionUser;
-import com.spaceclub.form.repository.FormOptionRepository;
 import com.spaceclub.form.repository.FormOptionUserRepository;
 import com.spaceclub.form.repository.FormRepository;
 import com.spaceclub.form.service.vo.FormApplicationGetInfo;
@@ -29,13 +26,9 @@ public class FormService {
 
     private final FormRepository formRepository;
 
-    private final FormOptionRepository formOptionRepository;
-
     private final FormOptionUserRepository formOptionUserRepository;
 
     private final UserRepository userRepository;
-
-    private final EventService eventService;
 
     @Transactional
     public Long createForm(FormCreate vo) {
@@ -55,23 +48,6 @@ public class FormService {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니댜."));
 
         return FormGet.from(event, user, form);
-    }
-
-    @Transactional
-    public void createApplicationForm(Long userId, Long eventId, List<FormOptionUser> formOptionUsers) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
-
-        for (FormOptionUser formOptionUser : formOptionUsers) {
-            FormOption formOption = formOptionRepository.findById(formOptionUser.getFormOptionId())
-                    .orElseThrow(() -> new IllegalStateException("존재하지 않는 폼 옵션 입니다."));
-
-            FormOptionUser registeredFormOptionUser = formOptionUser.registerFormOptionAndUser(formOption, user);
-            formOptionUserRepository.save(registeredFormOptionUser);
-            formOption.addFormOptionUser(registeredFormOptionUser);
-            formOptionRepository.save(formOption);
-        }
-
-        eventService.applyEvent(eventId, userId);
     }
 
     public FormApplicationGetInfo getApplicationForms(Long userId, Long eventId) {

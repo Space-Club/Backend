@@ -7,6 +7,11 @@ import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventUser;
 import com.spaceclub.event.repository.EventRepository;
 import com.spaceclub.event.repository.EventUserRepository;
+import com.spaceclub.event.service.vo.EventApplicationCreateInfo;
+import com.spaceclub.form.domain.FormOption;
+import com.spaceclub.form.domain.FormOptionUser;
+import com.spaceclub.form.repository.FormOptionRepository;
+import com.spaceclub.form.repository.FormOptionUserRepository;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.spaceclub.event.domain.ApplicationStatus.*;
+import static com.spaceclub.event.domain.ApplicationStatus.PENDING;
 
 @Service
 @Transactional(readOnly = true)
@@ -29,6 +34,11 @@ public class EventService {
     private final UserRepository userRepository;
 
     private final EventUserRepository eventUserRepository;
+
+    private final FormOptionRepository formOptionRepository;
+
+    private final FormOptionUserRepository formOptionUserRepository;
+
 
     @Transactional
     public Long create(Event event, Long clubId, Long userId) {
@@ -63,20 +73,28 @@ public class EventService {
     }
 
     @Transactional
-    public void applyEvent(Long eventId, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 회원입니다.")
-        );
+    public void createApplicationForm(EventApplicationCreateInfo info) {
+        User user = userRepository.findById(info.userId()).orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
+        Event event = eventRepository.findById(info.eventId()).orElseThrow(() -> new IllegalStateException("존재하지 않는 행사입니다."));
 
-        Event event = eventRepository.findById(eventId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 행사입니다.")
-        );
-        validateIfEventUserExists(eventId, userId);
+        validateTicketCount(info.ticketCount(), event.getMaxTicketCount());
+        validateIfEventUserExists(info.eventId(), info.userId());
+
+        for (FormOptionUser formOptionUser : info.formOptionUsers()) {
+            FormOption formOption = formOptionRepository.findById(formOptionUser.getFormOptionId())
+                    .orElseThrow(() -> new IllegalStateException("존재하지 않는 폼 옵션 입니다."));
+
+            FormOptionUser registeredFormOptionUser = formOptionUser.registerFormOptionAndUser(formOption, user);
+            formOptionUserRepository.save(registeredFormOptionUser);
+            formOption.addFormOptionUser(registeredFormOptionUser);
+            formOptionRepository.save(formOption);
+        }
 
         EventUser newEventUser = EventUser.builder()
                 .user(user)
                 .event(event)
                 .status(PENDING)
+                .ticketCount(info.ticketCount())
                 .build();
 
         eventUserRepository.save(newEventUser);
@@ -86,6 +104,11 @@ public class EventService {
         if (eventUserRepository.existsByEventIdAndUserId(eventId, userId)) {
             throw new IllegalArgumentException("이미 신청한 행사입니다.");
         }
+    }
+
+    private void validateTicketCount(Integer ticketCount, Integer maxTicketCount) {
+        if (maxTicketCount == null) throw new IllegalArgumentException("인 당 예매 수를 설정할 수 없는 행사 종류입니다.");
+        if (maxTicketCount < ticketCount) throw new IllegalArgumentException("인 당 예매 수를 초과하였습니다.");
     }
 
     public Event get(Long eventId) {

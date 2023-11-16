@@ -1,4 +1,4 @@
-package com.spaceclub.event.controller;
+package com.spaceclub.event.controller.dto;
 
 import com.spaceclub.event.domain.ApplicationStatus;
 

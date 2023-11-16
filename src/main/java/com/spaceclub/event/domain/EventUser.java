@@ -44,13 +44,16 @@ public class EventUser extends BaseTimeEntity {
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
+    private Integer ticketCount;
+
     @Builder
-    private EventUser(Long id, ApplicationStatus status, User user, Event event) {
+    private EventUser(Long id, ApplicationStatus status, User user, Event event, Integer ticketCount) {
         validate(user, event);
         this.id = id;
         this.status = status;
         this.user = user;
         this.event = event;
+        this.ticketCount = ticketCount;
     }
 
     private void validate(User user, Event event) {
