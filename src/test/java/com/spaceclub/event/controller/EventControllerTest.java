@@ -2,7 +2,7 @@ package com.spaceclub.event.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
-import com.spaceclub.event.controller.dto.EventApplyRequest;
+import com.spaceclub.event.controller.dto.EventApplicationCreateRequest;
 import com.spaceclub.event.controller.dto.createRequest.ClubEventCreateRequest;
 import com.spaceclub.event.controller.dto.createRequest.PromotionEventCreateRequest;
 import com.spaceclub.event.controller.dto.createRequest.RecruitmentEventCreateRequest;
@@ -13,6 +13,8 @@ import com.spaceclub.event.controller.dto.updateRequest.RecruitmentEventUpdateRe
 import com.spaceclub.event.controller.dto.updateRequest.ShowEventUpdateRequest;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.service.EventService;
+import com.spaceclub.event.service.vo.EventApplicationCreateInfo;
+import com.spaceclub.form.FormTestFixture;
 import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.global.jwt.service.JwtService;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -25,6 +27,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -890,39 +893,6 @@ class EventControllerTest {
 
     @Test
     @WithMockUser
-    void 행사_신청에_성공한다() throws Exception {
-        // given
-        doNothing().when(eventService).applyEvent(any(Long.class), any(Long.class));
-        given(jwtService.verifyUserId(any())).willReturn(1L);
-
-        Long eventId = 1L;
-        EventApplyRequest request = EventApplyRequest.builder()
-                .eventId(eventId)
-                .build();
-
-        // when
-        ResultActions result = mvc.perform(post("/api/v1/events/apply")
-                .header("Authorization", "access token")
-                .content(mapper.writeValueAsString(request))
-                .contentType(APPLICATION_JSON_VALUE)
-                .with(csrf()));
-
-        // then
-        result.andExpect(status().isNoContent())
-                .andDo(print())
-                .andDo(document("event/apply",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(
-                                headerWithName(AUTHORIZATION).description("액세스 토큰")
-                        ),
-                        requestFields(
-                                fieldWithPath("eventId").type(NUMBER).description("이벤트 ID")
-                        )));
-    }
-
-    @Test
-    @WithMockUser
     void 행사_상세_조회에_성공한다() throws Exception {
         // given
         Event event = event1();
@@ -1079,6 +1049,55 @@ class EventControllerTest {
                         pathParameters(
                                 parameterWithName("eventId").description("행사 ID")
                         ))
+                );
+    }
+
+    @Test
+    @WithMockUser
+    void 행사_신청에_성공한다() throws Exception {
+        // given
+        EventApplicationCreateRequest request = EventApplicationCreateRequest.builder()
+                .eventId(1L)
+                .ticketCount(5)
+                .forms(List.of(
+                        new EventApplicationCreateRequest.FormRequest(FormTestFixture.formOption1().getId(), "박씨"),
+                        new EventApplicationCreateRequest.FormRequest(FormTestFixture.formOption2().getId(), "010-1111-2222")
+                ))
+                .build();
+
+        Long userId = 1L;
+        given(jwtService.verifyUserId(any())).willReturn(userId);
+        doNothing().when(eventService).createApplicationForm(EventApplicationCreateInfo.builder()
+                .userId(userId)
+                .eventId(request.eventId())
+                .formOptionUsers(request.toEntityList())
+                .ticketCount(request.ticketCount())
+                .build()
+        );
+
+        // when, then
+        mvc.perform(post("/api/v1/events/applications")
+                        .header("Authorization", "Access Token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(request))
+                        .with(csrf())
+                )
+                .andExpect(status().isNoContent())
+                .andDo(
+                        document("event/createApplications",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName("Authorization").description("액세스 토큰")
+                                ),
+                                requestFields(
+                                        fieldWithPath("eventId").type(NUMBER).description("행사 id"),
+                                        fieldWithPath("ticketCount").type(NUMBER).description("행사 예매 매수"),
+                                        fieldWithPath("forms[]").type(ARRAY).description("폼 리스트"),
+                                        fieldWithPath("forms[].optionId").type(NUMBER).description("폼 항목 id"),
+                                        fieldWithPath("forms[].content").type(STRING).description("폼 항목 답변 내용")
+                                )
+                        )
                 );
     }
 

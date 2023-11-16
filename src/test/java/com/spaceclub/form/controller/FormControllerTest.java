@@ -3,8 +3,6 @@ package com.spaceclub.form.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.form.FormTestFixture;
-import com.spaceclub.form.controller.dto.FormApplicationCreateRequest;
-import com.spaceclub.form.controller.dto.FormApplicationCreateRequest.FormRequest;
 import com.spaceclub.form.controller.dto.FormCreateRequest;
 import com.spaceclub.form.domain.Form;
 import com.spaceclub.form.domain.FormOptionType;
@@ -19,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -30,7 +27,6 @@ import static com.spaceclub.form.controller.dto.FormCreateRequest.FormCreateOpti
 import static com.spaceclub.user.UserTestFixture.user1;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -162,47 +158,6 @@ class FormControllerTest {
                                         fieldWithPath("form.options[].id").type(NUMBER).description("폼 항목 id"),
                                         fieldWithPath("form.options[].title").type(STRING).description("폼 항목명"),
                                         fieldWithPath("form.options[].type").type(STRING).description("폼 항목 타입(TEXT, SELECT, RADIO, NUMBER)")
-                                )
-                        )
-                );
-    }
-
-    @Test
-    @WithMockUser
-    void 폼_제출을_통한_행사_신청에_성공한다() throws Exception {
-        // given
-        FormApplicationCreateRequest request = FormApplicationCreateRequest.builder()
-                .eventId(1L)
-                .forms(List.of(
-                        new FormRequest(FormTestFixture.formOption1().getId(), "박씨"),
-                        new FormRequest(FormTestFixture.formOption2().getId(), "010-1111-2222")
-                ))
-                .build();
-
-        Long userId = 1L;
-        given(jwtService.verifyUserId(any())).willReturn(userId);
-        doNothing().when(formService).createApplicationForm(1L, request.eventId(), request.toEntityList());
-
-        // when, then
-        mvc.perform(post("/api/v1/events/forms/applications")
-                        .header("Authorization", "Access Token")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request))
-                        .with(csrf())
-                )
-                .andExpect(status().isNoContent())
-                .andDo(
-                        document("form/createApplications",
-                                preprocessRequest(prettyPrint()),
-                                preprocessResponse(prettyPrint()),
-                                requestHeaders(
-                                        headerWithName("Authorization").description("액세스 토큰")
-                                ),
-                                requestFields(
-                                        fieldWithPath("eventId").type(NUMBER).description("행사 id"),
-                                        fieldWithPath("forms[]").type(ARRAY).description("폼 리스트"),
-                                        fieldWithPath("forms[].optionId").type(NUMBER).description("폼 항목 id"),
-                                        fieldWithPath("forms[].content").type(STRING).description("폼 항목 답변 내용")
                                 )
                         )
                 );

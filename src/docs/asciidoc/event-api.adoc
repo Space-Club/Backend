@@ -188,22 +188,24 @@ include::{snippets}/event/update/club/request-part-request-fields.adoc[]
 include::{snippets}/event/update/club/http-response.adoc[]
 :sectnums:
 
-=== 행사 신청
+=== 행사 신청하기
 :sectnums!:
 ==== Request
 
-include::{snippets}/event/apply/http-request.adoc[]
-===== Request Header
+include::{snippets}/event/createApplications/http-request.adoc[]
 
-include::{snippets}/event/apply/request-headers.adoc[]
+=====  Request Header
 
-===== Request Body
+include::{snippets}/event/createApplications/request-headers.adoc[]
 
-include::{snippets}/event/apply/request-fields.adoc[]
+=====  Request Body
+
+include::{snippets}/event/createApplications/request-fields.adoc[]
 
 ==== Response
 
-include::{snippets}/event/apply/http-response.adoc[]
+include::{snippets}/event/createApplications/http-response.adoc[]
+
 :sectnums:
 
 === 행사 신청 취소

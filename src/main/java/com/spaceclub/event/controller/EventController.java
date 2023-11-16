@@ -2,7 +2,7 @@ package com.spaceclub.event.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.spaceclub.event.controller.dto.EventApplyRequest;
+import com.spaceclub.event.controller.dto.EventApplicationDeleteResponse;
 import com.spaceclub.event.controller.dto.EventCreateResponse;
 import com.spaceclub.event.controller.dto.EventDetailGetResponse;
 import com.spaceclub.event.controller.dto.EventGetResponse;
@@ -19,6 +19,8 @@ import com.spaceclub.event.domain.ApplicationStatus;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.service.EventService;
+import com.spaceclub.event.controller.dto.EventApplicationCreateRequest;
+import com.spaceclub.event.service.vo.EventApplicationCreateInfo;
 import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.service.JwtService;
@@ -166,22 +168,9 @@ public class EventController {
         Long userId = jwtService.verifyUserId(servletRequest);
         Page<Event> events = eventService.getSearchEvents(keyword, pageable, userId);
 
-        List<EventSearchGetResponse> eventSearchGetResponses = events.getContent()
-                .stream()
-                .map(EventSearchGetResponse::from)
-                .toList();
+        List<EventSearchGetResponse> eventSearchGetResponses = events.getContent().stream().map(EventSearchGetResponse::from).toList();
 
         return ResponseEntity.ok(new PageResponse<>(eventSearchGetResponses, events));
-    }
-
-    @PostMapping("/apply")
-    public ResponseEntity<Void> applyEvent(@RequestBody EventApplyRequest request, HttpServletRequest servletRequest) {
-        Long eventId = request.eventId();
-        Long userId = jwtService.verifyUserId(servletRequest);
-
-        eventService.applyEvent(eventId, userId);
-
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{eventId}")
@@ -191,6 +180,22 @@ public class EventController {
 
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/applications")
+    public ResponseEntity<Void> createApplicationForm(@RequestBody EventApplicationCreateRequest request, HttpServletRequest servletRequest) {
+        Long userId = jwtService.verifyUserId(servletRequest);
+
+        EventApplicationCreateInfo eventApplicationCreateInfo = EventApplicationCreateInfo.builder()
+                .userId(userId)
+                .eventId(request.eventId())
+                .formOptionUsers(request.toEntityList())
+                .ticketCount(request.ticketCount())
+                .build();
+        eventService.createApplicationForm(eventApplicationCreateInfo);
+
+        return ResponseEntity.noContent().build();
+    }
+
 
     @DeleteMapping("/{eventId}/applications")
     public ResponseEntity<EventApplicationDeleteResponse> cancelEvent(@PathVariable Long eventId, HttpServletRequest servletRequest) {

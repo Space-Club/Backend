@@ -1,6 +1,5 @@
 package com.spaceclub.form.controller;
 
-import com.spaceclub.form.controller.dto.FormApplicationCreateRequest;
 import com.spaceclub.form.controller.dto.FormApplicationGetResponse;
 import com.spaceclub.form.controller.dto.FormCreateRequest;
 import com.spaceclub.form.controller.dto.FormGetResponse;
@@ -50,15 +49,6 @@ public class FormController {
         FormGet formGetVo = formService.getForm(userId, eventId);
 
         return ResponseEntity.ok(FormGetResponse.from(formGetVo));
-    }
-
-    @PostMapping("/forms/applications")
-    public ResponseEntity<Void> createApplicationForm(@RequestBody FormApplicationCreateRequest request, HttpServletRequest servletRequest) {
-        Long userId = jwtService.verifyUserId(servletRequest);
-
-        formService.createApplicationForm(userId, request.eventId(), request.toEntityList());
-
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{eventId}/forms/applications")
