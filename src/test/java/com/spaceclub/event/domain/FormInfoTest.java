@@ -20,8 +20,8 @@ class FormInfoTest {
     void 폼_오픈_일시가_null이면_생성에_실패한다() {
         assertThatThrownBy(() ->
                 FormInfo.builder()
-                        .formOpenDate(null)
-                        .formCloseDate(formInfo().getFormCloseDate())
+                        .formOpenDateTime(null)
+                        .formCloseDateTime(formInfo().getFormCloseDateTime())
                         .build())
                 .isInstanceOf(IllegalArgumentException.class);
     }
@@ -30,8 +30,8 @@ class FormInfoTest {
     void 폼_마감_일시가_null이면_생성에_실패한다() {
         assertThatThrownBy(() ->
                 FormInfo.builder()
-                        .formOpenDate(formInfo().getFormOpenDate())
-                        .formCloseDate(null)
+                        .formOpenDateTime(formInfo().getFormOpenDateTime())
+                        .formCloseDateTime(null)
                         .build())
                 .isInstanceOf(IllegalArgumentException.class);
     }

@@ -50,8 +50,8 @@ public class EventTestFixture {
 
     public static FormInfo formInfo() {
         return FormInfo.builder()
-                .formOpenDate(LocalDateTime.of(2023, 10, 24, 23, 41, 30))
-                .formCloseDate(LocalDateTime.of(2023, 10, 24, 23, 41, 30))
+                .formOpenDateTime(LocalDateTime.of(2023, 10, 24, 23, 41, 30))
+                .formCloseDateTime(LocalDateTime.of(2023, 10, 24, 23, 41, 30))
                 .build();
     }
 

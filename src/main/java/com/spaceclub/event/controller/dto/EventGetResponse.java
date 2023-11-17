@@ -11,8 +11,8 @@ public record EventGetResponse(
         String posterImageUrl,
         LocalDate startDate,
         LocalTime startTime,
-        LocalDate formEndDate,
-        LocalTime formEndTime,
+        LocalDate formCloseDate,
+        LocalTime formCloseTime,
         String location,
         String clubName,
         String clubLogoImageUrl

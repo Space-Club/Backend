@@ -31,8 +31,8 @@ public record ClubEventCreateRequest(
 
         public FormInfo toEntity() {
             return FormInfo.builder()
-                    .formOpenDate(openDate.atTime(openTime))
-                    .formCloseDate(closeDate.atTime(closeTime))
+                    .formOpenDateTime(openDate.atTime(openTime))
+                    .formCloseDateTime(closeDate.atTime(closeTime))
                     .build();
         }
 
