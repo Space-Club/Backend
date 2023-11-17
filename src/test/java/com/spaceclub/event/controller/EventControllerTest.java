@@ -926,6 +926,8 @@ class EventControllerTest {
                                 fieldWithPath("posterImageUrl").type(STRING).description("행사 포스터 URL"),
                                 fieldWithPath("startDate").type(STRING).description("행사 시작 날짜"),
                                 fieldWithPath("startTime").type(STRING).description("행사 시작 시각"),
+                                fieldWithPath("endDate").type(STRING).description("행사 종료 날짜"),
+                                fieldWithPath("endTime").type(STRING).description("행사 종료 시각"),
                                 fieldWithPath("location").type(STRING).description("행사 위치"),
                                 fieldWithPath("clubName").type(STRING).description("행사 주최 클럽 이름"),
                                 fieldWithPath("clubLogoImageUrl").type(STRING).description("행사 주최 클럽 로고 이미지 Url"),
@@ -937,8 +939,9 @@ class EventControllerTest {
                                 fieldWithPath("applicants").type(NUMBER).description("신청자 수"),
                                 fieldWithPath("capacity").type(NUMBER).description("신청 정원"),
                                 fieldWithPath("eventCategory").type(STRING).description("이벤트 종류"),
-                                fieldWithPath("isManager").type(BOOLEAN).description("매니저 여부")
-
+                                fieldWithPath("isManager").type(BOOLEAN).description("매니저 여부"),
+                                fieldWithPath("hasForm").type(BOOLEAN).description("폼 존재 여부"),
+                                fieldWithPath("maxTicketCount").type(NUMBER).description("인당 최대 예매 가능 수")
                         )));
     }
 
@@ -969,6 +972,8 @@ class EventControllerTest {
                                 fieldWithPath("posterImageUrl").type(STRING).description("행사 포스터 URL"),
                                 fieldWithPath("startDate").type(STRING).description("행사 시작 날짜"),
                                 fieldWithPath("startTime").type(STRING).description("행사 시작 시각"),
+                                fieldWithPath("endDate").type(STRING).description("행사 종료 날짜"),
+                                fieldWithPath("endTime").type(STRING).description("행사 종료 시각"),
                                 fieldWithPath("activityArea").type(STRING).description("활동 영역"),
                                 fieldWithPath("formOpenDate").type(STRING).description("행사 참여 신청 시작 날짜"),
                                 fieldWithPath("formOpenTime").type(STRING).description("행사 참여 신청 시작 시간"),
@@ -980,8 +985,8 @@ class EventControllerTest {
                                 fieldWithPath("applicants").type(NUMBER).description("신청자 수"),
                                 fieldWithPath("capacity").type(NUMBER).description("신청 정원"),
                                 fieldWithPath("eventCategory").type(STRING).description("이벤트 종류"),
-                                fieldWithPath("isManager").type(BOOLEAN).description("이벤트 종류")
-
+                                fieldWithPath("isManager").type(BOOLEAN).description("이벤트 종류"),
+                                fieldWithPath("hasForm").type(BOOLEAN).description("폼 존재 여부")
                         )));
     }
 
@@ -1012,6 +1017,8 @@ class EventControllerTest {
                                 fieldWithPath("posterImageUrl").type(STRING).description("행사 포스터 URL"),
                                 fieldWithPath("startDate").type(STRING).description("행사 시작 날짜"),
                                 fieldWithPath("startTime").type(STRING).description("행사 시작 시각"),
+                                fieldWithPath("endDate").type(STRING).description("행사 종료 날짜"),
+                                fieldWithPath("endTime").type(STRING).description("행사 종료 시각"),
                                 fieldWithPath("location").type(STRING).description("행사 위치"),
                                 fieldWithPath("recruitmentTarget").type(STRING).description("모집 대상"),
                                 fieldWithPath("applicants").type(NUMBER).description("신청 인원"),
@@ -1024,7 +1031,8 @@ class EventControllerTest {
                                 fieldWithPath("formCloseTime").type(STRING).description("행사 참여 신청 종료 시간"),
                                 fieldWithPath("isBookmarked").type(BOOLEAN).description("북마크 여부"),
                                 fieldWithPath("eventCategory").type(STRING).description("이벤트 종류"),
-                                fieldWithPath("isManager").type(BOOLEAN).description("매니저 여부")
+                                fieldWithPath("isManager").type(BOOLEAN).description("매니저 여부"),
+                                fieldWithPath("hasForm").type(BOOLEAN).description("폼 존재 여부")
                         )));
     }
 
@@ -1055,6 +1063,8 @@ class EventControllerTest {
                                 fieldWithPath("posterImageUrl").type(STRING).description("행사 포스터 URL"),
                                 fieldWithPath("startDate").type(STRING).description("행사 시작 날짜"),
                                 fieldWithPath("startTime").type(STRING).description("행사 시작 시각"),
+                                fieldWithPath("endDate").type(STRING).description("행사 종료 날짜"),
+                                fieldWithPath("endTime").type(STRING).description("행사 종료 시각"),
                                 fieldWithPath("location").type(STRING).description("행사 위치"),
                                 fieldWithPath("dues").type(NUMBER).description("행사 참가 회비"),
                                 fieldWithPath("applicants").type(NUMBER).description("신청 인원"),
@@ -1067,7 +1077,8 @@ class EventControllerTest {
                                 fieldWithPath("formCloseTime").type(STRING).description("행사 참여 신청 종료 시간"),
                                 fieldWithPath("isBookmarked").type(BOOLEAN).description("북마크 여부"),
                                 fieldWithPath("eventCategory").type(STRING).description("이벤트 종류"),
-                                fieldWithPath("isManager").type(BOOLEAN).description("매니저 여부")
+                                fieldWithPath("isManager").type(BOOLEAN).description("매니저 여부"),
+                                fieldWithPath("hasForm").type(BOOLEAN).description("폼 존재 여부")
                         )));
     }
 

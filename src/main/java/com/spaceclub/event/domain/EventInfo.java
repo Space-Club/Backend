@@ -35,6 +35,7 @@ public class EventInfo {
     @Getter
     private LocalDateTime startDateTime;
 
+    @Getter
     private LocalDateTime endDateTime;
 
     @Getter
