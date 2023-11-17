@@ -42,8 +42,8 @@ import static com.spaceclub.club.ClubUserTestFixture.club1User1Manager;
 import static com.spaceclub.club.ClubUserTestFixture.club1User2Manager;
 import static com.spaceclub.club.domain.ClubUserRole.MANAGER;
 import static com.spaceclub.event.EventTestFixture.event1;
-import static com.spaceclub.event.EventTestFixture.event2;
-import static com.spaceclub.event.EventTestFixture.event_club;
+import static com.spaceclub.event.EventTestFixture.showEvent;
+import static com.spaceclub.event.EventTestFixture.clubEvent;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
@@ -303,7 +303,7 @@ class ClubControllerTest {
     @WithMockUser
     public void 클럽_행사_조회에_성공한다() throws Exception {
         // given
-        List<Event> events = List.of(event1(), event2(), event_club());
+        List<Event> events = List.of(event1(), showEvent(), clubEvent());
         Page<Event> eventPages = new PageImpl<>(events);
 
         given(clubService.getClubEvents(any(Long.class), any(Pageable.class))).willReturn(eventPages);
@@ -594,7 +594,7 @@ class ClubControllerTest {
         // given
         Long clubId = 1L;
         given(clubService.getClubSchedules(any(Long.class), any(Long.class))).willReturn(
-                List.of(event_club())
+                List.of(clubEvent())
         );
         given(clubService.getManagerProfileImageUrl(any(Long.class))).willReturn("profileImageUrl");
 

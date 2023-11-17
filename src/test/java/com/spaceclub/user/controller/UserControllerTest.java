@@ -39,8 +39,8 @@ import java.util.UUID;
 import static com.spaceclub.club.ClubTestFixture.club1;
 import static com.spaceclub.club.ClubTestFixture.club2;
 import static com.spaceclub.event.EventTestFixture.event1;
-import static com.spaceclub.event.EventTestFixture.event2;
-import static com.spaceclub.event.EventTestFixture.event_club;
+import static com.spaceclub.event.EventTestFixture.showEvent;
+import static com.spaceclub.event.EventTestFixture.clubEvent;
 import static com.spaceclub.user.domain.Status.NOT_REGISTERED;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -101,7 +101,7 @@ class UserControllerTest {
     @WithMockUser
     void 유저의_모든_이벤트_조회에_성공한다() throws Exception {
         // given
-        List<Event> events = List.of(event1(), event2(), event_club());
+        List<Event> events = List.of(event1(), showEvent(), clubEvent());
         Page<Event> eventPages = new PageImpl<>(events);
 
         given(userService.findAllEventPages(any(Long.class), any(Pageable.class))).willReturn(eventPages);
@@ -397,7 +397,7 @@ class UserControllerTest {
     @WithMockUser
     void 유저가_북마크한_이벤트_조회에_성공한다() throws Exception {
         // given
-        List<Event> events = List.of(event1(), event2(), event_club());
+        List<Event> events = List.of(event1(), showEvent(), clubEvent());
         Page<Event> eventPages = new PageImpl<>(events);
 
         Long userId = 1L;

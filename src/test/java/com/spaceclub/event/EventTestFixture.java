@@ -67,7 +67,7 @@ public class EventTestFixture {
                 .build();
     }
 
-    public static Event event2() {
+    public static Event showEvent() {
         return Event.builder()
                 .id(2L)
                 .category(SHOW)
@@ -79,7 +79,7 @@ public class EventTestFixture {
                 .build();
     }
 
-    public static Event event_club() {
+    public static Event clubEvent() {
         return Event.builder()
                 .id(3L)
                 .category(CLUB)
@@ -91,7 +91,7 @@ public class EventTestFixture {
                 .build();
     }
 
-    public static Event event_promotion() {
+    public static Event promotionEvent() {
         return Event.builder()
                 .id(4L)
                 .category(PROMOTION)
@@ -103,7 +103,7 @@ public class EventTestFixture {
                 .build();
     }
 
-    public static Event event_recruitment() {
+    public static Event recruitmentEvent() {
         return Event.builder()
                 .id(5L)
                 .category(RECRUITMENT)

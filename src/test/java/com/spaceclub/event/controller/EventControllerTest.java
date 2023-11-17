@@ -41,10 +41,10 @@ import java.time.LocalTime;
 import java.util.List;
 
 import static com.spaceclub.event.EventTestFixture.event1;
-import static com.spaceclub.event.EventTestFixture.event2;
-import static com.spaceclub.event.EventTestFixture.event_club;
-import static com.spaceclub.event.EventTestFixture.event_promotion;
-import static com.spaceclub.event.EventTestFixture.event_recruitment;
+import static com.spaceclub.event.EventTestFixture.showEvent;
+import static com.spaceclub.event.EventTestFixture.clubEvent;
+import static com.spaceclub.event.EventTestFixture.promotionEvent;
+import static com.spaceclub.event.EventTestFixture.recruitmentEvent;
 import static com.spaceclub.event.domain.ApplicationStatus.CANCELED;
 import static com.spaceclub.event.domain.EventCategory.CLUB;
 import static com.spaceclub.event.domain.EventCategory.PROMOTION;
@@ -841,7 +841,7 @@ class EventControllerTest {
     @WithMockUser
     public void 전체_행사_조회에_성공한다() throws Exception {
         // given
-        List<Event> events = List.of(event1(), event2(), event_club());
+        List<Event> events = List.of(event1(), showEvent(), clubEvent());
         Page<Event> eventPages = new PageImpl<>(events);
 
         given(eventService.getAll(any(Pageable.class))).willReturn(eventPages);
@@ -937,7 +937,7 @@ class EventControllerTest {
     @WithMockUser
     void 행사_상세_조회에_성공한다_홍보() throws Exception {
         // given
-        Event event = event_promotion();
+        Event event = promotionEvent();
 
         given(eventService.get(any(Long.class))).willReturn(event);
 
@@ -976,7 +976,7 @@ class EventControllerTest {
     @WithMockUser
     void 행사_상세_조회에_성공한다_모집_공고() throws Exception {
         // given
-        Event event = event_recruitment();
+        Event event = recruitmentEvent();
 
         given(eventService.get(any(Long.class))).willReturn(event);
 
@@ -1012,7 +1012,7 @@ class EventControllerTest {
     @WithMockUser
     void 행사_상세_조회에_성공한다_클럽_일정() throws Exception {
         // given
-        Event event = event_club();
+        Event event = clubEvent();
 
         given(eventService.get(any(Long.class))).willReturn(event);
 
@@ -1078,7 +1078,7 @@ class EventControllerTest {
     @WithMockUser
     public void 행사_검색에_성공한다() throws Exception {
         // given
-        List<Event> events = List.of(event1(), event2(), event_club());
+        List<Event> events = List.of(event1(), showEvent(), clubEvent());
         Page<Event> eventPages = new PageImpl<>(events);
 
         given(jwtService.verifyUserId(any())).willReturn(1L);
