@@ -1,7 +1,9 @@
 package com.spaceclub.form.service;
 
 import com.spaceclub.event.domain.Event;
+import com.spaceclub.event.domain.EventUser;
 import com.spaceclub.event.repository.EventRepository;
+import com.spaceclub.event.repository.EventUserRepository;
 import com.spaceclub.form.domain.Form;
 import com.spaceclub.form.domain.FormOptionUser;
 import com.spaceclub.form.repository.FormOptionUserRepository;
@@ -12,6 +14,8 @@ import com.spaceclub.form.service.vo.FormGet;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +33,8 @@ public class FormService {
     private final FormOptionUserRepository formOptionUserRepository;
 
     private final UserRepository userRepository;
+
+    private final EventUserRepository eventUserRepository;
 
     @Transactional
     public Long createForm(FormCreate vo) {
@@ -50,13 +56,14 @@ public class FormService {
         return FormGet.from(event, user, form);
     }
 
-    public FormApplicationGetInfo getApplicationForms(Long userId, Long eventId) {
+    public FormApplicationGetInfo getApplicationForms(Long userId, Long eventId, Pageable pageable) {
         Event event = validateEventAndForm(eventId);
         Form form = event.getForm();
 
         List<FormOptionUser> formOptionUsers = formOptionUserRepository.findByFormOption_Form_Id(form.getId());
+        Page<EventUser> eventUser = eventUserRepository.findByEvent(event, pageable);
 
-        return new FormApplicationGetInfo(form, formOptionUsers, event.getEventUsers());
+        return new FormApplicationGetInfo(form, formOptionUsers, eventUser);
     }
 
     private Event validateEventAndForm(Long eventId) {

@@ -78,8 +78,8 @@ public class EventService {
         User user = userRepository.findById(info.userId()).orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
         Event event = eventRepository.findById(info.eventId()).orElseThrow(() -> new IllegalStateException("존재하지 않는 행사입니다."));
 
-        validateTicketCount(info.ticketCount(), event.getMaxTicketCount());
-        validateIfEventUserExists(info.eventId(), info.userId());
+        validateEventTicketCount(event.getMaxTicketCount(), info.ticketCount());
+        if (eventUserRepository.existsByEventIdAndUserId(info.eventId(), info.userId())) throw new IllegalArgumentException("이미 신청한 행사입니다.");
 
         for (FormOptionUser formOptionUser : info.formOptionUsers()) {
             FormOption formOption = formOptionRepository.findById(formOptionUser.getFormOptionId())
@@ -101,15 +101,11 @@ public class EventService {
         eventUserRepository.save(newEventUser);
     }
 
-    private void validateIfEventUserExists(Long eventId, Long userId) {
-        if (eventUserRepository.existsByEventIdAndUserId(eventId, userId)) {
-            throw new IllegalArgumentException("이미 신청한 행사입니다.");
-        }
-    }
-
-    private void validateTicketCount(Integer ticketCount, Integer maxTicketCount) {
-        if (maxTicketCount == null) throw new IllegalArgumentException("인 당 예매 수를 설정할 수 없는 행사 종류입니다.");
-        if (maxTicketCount < ticketCount) throw new IllegalArgumentException("인 당 예매 수를 초과하였습니다.");
+    private void validateEventTicketCount(Integer maxTicketCount, Integer ticketCount) {
+        if (maxTicketCount == null && ticketCount != null) throw new IllegalArgumentException("행사 티켓을 관리하지 않는 행사입니다.");
+        if (maxTicketCount != null && ticketCount == null) throw new IllegalArgumentException("행사 티켓 매수는 필수입니다.");
+        if (ticketCount != null && maxTicketCount < ticketCount)
+            throw new IllegalArgumentException("인 당 티켓 예매 수를 초과하였습니다.");
     }
 
     public Event get(Long eventId) {
