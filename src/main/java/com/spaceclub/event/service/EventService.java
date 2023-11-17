@@ -4,6 +4,7 @@ import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.event.domain.ApplicationStatus;
 import com.spaceclub.event.domain.Event;
+import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.domain.EventUser;
 import com.spaceclub.event.repository.EventRepository;
 import com.spaceclub.event.repository.EventUserRepository;
@@ -59,8 +60,8 @@ public class EventService {
         eventRepository.save(event);
     }
 
-    public Page<Event> getAll(Pageable pageable) {
-        return eventRepository.findAll(pageable);
+    public Page<Event> getAllEvents(EventCategory eventCategory, Pageable pageable) {
+        return eventRepository.findAllByCategory(eventCategory, pageable);
     }
 
     public Page<Event> getSearchEvents(String keyword, Pageable pageable, Long userId) {
