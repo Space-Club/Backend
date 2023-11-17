@@ -14,21 +14,7 @@ public record ClubGetResponse(
 ) {
 
     @Builder
-    public ClubGetResponse(String name,
-                           String logoImageUrl,
-                           String info,
-                           int memberCount,
-                           String coverImageUrl,
-                           String inviteLink,
-                           String role
-    ) {
-        this.name = name;
-        this.logoImageUrl = logoImageUrl;
-        this.info = info;
-        this.memberCount = memberCount;
-        this.coverImageUrl = coverImageUrl;
-        this.inviteLink = inviteLink;
-        this.role = role;
+    public ClubGetResponse {
     }
 
     public static ClubGetResponse from(Club club, String inviteLink, String role){

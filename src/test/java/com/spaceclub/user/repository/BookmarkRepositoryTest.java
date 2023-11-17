@@ -19,8 +19,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import java.util.List;
 
 import static com.spaceclub.event.EventTestFixture.event1;
-import static com.spaceclub.event.EventTestFixture.event2;
-import static com.spaceclub.event.EventTestFixture.event3;
+import static com.spaceclub.event.EventTestFixture.showEvent;
+import static com.spaceclub.event.EventTestFixture.clubEvent;
 import static com.spaceclub.user.domain.Status.NOT_REGISTERED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -65,7 +65,7 @@ class BookmarkRepositoryTest {
                 .build();
         userRepository.save(user);
 
-        eventRepository.saveAll(List.of(event1(), event2(), event3()));
+        eventRepository.saveAll(List.of(event1(), showEvent(), clubEvent()));
 
         Bookmark bookmarkEvent1 = Bookmark.builder()
                 .id(1L)
@@ -75,12 +75,12 @@ class BookmarkRepositoryTest {
         Bookmark bookmarkEvent2 = Bookmark.builder()
                 .id(2L)
                 .user(user)
-                .event(event2())
+                .event(showEvent())
                 .build();
         Bookmark bookmarkEvent3 = Bookmark.builder()
                 .id(3L)
                 .user(user)
-                .event(event3())
+                .event(clubEvent())
                 .build();
         bookmarkRepository.saveAll(List.of(bookmarkEvent1, bookmarkEvent2, bookmarkEvent3));
     }

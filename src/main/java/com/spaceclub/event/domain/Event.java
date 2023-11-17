@@ -205,4 +205,20 @@ public class Event extends BaseTimeEntity {
         return ticketInfo.getMaxTicketCount();
     }
 
+    public Integer getDues() {
+        return this.eventInfo.getDues();
+    }
+
+    public Integer getCapacity() {
+        return this.eventInfo.getCapacity();
+    }
+
+    public String getRecruitmentTarget() {
+        return this.eventInfo.getRecruitmentTarget();
+    }
+
+    public String getActivityArea() {
+        return this.eventInfo.getActivityArea();
+    }
+
 }

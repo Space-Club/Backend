@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import static com.spaceclub.event.EventTestFixture.event1;
-import static com.spaceclub.event.EventTestFixture.event3;
+import static com.spaceclub.event.EventTestFixture.clubEvent;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -15,7 +15,7 @@ class ClubEventGetResponseTest {
     void 클럽의_모든_이벤트_조회에_성공한다() {
         // given
         ClubEventGetResponse showCategory = ClubEventGetResponse.from(event1());
-        ClubEventGetResponse clubCategory = ClubEventGetResponse.from(event3());
+        ClubEventGetResponse clubCategory = ClubEventGetResponse.from(clubEvent());
 
         // when, then
         assertAll(

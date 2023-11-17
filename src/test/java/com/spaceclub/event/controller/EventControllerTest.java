@@ -41,8 +41,10 @@ import java.time.LocalTime;
 import java.util.List;
 
 import static com.spaceclub.event.EventTestFixture.event1;
-import static com.spaceclub.event.EventTestFixture.event2;
-import static com.spaceclub.event.EventTestFixture.event3;
+import static com.spaceclub.event.EventTestFixture.showEvent;
+import static com.spaceclub.event.EventTestFixture.clubEvent;
+import static com.spaceclub.event.EventTestFixture.promotionEvent;
+import static com.spaceclub.event.EventTestFixture.recruitmentEvent;
 import static com.spaceclub.event.domain.ApplicationStatus.CANCELED;
 import static com.spaceclub.event.domain.EventCategory.CLUB;
 import static com.spaceclub.event.domain.EventCategory.PROMOTION;
@@ -839,7 +841,7 @@ class EventControllerTest {
     @WithMockUser
     public void 전체_행사_조회에_성공한다() throws Exception {
         // given
-        List<Event> events = List.of(event1(), event2(), event3());
+        List<Event> events = List.of(event1(), showEvent(), clubEvent());
         Page<Event> eventPages = new PageImpl<>(events);
 
         given(eventService.getAll(any(Pageable.class))).willReturn(eventPages);
@@ -893,7 +895,7 @@ class EventControllerTest {
 
     @Test
     @WithMockUser
-    void 행사_상세_조회에_성공한다() throws Exception {
+    void 행사_상세_조회에_성공한다_공연() throws Exception {
         // given
         Event event = event1();
 
@@ -905,7 +907,7 @@ class EventControllerTest {
         // then
         actions.andExpect(status().isOk())
                 .andDo(print())
-                .andDo(document("event/get",
+                .andDo(document("event/getShowEvent",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
@@ -918,10 +920,127 @@ class EventControllerTest {
                                 fieldWithPath("startDate").type(STRING).description("행사 시작 날짜"),
                                 fieldWithPath("startTime").type(STRING).description("행사 시작 시각"),
                                 fieldWithPath("location").type(STRING).description("행사 위치"),
+                                fieldWithPath("dues").type(NUMBER).description("참가 회비"),
                                 fieldWithPath("clubName").type(STRING).description("행사 주최 클럽 이름"),
                                 fieldWithPath("clubLogoImageUrl").type(STRING).description("행사 주최 클럽 로고 이미지 Url"),
                                 fieldWithPath("formOpenDateTime").type(STRING).description("행사 참여 신청 시작 날짜와 시간"),
-                                fieldWithPath("formCloseDateTime").type(STRING).description("행사 참여 신청 종료 날짜와 시간")
+                                fieldWithPath("formCloseDateTime").type(STRING).description("행사 참여 신청 종료 날짜와 시간"),
+                                fieldWithPath("isBookmarked").type(BOOLEAN).description("북마크 여부"),
+                                fieldWithPath("applicants").type(NUMBER).description("신청자 수"),
+                                fieldWithPath("capacity").type(NUMBER).description("신청 정원"),
+                                fieldWithPath("eventCategory").type(STRING).description("이벤트 종류")
+
+                        )));
+    }
+
+    @Test
+    @WithMockUser
+    void 행사_상세_조회에_성공한다_홍보() throws Exception {
+        // given
+        Event event = promotionEvent();
+
+        given(eventService.get(any(Long.class))).willReturn(event);
+
+        // when
+        ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}", 1L));
+
+        // then
+        actions.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("event/getPromotionEvent",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("eventId").description("행사 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(NUMBER).description("행사 ID"),
+                                fieldWithPath("title").type(STRING).description("행사 제목"),
+                                fieldWithPath("posterImageUrl").type(STRING).description("행사 포스터 URL"),
+                                fieldWithPath("startDate").type(STRING).description("행사 시작 날짜"),
+                                fieldWithPath("startTime").type(STRING).description("행사 시작 시각"),
+                                fieldWithPath("location").type(STRING).description("행사 위치"),
+                                fieldWithPath("formOpenDateTime").type(STRING).description("행사 참여 신청 시작 날짜와 시간"),
+                                fieldWithPath("formCloseDateTime").type(STRING).description("행사 참여 신청 종료 날짜와 시간"),
+                                fieldWithPath("clubName").type(STRING).description("행사 주최 클럽 이름"),
+                                fieldWithPath("clubLogoImageUrl").type(STRING).description("행사 주최 클럽 로고 이미지 Url"),
+                                fieldWithPath("isBookmarked").type(BOOLEAN).description("북마크 여부"),
+                                fieldWithPath("applicants").type(NUMBER).description("신청자 수"),
+                                fieldWithPath("capacity").type(NUMBER).description("신청 정원"),
+                                fieldWithPath("eventCategory").type(STRING).description("이벤트 종류")
+
+                        )));
+    }
+
+    @Test
+    @WithMockUser
+    void 행사_상세_조회에_성공한다_모집_공고() throws Exception {
+        // given
+        Event event = recruitmentEvent();
+
+        given(eventService.get(any(Long.class))).willReturn(event);
+
+        // when
+        ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}", 1L));
+
+        // then
+        actions.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("event/getRecruitmentEvent",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("eventId").description("행사 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(NUMBER).description("행사 ID"),
+                                fieldWithPath("title").type(STRING).description("행사 제목"),
+                                fieldWithPath("posterImageUrl").type(STRING).description("행사 포스터 URL"),
+                                fieldWithPath("recruitmentTarget").type(STRING).description("모집 대상"),
+                                fieldWithPath("capacity").type(NUMBER).description("모집 인원"),
+                                fieldWithPath("activityArea").type(STRING).description("활동 위치"),
+                                fieldWithPath("clubName").type(STRING).description("행사 주최 클럽 이름"),
+                                fieldWithPath("clubLogoImageUrl").type(STRING).description("행사 주최 클럽 로고 이미지 Url"),
+                                fieldWithPath("formOpenDateTime").type(STRING).description("행사 참여 신청 시작 날짜와 시간"),
+                                fieldWithPath("formCloseDateTime").type(STRING).description("행사 참여 신청 종료 날짜와 시간"),
+                                fieldWithPath("isBookmarked").type(BOOLEAN).description("북마크 여부"),
+                                fieldWithPath("eventCategory").type(STRING).description("이벤트 종류")
+                        )));
+    }
+
+    @Test
+    @WithMockUser
+    void 행사_상세_조회에_성공한다_클럽_일정() throws Exception {
+        // given
+        Event event = clubEvent();
+
+        given(eventService.get(any(Long.class))).willReturn(event);
+
+        // when
+        ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}", 1L));
+
+        // then
+        actions.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("event/getClubEvent",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("eventId").description("행사 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(NUMBER).description("행사 ID"),
+                                fieldWithPath("title").type(STRING).description("행사 제목"),
+                                fieldWithPath("posterImageUrl").type(STRING).description("행사 포스터 URL"),
+                                fieldWithPath("startDate").type(STRING).description("행사 시작 날짜"),
+                                fieldWithPath("startTime").type(STRING).description("행사 시작 시각"),
+                                fieldWithPath("location").type(STRING).description("행사 위치"),
+                                fieldWithPath("formOpenDateTime").type(STRING).description("행사 참여 신청 시작 날짜와 시간"),
+                                fieldWithPath("formCloseDateTime").type(STRING).description("행사 참여 신청 종료 날짜와 시간"),
+                                fieldWithPath("clubName").type(STRING).description("행사 주최 클럽 이름"),
+                                fieldWithPath("clubLogoImageUrl").type(STRING).description("행사 주최 클럽 로고 이미지 Url"),
+                                fieldWithPath("isBookmarked").type(BOOLEAN).description("북마크 여부"),
+                                fieldWithPath("eventCategory").type(STRING).description("이벤트 종류")
                         )));
     }
 
@@ -959,7 +1078,7 @@ class EventControllerTest {
     @WithMockUser
     public void 행사_검색에_성공한다() throws Exception {
         // given
-        List<Event> events = List.of(event1(), event2(), event3());
+        List<Event> events = List.of(event1(), showEvent(), clubEvent());
         Page<Event> eventPages = new PageImpl<>(events);
 
         given(jwtService.verifyUserId(any())).willReturn(1L);
