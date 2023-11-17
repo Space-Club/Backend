@@ -128,9 +128,7 @@ public class ClubService {
     }
 
     public List<ClubNotice> getNotices(Long clubId, Long userId) {
-        ClubUser clubUser = validateClubAndGetClubUser(clubId, userId);
-
-        if (!clubUser.isManager()) throw new IllegalStateException("해당 권한이 없습니다.");
+        validateClubAndGetClubUser(clubId, userId);
 
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
