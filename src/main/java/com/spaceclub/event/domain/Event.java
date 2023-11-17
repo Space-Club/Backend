@@ -161,29 +161,29 @@ public class Event extends BaseTimeEntity {
     }
 
     public LocalDateTime getFormOpenDateTime() {
-        return formInfo.getFormOpenDate();
+        return formInfo.getFormOpenDateTime();
     }
 
     public LocalDateTime getFormCloseDateTime() {
-        return formInfo.getFormCloseDate();
+        return formInfo.getFormCloseDateTime();
     }
 
     public LocalDate getFormOpenDate() {
-        return formInfo.getFormOpenDate().toLocalDate();
+        return formInfo.getFormOpenDateTime().toLocalDate();
     }
 
     public LocalDate getFormCloseDate() {
-        if (formInfo.getFormCloseDate() == null) return null;
-        return formInfo.getFormCloseDate().toLocalDate();
+        if (formInfo.getFormCloseDateTime() == null) return null;
+        return formInfo.getFormCloseDateTime().toLocalDate();
     }
 
     public LocalTime getFormOpenTime() {
-        return formInfo.getFormOpenDate().toLocalTime();
+        return formInfo.getFormOpenDateTime().toLocalTime();
     }
 
     public LocalTime getFormCloseTime() {
-        if (formInfo.getFormCloseDate() == null) return null;
-        return formInfo.getFormCloseDate().toLocalTime();
+        if (formInfo.getFormCloseDateTime() == null) return null;
+        return formInfo.getFormCloseDateTime().toLocalTime();
     }
 
     public Long getFormId() {

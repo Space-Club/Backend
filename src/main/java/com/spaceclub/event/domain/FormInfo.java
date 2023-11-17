@@ -17,16 +17,16 @@ import java.time.LocalDateTime;
 public class FormInfo {
 
     @Getter
-    private LocalDateTime formOpenDate;
+    private LocalDateTime formOpenDateTime;
 
     @Getter
-    private LocalDateTime formCloseDate;
+    private LocalDateTime formCloseDateTime;
 
     @Builder
-    public FormInfo(LocalDateTime formOpenDate, LocalDateTime formCloseDate) {
-        validate(formOpenDate, formCloseDate);
-        this.formOpenDate = formOpenDate;
-        this.formCloseDate = formCloseDate;
+    public FormInfo(LocalDateTime formOpenDateTime, LocalDateTime formCloseDateTime) {
+        validate(formOpenDateTime, formCloseDateTime);
+        this.formOpenDateTime = formOpenDateTime;
+        this.formCloseDateTime = formCloseDateTime;
     }
 
     private void validate(LocalDateTime formOpenDate, LocalDateTime formCloseDate) {
