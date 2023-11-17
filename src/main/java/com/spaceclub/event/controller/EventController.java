@@ -191,18 +191,23 @@ public class EventController {
             case SHOW -> filter = SimpleBeanPropertyFilter.serializeAllExcept("recruitmentTarget", "dues", "activityArea");
             case CLUB -> filter = SimpleBeanPropertyFilter.serializeAllExcept("recruitmentTarget", "cost", "activityArea");
             case PROMOTION -> filter = SimpleBeanPropertyFilter.serializeAllExcept("recruitmentTarget", "dues", "cost", "location");
-            case RECRUITMENT -> filter = SimpleBeanPropertyFilter.serializeAllExcept("cost", "activityArea");
+            case RECRUITMENT -> filter = SimpleBeanPropertyFilter.serializeAllExcept("dues", "cost", "activityArea");
             default -> throw new IllegalArgumentException("존재하지 않는 행사의 카테고리입니다.");
         }
 
         EventDetailGetResponse response = EventDetailGetResponse.from(event, true, true);
 
+        MappingJacksonValue filteredEventDetailResponse = filterEventDetailResponse(filter, response);
+
+        return ResponseEntity.ok(filteredEventDetailResponse);
+    }
+
+    private MappingJacksonValue filterEventDetailResponse(SimpleBeanPropertyFilter filter, EventDetailGetResponse response) {
         SimpleFilterProvider simpleFilter = new SimpleFilterProvider().addFilter("EventDetailFilter", filter);
 
         MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(response);
         mappingJacksonValue.setFilters(simpleFilter);
-
-        return ResponseEntity.ok(mappingJacksonValue);
+        return mappingJacksonValue;
     }
 
     @PostMapping("/applications")

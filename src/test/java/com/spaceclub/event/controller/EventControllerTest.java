@@ -1013,7 +1013,6 @@ class EventControllerTest {
                                 fieldWithPath("startDate").type(STRING).description("행사 시작 날짜"),
                                 fieldWithPath("startTime").type(STRING).description("행사 시작 시각"),
                                 fieldWithPath("location").type(STRING).description("행사 위치"),
-                                fieldWithPath("dues").type(NUMBER).description("동아리 가입 회비"),
                                 fieldWithPath("recruitmentTarget").type(STRING).description("모집 대상"),
                                 fieldWithPath("applicants").type(NUMBER).description("신청 인원"),
                                 fieldWithPath("capacity").type(NUMBER).description("모집 정원"),

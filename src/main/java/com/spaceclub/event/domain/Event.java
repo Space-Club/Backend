@@ -226,4 +226,8 @@ public class Event extends BaseTimeEntity {
         return this.eventInfo.getActivityArea();
     }
 
+    public Integer getCost() {
+        return this.ticketInfo.getCost();
+    }
+
 }

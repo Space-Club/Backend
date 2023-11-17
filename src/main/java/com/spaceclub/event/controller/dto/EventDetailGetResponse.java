@@ -47,7 +47,7 @@ public record EventDetailGetResponse(
                 .startTime(event.getStartTime())
                 .location(event.getLocation())
                 .dues(event.getDues())
-                .cost(event.getDues())
+                .cost(event.getCost())
                 .activityArea(event.getActivityArea())
                 .clubName(event.getClubName())
                 .clubLogoImageUrl(event.getClubLogoImageUrl())
