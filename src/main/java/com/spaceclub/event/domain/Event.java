@@ -134,14 +134,17 @@ public class Event extends BaseTimeEntity {
     }
 
     public LocalDate getStartDate() {
-        return eventInfo.getStartDate().toLocalDate();
+        if (eventInfo.getStartDateTime() == null) return null;
+        return eventInfo.getStartDateTime().toLocalDate();
     }
 
     public LocalTime getStartTime() {
-        return eventInfo.getStartDate().toLocalTime();
+        if (eventInfo.getStartDateTime() == null) return null;
+        return eventInfo.getStartDateTime().toLocalTime();
     }
 
     public String getLocation() {
+        if (eventInfo.getLocation() == null) return null;
         return eventInfo.getLocation();
     }
 
@@ -170,6 +173,7 @@ public class Event extends BaseTimeEntity {
     }
 
     public LocalDate getFormCloseDate() {
+        if (formInfo.getFormCloseDate() == null) return null;
         return formInfo.getFormCloseDate().toLocalDate();
     }
 
@@ -178,6 +182,7 @@ public class Event extends BaseTimeEntity {
     }
 
     public LocalTime getFormCloseTime() {
+        if (formInfo.getFormCloseDate() == null) return null;
         return formInfo.getFormCloseDate().toLocalTime();
     }
 

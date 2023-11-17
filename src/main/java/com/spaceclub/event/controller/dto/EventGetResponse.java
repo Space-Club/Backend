@@ -11,6 +11,8 @@ public record EventGetResponse(
         String posterImageUrl,
         LocalDate startDate,
         LocalTime startTime,
+        LocalDate formEndDate,
+        LocalTime formEndTime,
         String location,
         String clubName,
         String clubLogoImageUrl
@@ -23,6 +25,8 @@ public record EventGetResponse(
                 event.getPosterImageUrl(),
                 event.getStartDate(),
                 event.getStartTime(),
+                event.getFormCloseDate(),
+                event.getFormCloseTime(),
                 event.getLocation(),
                 event.getClubName(),
                 event.getClubLogoImageUrl()
