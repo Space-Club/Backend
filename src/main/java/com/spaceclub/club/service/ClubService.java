@@ -185,9 +185,7 @@ public class ClubService {
     }
 
     public List<Event> getClubSchedules(Long clubId, Long userId) {
-        ClubUser clubUser = validateClubAndGetClubUser(clubId, userId);
-
-        if (!clubUser.isManager()) throw new IllegalStateException("해당 권한이 없습니다.");
+        validateClubAndGetClubUser(clubId, userId);
 
         return eventRepository.findAllByClub_IdAndCategory(clubId, EventCategory.CLUB);
     }
@@ -221,6 +219,7 @@ public class ClubService {
     }
 
     public String getManagerProfileImageUrl(Long clubId) {
+
         ClubUser clubUser = clubUserRepository.findByClub_IdAndRole(clubId, ClubUserRole.MANAGER);
         Long userId = clubUser.getUserId();
 
