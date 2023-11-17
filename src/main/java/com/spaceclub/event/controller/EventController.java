@@ -1,14 +1,13 @@
 package com.spaceclub.event.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.spaceclub.event.controller.dto.EventApplicationCreateRequest;
 import com.spaceclub.event.controller.dto.EventApplicationDeleteResponse;
 import com.spaceclub.event.controller.dto.EventCreateResponse;
-import com.spaceclub.event.controller.dto.detailGetResponse.ClubEventDetailGetResponse;
-import com.spaceclub.event.controller.dto.detailGetResponse.PromotionEventDetailGetResponse;
-import com.spaceclub.event.controller.dto.detailGetResponse.RecruitmentEventDetailGetResponse;
-import com.spaceclub.event.controller.dto.detailGetResponse.ShowEventDetailGetResponse;
+import com.spaceclub.event.controller.dto.EventDetailGetResponse;
 import com.spaceclub.event.controller.dto.EventGetResponse;
 import com.spaceclub.event.controller.dto.EventSearchGetResponse;
 import com.spaceclub.event.controller.dto.createRequest.ClubEventCreateRequest;
@@ -33,6 +32,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -180,30 +180,34 @@ public class EventController {
     }
 
     @GetMapping("/{eventId}")
-    public ResponseEntity<?> getEventDetail(@PathVariable Long eventId) {
+    public ResponseEntity<MappingJacksonValue> getEventDetail(@PathVariable Long eventId) {
         Event event = eventService.get(eventId);
 
         EventCategory category = event.getCategory();
 
+        SimpleBeanPropertyFilter filter;
+
         switch (category) {
-            case SHOW -> {
-                ShowEventDetailGetResponse response = ShowEventDetailGetResponse.from(event, true, 10);
-                return ResponseEntity.ok(response);
-            }
-            case CLUB -> {
-                ClubEventDetailGetResponse response = ClubEventDetailGetResponse.from(event, true);
-                return ResponseEntity.ok(response);
-            }
-            case PROMOTION -> {
-                PromotionEventDetailGetResponse response = PromotionEventDetailGetResponse.from(event, true, 10);
-                return ResponseEntity.ok(response);
-            }
-            case RECRUITMENT -> {
-                RecruitmentEventDetailGetResponse response = RecruitmentEventDetailGetResponse.from(event, true);
-                return ResponseEntity.ok(response);
-            }
+            case SHOW -> filter = SimpleBeanPropertyFilter.serializeAllExcept("recruitmentTarget", "dues", "activityArea");
+            case CLUB -> filter = SimpleBeanPropertyFilter.serializeAllExcept("recruitmentTarget", "cost", "activityArea");
+            case PROMOTION -> filter = SimpleBeanPropertyFilter.serializeAllExcept("recruitmentTarget", "dues", "cost", "location");
+            case RECRUITMENT -> filter = SimpleBeanPropertyFilter.serializeAllExcept("dues", "cost", "activityArea");
             default -> throw new IllegalArgumentException("존재하지 않는 행사의 카테고리입니다.");
         }
+
+        EventDetailGetResponse response = EventDetailGetResponse.from(event, true, true);
+
+        MappingJacksonValue filteredEventDetailResponse = filterEventDetailResponse(filter, response);
+
+        return ResponseEntity.ok(filteredEventDetailResponse);
+    }
+
+    private MappingJacksonValue filterEventDetailResponse(SimpleBeanPropertyFilter filter, EventDetailGetResponse response) {
+        SimpleFilterProvider simpleFilter = new SimpleFilterProvider().addFilter("EventDetailFilter", filter);
+
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(response);
+        mappingJacksonValue.setFilters(simpleFilter);
+        return mappingJacksonValue;
     }
 
     @PostMapping("/applications")

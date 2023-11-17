@@ -921,19 +921,23 @@ class EventControllerTest {
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
                                 fieldWithPath("title").type(STRING).description("행사 제목"),
+                                fieldWithPath("content").type(STRING).description("행사 내용"),
+                                fieldWithPath("cost").type(NUMBER).description("참가 비용"),
                                 fieldWithPath("posterImageUrl").type(STRING).description("행사 포스터 URL"),
                                 fieldWithPath("startDate").type(STRING).description("행사 시작 날짜"),
                                 fieldWithPath("startTime").type(STRING).description("행사 시작 시각"),
                                 fieldWithPath("location").type(STRING).description("행사 위치"),
-                                fieldWithPath("dues").type(NUMBER).description("참가 회비"),
                                 fieldWithPath("clubName").type(STRING).description("행사 주최 클럽 이름"),
                                 fieldWithPath("clubLogoImageUrl").type(STRING).description("행사 주최 클럽 로고 이미지 Url"),
-                                fieldWithPath("formOpenDateTime").type(STRING).description("행사 참여 신청 시작 날짜와 시간"),
-                                fieldWithPath("formCloseDateTime").type(STRING).description("행사 참여 신청 종료 날짜와 시간"),
+                                fieldWithPath("formOpenDate").type(STRING).description("행사 참여 신청 시작 날짜"),
+                                fieldWithPath("formOpenTime").type(STRING).description("행사 참여 신청 시작 시간"),
+                                fieldWithPath("formCloseDate").type(STRING).description("행사 참여 신청 종료 날짜"),
+                                fieldWithPath("formCloseTime").type(STRING).description("행사 참여 신청 종료 시간"),
                                 fieldWithPath("isBookmarked").type(BOOLEAN).description("북마크 여부"),
                                 fieldWithPath("applicants").type(NUMBER).description("신청자 수"),
                                 fieldWithPath("capacity").type(NUMBER).description("신청 정원"),
-                                fieldWithPath("eventCategory").type(STRING).description("이벤트 종류")
+                                fieldWithPath("eventCategory").type(STRING).description("이벤트 종류"),
+                                fieldWithPath("isManager").type(BOOLEAN).description("매니저 여부")
 
                         )));
     }
@@ -961,18 +965,22 @@ class EventControllerTest {
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
                                 fieldWithPath("title").type(STRING).description("행사 제목"),
+                                fieldWithPath("content").type(STRING).description("행사 내용"),
                                 fieldWithPath("posterImageUrl").type(STRING).description("행사 포스터 URL"),
                                 fieldWithPath("startDate").type(STRING).description("행사 시작 날짜"),
                                 fieldWithPath("startTime").type(STRING).description("행사 시작 시각"),
-                                fieldWithPath("location").type(STRING).description("행사 위치"),
-                                fieldWithPath("formOpenDateTime").type(STRING).description("행사 참여 신청 시작 날짜와 시간"),
-                                fieldWithPath("formCloseDateTime").type(STRING).description("행사 참여 신청 종료 날짜와 시간"),
+                                fieldWithPath("activityArea").type(STRING).description("활동 영역"),
+                                fieldWithPath("formOpenDate").type(STRING).description("행사 참여 신청 시작 날짜"),
+                                fieldWithPath("formOpenTime").type(STRING).description("행사 참여 신청 시작 시간"),
+                                fieldWithPath("formCloseDate").type(STRING).description("행사 참여 신청 종료 날짜"),
+                                fieldWithPath("formCloseTime").type(STRING).description("행사 참여 신청 종료 시간"),
                                 fieldWithPath("clubName").type(STRING).description("행사 주최 클럽 이름"),
                                 fieldWithPath("clubLogoImageUrl").type(STRING).description("행사 주최 클럽 로고 이미지 Url"),
                                 fieldWithPath("isBookmarked").type(BOOLEAN).description("북마크 여부"),
                                 fieldWithPath("applicants").type(NUMBER).description("신청자 수"),
                                 fieldWithPath("capacity").type(NUMBER).description("신청 정원"),
-                                fieldWithPath("eventCategory").type(STRING).description("이벤트 종류")
+                                fieldWithPath("eventCategory").type(STRING).description("이벤트 종류"),
+                                fieldWithPath("isManager").type(BOOLEAN).description("이벤트 종류")
 
                         )));
     }
@@ -1000,16 +1008,23 @@ class EventControllerTest {
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
                                 fieldWithPath("title").type(STRING).description("행사 제목"),
+                                fieldWithPath("content").type(STRING).description("행사 내용"),
                                 fieldWithPath("posterImageUrl").type(STRING).description("행사 포스터 URL"),
+                                fieldWithPath("startDate").type(STRING).description("행사 시작 날짜"),
+                                fieldWithPath("startTime").type(STRING).description("행사 시작 시각"),
+                                fieldWithPath("location").type(STRING).description("행사 위치"),
                                 fieldWithPath("recruitmentTarget").type(STRING).description("모집 대상"),
-                                fieldWithPath("capacity").type(NUMBER).description("모집 인원"),
-                                fieldWithPath("activityArea").type(STRING).description("활동 위치"),
+                                fieldWithPath("applicants").type(NUMBER).description("신청 인원"),
+                                fieldWithPath("capacity").type(NUMBER).description("모집 정원"),
                                 fieldWithPath("clubName").type(STRING).description("행사 주최 클럽 이름"),
                                 fieldWithPath("clubLogoImageUrl").type(STRING).description("행사 주최 클럽 로고 이미지 Url"),
-                                fieldWithPath("formOpenDateTime").type(STRING).description("행사 참여 신청 시작 날짜와 시간"),
-                                fieldWithPath("formCloseDateTime").type(STRING).description("행사 참여 신청 종료 날짜와 시간"),
+                                fieldWithPath("formOpenDate").type(STRING).description("행사 참여 신청 시작 날짜"),
+                                fieldWithPath("formOpenTime").type(STRING).description("행사 참여 신청 시작 시간"),
+                                fieldWithPath("formCloseDate").type(STRING).description("행사 참여 신청 종료 날짜"),
+                                fieldWithPath("formCloseTime").type(STRING).description("행사 참여 신청 종료 시간"),
                                 fieldWithPath("isBookmarked").type(BOOLEAN).description("북마크 여부"),
-                                fieldWithPath("eventCategory").type(STRING).description("이벤트 종류")
+                                fieldWithPath("eventCategory").type(STRING).description("이벤트 종류"),
+                                fieldWithPath("isManager").type(BOOLEAN).description("매니저 여부")
                         )));
     }
 
@@ -1036,16 +1051,23 @@ class EventControllerTest {
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
                                 fieldWithPath("title").type(STRING).description("행사 제목"),
+                                fieldWithPath("content").type(STRING).description("행사 제목"),
                                 fieldWithPath("posterImageUrl").type(STRING).description("행사 포스터 URL"),
                                 fieldWithPath("startDate").type(STRING).description("행사 시작 날짜"),
                                 fieldWithPath("startTime").type(STRING).description("행사 시작 시각"),
                                 fieldWithPath("location").type(STRING).description("행사 위치"),
-                                fieldWithPath("formOpenDateTime").type(STRING).description("행사 참여 신청 시작 날짜와 시간"),
-                                fieldWithPath("formCloseDateTime").type(STRING).description("행사 참여 신청 종료 날짜와 시간"),
+                                fieldWithPath("dues").type(NUMBER).description("행사 참가 회비"),
+                                fieldWithPath("applicants").type(NUMBER).description("신청 인원"),
+                                fieldWithPath("capacity").type(NUMBER).description("모집 정원"),
                                 fieldWithPath("clubName").type(STRING).description("행사 주최 클럽 이름"),
                                 fieldWithPath("clubLogoImageUrl").type(STRING).description("행사 주최 클럽 로고 이미지 Url"),
+                                fieldWithPath("formOpenDate").type(STRING).description("행사 참여 신청 시작 날짜"),
+                                fieldWithPath("formOpenTime").type(STRING).description("행사 참여 신청 시작 시간"),
+                                fieldWithPath("formCloseDate").type(STRING).description("행사 참여 신청 종료 날짜"),
+                                fieldWithPath("formCloseTime").type(STRING).description("행사 참여 신청 종료 시간"),
                                 fieldWithPath("isBookmarked").type(BOOLEAN).description("북마크 여부"),
-                                fieldWithPath("eventCategory").type(STRING).description("이벤트 종류")
+                                fieldWithPath("eventCategory").type(STRING).description("이벤트 종류"),
+                                fieldWithPath("isManager").type(BOOLEAN).description("매니저 여부")
                         )));
     }
 
