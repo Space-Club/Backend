@@ -51,7 +51,7 @@ public record PromotionEventCreateRequest(
             return EventInfo.builder()
                     .title(title)
                     .content(content)
-                    .startDate(startDate.atTime(startTime))
+                    .startDateTime(startDate.atTime(startTime))
                     .location(location)
                     .capacity(capacity)
                     .posterImageUrl(posterImageUrl)
