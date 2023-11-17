@@ -12,6 +12,7 @@ import com.spaceclub.event.controller.dto.updateRequest.PromotionEventUpdateRequ
 import com.spaceclub.event.controller.dto.updateRequest.RecruitmentEventUpdateRequest;
 import com.spaceclub.event.controller.dto.updateRequest.ShowEventUpdateRequest;
 import com.spaceclub.event.domain.Event;
+import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.service.EventService;
 import com.spaceclub.event.service.vo.EventApplicationCreateInfo;
 import com.spaceclub.form.FormTestFixture;
@@ -844,10 +845,11 @@ class EventControllerTest {
         List<Event> events = List.of(event1(), showEvent(), clubEvent());
         Page<Event> eventPages = new PageImpl<>(events);
 
-        given(eventService.getAll(any(Pageable.class))).willReturn(eventPages);
+        given(eventService.getAllEvents(any(EventCategory.class), any(Pageable.class))).willReturn(eventPages);
 
         // when
         ResultActions actions = mvc.perform(get("/api/v1/events")
+                .param("category", "SHOW")
                 .param("page", "1")
                 .param("size", "3")
                 .param("sort", "id,asc")
@@ -869,7 +871,8 @@ class EventControllerTest {
                         queryParameters(
                                 parameterWithName("page").description("페이지"),
                                 parameterWithName("size").description("페이지 내 개수"),
-                                parameterWithName("sort").description("정렬 방법((ex) id,desc)")
+                                parameterWithName("sort").description("정렬 방법(ex. id,desc)"),
+                                parameterWithName("category").description("행사 카테고리 (ex. SHOW, RECRUITMENT, PROMOTION, CLUB")
                         ),
                         responseFields(
                                 fieldWithPath("data").type(ARRAY).description("페이지 내 행사 정보"),
@@ -879,6 +882,8 @@ class EventControllerTest {
                                 fieldWithPath("data[].location").type(STRING).description("행사 위치"),
                                 fieldWithPath("data[].startDate").type(STRING).description("행사 날짜"),
                                 fieldWithPath("data[].startTime").type(STRING).description("행사 시간"),
+                                fieldWithPath("data[].formEndDate").type(STRING).description("폼 마감 날짜"),
+                                fieldWithPath("data[].formEndTime").type(STRING).description("폼 마감 시간"),
                                 fieldWithPath("data[].location").type(STRING).description("행사 위치"),
                                 fieldWithPath("data[].clubName").type(STRING).description("클럽 명"),
                                 fieldWithPath("data[].clubLogoImageUrl").type(STRING).description("클럽 로그 이미지 Url"),

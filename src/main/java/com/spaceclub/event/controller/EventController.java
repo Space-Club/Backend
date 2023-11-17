@@ -2,6 +2,7 @@ package com.spaceclub.event.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.spaceclub.event.controller.dto.EventApplicationCreateRequest;
 import com.spaceclub.event.controller.dto.EventApplicationDeleteResponse;
 import com.spaceclub.event.controller.dto.EventCreateResponse;
 import com.spaceclub.event.controller.dto.detailGetResponse.ClubEventDetailGetResponse;
@@ -22,7 +23,6 @@ import com.spaceclub.event.domain.ApplicationStatus;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.service.EventService;
-import com.spaceclub.event.controller.dto.EventApplicationCreateRequest;
 import com.spaceclub.event.service.vo.EventApplicationCreateInfo;
 import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.global.dto.PageResponse;
@@ -108,10 +108,13 @@ public class EventController {
 
 
     @GetMapping
-    public ResponseEntity<PageResponse<EventGetResponse, Event>> getEvents(Pageable pageable) {
-        Page<Event> events = eventService.getAll(pageable);
+    public ResponseEntity<PageResponse<EventGetResponse, Event>> getAllEvents(@RequestParam EventCategory category, Pageable pageable) {
+        Page<Event> events = eventService.getAllEvents(category, pageable);
 
-        List<EventGetResponse> eventGetResponses = events.getContent().stream().map(EventGetResponse::from).toList();
+        List<EventGetResponse> eventGetResponses = events.getContent()
+                .stream()
+                .map(EventGetResponse::from)
+                .toList();
 
         return ResponseEntity.ok(new PageResponse<>(eventGetResponses, events));
     }
