@@ -33,7 +33,7 @@ public class EventInfo {
     private String content;
 
     @Getter
-    private LocalDateTime startDate;
+    private LocalDateTime startDateTime;
 
     private LocalDateTime endDateTime;
 
@@ -60,7 +60,7 @@ public class EventInfo {
     private EventInfo(
             String title,
             String content,
-            LocalDateTime startDate,
+            LocalDateTime startDateTime,
             String location,
             Integer capacity,
             String posterImageUrl,
@@ -73,7 +73,7 @@ public class EventInfo {
         validate(title, content, location, capacity);
         this.title = title;
         this.content = content;
-        this.startDate = startDate;
+        this.startDateTime = startDateTime;
         this.location = location;
         this.capacity = capacity;
         this.posterImageUrl = posterImageUrl;
