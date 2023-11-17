@@ -2,6 +2,7 @@ package com.spaceclub.form.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
+import com.spaceclub.event.domain.EventUser;
 import com.spaceclub.form.FormTestFixture;
 import com.spaceclub.form.controller.dto.FormCreateRequest;
 import com.spaceclub.form.domain.Form;
@@ -17,6 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -48,6 +52,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -169,15 +174,19 @@ class FormControllerTest {
         // given
         Form form = FormTestFixture.form();
         form.addItems(List.of(FormTestFixture.formOption1(), FormTestFixture.formOption2()));
-        FormApplicationGetInfo formApplicationGetInfo = new FormApplicationGetInfo(form, List.of(FormTestFixture.formOptionUser1(), FormTestFixture.formOptionUser2()), List.of(eventUser()));
+        Page<EventUser> eventUserPages = new PageImpl<>(List.of(eventUser()));
+        FormApplicationGetInfo formApplicationGetInfo = new FormApplicationGetInfo(form, List.of(FormTestFixture.formOptionUser1(), FormTestFixture.formOptionUser2()), eventUserPages);
 
         Long userId = 1L;
         given(jwtService.verifyUserId(any())).willReturn(userId);
-        given(formService.getApplicationForms(userId, 1L)).willReturn(formApplicationGetInfo);
+        given(formService.getApplicationForms(any(Long.class), any(Long.class), any(Pageable.class))).willReturn(formApplicationGetInfo);
 
         // when, then
         mvc.perform(get("/api/v1/events/{eventId}/forms/applications", 1L)
                         .header(AUTHORIZATION, "Access Token")
+                        .param("page", "1")
+                        .param("size", "3")
+                        .param("sort", "id,desc")
                 )
                 .andExpect(status().isOk())
                 .andDo(
@@ -190,6 +199,11 @@ class FormControllerTest {
                                 pathParameters(
                                         parameterWithName("eventId").description("행사 optionId")
                                 ),
+                                queryParameters(
+                                        parameterWithName("page").description("페이지"),
+                                        parameterWithName("size").description("페이지 내 개수"),
+                                        parameterWithName("sort").description("정렬 방법(ex. id,desc)")
+                                ),
                                 responseFields(
                                         fieldWithPath("formInfo").type(OBJECT).description("폼 정보"),
                                         fieldWithPath("formInfo.count").type(NUMBER).description("폼 개수"),
@@ -200,7 +214,14 @@ class FormControllerTest {
                                         fieldWithPath("userForms[].options[]").type(ARRAY).description("폼 옵션 리스트"),
                                         fieldWithPath("userForms[].options[].title").type(STRING).description("폼 옵션명"),
                                         fieldWithPath("userForms[].options[].content").type(STRING).description("폼 옵션 내용"),
-                                        fieldWithPath("userForms[].applicationStatus").type(STRING).description("신청 상태")
+                                        fieldWithPath("userForms[].applicationStatus").type(STRING).description("신청 상태"),
+                                        fieldWithPath("pageData").type(OBJECT).description("페이지 정보"),
+                                        fieldWithPath("pageData.first").type(BOOLEAN).description("첫 페이지 여부"),
+                                        fieldWithPath("pageData.last").type(BOOLEAN).description("마지막 페이지 여부"),
+                                        fieldWithPath("pageData.pageNumber").type(NUMBER).description("현재 페이지 번호"),
+                                        fieldWithPath("pageData.size").type(NUMBER).description("페이지 내 개수"),
+                                        fieldWithPath("pageData.totalPages").type(NUMBER).description("총 페이지 개수"),
+                                        fieldWithPath("pageData.totalElements").type(NUMBER).description("총 행사 개수")
                                 )
 
                         )

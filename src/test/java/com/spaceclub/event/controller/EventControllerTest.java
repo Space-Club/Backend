@@ -41,11 +41,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static com.spaceclub.event.EventTestFixture.event1;
-import static com.spaceclub.event.EventTestFixture.showEvent;
 import static com.spaceclub.event.EventTestFixture.clubEvent;
+import static com.spaceclub.event.EventTestFixture.event1;
 import static com.spaceclub.event.EventTestFixture.promotionEvent;
 import static com.spaceclub.event.EventTestFixture.recruitmentEvent;
+import static com.spaceclub.event.EventTestFixture.showEvent;
 import static com.spaceclub.event.domain.ApplicationStatus.CANCELED;
 import static com.spaceclub.event.domain.EventCategory.CLUB;
 import static com.spaceclub.event.domain.EventCategory.PROMOTION;
@@ -872,7 +872,7 @@ class EventControllerTest {
                                 parameterWithName("page").description("페이지"),
                                 parameterWithName("size").description("페이지 내 개수"),
                                 parameterWithName("sort").description("정렬 방법(ex. id,desc)"),
-                                parameterWithName("category").description("행사 카테고리 (ex. SHOW, RECRUITMENT, PROMOTION, CLUB")
+                                parameterWithName("category").description("행사 카테고리 (ex. SHOW, RECRUITMENT, PROMOTION, CLUB)")
                         ),
                         responseFields(
                                 fieldWithPath("data").type(ARRAY).description("페이지 내 행사 정보"),

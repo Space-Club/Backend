@@ -6,31 +6,34 @@ import com.spaceclub.form.domain.Form;
 import com.spaceclub.form.domain.FormOption;
 import com.spaceclub.form.domain.FormOptionUser;
 import com.spaceclub.form.service.vo.FormApplicationGetInfo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import java.util.List;
 
 public record FormApplicationGetResponse(
         FormInfoResponse formInfo,
-        List<UserFormResponse> userForms
+        List<UserFormResponse> userForms,
+        PageableResponse pageData
 ) {
 
     public static FormApplicationGetResponse from(FormApplicationGetInfo vo) {
         Form form = vo.form();
-        List<EventUser> eventUsers = vo.eventUsers();
+        Page<EventUser> eventUsers = vo.eventUsers();
         List<FormOptionUser> formOptionUsers = vo.formOptionUsers();
 
         List<String> optionTitles = form.getOptions().stream()
                 .map(FormOption::getTitle)
                 .toList();
 
-        FormInfoResponse formInfoResponse = new FormInfoResponse(eventUsers.size(), optionTitles, form.isManaged());
-        List<UserFormResponse> userForms = generateUserFormResponses(eventUsers, formOptionUsers);
+        FormInfoResponse formInfoResponse = new FormInfoResponse(eventUsers.getTotalElements(), optionTitles, form.isManaged());
+        Page<UserFormResponse> userFormPages = generateUserFormResponses(eventUsers, formOptionUsers);
 
-        return new FormApplicationGetResponse(formInfoResponse, userForms);
+        return new FormApplicationGetResponse(formInfoResponse, userFormPages.getContent(), PageableResponse.from(userFormPages));
     }
 
-    private static List<UserFormResponse> generateUserFormResponses(List<EventUser> eventUsers, List<FormOptionUser> formOptionUsers) {
-        return eventUsers.stream()
+    private static Page<UserFormResponse> generateUserFormResponses(Page<EventUser> eventUsers, List<FormOptionUser> formOptionUsers) {
+        List<UserFormResponse> userFormResponses = eventUsers.getContent().stream()
                 .map(eventUser -> {
                     Long userId = eventUser.getUserId();
 
@@ -42,9 +45,12 @@ public record FormApplicationGetResponse(
                     return new UserFormResponse(eventUser.getId(), options, eventUser.getStatus());
                 })
                 .toList();
+
+        return new PageImpl<>(userFormResponses, eventUsers.getPageable(), eventUsers.getTotalElements());
     }
 
-    private record FormInfoResponse(int count, List<String> optionTitles, boolean managed) {
+
+    private record FormInfoResponse(long count, List<String> optionTitles, boolean managed) {
 
     }
 
@@ -57,6 +63,26 @@ public record FormApplicationGetResponse(
     }
 
     private record UserFormOptionResponse(String title, String content) {
+
+    }
+
+    private record PageableResponse(boolean first,
+                                    boolean last,
+                                    int pageNumber,
+                                    int size,
+                                    int totalPages,
+                                    long totalElements) {
+
+        private static PageableResponse from(Page<UserFormResponse> page) {
+            return new PageableResponse(
+                    page.isFirst(),
+                    page.isLast(),
+                    page.getNumber(),
+                    page.getSize(),
+                    page.getTotalPages(),
+                    page.getTotalElements()
+            );
+        }
 
     }
 
