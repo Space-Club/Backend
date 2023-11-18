@@ -63,28 +63,28 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserLoginResponse> updateRequiredInfo(@RequestBody UserRequiredInfoRequest request) {//유저 찾기
+    public ResponseEntity<UserLoginResponse> createAccount(@RequestBody UserRequiredInfoRequest request) {
         User user = userService.updateRequiredInfo(request.userId(), new UserRequiredInfo(request.name(), request.phoneNumber()));
+
         String accessToken = jwtManager.createAccessToken(user.getId(), user.getUsername());
+        String refreshToken = jwtManager.createRefreshToken(user.getId());
 
         return ResponseEntity.created(URI.create("/api/v1/users/" + user.getId()))
-                .body(UserLoginResponse.from(user.getId(), accessToken));
+                .body(UserLoginResponse.from(user.getId(), accessToken, refreshToken));
     }
-
 
     @PostMapping("/oauths")
     public UserLoginResponse loginUser(@RequestBody UserCodeRequest userCodeRequest) {
         User kakaoUser = userService.createKakaoUser(userCodeRequest.code());
 
-        // 신규 유저면 빈 access token
         if (kakaoUser.isNewMember()) {
-            return UserLoginResponse.from(kakaoUser.getId(), "");
+            return UserLoginResponse.from(kakaoUser.getId(), "", "");
         }
 
-        // 기존 유저면 jwt
         String accessToken = jwtManager.createAccessToken(kakaoUser.getId(), kakaoUser.getUsername());
+        String refreshToken = jwtManager.createRefreshToken(kakaoUser.getId());
 
-        return UserLoginResponse.from(kakaoUser.getId(), accessToken);
+        return UserLoginResponse.from(kakaoUser.getId(), accessToken, refreshToken);
     }
 
 

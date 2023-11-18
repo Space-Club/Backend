@@ -2,10 +2,12 @@ package com.spaceclub.global.jwt.service;
 
 import com.spaceclub.global.jwt.Claims;
 import com.spaceclub.global.jwt.Jwt;
+import com.spaceclub.user.domain.User;
 import com.spaceclub.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -21,8 +23,16 @@ public class JwtManager {
         return jwt.signAccessToken(Claims.from(userId, username));
     }
 
-    public String createRefreshToken() {
-        return jwt.signRefreshToken();
+    @Transactional
+    public String createRefreshToken(Long userId) {
+        String refreshToken = jwt.signRefreshToken();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."))
+                .updateRefreshToken(refreshToken);
+        userRepository.save(user);
+
+        return refreshToken;
     }
 
     public Long verifyUserId(HttpServletRequest request) {
