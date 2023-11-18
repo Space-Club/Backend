@@ -112,6 +112,7 @@ class ClubControllerTest {
     @Test
     @WithMockUser
     void 클럽_생성에_성공한다() throws Exception {
+
         // given
         given(clubService.createClub(any(Club.class), any(), any(MultipartFile.class))).willReturn(
                 Club.builder()
