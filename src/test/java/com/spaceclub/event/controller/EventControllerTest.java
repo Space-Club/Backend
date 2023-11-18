@@ -17,7 +17,7 @@ import com.spaceclub.event.service.EventService;
 import com.spaceclub.event.service.vo.EventApplicationCreateInfo;
 import com.spaceclub.form.FormTestFixture;
 import com.spaceclub.global.S3ImageUploader;
-import com.spaceclub.global.jwt.service.JwtService;
+import com.spaceclub.global.jwt.service.JwtManager;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,7 +104,7 @@ class EventControllerTest {
     private EventService eventService;
 
     @MockBean
-    private JwtService jwtService;
+    private JwtManager jwtManager;
 
     @MockBean
     private S3ImageUploader uploader;
@@ -1119,7 +1119,7 @@ class EventControllerTest {
         List<Event> events = List.of(event1(), showEvent(), clubEvent());
         Page<Event> eventPages = new PageImpl<>(events);
 
-        given(jwtService.verifyUserId(any())).willReturn(1L);
+        given(jwtManager.verifyUserId(any())).willReturn(1L);
         given(eventService.getSearchEvents(any(String.class), any(Pageable.class), any(Long.class))).willReturn(eventPages);
 
         // when
@@ -1185,7 +1185,7 @@ class EventControllerTest {
     @WithMockUser
     public void 행사_삭제에_성공한다() throws Exception {
         // given
-        given(jwtService.verifyUserId(any())).willReturn(1L);
+        given(jwtManager.verifyUserId(any())).willReturn(1L);
         doNothing().when(eventService).delete(any(Long.class), any(Long.class));
 
         // when
@@ -1223,7 +1223,7 @@ class EventControllerTest {
                 .build();
 
         Long userId = 1L;
-        given(jwtService.verifyUserId(any())).willReturn(userId);
+        given(jwtManager.verifyUserId(any())).willReturn(userId);
         doNothing().when(eventService).createApplicationForm(EventApplicationCreateInfo.builder()
                 .userId(userId)
                 .eventId(request.eventId())

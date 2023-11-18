@@ -53,6 +53,7 @@ public class User {
     private Email email;
 
     @Lob
+    @Getter
     private String refreshToken;
 
     @Lob

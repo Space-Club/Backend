@@ -11,7 +11,7 @@ import com.spaceclub.form.service.FormService;
 import com.spaceclub.form.service.vo.FormApplicationGetInfo;
 import com.spaceclub.form.service.vo.FormCreate;
 import com.spaceclub.form.service.vo.FormGet;
-import com.spaceclub.global.jwt.service.JwtService;
+import com.spaceclub.global.jwt.service.JwtManager;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -72,7 +71,7 @@ class FormControllerTest {
     private FormService formService;
 
     @MockBean
-    private JwtService jwtService;
+    private JwtManager jwtManager;
 
     @Test
     @WithMockUser
@@ -86,7 +85,7 @@ class FormControllerTest {
 
         Long eventId = 1L;
         Long userId = 1L;
-        given(jwtService.verifyUserId(any())).willReturn(userId);
+        given(jwtManager.verifyUserId(any())).willReturn(userId);
         given(formService.createForm(any(FormCreate.class))).willReturn(eventId);
 
         // when, then
@@ -133,7 +132,7 @@ class FormControllerTest {
                 .build();
 
         Long userId = 1L;
-        given(jwtService.verifyUserId(any())).willReturn(userId);
+        given(jwtManager.verifyUserId(any())).willReturn(userId);
         given(formService.getForm(any(Long.class), any(Long.class))).willReturn(formGet);
 
         // when, then
@@ -178,7 +177,7 @@ class FormControllerTest {
         FormApplicationGetInfo formApplicationGetInfo = new FormApplicationGetInfo(form, List.of(FormTestFixture.formOptionUser1(), FormTestFixture.formOptionUser2()), eventUserPages);
 
         Long userId = 1L;
-        given(jwtService.verifyUserId(any())).willReturn(userId);
+        given(jwtManager.verifyUserId(any())).willReturn(userId);
         given(formService.getApplicationForms(any(Long.class), any(Long.class), any(Pageable.class))).willReturn(formApplicationGetInfo);
 
         // when, then

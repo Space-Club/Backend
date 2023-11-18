@@ -20,7 +20,7 @@ import com.spaceclub.club.service.vo.ClubNoticeUpdate;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.dto.PageResponse;
-import com.spaceclub.global.jwt.service.JwtService;
+import com.spaceclub.global.jwt.service.JwtManager;
 import com.spaceclub.invite.service.InviteService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +55,7 @@ public class ClubController {
 
     private final InviteService inviteService;
 
-    private final JwtService jwtService;
+    private final JwtManager jwtManager;
 
     @PostMapping(value = "/clubs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> createClub(@RequestPart(value = "request") ClubCreateRequest request,
@@ -63,7 +63,7 @@ public class ClubController {
                                              UriComponentsBuilder uriBuilder,
                                              HttpServletRequest httpServletRequest) throws IOException {
 
-        Long userId = jwtService.verifyUserId(httpServletRequest);
+        Long userId = jwtManager.verifyUserId(httpServletRequest);
         Club newClub = request.toEntity();
 
         Club createdClub = clubService.createClub(newClub, userId, logoImage);
@@ -80,7 +80,7 @@ public class ClubController {
     @GetMapping("/clubs/{clubId}")
     public ResponseEntity<ClubGetResponse> getClub(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
         Club club = clubService.getClub(clubId);
-        Long userId = jwtService.verifyUserId(httpServletRequest);
+        Long userId = jwtManager.verifyUserId(httpServletRequest);
 
         String inviteCode = inviteService.getInviteCode(clubId, userId);
         String role = clubService.getUserRole(clubId, userId);
@@ -94,7 +94,7 @@ public class ClubController {
                                            @RequestPart(value = "request", required = false) ClubUpdateRequest request,
                                            @RequestPart(value = "logoImage", required = false) MultipartFile logoImage,
                                            HttpServletRequest httpServletRequest) throws IOException {
-        Long userId = jwtService.verifyUserId(httpServletRequest);
+        Long userId = jwtManager.verifyUserId(httpServletRequest);
 
         if (request == null) {
             request = new ClubUpdateRequest();
@@ -108,7 +108,7 @@ public class ClubController {
 
     @DeleteMapping("/clubs/{clubId}")
     public ResponseEntity<String> deleteClub(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
-        Long userId = jwtService.verifyUserId(httpServletRequest);
+        Long userId = jwtManager.verifyUserId(httpServletRequest);
         clubService.deleteClub(clubId, userId);
         return ResponseEntity.noContent().build();
     }
@@ -154,7 +154,7 @@ public class ClubController {
     public ResponseEntity<Void> createNotice(@PathVariable Long clubId,
                                              @RequestBody ClubNoticeCreateRequest request,
                                              HttpServletRequest httpServletRequest) {
-        Long userId = jwtService.verifyUserId(httpServletRequest);
+        Long userId = jwtManager.verifyUserId(httpServletRequest);
 
         clubService.createNotice(request.notice(), clubId, userId);
 
@@ -163,7 +163,7 @@ public class ClubController {
 
     @GetMapping("/clubs/{clubId}/notices")
     public ResponseEntity<ClubNoticeGetResponse> getNotices(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
-        Long userId = jwtService.verifyUserId(httpServletRequest);
+        Long userId = jwtManager.verifyUserId(httpServletRequest);
 
         List<ClubNotice> notices = clubService.getNotices(clubId, userId);
 
@@ -177,7 +177,7 @@ public class ClubController {
                                              @PathVariable Long noticeId,
                                              @RequestBody ClubNoticeUpdateRequest request,
                                              HttpServletRequest httpServletRequest) {
-        Long userId = jwtService.verifyUserId(httpServletRequest);
+        Long userId = jwtManager.verifyUserId(httpServletRequest);
         ClubNoticeUpdate vo = ClubNoticeUpdate.builder()
                 .clubId(clubId)
                 .noticeId(noticeId)
@@ -194,7 +194,7 @@ public class ClubController {
     public ResponseEntity<Void> deleteNotice(@PathVariable Long clubId,
                                              @PathVariable Long noticeId,
                                              HttpServletRequest httpServletRequest) {
-        Long userId = jwtService.verifyUserId(httpServletRequest);
+        Long userId = jwtManager.verifyUserId(httpServletRequest);
         ClubNoticeDelete deleteVo = ClubNoticeDelete.builder()
                 .clubId(clubId)
                 .noticeId(noticeId)
@@ -208,7 +208,7 @@ public class ClubController {
 
     @GetMapping("/clubs/{clubId}/schedules")
     public ResponseEntity<ClubScheduleGetResponse> getClubSchedule(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
-        Long userId = jwtService.verifyUserId(httpServletRequest);
+        Long userId = jwtManager.verifyUserId(httpServletRequest);
 
         List<Event> events = clubService.getClubSchedules(clubId, userId);
 

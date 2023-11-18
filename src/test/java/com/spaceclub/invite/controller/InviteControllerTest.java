@@ -3,7 +3,7 @@ package com.spaceclub.invite.controller;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.service.ClubService;
-import com.spaceclub.global.jwt.service.JwtService;
+import com.spaceclub.global.jwt.service.JwtManager;
 import com.spaceclub.invite.service.InviteService;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
@@ -53,7 +53,7 @@ class InviteControllerTest {
     private ClubService clubService;
 
     @MockBean
-    private JwtService jwtService;
+    private JwtManager jwtManager;
 
     @Test
     @WithMockUser
