@@ -11,4 +11,5 @@ jwt:
   header: access-token
   issuer: space-club
   client-secret: ENC(2qr8v6d7x0P13dZVjQx4XToeeUHUh7tW)
-  expiry-seconds: 300000000 # 임시 값
+  expiry-seconds: 3600  # 1시간
+  refresh-expiry-seconds: 1209600 # 2주
