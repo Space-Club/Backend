@@ -131,7 +131,7 @@ public class User {
     }
 
     public User changeProfileImageUrl(String profileUrl) {
-        if (profileUrl != null) throw new IllegalArgumentException("프로필 이미지는 null이 될 수 없습니다.");
+        if (profileUrl == null) throw new IllegalArgumentException("프로필 이미지는 null이 될 수 없습니다.");
         this.profileImageUrl = profileUrl;
 
         return this;
