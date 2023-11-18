@@ -47,6 +47,7 @@ import static com.spaceclub.club.domain.ClubUserRole.MANAGER;
 import static com.spaceclub.event.EventTestFixture.clubEvent;
 import static com.spaceclub.event.EventTestFixture.event1;
 import static com.spaceclub.event.EventTestFixture.showEvent;
+import static com.spaceclub.event.EventTestFixture.clubEvent;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
@@ -111,7 +112,6 @@ class ClubControllerTest {
     @Test
     @WithMockUser
     void 클럽_생성에_성공한다() throws Exception {
-
         // given
         given(clubService.createClub(any(Club.class), any(), any(MultipartFile.class))).willReturn(
                 Club.builder()
