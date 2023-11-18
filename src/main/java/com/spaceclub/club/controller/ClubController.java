@@ -9,6 +9,7 @@ import com.spaceclub.club.controller.dto.ClubNoticeUpdateRequest;
 import com.spaceclub.club.controller.dto.ClubScheduleGetResponse;
 import com.spaceclub.club.controller.dto.ClubScheduleGetResponse.ClubScheduleGetResponseInfo;
 import com.spaceclub.club.controller.dto.ClubUpdateRequest;
+import com.spaceclub.club.controller.dto.ClubUserRoleResponse;
 import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
 import com.spaceclub.club.controller.dto.MemberGetResponse;
 import com.spaceclub.club.domain.Club;
@@ -76,12 +77,17 @@ public class ClubController {
     @GetMapping("/clubs/{clubId}")
     public ResponseEntity<ClubGetResponse> getClub(@PathVariable Long clubId,  @Authenticated JwtUser jwtUser) {
         Club club = clubService.getClub(clubId);
-
         String inviteCode = inviteService.getInviteCode(clubId, jwtUser.id());
-        String role = clubService.getUserRole(clubId, jwtUser.id());
-        ClubGetResponse response = ClubGetResponse.from(club, INVITE_LINK_PREFIX + inviteCode, role);
+        ClubGetResponse response = ClubGetResponse.from(club, INVITE_LINK_PREFIX + inviteCode);
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/clubs/{clubId}/users")
+    public ResponseEntity<ClubUserRoleResponse> getClubUserRole(@PathVariable Long clubId, @Authenticated JwtUser jwtUser) {
+        String role = clubService.getUserRole(clubId, jwtUser.id());
+
+        return ResponseEntity.ok(new ClubUserRoleResponse(role));
     }
 
     @PatchMapping(value = "/clubs/{clubId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

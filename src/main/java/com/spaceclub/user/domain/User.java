@@ -187,10 +187,4 @@ public class User {
         );
     }
 
-    public User updateRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-
-        return this;
-    }
-
 }

@@ -183,7 +183,7 @@ class ClubControllerTest {
     void 클럽_조회에_성공한다() throws Exception {
         // given
         given(clubService.getClub(any(Long.class))).willReturn(club1());
-        given(clubService.getUserRole(any(Long.class), any())).willReturn(MANAGER.name());
+        given(inviteService.getInviteCode(any(Long.class), any(Long.class))).willReturn("inviteCode");
 
         // when
         ResultActions result = this.mockMvc.perform(get("/api/v1/clubs/{clubId}", club1().getId())
@@ -208,10 +208,39 @@ class ClubControllerTest {
                                 fieldWithPath("memberCount").type(NUMBER).description("클럽 멤버 수"),
                                 fieldWithPath("coverImageUrl").type(STRING).description("클럽 커버 이미지 Url"),
                                 fieldWithPath("inviteLink").type(STRING).description("클럽 초대 링크"),
-                                fieldWithPath("inviteLink").type(STRING).description("클럽 초대 링크"),
-                                fieldWithPath("role").type(STRING).description("유저의 클럽 ROLE")
+                                fieldWithPath("inviteLink").type(STRING).description("클럽 초대 링크")
                         )));
 
+    }
+
+    @Test
+    @WithMockUser
+    void 클럽_유저_권한_조회에_성공한다() throws Exception {
+        // given
+        final String userRole = "MANAGER";
+        given(clubService.getUserRole(any(Long.class), any())).willReturn(userRole);
+
+        // when, then
+        mockMvc.perform(get("/api/v1/clubs/{clubId}/users", club1().getId())
+                        .header(AUTHORIZATION, "Access Token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                ).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.role").value("MANAGER"))
+                .andDo(
+                        document("club/getUserRole",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                pathParameters(
+                                        parameterWithName("clubId").description("클럽 아이디")),
+                                requestHeaders(
+                                        headerWithName(AUTHORIZATION).description("Access Token")
+                                ),
+                                responseFields(
+                                        fieldWithPath("role").type(STRING).description("유저 권한")
+                                )
+                        )
+                );
     }
 
     @Test
@@ -531,12 +560,6 @@ class ClubControllerTest {
         // given
         Long clubId = 1L;
         Long noticeId = 1L;
-        ClubNoticeUpdate newNoticeVO = ClubNoticeUpdate.builder()
-                .notice("새로운 공지사항")
-                .userId(1L)
-                .noticeId(noticeId)
-                .clubId(clubId)
-                .build();
         doNothing().when(clubService).updateNotice(any(ClubNoticeUpdate.class));
 
         // when

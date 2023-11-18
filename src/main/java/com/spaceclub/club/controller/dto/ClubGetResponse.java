@@ -9,15 +9,14 @@ public record ClubGetResponse(
         String info,
         int memberCount,
         String coverImageUrl,
-        String inviteLink,
-        String role
+        String inviteLink
 ) {
 
     @Builder
     public ClubGetResponse {
     }
 
-    public static ClubGetResponse from(Club club, String inviteLink, String role){
+    public static ClubGetResponse from(Club club, String inviteLink){
         return ClubGetResponse.builder()
                 .name(club.getName())
                 .logoImageUrl(club.getLogoImageUrl())
@@ -25,7 +24,6 @@ public record ClubGetResponse(
                 .memberCount(club.getClubUser().size())
                 .coverImageUrl(club.getCoverImageUrl())
                 .inviteLink(inviteLink)
-                .role(role)
                 .build();
     }
 
