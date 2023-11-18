@@ -49,6 +49,11 @@ include::{snippets}/club/delete/http-response.adoc[]
 ==== Request
 
 include::{snippets}/club/getAllEvent/http-request.adoc[]
+
+===== Request Header
+
+include::{snippets}/club/getAllEvent/request-headers.adoc[]
+
 ===== Path Parameter
 
 include::{snippets}/club/getAllEvent/path-parameters.adoc[]
@@ -70,6 +75,11 @@ include::{snippets}/club/getAllEvent/response-fields.adoc[]
 ==== Request
 
 include::{snippets}/club/getAllMember/http-request.adoc[]
+
+===== Request Header
+
+include::{snippets}/club/getAllMember/request-headers.adoc[]
+
 ===== Path Parameter
 
 include::{snippets}/club/getAllMember/path-parameters.adoc[]
@@ -87,6 +97,10 @@ include::{snippets}/club/getAllMember/response-fields.adoc[]
 ==== Request
 
 include::{snippets}/club/updateMemberRole/http-request.adoc[]
+===== Request Header
+
+include::{snippets}/club/updateMemberRole/request-headers.adoc[]
+
 ===== Request Body
 
 include::{snippets}/club/updateMemberRole/request-body.adoc[]
@@ -106,6 +120,10 @@ include::{snippets}/club/updateMemberRole/http-response.adoc[]
 ==== Request
 
 include::{snippets}/club/deleteMember/http-request.adoc[]
+===== Request Header
+
+include::{snippets}/club/deleteMember/request-headers.adoc[]
+
 ===== Path Parameter
 
 include::{snippets}/club/deleteMember/path-parameters.adoc[]
@@ -122,6 +140,7 @@ include::{snippets}/club/deleteMember/http-response.adoc[]
 include::{snippets}/club/get/http-request.adoc[]
 
 ===== Request Header
+
 include::{snippets}/club/get/request-headers.adoc[]
 
 ===== Path Parameter
@@ -182,6 +201,7 @@ include::{snippets}/club/createNotice/request-headers.adoc[]
 include::{snippets}/club/createNotice/http-response.adoc[]
 
 :sectnums:
+
 === 클럽 공지사항 조회
 :sectnums!:
 ==== Request
@@ -200,9 +220,11 @@ include::{snippets}/club/getNotice/request-headers.adoc[]
 include::{snippets}/club/getNotice/http-response.adoc[]
 
 ===== Response Body
+
 include::{snippets}/club/getNotice/response-fields.adoc[]
 
 :sectnums:
+
 === 클럽 공지사항 수정
 :sectnums!:
 ==== Request
@@ -217,6 +239,7 @@ include::{snippets}/club/updateNotice/path-parameters.adoc[]
 include::{snippets}/club/updateNotice/request-headers.adoc[]
 
 ===== Request Body
+
 include::{snippets}/club/updateNotice/request-fields.adoc[]
 
 ==== Response
@@ -224,6 +247,7 @@ include::{snippets}/club/updateNotice/request-fields.adoc[]
 include::{snippets}/club/updateNotice/http-response.adoc[]
 
 :sectnums:
+
 === 클럽 공지사항 삭제
 :sectnums!:
 ==== Request
@@ -242,7 +266,8 @@ include::{snippets}/club/deleteNotice/request-headers.adoc[]
 include::{snippets}/club/deleteNotice/http-response.adoc[]
 
 :sectnums:
-=== 클럽 일정 확인하기
+
+=== 클럽 일정 확인
 :sectnums!:
 ==== Request
 
@@ -260,6 +285,7 @@ include::{snippets}/club/getSchedule/request-headers.adoc[]
 include::{snippets}/club/getSchedule/http-response.adoc[]
 
 ===== Response Body
+
 include::{snippets}/club/getSchedule/response-fields.adoc[]
 :sectnums:
 

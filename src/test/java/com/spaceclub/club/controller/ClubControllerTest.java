@@ -343,11 +343,12 @@ class ClubControllerTest {
         List<Event> events = List.of(event1(), showEvent(), clubEvent());
         Page<Event> eventPages = new PageImpl<>(events);
 
-        given(clubService.getClubEvents(any(Long.class), any(Pageable.class))).willReturn(eventPages);
+        given(clubService.getClubEvents(any(Long.class), any(Pageable.class), any(Long.class))).willReturn(eventPages);
         Long clubId = 1L;
 
         // when
         ResultActions actions = mockMvc.perform(get("/api/v1/clubs/{clubId}/events", clubId)
+                .header("Authorization", "access token")
                 .param("page", "1")
                 .param("size", "3")
                 .param("sort", "id,asc")
@@ -366,6 +367,9 @@ class ClubControllerTest {
                 .andDo(document("club/getAllEvent",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName("Authorization").description("유저 액세스 토큰")
+                        ),
                         pathParameters(
                                 parameterWithName("clubId").description("클럽 아이디")),
                         queryParameters(
@@ -400,10 +404,12 @@ class ClubControllerTest {
     @WithMockUser
     public void 클럽_멤버_조회에_성공한다() throws Exception {
         // given
-        given(clubService.getMembers(any(Long.class))).willReturn(List.of(club1User1Manager(), club1User2Manager()));
+        given(clubService.getMembers(any(Long.class), any(Long.class))).willReturn(List.of(club1User1Manager(), club1User2Manager()));
 
         // when
-        ResultActions actions = mockMvc.perform(get("/api/v1/clubs/{clubId}/members", club1().getId()));
+        ResultActions actions = mockMvc.perform(get("/api/v1/clubs/{clubId}/members", club1().getId())
+                .header("Authorization", "access token")
+        );
 
         // then
         actions
@@ -411,6 +417,9 @@ class ClubControllerTest {
                 .andDo(document("club/getAllMember",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName("Authorization").description("유저 액세스 토큰")
+                        ),
                         pathParameters(
                                 parameterWithName("clubId").description("클럽 아이디")),
                         responseFields(
@@ -436,6 +445,7 @@ class ClubControllerTest {
 
         // when
         ResultActions result = this.mockMvc.perform(patch("/api/v1/clubs/{clubId}/members/{memberId}", clubId, memberId)
+                .header("Authorization", "access token")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(request))
@@ -447,6 +457,9 @@ class ClubControllerTest {
                 .andDo(document("club/updateMemberRole",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName("Authorization").description("유저 액세스 토큰")
+                        ),
                         pathParameters(
                                 parameterWithName("clubId").description("클럽 아이디"),
                                 parameterWithName("memberId").description("멤버 아이디")
@@ -464,10 +477,11 @@ class ClubControllerTest {
         Long clubId = 1L;
         Long memberId = 1L;
 
-        doNothing().when(clubService).deleteMember(any(Long.class), any(Long.class));
+        doNothing().when(clubService).deleteMember(any(Long.class), any(Long.class), any(Long.class));
 
         // when
         ResultActions result = this.mockMvc.perform(delete("/api/v1/clubs/{clubId}/members/{memberId}", clubId, memberId)
+                .header("Authorization", "access token")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
         );
@@ -478,6 +492,9 @@ class ClubControllerTest {
                 .andDo(document("club/deleteMember",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName("Authorization").description("유저 액세스 토큰")
+                        ),
                         pathParameters(
                                 parameterWithName("clubId").description("클럽 아이디"),
                                 parameterWithName("memberId").description("멤버 아이디")

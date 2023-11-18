@@ -88,6 +88,7 @@ public class UserService {
     }
 
     public List<Club> getClubs(Long userId) {
+        if (!userRepository.existsById(userId)) throw new IllegalStateException("존재하지 않는 유저입니다.");
         List<ClubUser> clubUsers = clubUserRepository.findByUser_Id(userId);
 
         return clubUsers.stream()

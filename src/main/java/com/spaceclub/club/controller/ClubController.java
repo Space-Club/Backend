@@ -113,8 +113,9 @@ public class ClubController {
     }
 
     @GetMapping("/clubs/{clubId}/events")
-    public ResponseEntity<PageResponse<ClubEventGetResponse, Event>> getClubEvents(@PathVariable Long clubId, Pageable pageable) {
-        Page<Event> events = clubService.getClubEvents(clubId, pageable);
+    public ResponseEntity<PageResponse<ClubEventGetResponse, Event>> getClubEvents(@PathVariable Long clubId, Pageable pageable, HttpServletRequest httpServletRequest) {
+        Long userId = jwtService.verifyUserId(httpServletRequest);
+        Page<Event> events = clubService.getClubEvents(clubId, pageable, userId);
 
         List<ClubEventGetResponse> clubEventGetResponses = events.getContent()
                 .stream()
@@ -125,15 +126,17 @@ public class ClubController {
     }
 
     @PatchMapping("/clubs/{clubId}/members/{memberId}")
-    public ResponseEntity<Void> updateMemberRole(@PathVariable Long clubId, @PathVariable Long memberId, @RequestBody ClubUserUpdateRequest request) {
-        clubService.updateMemberRole(new ClubUserUpdate(clubId, memberId, request.role()));
+    public ResponseEntity<Void> updateMemberRole(@PathVariable Long clubId, @PathVariable Long memberId, @RequestBody ClubUserUpdateRequest request, HttpServletRequest httpServletRequest) {
+        Long userId = jwtService.verifyUserId(httpServletRequest);
+        clubService.updateMemberRole(new ClubUserUpdate(clubId, memberId, request.role(), userId));
 
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/clubs/{clubId}/members")
-    public ResponseEntity<List<MemberGetResponse>> getMembers(@PathVariable Long clubId) {
-        List<ClubUser> clubUsers = clubService.getMembers(clubId);
+    public ResponseEntity<List<MemberGetResponse>> getMembers(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
+        Long userId = jwtService.verifyUserId(httpServletRequest);
+        List<ClubUser> clubUsers = clubService.getMembers(clubId, userId);
 
         List<MemberGetResponse> response = clubUsers.stream()
                 .map(MemberGetResponse::from)
@@ -143,8 +146,9 @@ public class ClubController {
     }
 
     @DeleteMapping("/clubs/{clubId}/members/{memberId}")
-    public ResponseEntity<Void> deleteMember(@PathVariable Long clubId, @PathVariable Long memberId) {
-        clubService.deleteMember(clubId, memberId);
+    public ResponseEntity<Void> deleteMember(@PathVariable Long clubId, @PathVariable Long memberId, HttpServletRequest httpServletRequest) {
+        Long userId = jwtService.verifyUserId(httpServletRequest);
+        clubService.deleteMember(clubId, memberId, userId);
 
         return ResponseEntity.noContent().build();
     }

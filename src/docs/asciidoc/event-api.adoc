@@ -188,7 +188,7 @@ include::{snippets}/event/update/club/request-part-request-fields.adoc[]
 include::{snippets}/event/update/club/http-response.adoc[]
 :sectnums:
 
-=== 행사 신청하기
+=== 행사 신청
 :sectnums!:
 ==== Request
 
