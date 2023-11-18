@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.event.controller.dto.BookmarkedEventRequest;
 import com.spaceclub.event.domain.Event;
+import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.interceptor.JwtAuthorizationInterceptor;
 import com.spaceclub.global.jwt.service.JwtManager;
 import com.spaceclub.user.UserTestFixture;
@@ -105,6 +106,9 @@ class UserControllerTest {
     @MockBean
     private JwtManager jwtManager;
 
+    @MockBean
+    private UserArgumentResolver userArgumentResolver;
+
     @Test
     @WithMockUser
     void 유저의_모든_이벤트_조회에_성공한다() throws Exception {
@@ -112,8 +116,8 @@ class UserControllerTest {
         List<Event> events = List.of(event1(), showEvent(), clubEvent());
         Page<Event> eventPages = new PageImpl<>(events);
 
-        given(userService.findAllEventPages(any(Long.class), any(Pageable.class))).willReturn(eventPages);
-        given(userService.findEventStatus(any(Long.class), any(Event.class))).willReturn("CONFIRMED");
+        given(userService.findAllEventPages(any(), any(Pageable.class))).willReturn(eventPages);
+        given(userService.findEventStatus(any(), any(Event.class))).willReturn("CONFIRMED");
 
         // when, then
         mvc.perform(get("/api/v1/users/events")
@@ -383,8 +387,7 @@ class UserControllerTest {
     @WithMockUser
     void 유저의_모든_클럽_조회에_성공한다() throws Exception {
         // given
-        given(jwtManager.verifyUserId(any())).willReturn(1L);
-        given(userService.getClubs(1L)).willReturn(List.of(club1(), club2()));
+        given(userService.getClubs(any())).willReturn(List.of(club1(), club2()));
 
         // when
         ResultActions actions = mvc.perform(get("/api/v1/users/clubs")
@@ -418,7 +421,7 @@ class UserControllerTest {
 
         Long userId = 1L;
         given(jwtManager.verifyUserId(any())).willReturn(userId);
-        given(userService.findAllBookmarkedEventPages(any(Long.class), any(Pageable.class))).willReturn(eventPages);
+        given(userService.findAllBookmarkedEventPages(any(), any(Pageable.class))).willReturn(eventPages);
 
         // when, then
         mvc.perform(get("/api/v1/users/bookmarked-events")

@@ -2,10 +2,10 @@ package com.spaceclub.invite.controller;
 
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.service.ClubService;
-import com.spaceclub.global.jwt.service.JwtManager;
+import com.spaceclub.global.Authenticated;
+import com.spaceclub.global.jwt.vo.JwtUser;
 import com.spaceclub.invite.controller.dto.ClubRequestToJoinResponse;
 import com.spaceclub.invite.service.InviteService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,13 +27,10 @@ public class InviteController {
 
     private final ClubService clubService;
 
-    private final JwtManager jwtManager;
-
     @PostMapping("/clubs/{clubId}/invite")
-    public ResponseEntity<Map<String, String>> getInviteLink(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
-        Long userId = jwtManager.verifyUserId(httpServletRequest);
+    public ResponseEntity<Map<String, String>> getInviteLink(@PathVariable Long clubId, @Authenticated JwtUser jwtUser) {
 
-        String inviteCode = service.getInviteCode(clubId, userId);
+        String inviteCode = service.getInviteCode(clubId, jwtUser.id());
 
         String inviteLink = INVITE_LINK_PREFIX + inviteCode;
 
@@ -43,10 +40,9 @@ public class InviteController {
     }
 
     @PostMapping("/clubs/invite/{code}")
-    public ResponseEntity<Map<String, Long>> joinClub(@PathVariable String code, HttpServletRequest httpServletRequest) {
-        Long userId = jwtManager.verifyUserId(httpServletRequest);
+    public ResponseEntity<Map<String, Long>> joinClub(@PathVariable String code, @Authenticated JwtUser jwtUser) {
 
-        Long clubId = service.joinClub(code, userId);
+        Long clubId = service.joinClub(code, jwtUser.id());
 
         return ResponseEntity.ok(
                 Map.of("clubId", clubId)

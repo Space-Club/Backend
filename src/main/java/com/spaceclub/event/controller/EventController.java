@@ -23,10 +23,10 @@ import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.service.EventService;
 import com.spaceclub.event.service.vo.EventApplicationCreateInfo;
+import com.spaceclub.global.Authenticated;
 import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.global.dto.PageResponse;
-import com.spaceclub.global.jwt.service.JwtManager;
-import jakarta.servlet.http.HttpServletRequest;
+import com.spaceclub.global.jwt.vo.JwtUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -57,14 +57,12 @@ public class EventController {
 
     private final S3ImageUploader uploader;
 
-    private final JwtManager jwtManager;
-
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<EventCreateResponse> create(
             @RequestPart MultipartFile posterImage,
             @RequestPart String request,
             @RequestPart String category,
-            HttpServletRequest servletRequest
+            @Authenticated JwtUser jwtUser
     ) throws IOException {
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -99,9 +97,7 @@ public class EventController {
             }
             default -> throw new IllegalArgumentException("존재하지 않는 행사의 카테고리입니다");
         }
-
-        Long userId = jwtManager.verifyUserId(servletRequest);
-        Long eventId = eventService.create(event, clubId, userId);
+        Long eventId = eventService.create(event, clubId, jwtUser.id());
 
         return ResponseEntity.ok(new EventCreateResponse(eventId));
     }
@@ -124,7 +120,7 @@ public class EventController {
             @RequestPart MultipartFile posterImage,
             @RequestPart String request,
             @RequestPart String category,
-            HttpServletRequest servletRequest
+            @Authenticated JwtUser jwtUser
     ) throws IOException {
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -155,24 +151,25 @@ public class EventController {
             default -> throw new IllegalArgumentException("존재하지 않는 행사의 카테고리입니다");
         }
 
-        Long userId = jwtManager.verifyUserId(servletRequest);
-        eventService.update(event, userId);
+        eventService.update(event, jwtUser.id());
 
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{eventId}")
-    public ResponseEntity<Void> deleteEvent(@PathVariable Long eventId, HttpServletRequest servletRequest) {
-        Long userId = jwtManager.verifyUserId(servletRequest);
-        eventService.delete(eventId, userId);
+    public ResponseEntity<Void> deleteEvent(@PathVariable Long eventId, @Authenticated JwtUser jwtUser) {
+        eventService.delete(eventId, jwtUser.id());
 
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/searches")
-    public ResponseEntity<PageResponse<EventSearchGetResponse, Event>> getSearchEvents(@RequestParam String keyword, Pageable pageable, HttpServletRequest servletRequest) {
-        Long userId = jwtManager.verifyUserId(servletRequest);
-        Page<Event> events = eventService.getSearchEvents(keyword, pageable, userId);
+    public ResponseEntity<PageResponse<EventSearchGetResponse, Event>> getSearchEvents(
+            @RequestParam String keyword,
+            Pageable pageable,
+            @Authenticated JwtUser jwtUser
+    ) {
+        Page<Event> events = eventService.getSearchEvents(keyword, pageable, jwtUser.id());
 
         List<EventSearchGetResponse> eventSearchGetResponses = events.getContent().stream().map(EventSearchGetResponse::from).toList();
 
@@ -211,11 +208,9 @@ public class EventController {
     }
 
     @PostMapping("/applications")
-    public ResponseEntity<Void> createApplicationForm(@RequestBody EventApplicationCreateRequest request, HttpServletRequest servletRequest) {
-        Long userId = jwtManager.verifyUserId(servletRequest);
-
+    public ResponseEntity<Void> createApplicationForm(@RequestBody EventApplicationCreateRequest request, @Authenticated JwtUser jwtUser) {
         EventApplicationCreateInfo eventApplicationCreateInfo = EventApplicationCreateInfo.builder()
-                .userId(userId)
+                .userId(jwtUser.id())
                 .eventId(request.eventId())
                 .formOptionUsers(request.toEntityList())
                 .ticketCount(request.ticketCount())
@@ -227,10 +222,8 @@ public class EventController {
 
 
     @DeleteMapping("/{eventId}/applications")
-    public ResponseEntity<EventApplicationDeleteResponse> cancelEvent(@PathVariable Long eventId, HttpServletRequest servletRequest) {
-        Long userId = jwtManager.verifyUserId(servletRequest);
-
-        ApplicationStatus status = eventService.cancelEvent(eventId, userId);
+    public ResponseEntity<EventApplicationDeleteResponse> cancelEvent(@PathVariable Long eventId, @Authenticated JwtUser jwtUser) {
+        ApplicationStatus status = eventService.cancelEvent(eventId, jwtUser.id());
 
         return ResponseEntity.ok(new EventApplicationDeleteResponse(status));
     }

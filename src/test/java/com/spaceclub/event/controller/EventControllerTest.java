@@ -17,9 +17,8 @@ import com.spaceclub.event.service.EventService;
 import com.spaceclub.event.service.vo.EventApplicationCreateInfo;
 import com.spaceclub.form.FormTestFixture;
 import com.spaceclub.global.S3ImageUploader;
+import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.interceptor.JwtAuthorizationInterceptor;
-import com.spaceclub.global.jwt.service.JwtManager;
-import com.spaceclub.user.controller.UserController;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,10 +112,10 @@ class EventControllerTest {
     private EventService eventService;
 
     @MockBean
-    private JwtManager jwtManager;
+    private S3ImageUploader uploader;
 
     @MockBean
-    private S3ImageUploader uploader;
+    private UserArgumentResolver userArgumentResolver;
 
     private final MockMultipartFile posterImage = new MockMultipartFile(
             "posterImage",
@@ -1095,7 +1094,7 @@ class EventControllerTest {
     @WithMockUser
     void 행사_참여_신청_취소에_성공한다() throws Exception {
         // given
-        given(eventService.cancelEvent(any(Long.class), any(Long.class))).willReturn(CANCELED);
+        given(eventService.cancelEvent(any(Long.class), any())).willReturn(CANCELED);
 
         // when
         ResultActions actions = mvc.perform(delete("/api/v1/events/{eventId}/applications", 1L)
@@ -1128,8 +1127,7 @@ class EventControllerTest {
         List<Event> events = List.of(event1(), showEvent(), clubEvent());
         Page<Event> eventPages = new PageImpl<>(events);
 
-        given(jwtManager.verifyUserId(any())).willReturn(1L);
-        given(eventService.getSearchEvents(any(String.class), any(Pageable.class), any(Long.class))).willReturn(eventPages);
+        given(eventService.getSearchEvents(any(String.class), any(Pageable.class), any())).willReturn(eventPages);
 
         // when
         ResultActions actions = mvc.perform(get("/api/v1/events/searches")
@@ -1194,8 +1192,7 @@ class EventControllerTest {
     @WithMockUser
     public void 행사_삭제에_성공한다() throws Exception {
         // given
-        given(jwtManager.verifyUserId(any())).willReturn(1L);
-        doNothing().when(eventService).delete(any(Long.class), any(Long.class));
+        doNothing().when(eventService).delete(any(Long.class), any());
 
         // when
         ResultActions actions = mvc.perform(delete("/api/v1/events/{eventId}", 1L)
@@ -1232,7 +1229,6 @@ class EventControllerTest {
                 .build();
 
         Long userId = 1L;
-        given(jwtManager.verifyUserId(any())).willReturn(userId);
         doNothing().when(eventService).createApplicationForm(EventApplicationCreateInfo.builder()
                 .userId(userId)
                 .eventId(request.eventId())

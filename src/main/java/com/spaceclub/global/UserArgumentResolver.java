@@ -17,8 +17,8 @@ import java.util.Objects;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-@Component
 @Slf4j
+@Component
 @RequiredArgsConstructor
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -36,7 +36,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter,
                                   ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest,
-                                  WebDataBinderFactory binderFactory) throws Exception {
+                                  WebDataBinderFactory binderFactory) {
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
 
         String accessToken = Objects.requireNonNull(request)

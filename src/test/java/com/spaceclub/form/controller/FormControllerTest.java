@@ -11,9 +11,8 @@ import com.spaceclub.form.service.FormService;
 import com.spaceclub.form.service.vo.FormApplicationGetInfo;
 import com.spaceclub.form.service.vo.FormCreate;
 import com.spaceclub.form.service.vo.FormGet;
+import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.interceptor.JwtAuthorizationInterceptor;
-import com.spaceclub.global.jwt.service.JwtManager;
-import com.spaceclub.user.controller.UserController;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +80,7 @@ class FormControllerTest {
     private FormService formService;
 
     @MockBean
-    private JwtManager jwtManager;
+    private UserArgumentResolver userArgumentResolver;
 
     @Test
     @WithMockUser
@@ -94,8 +93,6 @@ class FormControllerTest {
         FormCreateRequest formCreateRequest = new FormCreateRequest(1L, "행사에 대한 폼 양식입니다.", true, items);
 
         Long eventId = 1L;
-        Long userId = 1L;
-        given(jwtManager.verifyUserId(any())).willReturn(userId);
         given(formService.createForm(any(FormCreate.class))).willReturn(eventId);
 
         // when, then
@@ -140,10 +137,7 @@ class FormControllerTest {
                 .form(form)
                 .user(user1())
                 .build();
-
-        Long userId = 1L;
-        given(jwtManager.verifyUserId(any())).willReturn(userId);
-        given(formService.getForm(any(Long.class), any(Long.class))).willReturn(formGet);
+        given(formService.getForm(any(), any(Long.class))).willReturn(formGet);
 
         // when, then
         mvc.perform(get("/api/v1/events/{eventId}/forms", 1L)
@@ -187,8 +181,7 @@ class FormControllerTest {
         FormApplicationGetInfo formApplicationGetInfo = new FormApplicationGetInfo(form, List.of(FormTestFixture.formOptionUser1(), FormTestFixture.formOptionUser2()), eventUserPages);
 
         Long userId = 1L;
-        given(jwtManager.verifyUserId(any())).willReturn(userId);
-        given(formService.getApplicationForms(any(Long.class), any(Long.class), any(Pageable.class))).willReturn(formApplicationGetInfo);
+        given(formService.getApplicationForms(any(), any(Long.class), any(Pageable.class))).willReturn(formApplicationGetInfo);
 
         // when, then
         mvc.perform(get("/api/v1/events/{eventId}/forms/applications", 1L)

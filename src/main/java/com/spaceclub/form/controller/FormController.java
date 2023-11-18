@@ -7,8 +7,8 @@ import com.spaceclub.form.service.FormService;
 import com.spaceclub.form.service.vo.FormApplicationGetInfo;
 import com.spaceclub.form.service.vo.FormCreate;
 import com.spaceclub.form.service.vo.FormGet;
-import com.spaceclub.global.jwt.service.JwtManager;
-import jakarta.servlet.http.HttpServletRequest;
+import com.spaceclub.global.Authenticated;
+import com.spaceclub.global.jwt.vo.JwtUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -29,12 +29,13 @@ public class FormController {
 
     private final FormService formService;
 
-    private final JwtManager jwtManager;
-
     @PostMapping("/forms")
-    public ResponseEntity<Void> createForm(@RequestBody FormCreateRequest request, UriComponentsBuilder uriBuilder, HttpServletRequest servletRequest) {
-        Long userId = jwtManager.verifyUserId(servletRequest);
-        Long eventId = formService.createForm(FormCreate.from(request, userId));
+    public ResponseEntity<Void> createForm(
+            @RequestBody FormCreateRequest request,
+            UriComponentsBuilder uriBuilder,
+            @Authenticated JwtUser jwtUser
+    ) {
+        Long eventId = formService.createForm(FormCreate.from(request, jwtUser.id()));
 
         URI location = uriBuilder
                 .path("/api/v1/events/{id}")
@@ -45,17 +46,19 @@ public class FormController {
     }
 
     @GetMapping("/{eventId}/forms")
-    public ResponseEntity<FormGetResponse> getFormItem(@PathVariable Long eventId, HttpServletRequest servletRequest) {
-        Long userId = jwtManager.verifyUserId(servletRequest);
-        FormGet formGetVo = formService.getForm(userId, eventId);
+    public ResponseEntity<FormGetResponse> getFormItem(@PathVariable Long eventId, @Authenticated JwtUser jwtUser) {
+        FormGet formGetVo = formService.getForm(jwtUser.id(), eventId);
 
         return ResponseEntity.ok(FormGetResponse.from(formGetVo));
     }
 
     @GetMapping("/{eventId}/forms/applications")
-    public ResponseEntity<FormApplicationGetResponse> getApplicationForms(@PathVariable Long eventId, Pageable pageable, HttpServletRequest servletRequest) {
-        Long userId = jwtManager.verifyUserId(servletRequest);
-        FormApplicationGetInfo formApplicationGetInfo = formService.getApplicationForms(userId, eventId, pageable);
+    public ResponseEntity<FormApplicationGetResponse> getApplicationForms(
+            @PathVariable Long eventId,
+            Pageable pageable,
+            @Authenticated JwtUser jwtUser
+    ) {
+        FormApplicationGetInfo formApplicationGetInfo = formService.getApplicationForms(jwtUser.id(), eventId, pageable);
 
         return ResponseEntity.ok(FormApplicationGetResponse.from(formApplicationGetInfo));
     }
