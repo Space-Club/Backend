@@ -3,14 +3,18 @@ package com.spaceclub.invite.controller;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.service.ClubService;
+import com.spaceclub.global.interceptor.JwtAuthorizationInterceptor;
 import com.spaceclub.global.jwt.service.JwtManager;
 import com.spaceclub.invite.service.InviteService;
+import com.spaceclub.user.controller.UserController;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -38,7 +42,12 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(InviteController.class)
+@WebMvcTest(value = InviteController.class,
+        excludeFilters = {
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+                        JwtAuthorizationInterceptor.class,
+                })
+        })
 @AutoConfigureRestDocs
 @DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.class)
 class InviteControllerTest {

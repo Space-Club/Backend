@@ -12,6 +12,7 @@ import com.spaceclub.club.service.ClubService;
 import com.spaceclub.club.service.vo.ClubNoticeUpdate;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
+import com.spaceclub.global.interceptor.JwtAuthorizationInterceptor;
 import com.spaceclub.global.jwt.service.JwtManager;
 import com.spaceclub.invite.service.InviteService;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -20,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -41,9 +44,9 @@ import static com.spaceclub.club.ClubTestFixture.club1;
 import static com.spaceclub.club.ClubUserTestFixture.club1User1Manager;
 import static com.spaceclub.club.ClubUserTestFixture.club1User2Manager;
 import static com.spaceclub.club.domain.ClubUserRole.MANAGER;
+import static com.spaceclub.event.EventTestFixture.clubEvent;
 import static com.spaceclub.event.EventTestFixture.event1;
 import static com.spaceclub.event.EventTestFixture.showEvent;
-import static com.spaceclub.event.EventTestFixture.clubEvent;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
@@ -80,7 +83,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ClubController.class)
+@WebMvcTest(value = ClubController.class,
+        excludeFilters = {
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+                        JwtAuthorizationInterceptor.class,
+                })
+        })
 @AutoConfigureRestDocs
 @DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.class)
 class ClubControllerTest {

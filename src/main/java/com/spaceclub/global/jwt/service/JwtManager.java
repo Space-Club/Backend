@@ -25,7 +25,6 @@ public class JwtManager {
         return jwt.signRefreshToken();
     }
 
-
     public Long verifyUserId(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION);
 

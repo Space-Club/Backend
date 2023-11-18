@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.event.controller.dto.BookmarkedEventRequest;
 import com.spaceclub.event.domain.Event;
+import com.spaceclub.global.interceptor.JwtAuthorizationInterceptor;
 import com.spaceclub.global.jwt.service.JwtManager;
 import com.spaceclub.user.UserTestFixture;
 import com.spaceclub.user.controller.dto.UserProfileUpdateRequest;
@@ -20,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -80,7 +83,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(UserController.class)
+@WebMvcTest(value = UserController.class,
+        excludeFilters = {
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+                        JwtAuthorizationInterceptor.class,
+                })
+        })
 @AutoConfigureRestDocs
 @DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.class)
 class UserControllerTest {

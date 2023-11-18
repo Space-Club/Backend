@@ -10,6 +10,7 @@ import com.spaceclub.form.service.vo.FormGet;
 import com.spaceclub.global.jwt.service.JwtManager;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,9 +53,9 @@ public class FormController {
     }
 
     @GetMapping("/{eventId}/forms/applications")
-    public ResponseEntity<FormApplicationGetResponse> getApplicationForms(@PathVariable Long eventId, HttpServletRequest servletRequest) {
+    public ResponseEntity<FormApplicationGetResponse> getApplicationForms(@PathVariable Long eventId, Pageable pageable, HttpServletRequest servletRequest) {
         Long userId = jwtManager.verifyUserId(servletRequest);
-        FormApplicationGetInfo formApplicationGetInfo = formService.getApplicationForms(userId, eventId);
+        FormApplicationGetInfo formApplicationGetInfo = formService.getApplicationForms(userId, eventId, pageable);
 
         return ResponseEntity.ok(FormApplicationGetResponse.from(formApplicationGetInfo));
     }

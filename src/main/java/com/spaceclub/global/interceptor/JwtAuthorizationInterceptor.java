@@ -26,11 +26,11 @@ public class JwtAuthorizationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String accessToken = request.getHeader(AUTHORIZATION);
-        validate(accessToken);
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        validate(authorizationHeader);
 
-        String prefixRemovedAccessToken = accessToken.replace(TOKEN_PREFIX, "");
-        if (jwt.isValidFormat(prefixRemovedAccessToken)) { // 올바른 토큰 아니면 예외 발생 exception handler에서 catch 예정, 만료 시간
+        String accessToken = authorizationHeader.replace(TOKEN_PREFIX, "");
+        if (jwt.isValidFormat(accessToken)) { // 올바른 토큰 아니면 예외 발생 exception handler에서 catch 예정, 만료 시간
             //JWTDecodeException (dispatcher servlet에서 발생) // 예외 처리 후 제거 예정
             log.info("access token interceptor preHandle(), access token is valid");
 
@@ -38,16 +38,16 @@ public class JwtAuthorizationInterceptor implements HandlerInterceptor {
         }
         log.info("access token interceptor preHandle(), access token is expired");
 
-        Long userId = jwt.getClaims(prefixRemovedAccessToken).getId();
-        String username = jwt.getClaims(prefixRemovedAccessToken).getUsername();
+        Long userId = jwt.getClaims(accessToken).getId();
+        String username = jwt.getClaims(accessToken).getUsername();
 
         if (isRefreshTokenExists(request)) { // 만료되고 refresh token값이 있으면
-            String refreshToken = request.getHeader(REFRESH_TOKEN);
-            validate(refreshToken);
+            String refreshTokenHeader = request.getHeader(REFRESH_TOKEN);
+            validate(refreshTokenHeader);
 
-            String prefixRemovedRefreshToken = refreshToken.replace(TOKEN_PREFIX, "");
+            String refreshToken = refreshTokenHeader.replace(TOKEN_PREFIX, "");
 
-            if (jwtManager.isValidRefreshToken(prefixRemovedRefreshToken, userId)) { // refresh token verify ->
+            if (jwtManager.isValidRefreshToken(refreshToken, userId)) { // refresh token verify ->
                 log.info("access token interceptor preHandle(), refresh token is valid");
                 response.addHeader(AUTHORIZATION, jwtManager.createAccessToken(userId, username));
 
