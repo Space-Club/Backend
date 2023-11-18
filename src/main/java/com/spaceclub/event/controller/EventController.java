@@ -189,13 +189,13 @@ public class EventController {
 
         switch (category) {
             case SHOW -> filter = SimpleBeanPropertyFilter.serializeAllExcept("recruitmentTarget", "dues", "activityArea");
-            case CLUB -> filter = SimpleBeanPropertyFilter.serializeAllExcept("recruitmentTarget", "cost", "activityArea");
-            case PROMOTION -> filter = SimpleBeanPropertyFilter.serializeAllExcept("recruitmentTarget", "dues", "cost", "location");
-            case RECRUITMENT -> filter = SimpleBeanPropertyFilter.serializeAllExcept("dues", "cost", "activityArea");
+            case CLUB -> filter = SimpleBeanPropertyFilter.serializeAllExcept("recruitmentTarget", "cost", "activityArea", "maxTicketCount");
+            case PROMOTION -> filter = SimpleBeanPropertyFilter.serializeAllExcept("recruitmentTarget", "dues", "cost", "location", "maxTicketCount");
+            case RECRUITMENT -> filter = SimpleBeanPropertyFilter.serializeAllExcept("dues", "cost", "activityArea", "maxTicketCount");
             default -> throw new IllegalArgumentException("존재하지 않는 행사의 카테고리입니다.");
         }
 
-        EventDetailGetResponse response = EventDetailGetResponse.from(event, true, true);
+        EventDetailGetResponse response = EventDetailGetResponse.from(event, true, true, true);
 
         MappingJacksonValue filteredEventDetailResponse = filterEventDetailResponse(filter, response);
 

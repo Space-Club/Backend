@@ -230,4 +230,12 @@ public class Event extends BaseTimeEntity {
         return this.ticketInfo.getCost();
     }
 
+    public LocalDate getEndDate() {
+        return this.eventInfo.getEndDateTime().toLocalDate();
+    }
+
+    public LocalTime getEndTime() {
+        return this.eventInfo.getEndDateTime().toLocalTime();
+    }
+
 }
