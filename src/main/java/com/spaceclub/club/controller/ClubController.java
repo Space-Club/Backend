@@ -45,8 +45,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
-import static com.spaceclub.invite.controller.InviteController.INVITE_LINK_PREFIX;
-
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -75,10 +73,11 @@ public class ClubController {
     }
 
     @GetMapping("/clubs/{clubId}")
-    public ResponseEntity<ClubGetResponse> getClub(@PathVariable Long clubId,  @Authenticated JwtUser jwtUser) {
-        Club club = clubService.getClub(clubId);
-        String inviteCode = inviteService.getInviteCode(clubId, jwtUser.id());
-        ClubGetResponse response = ClubGetResponse.from(club, INVITE_LINK_PREFIX + inviteCode);
+    public ResponseEntity<ClubGetResponse> getClub(@PathVariable Long clubId, HttpServletRequest httpServletRequest) {
+        Long userId = jwtService.verifyUserId(httpServletRequest);
+        Club club = clubService.getClub(clubId, userId);
+
+        ClubGetResponse response = ClubGetResponse.from(club);
 
         return ResponseEntity.ok(response);
     }
@@ -207,7 +206,7 @@ public class ClubController {
     public ResponseEntity<ClubScheduleGetResponse> getClubSchedule(@PathVariable Long clubId,  @Authenticated JwtUser jwtUser) {
         List<Event> events = clubService.getClubSchedules(clubId, jwtUser.id());
 
-        String profileImageUrl = clubService.getManagerProfileImageUrl(clubId);
+        List<Event> events = clubService.getClubSchedules(clubId, userId);
 
         List<ClubScheduleGetResponseInfo> schedules = events.stream()
                 .map((event -> ClubScheduleGetResponseInfo.builder()
@@ -216,7 +215,6 @@ public class ClubController {
                         .startDateTime(event.getFormOpenDateTime())
                         .endDateTime(event.getFormCloseDateTime())
                         .manager(event.getManagerName())
-                        .profileImageUrl(profileImageUrl)
                         .build()))
                 .toList();
 

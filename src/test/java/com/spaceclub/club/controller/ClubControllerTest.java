@@ -47,7 +47,6 @@ import static com.spaceclub.club.domain.ClubUserRole.MANAGER;
 import static com.spaceclub.event.EventTestFixture.clubEvent;
 import static com.spaceclub.event.EventTestFixture.event1;
 import static com.spaceclub.event.EventTestFixture.showEvent;
-import static com.spaceclub.event.EventTestFixture.clubEvent;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
@@ -182,12 +181,11 @@ class ClubControllerTest {
     @WithMockUser
     void 클럽_조회에_성공한다() throws Exception {
         // given
-        given(clubService.getClub(any(Long.class))).willReturn(club1());
-        given(inviteService.getInviteCode(any(Long.class), any(Long.class))).willReturn("inviteCode");
+        given(clubService.getClub(any(Long.class), any(Long.class))).willReturn(club1());
 
         // when
         ResultActions result = this.mockMvc.perform(get("/api/v1/clubs/{clubId}", club1().getId())
-                .header(AUTHORIZATION, "Access Token")
+                .header(AUTHORIZATION, "access Token")
                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
@@ -199,16 +197,14 @@ class ClubControllerTest {
                         pathParameters(
                                 parameterWithName("clubId").description("클럽 아이디")),
                         requestHeaders(
-                                headerWithName(AUTHORIZATION).description("Access Token")
+                                headerWithName(AUTHORIZATION).description("유저의 액세스 토큰")
                         ),
                         responseFields(
                                 fieldWithPath("name").type(STRING).description("클럽 이름"),
                                 fieldWithPath("logoImageUrl").type(STRING).description("클럽 이미지 Url"),
                                 fieldWithPath("info").type(STRING).description("클럽 소개"),
                                 fieldWithPath("memberCount").type(NUMBER).description("클럽 멤버 수"),
-                                fieldWithPath("coverImageUrl").type(STRING).description("클럽 커버 이미지 Url"),
-                                fieldWithPath("inviteLink").type(STRING).description("클럽 초대 링크"),
-                                fieldWithPath("inviteLink").type(STRING).description("클럽 초대 링크")
+                                fieldWithPath("coverImageUrl").type(STRING).description("클럽 커버 이미지 Url")
                         )));
 
     }
@@ -644,7 +640,6 @@ class ClubControllerTest {
         given(clubService.getClubSchedules(any(Long.class), any())).willReturn(
                 List.of(clubEvent())
         );
-        given(clubService.getManagerProfileImageUrl(any(Long.class))).willReturn("profileImageUrl");
 
         // when
         ResultActions result = this.mockMvc.perform(get("/api/v1/clubs/{clubId}/schedules", clubId)
@@ -669,8 +664,7 @@ class ClubControllerTest {
                                 fieldWithPath("schedules.[].title").type(STRING).description("일정 제목"),
                                 fieldWithPath("schedules.[].startDateTime").type(STRING).description("일정 시작 날짜와 시간"),
                                 fieldWithPath("schedules.[].endDateTime").type(STRING).description("일정 종료 날짜와 시간"),
-                                fieldWithPath("schedules.[].manager").type(STRING).description("일정 생성자"),
-                                fieldWithPath("schedules.[].profileImageUrl").type(STRING).description("일정 생성자의 프사 URL")
+                                fieldWithPath("schedules.[].manager").type(STRING).description("일정 생성자")
                         )
                 ));
     }

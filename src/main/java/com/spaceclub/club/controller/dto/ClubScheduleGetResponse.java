@@ -14,8 +14,7 @@ public record ClubScheduleGetResponse(
             String title,
             LocalDateTime startDateTime,
             LocalDateTime endDateTime,
-            String manager,
-            String profileImageUrl
+            String manager
     ) {
 
         @Builder

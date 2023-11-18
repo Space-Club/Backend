@@ -8,22 +8,20 @@ public record ClubGetResponse(
         String logoImageUrl,
         String info,
         int memberCount,
-        String coverImageUrl,
-        String inviteLink
+        String coverImageUrl
 ) {
 
     @Builder
     public ClubGetResponse {
     }
 
-    public static ClubGetResponse from(Club club, String inviteLink){
+    public static ClubGetResponse from(Club club) {
         return ClubGetResponse.builder()
                 .name(club.getName())
                 .logoImageUrl(club.getLogoImageUrl())
                 .info(club.getInfo())
                 .memberCount(club.getClubUser().size())
                 .coverImageUrl(club.getCoverImageUrl())
-                .inviteLink(inviteLink)
                 .build();
     }
 
