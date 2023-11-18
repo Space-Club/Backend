@@ -107,7 +107,7 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이벤트입니다."));
         User user = getUser(userBookmarkInfo.userId());
 
-        if (userBookmarkInfo.bookmarkStatus()) {
+        if (userBookmarkInfo.bookmarkStatus() && !bookmarkExists(userBookmarkInfo)){
             Bookmark bookmark = Bookmark.builder()
                     .user(user)
                     .event(event)
@@ -115,11 +115,25 @@ public class UserService {
             bookmarkRepository.save(bookmark);
             return;
         }
+        if (!userBookmarkInfo.bookmarkStatus() && bookmarkExists(userBookmarkInfo)) {
+            Bookmark bookmark = bookmarkRepository.findByUserIdAndEventId(userBookmarkInfo.userId(), userBookmarkInfo.eventId())
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 북마크입니다."));
 
-        Bookmark bookmark = bookmarkRepository.findByUserIdAndEventId(userBookmarkInfo.userId(), userBookmarkInfo.eventId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 북마크입니다."));
+            bookmarkRepository.delete(bookmark);
+            return;
+        }
+        if (userBookmarkInfo.bookmarkStatus() && bookmarkExists(userBookmarkInfo)) {
+            throw new IllegalArgumentException("이미 북마크한 이벤트입니다.");
+        }
+        if (!userBookmarkInfo.bookmarkStatus() && !bookmarkExists(userBookmarkInfo)) {
+            throw new IllegalArgumentException("잘못된 요청입니다.");
+        }
+    }
 
-        bookmarkRepository.delete(bookmark);
+    private boolean bookmarkExists(UserBookmarkInfo userBookmarkInfo) {
+        return bookmarkRepository
+                .findByUserIdAndEventId(userBookmarkInfo.userId(), userBookmarkInfo.eventId())
+                .isPresent();
     }
 
     public void logout(Long userId) {
