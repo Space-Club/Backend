@@ -84,7 +84,8 @@ public class Event extends BaseTimeEntity {
             TicketInfo ticketInfo,
             FormInfo formInfo,
             Club club,
-            Form form
+            Form form,
+            LocalDateTime createdAt
     ) {
         Assert.notNull(category, "행사 카테고리는 필수 값입니다.");
         this.id = id;
@@ -95,6 +96,7 @@ public class Event extends BaseTimeEntity {
         this.formInfo = formInfo;
         this.club = club;
         this.form = form;
+        this.createdAt = createdAt;
     }
 
     public Event registerClub(Club club) {
@@ -106,6 +108,7 @@ public class Event extends BaseTimeEntity {
                 .ticketInfo(this.ticketInfo)
                 .formInfo(this.formInfo)
                 .club(club)
+                .createdAt(this.createdAt)
                 .build();
     }
 
@@ -119,6 +122,7 @@ public class Event extends BaseTimeEntity {
                 .formInfo(this.formInfo)
                 .club(this.club)
                 .form(form)
+                .createdAt(this.createdAt)
                 .build();
     }
 

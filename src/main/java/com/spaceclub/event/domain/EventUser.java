@@ -86,6 +86,8 @@ public class EventUser extends BaseTimeEntity {
                     .status(CANCEL_REQUESTED)
                     .user(this.user)
                     .event(this.event)
+                    .ticketCount(this.ticketCount)
+                    .createdAt(this.createdAt)
                     .build();
         }
 
@@ -94,6 +96,8 @@ public class EventUser extends BaseTimeEntity {
                 .status(CANCELED)
                 .user(this.user)
                 .event(this.event)
+                .ticketCount(this.ticketCount)
+                .createdAt(this.createdAt)
                 .build();
     }
 
