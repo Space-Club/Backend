@@ -140,7 +140,6 @@ public record EventDetailGetResponse(
                 .eventCategory(event.getCategory().toString())
                 .isManager(isManager)
                 .hasForm(hasForm)
-                .maxTicketCount(event.getMaxTicketCount())
                 .build();
     }
 
