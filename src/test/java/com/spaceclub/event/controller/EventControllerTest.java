@@ -947,7 +947,9 @@ class EventControllerTest {
                                 fieldWithPath("eventCategory").type(STRING).description("이벤트 종류"),
                                 fieldWithPath("isManager").type(BOOLEAN).description("매니저 여부"),
                                 fieldWithPath("hasForm").type(BOOLEAN).description("폼 존재 여부"),
-                                fieldWithPath("maxTicketCount").type(NUMBER).description("인당 최대 예매 가능 수")
+                                fieldWithPath("maxTicketCount").type(NUMBER).description("인당 최대 예매 가능 수"),
+                                fieldWithPath("bankName").type(STRING).description("은행 명"),
+                                fieldWithPath("bankAccountNumber").type(STRING).description("계좌 번호")
                         )));
     }
 

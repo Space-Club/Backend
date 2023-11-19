@@ -34,7 +34,9 @@ public record EventDetailGetResponse(
         String eventCategory,
         Boolean isManager,
         Boolean hasForm,
-        Integer maxTicketCount
+        Integer maxTicketCount,
+        String bankName,
+        String bankAccountNumber
 ) {
 
     @Builder
@@ -64,6 +66,8 @@ public record EventDetailGetResponse(
                 .isManager(isManager)
                 .hasForm(hasForm)
                 .maxTicketCount(event.getMaxTicketCount())
+                .bankName(event.getBankName())
+                .bankAccountNumber(event.getBankAccountNumber())
                 .build();
     }
 
