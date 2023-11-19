@@ -238,4 +238,12 @@ public class Event extends BaseTimeEntity {
         return this.eventInfo.getEndDateTime().toLocalTime();
     }
 
+    public String getBankName() {
+        return this.bankInfo.getBankName();
+    }
+
+    public String getBankAccountNumber() {
+        return this.bankInfo.getBankAccountNumber();
+    }
+
 }
