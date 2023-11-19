@@ -31,7 +31,7 @@ public class InviteService {
 
     private final ClubUserRepository clubUserRepository;
 
-    private final int INVITE_LINK_VALID_HOURS = 48;
+    public static final int INVITE_LINK_VALID_HOURS = 48;
 
     public String getInviteCode(Long clubId, Long userId) {
         if (!clubUserRepository.existsByClub_IdAndUser_Id(clubId, userId))
@@ -51,6 +51,9 @@ public class InviteService {
                                 .build()
                 );
 
+        if (invite.isExpired()) {
+            invite = invite.updateCode(inviteCode);
+        }
 
         inviteRepository.save(invite);
 

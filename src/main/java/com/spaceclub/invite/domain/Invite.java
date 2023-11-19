@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import static com.spaceclub.invite.service.InviteService.INVITE_LINK_VALID_HOURS;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -39,22 +40,26 @@ public class Invite extends BaseTimeEntity {
     private LocalDateTime expiredAt;
 
     @Builder
-    public Invite(String code, Club club, LocalDateTime expiredAt) {
+    public Invite(Long id, String code, Club club, LocalDateTime expiredAt, LocalDateTime createdAt) {
+        this.id = id;
         this.code = code;
         this.club = club;
         this.expiredAt = expiredAt;
+        this.createdAt = createdAt;
     }
 
     public Invite updateCode(String code) {
-        this.code = code;
-        return this;
+        return Invite.builder()
+                .id(this.id)
+                .club(this.club)
+                .code(code)
+                .expiredAt(LocalDateTime.now().plusHours(INVITE_LINK_VALID_HOURS))
+                .createdAt(this.createdAt)
+                .build();
     }
 
     public boolean isExpired() {
-        LocalDateTime expiredAt = this.expiredAt;
-        LocalDateTime now = LocalDateTime.now();
-
-        return now.isAfter(expiredAt);
+        return LocalDateTime.now().isAfter(this.expiredAt);
     }
 
 }
