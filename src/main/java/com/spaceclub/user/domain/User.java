@@ -66,6 +66,30 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<FormOptionUser> formOptionUsers = new ArrayList<>();
 
+    private User(
+            Long id,
+            RequiredInfo requiredInfo,
+            Status status,
+            String oauthUserName,
+            Provider provider,
+            Email email,
+            String refreshToken,
+            String profileImageUrl,
+            List<EventUser> events,
+            List<FormOptionUser> formOptionUsers
+    ) {
+        this.id = id;
+        this.requiredInfo = requiredInfo;
+        this.status = status;
+        this.oauthUserName = oauthUserName;
+        this.provider = provider;
+        this.email = email;
+        this.refreshToken = refreshToken;
+        this.profileImageUrl = profileImageUrl;
+        this.events = events;
+        this.formOptionUsers = formOptionUsers;
+    }
+
     @Builder
     private User(
             Long id,
@@ -133,9 +157,34 @@ public class User {
 
     public User changeProfileImageUrl(String profileUrl) {
         if (profileUrl == null) throw new IllegalArgumentException("프로필 이미지는 null이 될 수 없습니다.");
-        this.profileImageUrl = profileUrl;
+        return new User(
+                this.id,
+                this.requiredInfo,
+                this.status,
+                this.oauthUserName,
+                this.provider,
+                this.email,
+                refreshToken,
+                profileUrl,
+                this.events,
+                this.formOptionUsers
+        );
+    }
 
-        return this;
+    public User updateRefreshToken(String refreshToken) {
+
+        return new User(
+                this.id,
+                this.requiredInfo,
+                this.status,
+                this.oauthUserName,
+                this.provider,
+                this.email,
+                refreshToken,
+                this.profileImageUrl,
+                this.events,
+                this.formOptionUsers
+        );
     }
 
 }

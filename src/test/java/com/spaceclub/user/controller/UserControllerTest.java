@@ -198,7 +198,8 @@ class UserControllerTest {
                                 ),
                                 responseFields(
                                         fieldWithPath("userId").type(NUMBER).description("유저 ID"),
-                                        fieldWithPath("accessToken").type(STRING).description("access token")
+                                        fieldWithPath("accessToken").type(STRING).description("access token"),
+                                        fieldWithPath("refreshToken").type(STRING).description("refresh token")
                                 )
                         )
                 );
@@ -210,8 +211,11 @@ class UserControllerTest {
         //given
         User newUser = UserTestFixture.user2();
         given(userService.createKakaoUser(any())).willReturn(newUser);
+
         final String accessToken = "generated access token";
+        final String refreshToken = "generated refresh token";
         given(jwtManager.createAccessToken(any(Long.class), any(String.class))).willReturn(accessToken);
+        given(jwtManager.createRefreshToken(any(Long.class))).willReturn(refreshToken);
 
         // when, then
         mvc.perform(post("/api/v1/users/oauths")
@@ -222,6 +226,7 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("userId").value(newUser.getId()))
                 .andExpect(jsonPath("accessToken").value(accessToken))
+                .andExpect(jsonPath("refreshToken").value(refreshToken))
                 .andDo(
                         document("user/kakaoLoginExistingUser",
                                 preprocessRequest(prettyPrint()),
@@ -231,7 +236,8 @@ class UserControllerTest {
                                 ),
                                 responseFields(
                                         fieldWithPath("userId").type(NUMBER).description("유저 ID"),
-                                        fieldWithPath("accessToken").type(STRING).description("access token")
+                                        fieldWithPath("accessToken").type(STRING).description("access token"),
+                                        fieldWithPath("refreshToken").type(STRING).description("refresh token")
                                 )
                         )
                 );
@@ -244,9 +250,10 @@ class UserControllerTest {
         UserRequiredInfoRequest request = new UserRequiredInfoRequest(2L, "name", "010-1234-5678");
         final User savedUser = UserTestFixture.user2();
         final String accessToken = "generated access token";
+        final String refreshToken = "generated refresh token";
         given(userService.updateRequiredInfo(any(), any(UserRequiredInfo.class))).willReturn(savedUser);
         given(jwtManager.createAccessToken(any(Long.class), any(String.class))).willReturn(accessToken);
-
+        given(jwtManager.createRefreshToken(any(Long.class))).willReturn(refreshToken);
         // when, then
         mvc.perform(post("/api/v1/users")
                         .content(mapper.writeValueAsString(request))
@@ -270,7 +277,8 @@ class UserControllerTest {
                                 ),
                                 responseFields(
                                         fieldWithPath("userId").type(NUMBER).description("유저 ID"),
-                                        fieldWithPath("accessToken").type(STRING).description("access token")
+                                        fieldWithPath("accessToken").type(STRING).description("access token"),
+                                        fieldWithPath("refreshToken").type(STRING).description("refresh token")
                                 )
                         )
                 );
