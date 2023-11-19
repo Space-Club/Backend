@@ -261,3 +261,47 @@ include::{snippets}/club/getSchedule/http-response.adoc[]
 
 ===== Response Body
 include::{snippets}/club/getSchedule/response-fields.adoc[]
+:sectnums:
+
+=== 클럽 조회
+:sectnums!:
+==== Request
+
+include::{snippets}/club/get/http-request.adoc[]
+
+===== Request Header
+include::{snippets}/club/get/request-headers.adoc[]
+
+===== Path Parameter
+
+include::{snippets}/club/get/path-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/club/get/http-response.adoc[]
+===== Response Body
+
+include::{snippets}/club/get/response-fields.adoc[]
+:sectnums:
+
+=== 클럽 유저 권한 조회
+:sectnums!:
+==== Request
+
+include::{snippets}/club/getUserRole/http-request.adoc[]
+
+===== Request Header
+include::{snippets}/club/getUserRole/request-headers.adoc[]
+
+===== Path Parameter
+
+include::{snippets}/club/getUserRole/path-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/club/getUserRole/http-response.adoc[]
+===== Response Body
+
+include::{snippets}/club/getUserRole/response-fields.adoc[]
+
+:sectnums:
