@@ -12,8 +12,8 @@ import com.spaceclub.club.service.ClubService;
 import com.spaceclub.club.service.vo.ClubNoticeUpdate;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
+import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.interceptor.JwtAuthorizationInterceptor;
-import com.spaceclub.global.jwt.service.JwtManager;
 import com.spaceclub.invite.service.InviteService;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
@@ -106,13 +106,14 @@ class ClubControllerTest {
     private InviteService inviteService;
 
     @MockBean
-    private JwtManager jwtManager;
+    private UserArgumentResolver userArgumentResolver;
 
     @Test
     @WithMockUser
     void 클럽_생성에_성공한다() throws Exception {
+
         // given
-        given(clubService.createClub(any(Club.class), any(Long.class), any(MultipartFile.class))).willReturn(
+        given(clubService.createClub(any(Club.class), any(), any(MultipartFile.class))).willReturn(
                 Club.builder()
                         .id(1L)
                         .name("연사모")
@@ -180,14 +181,12 @@ class ClubControllerTest {
     @WithMockUser
     void 클럽_조회에_성공한다() throws Exception {
         // given
-        Long userId = 1L;
         given(clubService.getClub(any(Long.class))).willReturn(club1());
-        given(jwtManager.verifyUserId(any())).willReturn(userId);
-        given(clubService.getUserRole(any(Long.class), any(Long.class))).willReturn(MANAGER.name());
+        given(clubService.getUserRole(any(Long.class), any())).willReturn(MANAGER.name());
 
         // when
         ResultActions result = this.mockMvc.perform(get("/api/v1/clubs/{clubId}", club1().getId())
-                .header(AUTHORIZATION, "Acess Token")
+                .header(AUTHORIZATION, "Access Token")
                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
@@ -495,7 +494,7 @@ class ClubControllerTest {
     void 클럽_공지사항_조회에_성공한다() throws Exception {
         // given
         Long clubId = 1L;
-        given(clubService.getNotices(any(Long.class), any(Long.class))).willReturn(
+        given(clubService.getNotices(any(Long.class), any())).willReturn(
                 List.of(clubNotice1(), clubNotice2())
         );
 
@@ -601,7 +600,7 @@ class ClubControllerTest {
     void 클럽_일정_조회에_성공한다() throws Exception {
         // given
         Long clubId = 1L;
-        given(clubService.getClubSchedules(any(Long.class), any(Long.class))).willReturn(
+        given(clubService.getClubSchedules(any(Long.class), any())).willReturn(
                 List.of(clubEvent())
         );
         given(clubService.getManagerProfileImageUrl(any(Long.class))).willReturn("profileImageUrl");

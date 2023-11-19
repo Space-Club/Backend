@@ -3,8 +3,10 @@ package com.spaceclub.user.controller;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.event.controller.dto.BookmarkedEventRequest;
 import com.spaceclub.event.domain.Event;
+import com.spaceclub.global.Authenticated;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.service.JwtManager;
+import com.spaceclub.global.jwt.vo.JwtUser;
 import com.spaceclub.user.controller.dto.UserBookmarkedEventGetResponse;
 import com.spaceclub.user.controller.dto.UserClubGetResponse;
 import com.spaceclub.user.controller.dto.UserCodeRequest;
@@ -18,7 +20,6 @@ import com.spaceclub.user.domain.User;
 import com.spaceclub.user.service.UserService;
 import com.spaceclub.user.service.vo.UserBookmarkInfo;
 import com.spaceclub.user.service.vo.UserRequiredInfo;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -51,12 +52,11 @@ public class UserController {
     private final JwtManager jwtManager;
 
     @GetMapping("/events")
-    public PageResponse<UserEventGetResponse, Event> getAllEvents(Pageable pageable, HttpServletRequest request) {
-        Long userId = jwtManager.verifyUserId(request);
-        Page<Event> eventPages = userService.findAllEventPages(userId, pageable);
+    public PageResponse<UserEventGetResponse, Event> getAllEvents(Pageable pageable, @Authenticated JwtUser jwtUser) {
+        Page<Event> eventPages = userService.findAllEventPages(jwtUser.id(), pageable);
 
         List<UserEventGetResponse> eventGetResponse = eventPages.getContent().stream()
-                .map(event -> from(event, userService.findEventStatus(userId, event)))
+                .map(event -> from(event, userService.findEventStatus(jwtUser.id(), event)))
                 .toList();
 
         return new PageResponse<>(eventGetResponse, eventPages);
@@ -89,31 +89,25 @@ public class UserController {
 
 
     @GetMapping("/profiles")
-    public UserProfileResponse getUserProfile(HttpServletRequest request) {
-        Long userId = jwtManager.verifyUserId(request);
-
-        return userService.getUserProfile(userId).toResponse();
+    public UserProfileResponse getUserProfile(@Authenticated JwtUser jwtUser) {
+        return userService.getUserProfile(jwtUser.id()).toResponse();
     }
 
     @PatchMapping("/required-infos")
-    public ResponseEntity<Void> updateUserProfile(@RequestBody UserProfileUpdateRequest request, HttpServletRequest servletRequest) {
-        Long userId = jwtManager.verifyUserId(servletRequest);
-        userService.updateRequiredInfo(userId, new UserRequiredInfo(request.name(), request.phoneNumber()));
+    public ResponseEntity<Void> updateUserProfile(@RequestBody UserProfileUpdateRequest request, @Authenticated JwtUser jwtUser) {
+        userService.updateRequiredInfo(jwtUser.id(), new UserRequiredInfo(request.name(), request.phoneNumber()));
 
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/images")
-    public UserProfileImageResponse getUserImage(HttpServletRequest request) {
-        Long userId = jwtManager.verifyUserId(request);
-
-        return new UserProfileImageResponse(userService.getUserProfileImage(userId));
+    public UserProfileImageResponse getUserImage(@Authenticated JwtUser jwtUser) {
+        return new UserProfileImageResponse(userService.getUserProfileImage(jwtUser.id()));
     }
 
     @GetMapping("/clubs")
-    public ResponseEntity<List<UserClubGetResponse>> getClubs(HttpServletRequest servletRequest) {
-        Long userId = jwtManager.verifyUserId(servletRequest);
-        List<Club> clubs = userService.getClubs(userId);
+    public ResponseEntity<List<UserClubGetResponse>> getClubs(@Authenticated JwtUser jwtUser) {
+        List<Club> clubs = userService.getClubs(jwtUser.id());
 
         List<UserClubGetResponse> clubResponses = clubs.stream()
                 .map(UserClubGetResponse::from)
@@ -125,10 +119,9 @@ public class UserController {
     @GetMapping("/bookmarked-events")
     public PageResponse<UserBookmarkedEventGetResponse, Event> getAllBookmarkedEvents(
             Pageable pageable,
-            HttpServletRequest servletRequest
+            @Authenticated JwtUser jwtUser
     ) {
-        Long userId = jwtManager.verifyUserId(servletRequest);
-        Page<Event> eventPages = userService.findAllBookmarkedEventPages(userId, pageable);
+        Page<Event> eventPages = userService.findAllBookmarkedEventPages(jwtUser.id(), pageable);
 
         List<UserBookmarkedEventGetResponse> bookmarkedEvents = eventPages.getContent().stream()
                 .map(UserBookmarkedEventGetResponse::from)
@@ -140,26 +133,23 @@ public class UserController {
     @PatchMapping("/events/{eventId}")
     public ResponseEntity<Void> bookmarkEvent(@PathVariable Long eventId,
                                               @RequestBody BookmarkedEventRequest request,
-                                              HttpServletRequest servletRequest
+                                              @Authenticated JwtUser jwtUser
     ){
-        Long userId = jwtManager.verifyUserId(servletRequest);
-        userService.changeBookmarkStatus(UserBookmarkInfo.of(eventId, userId, request.bookmark()));
+        userService.changeBookmarkStatus(UserBookmarkInfo.of(eventId, jwtUser.id(), request.bookmark()));
 
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletRequest servletRequest) {
-        Long userId = jwtManager.verifyUserId(servletRequest);
-        userService.logout(userId);
+    public ResponseEntity<Void> logout(@Authenticated JwtUser jwtUser) {
+        userService.logout(jwtUser.id());
 
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteUser(HttpServletRequest servletRequest) {
-        Long userId = jwtManager.verifyUserId(servletRequest);
-        userService.deleteUser(userId);
+    public ResponseEntity<Void> deleteUser(@Authenticated JwtUser jwtUser) {
+        userService.deleteUser(jwtUser.id());
 
         return ResponseEntity.noContent().build();
     }
@@ -167,10 +157,9 @@ public class UserController {
     @PatchMapping(value = "/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> changeUserProfileImage(
             @RequestPart MultipartFile userImage,
-            HttpServletRequest servletRequest
+            @Authenticated JwtUser jwtUser
     ) {
-        Long userId = jwtManager.verifyUserId(servletRequest);
-        userService.changeUserProfileImage(userImage, userId);
+        userService.changeUserProfileImage(userImage, jwtUser.id());
 
         return ResponseEntity.noContent().build();
     }

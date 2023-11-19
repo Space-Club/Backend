@@ -3,10 +3,9 @@ package com.spaceclub.invite.controller;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.service.ClubService;
+import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.interceptor.JwtAuthorizationInterceptor;
-import com.spaceclub.global.jwt.service.JwtManager;
 import com.spaceclub.invite.service.InviteService;
-import com.spaceclub.user.controller.UserController;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +61,7 @@ class InviteControllerTest {
     private ClubService clubService;
 
     @MockBean
-    private JwtManager jwtManager;
+    private UserArgumentResolver userArgumentResolver;
 
     @Test
     @WithMockUser
@@ -71,7 +70,7 @@ class InviteControllerTest {
         Club club = club1();
         Long clubId = club.getId();
 
-        given(inviteService.getInviteCode(any(Long.class), any(Long.class))).willReturn("650d2d91-a8cf-45e7-8a43-a0c798173ecb");
+        given(inviteService.getInviteCode(any(Long.class), any())).willReturn("650d2d91-a8cf-45e7-8a43-a0c798173ecb");
 
         // when
         ResultActions actions = mockMvc.perform(post("/api/v1/clubs/{clubId}/invite", clubId)

@@ -157,6 +157,7 @@ public class User {
 
     public User changeProfileImageUrl(String profileUrl) {
         if (profileUrl == null) throw new IllegalArgumentException("프로필 이미지는 null이 될 수 없습니다.");
+
         return new User(
                 this.id,
                 this.requiredInfo,
@@ -172,7 +173,6 @@ public class User {
     }
 
     public User updateRefreshToken(String refreshToken) {
-
         return new User(
                 this.id,
                 this.requiredInfo,

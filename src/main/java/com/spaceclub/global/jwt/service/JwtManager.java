@@ -35,6 +35,7 @@ public class JwtManager {
         return refreshToken;
     }
 
+
     public Long verifyUserId(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION);
 
