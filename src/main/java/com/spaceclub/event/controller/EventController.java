@@ -179,15 +179,12 @@ public class EventController {
 
         EventCategory category = event.getCategory();
 
-        EventDetailGetResponse response;
-
-        switch (category) {
-            case SHOW -> response = EventDetailGetResponse.withShow(event, true, true, true);
-            case CLUB -> response = EventDetailGetResponse.withClub(event, true, true, true);
-            case PROMOTION -> response = EventDetailGetResponse.withPromotion(event, true, true, true);
-            case RECRUITMENT -> response = EventDetailGetResponse.withRecruitment(event, true, true, true);
-            default -> throw new IllegalArgumentException("존재하지 않는 행사의 카테고리입니다.");
-        }
+        EventDetailGetResponse response = switch (category) {
+            case SHOW -> EventDetailGetResponse.withShow(event, true, true, true);
+            case CLUB -> EventDetailGetResponse.withClub(event, true, true, true);
+            case PROMOTION -> EventDetailGetResponse.withPromotion(event, true, true, true);
+            case RECRUITMENT -> EventDetailGetResponse.withRecruitment(event, true, true, true);
+        };
 
         return ResponseEntity.ok(response);
     }
