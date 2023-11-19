@@ -68,3 +68,26 @@ include::{snippets}/form/getAllApplications/http-response.adoc[]
 include::{snippets}/form/getAllApplications/response-fields.adoc[]
 
 :sectnums:
+
+=== 행사의 신청 상태 변경
+:sectnums!:
+==== Request
+
+include::{snippets}/form/updateApplicationStatus/http-request.adoc[]
+
+=====  Request Header
+
+include::{snippets}/form/updateApplicationStatus/request-headers.adoc[]
+
+===== Path Parameter
+
+include::{snippets}/form/updateApplicationStatus/path-parameters.adoc[]
+
+===== Request Body
+
+include::{snippets}/form/updateApplicationStatus/request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/form/updateApplicationStatus/http-response.adoc[]
+:sectnums:

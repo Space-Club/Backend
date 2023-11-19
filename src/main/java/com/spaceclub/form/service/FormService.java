@@ -3,6 +3,7 @@ package com.spaceclub.form.service;
 import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.club.repository.ClubUserRepository;
+import com.spaceclub.event.domain.ApplicationStatus;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventUser;
 import com.spaceclub.event.repository.EventRepository;
@@ -75,6 +76,17 @@ public class FormService {
 
         return new FormApplicationGetInfo(form, formOptionUsers, eventUser);
     }
+
+    @Transactional
+    public void updateApplicationStatus(Long eventId, Long userId, ApplicationStatus status) {
+        EventUser eventUser = eventUserRepository.findByEventIdAndUserId(eventId, userId).orElseThrow(() -> new IllegalStateException("해당 신청 내역이 없습니다."));
+        Event event = validateEventAndForm(eventUser.getEventId());
+        validateClubManager(event.getClubId(), userId);
+
+        EventUser updatedEventUser = eventUser.updateStatus(status);
+        eventUserRepository.save(updatedEventUser);
+    }
+
 
     private Event validateEventAndForm(Long eventId) {
         Event event = validateEvent(eventId);

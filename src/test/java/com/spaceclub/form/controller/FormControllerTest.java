@@ -2,8 +2,10 @@ package com.spaceclub.form.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
+import com.spaceclub.event.domain.ApplicationStatus;
 import com.spaceclub.event.domain.EventUser;
 import com.spaceclub.form.FormTestFixture;
+import com.spaceclub.form.controller.dto.FormApplicationStatusUpdateRequest;
 import com.spaceclub.form.controller.dto.FormCreateRequest;
 import com.spaceclub.form.domain.Form;
 import com.spaceclub.form.domain.FormOptionType;
@@ -30,10 +32,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static com.spaceclub.event.EventTestFixture.eventUser;
+import static com.spaceclub.event.domain.ApplicationStatus.CONFIRMED;
 import static com.spaceclub.form.controller.dto.FormCreateRequest.FormCreateOptionRequest;
 import static com.spaceclub.user.UserTestFixture.user1;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -41,6 +45,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
@@ -226,6 +231,39 @@ class FormControllerTest {
                                         fieldWithPath("pageData.totalElements").type(NUMBER).description("총 행사 개수")
                                 )
 
+                        )
+                );
+    }
+
+    @Test
+    @WithMockUser
+    void 행사의_신청_상태_변경에_성공한다() throws Exception {
+        // given
+        FormApplicationStatusUpdateRequest request = new FormApplicationStatusUpdateRequest(CONFIRMED);
+        given(jwtService.verifyUserId(any())).willReturn(1L);
+        doNothing().when(formService).updateApplicationStatus(any(Long.class), any(Long.class), any(ApplicationStatus.class));
+
+        // when, then
+        mvc.perform(patch("/api/v1/events/{eventId}/forms/applications-status", 1L)
+                        .header(AUTHORIZATION, "Access Token")
+                        .contentType(APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(request))
+                        .with(csrf())
+                )
+                .andExpect(status().isNoContent())
+                .andDo(
+                        document("form/updateApplicationStatus",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName(AUTHORIZATION).description("유저의 액세스 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("eventId").description("행사 id")
+                                ),
+                                requestFields(
+                                        fieldWithPath("status").type(STRING).description("행사 신청 상태")
+                                )
                         )
                 );
     }

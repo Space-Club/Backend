@@ -16,6 +16,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
+import java.time.LocalDateTime;
+
 import static com.spaceclub.event.domain.ApplicationStatus.CANCELED;
 import static com.spaceclub.event.domain.ApplicationStatus.CANCEL_REQUESTED;
 import static jakarta.persistence.FetchType.EAGER;
@@ -47,18 +49,30 @@ public class EventUser extends BaseTimeEntity {
     private Integer ticketCount;
 
     @Builder
-    private EventUser(Long id, ApplicationStatus status, User user, Event event, Integer ticketCount) {
+    private EventUser(Long id, ApplicationStatus status, User user, Event event, Integer ticketCount, LocalDateTime createdAt) {
         validate(user, event);
         this.id = id;
         this.status = status;
         this.user = user;
         this.event = event;
         this.ticketCount = ticketCount;
+        this.createdAt = createdAt;
     }
 
     private void validate(User user, Event event) {
         Assert.notNull(user, "유저는 필수입니다.");
         Assert.notNull(event, "이벤트는 필수입니다.");
+    }
+
+    public EventUser updateStatus(ApplicationStatus status) {
+        return EventUser.builder()
+                .id(this.id)
+                .status(status)
+                .user(this.user)
+                .event(this.event)
+                .ticketCount(this.ticketCount)
+                .createdAt(this.createdAt)
+                .build();
     }
 
     public Long getUserId() {
@@ -81,6 +95,10 @@ public class EventUser extends BaseTimeEntity {
                 .user(this.user)
                 .event(this.event)
                 .build();
+    }
+
+    public Long getEventId() {
+        return event.getId();
     }
 
 }
