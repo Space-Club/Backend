@@ -42,7 +42,7 @@ public record FormApplicationGetResponse(
                             .map(formOptionUser -> new UserFormOptionResponse(formOptionUser.getOptionTitle(), formOptionUser.getContent()))
                             .toList();
 
-                    return new UserFormResponse(eventUser.getId(), options, eventUser.getStatus());
+                    return new UserFormResponse(userId, options, eventUser.getStatus());
                 })
                 .toList();
 
@@ -55,7 +55,7 @@ public record FormApplicationGetResponse(
     }
 
     private record UserFormResponse(
-            Long id,
+            Long userId,
             List<UserFormOptionResponse> options,
             ApplicationStatus applicationStatus
     ) {

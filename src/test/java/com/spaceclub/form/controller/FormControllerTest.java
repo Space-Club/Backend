@@ -204,7 +204,7 @@ class FormControllerTest {
                                         headerWithName(AUTHORIZATION).description("액세스 토큰")
                                 ),
                                 pathParameters(
-                                        parameterWithName("eventId").description("행사 optionId")
+                                        parameterWithName("eventId").description("행사 id")
                                 ),
                                 queryParameters(
                                         parameterWithName("page").description("페이지"),
@@ -217,7 +217,7 @@ class FormControllerTest {
                                         fieldWithPath("formInfo.optionTitles[]").type(ARRAY).description("폼 옵션명 리스트"),
                                         fieldWithPath("formInfo.managed").type(BOOLEAN).description("관리 모드 여부"),
                                         fieldWithPath("userForms[]").type(ARRAY).description("유저 폼 리스트"),
-                                        fieldWithPath("userForms[].id").type(NUMBER).description("폼 id"),
+                                        fieldWithPath("userForms[].userId").type(NUMBER).description("폼의 유저 id"),
                                         fieldWithPath("userForms[].options[]").type(ARRAY).description("폼 옵션 리스트"),
                                         fieldWithPath("userForms[].options[].title").type(STRING).description("폼 옵션명"),
                                         fieldWithPath("userForms[].options[].content").type(STRING).description("폼 옵션 내용"),
