@@ -1,13 +1,13 @@
 package com.spaceclub.event.controller.dto;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.spaceclub.event.domain.Event;
 import lombok.Builder;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@JsonFilter("EventDetailFilter")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record EventDetailGetResponse(
         Long id,
         String title,
@@ -41,7 +41,7 @@ public record EventDetailGetResponse(
     public EventDetailGetResponse {
     }
 
-    public static EventDetailGetResponse from(Event event, Boolean isBookmarked, Boolean isManager, Boolean hasForm) {
+    public static EventDetailGetResponse withShow(Event event, Boolean isBookmarked, Boolean isManager, Boolean hasForm) {
         return EventDetailGetResponse.builder()
                 .id(event.getId())
                 .title(event.getTitle())
@@ -49,12 +49,84 @@ public record EventDetailGetResponse(
                 .posterImageUrl(event.getPosterImageUrl())
                 .startDate(event.getStartDate())
                 .startTime(event.getStartTime())
-                .endDate(event.getEndDate())
-                .endTime(event.getEndTime())
+                .location(event.getLocation())
+                .cost(event.getCost())
+                .clubName(event.getClubName())
+                .clubLogoImageUrl(event.getClubLogoImageUrl())
+                .formOpenDate(event.getFormOpenDate())
+                .formOpenTime(event.getFormOpenTime())
+                .formCloseDate(event.getFormCloseDate())
+                .formCloseTime(event.getFormCloseTime())
+                .isBookmarked(isBookmarked)
+                .applicants(10)
+                .capacity(10)
+                .eventCategory(event.getCategory().toString())
+                .isManager(isManager)
+                .hasForm(hasForm)
+                .maxTicketCount(event.getMaxTicketCount())
+                .build();
+    }
+
+    public static EventDetailGetResponse withClub(Event event, Boolean isBookmarked, Boolean isManager, Boolean hasForm) {
+        return EventDetailGetResponse.builder()
+                .id(event.getId())
+                .title(event.getTitle())
+                .content(event.getContent())
+                .posterImageUrl(event.getPosterImageUrl())
+                .startDate(event.getStartDate())
+                .startTime(event.getStartTime())
+                .endDate(event.getEndDate() == null ? LocalDate.EPOCH : event.getEndDate())
+                .endTime(event.getEndTime() == null ? LocalTime.MIN : event.getEndTime())
                 .location(event.getLocation())
                 .dues(event.getDues())
-                .cost(event.getCost())
+                .clubName(event.getClubName())
+                .clubLogoImageUrl(event.getClubLogoImageUrl())
+                .formOpenDate(event.getFormOpenDate())
+                .formOpenTime(event.getFormOpenTime())
+                .formCloseDate(event.getFormCloseDate())
+                .formCloseTime(event.getFormCloseTime())
+                .isBookmarked(isBookmarked)
+                .applicants(10)
+                .capacity(10)
+                .eventCategory(event.getCategory().toString())
+                .isManager(isManager)
+                .hasForm(hasForm)
+                .build();
+    }
+
+    public static EventDetailGetResponse withPromotion(Event event, Boolean isBookmarked, Boolean isManager, Boolean hasForm) {
+        return EventDetailGetResponse.builder()
+                .id(event.getId())
+                .title(event.getTitle())
+                .content(event.getContent())
+                .posterImageUrl(event.getPosterImageUrl())
+                .startDate(event.getStartDate())
+                .startTime(event.getStartTime())
                 .activityArea(event.getActivityArea())
+                .clubName(event.getClubName())
+                .clubLogoImageUrl(event.getClubLogoImageUrl())
+                .formOpenDate(event.getFormOpenDate())
+                .formOpenTime(event.getFormOpenTime())
+                .formCloseDate(event.getFormCloseDate())
+                .formCloseTime(event.getFormCloseTime())
+                .isBookmarked(isBookmarked)
+                .applicants(10)
+                .capacity(10)
+                .eventCategory(event.getCategory().toString())
+                .isManager(isManager)
+                .hasForm(hasForm)
+                .build();
+    }
+
+    public static EventDetailGetResponse withRecruitment(Event event, Boolean isBookmarked, Boolean isManager, Boolean hasForm) {
+        return EventDetailGetResponse.builder()
+                .id(event.getId())
+                .title(event.getTitle())
+                .content(event.getContent())
+                .posterImageUrl(event.getPosterImageUrl())
+                .startDate(event.getStartDate())
+                .startTime(event.getStartTime())
+                .location(event.getLocation())
                 .clubName(event.getClubName())
                 .clubLogoImageUrl(event.getClubLogoImageUrl())
                 .formOpenDate(event.getFormOpenDate())

@@ -1,8 +1,6 @@
 package com.spaceclub.event.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.spaceclub.event.controller.dto.EventApplicationCreateRequest;
 import com.spaceclub.event.controller.dto.EventApplicationDeleteResponse;
@@ -32,7 +30,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -74,7 +71,7 @@ public class EventController {
         Long clubId;
         Event event;
 
-        switch (EventCategory.valueOf(category)) {
+        switch (eventCategory) {
             case SHOW -> {
                 ShowEventCreateRequest showEventCreateRequest = objectMapper.readValue(request, ShowEventCreateRequest.class);
                 event = showEventCreateRequest.toEntity(eventCategory, posterImageUrl);
@@ -177,34 +174,22 @@ public class EventController {
     }
 
     @GetMapping("/{eventId}")
-    public ResponseEntity<MappingJacksonValue> getEventDetail(@PathVariable Long eventId) {
+    public ResponseEntity<EventDetailGetResponse> getEventDetail(@PathVariable Long eventId) {
         Event event = eventService.get(eventId);
 
         EventCategory category = event.getCategory();
 
-        SimpleBeanPropertyFilter filter;
+        EventDetailGetResponse response;
 
         switch (category) {
-            case SHOW -> filter = SimpleBeanPropertyFilter.serializeAllExcept("recruitmentTarget", "dues", "activityArea");
-            case CLUB -> filter = SimpleBeanPropertyFilter.serializeAllExcept("recruitmentTarget", "cost", "activityArea", "maxTicketCount");
-            case PROMOTION -> filter = SimpleBeanPropertyFilter.serializeAllExcept("recruitmentTarget", "dues", "cost", "location", "maxTicketCount");
-            case RECRUITMENT -> filter = SimpleBeanPropertyFilter.serializeAllExcept("dues", "cost", "activityArea", "maxTicketCount");
+            case SHOW -> response = EventDetailGetResponse.withShow(event, true, true, true);
+            case CLUB -> response = EventDetailGetResponse.withClub(event, true, true, true);
+            case PROMOTION -> response = EventDetailGetResponse.withPromotion(event, true, true, true);
+            case RECRUITMENT -> response = EventDetailGetResponse.withRecruitment(event, true, true, true);
             default -> throw new IllegalArgumentException("존재하지 않는 행사의 카테고리입니다.");
         }
 
-        EventDetailGetResponse response = EventDetailGetResponse.from(event, true, true, true);
-
-        MappingJacksonValue filteredEventDetailResponse = filterEventDetailResponse(filter, response);
-
-        return ResponseEntity.ok(filteredEventDetailResponse);
-    }
-
-    private MappingJacksonValue filterEventDetailResponse(SimpleBeanPropertyFilter filter, EventDetailGetResponse response) {
-        SimpleFilterProvider simpleFilter = new SimpleFilterProvider().addFilter("EventDetailFilter", filter);
-
-        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(response);
-        mappingJacksonValue.setFilters(simpleFilter);
-        return mappingJacksonValue;
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/applications")
