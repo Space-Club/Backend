@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.event.controller.dto.BookmarkedEventRequest;
 import com.spaceclub.event.domain.Event;
-import com.spaceclub.global.jwt.service.JwtService;
+import com.spaceclub.global.interceptor.JwtAuthorizationInterceptor;
+import com.spaceclub.global.jwt.service.JwtManager;
 import com.spaceclub.user.UserTestFixture;
 import com.spaceclub.user.controller.dto.UserProfileUpdateRequest;
 import com.spaceclub.user.controller.dto.UserRequiredInfoRequest;
@@ -20,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -80,7 +83,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(UserController.class)
+@WebMvcTest(value = UserController.class,
+        excludeFilters = {
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+                        JwtAuthorizationInterceptor.class,
+                })
+        })
 @AutoConfigureRestDocs
 @DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.class)
 class UserControllerTest {
@@ -95,7 +103,7 @@ class UserControllerTest {
     private UserService userService;
 
     @MockBean
-    private JwtService jwtService;
+    private JwtManager jwtManager;
 
     @Test
     @WithMockUser
@@ -203,7 +211,7 @@ class UserControllerTest {
         User newUser = UserTestFixture.user2();
         given(userService.createKakaoUser(any())).willReturn(newUser);
         final String accessToken = "generated access token";
-        given(jwtService.createToken(any(Long.class), any(String.class))).willReturn(accessToken);
+        given(jwtManager.createAccessToken(any(Long.class), any(String.class))).willReturn(accessToken);
 
         // when, then
         mvc.perform(post("/api/v1/users/oauths")
@@ -237,7 +245,7 @@ class UserControllerTest {
         final User savedUser = UserTestFixture.user2();
         final String accessToken = "generated access token";
         given(userService.updateRequiredInfo(any(), any(UserRequiredInfo.class))).willReturn(savedUser);
-        given(jwtService.createToken(any(Long.class), any(String.class))).willReturn(accessToken);
+        given(jwtManager.createAccessToken(any(Long.class), any(String.class))).willReturn(accessToken);
 
         // when, then
         mvc.perform(post("/api/v1/users")
@@ -275,7 +283,7 @@ class UserControllerTest {
         final User user = UserTestFixture.user1();
         UserProfileInfo userProfileInfo = new UserProfileInfo("멤버명", "010-1234-5678", "www.image.com");
 
-        given(jwtService.verifyUserId(any())).willReturn(user.getId());
+        given(jwtManager.verifyUserId(any())).willReturn(user.getId());
         given(userService.getUserProfile(any())).willReturn(userProfileInfo);
 
         // when, then
@@ -306,7 +314,7 @@ class UserControllerTest {
         final User user = UserTestFixture.user1();
         UserProfileUpdateRequest request = new UserProfileUpdateRequest("멤버명1", "010-1234-6789");
 
-        given(jwtService.verifyUserId(any())).willReturn(user.getId());
+        given(jwtManager.verifyUserId(any())).willReturn(user.getId());
         given(userService.updateRequiredInfo(any(Long.class), any(UserRequiredInfo.class))).willReturn(user);
 
         // when, then
@@ -340,7 +348,7 @@ class UserControllerTest {
         final User user = UserTestFixture.user1();
         final String profileImageUrl = "www.image.com";
 
-        given(jwtService.verifyUserId(any())).willReturn(user.getId());
+        given(jwtManager.verifyUserId(any())).willReturn(user.getId());
         given(userService.getUserProfileImage(any())).willReturn(profileImageUrl);
 
         // when, then
@@ -367,7 +375,7 @@ class UserControllerTest {
     @WithMockUser
     void 유저의_모든_클럽_조회에_성공한다() throws Exception {
         // given
-        given(jwtService.verifyUserId(any())).willReturn(1L);
+        given(jwtManager.verifyUserId(any())).willReturn(1L);
         given(userService.getClubs(1L)).willReturn(List.of(club1(), club2()));
 
         // when
@@ -401,7 +409,7 @@ class UserControllerTest {
         Page<Event> eventPages = new PageImpl<>(events);
 
         Long userId = 1L;
-        given(jwtService.verifyUserId(any())).willReturn(userId);
+        given(jwtManager.verifyUserId(any())).willReturn(userId);
         given(userService.findAllBookmarkedEventPages(any(Long.class), any(Pageable.class))).willReturn(eventPages);
 
         // when, then
@@ -457,7 +465,7 @@ class UserControllerTest {
     void 개별_행사_북마크_상태_변경에_성공한다() throws Exception {
         // given
         Long userId = 1L;
-        given(jwtService.verifyUserId(any())).willReturn(userId);
+        given(jwtManager.verifyUserId(any())).willReturn(userId);
         doNothing().when(userService).changeBookmarkStatus(any(UserBookmarkInfo.class));
         BookmarkedEventRequest bookmarkedEventRequest = new BookmarkedEventRequest(true);
 
@@ -488,7 +496,7 @@ class UserControllerTest {
     void 유저의_로그아웃에_성공한다() throws Exception {
         // given
         Long userId = 1L;
-        given(jwtService.verifyUserId(any())).willReturn(userId);
+        given(jwtManager.verifyUserId(any())).willReturn(userId);
         doNothing().when(userService).logout(any(Long.class));
 
         // when, then
@@ -510,7 +518,7 @@ class UserControllerTest {
     void 유저_회원_탈퇴에_성공한다() throws Exception {
         // given
         Long userId = 1L;
-        given(jwtService.verifyUserId(any())).willReturn(userId);
+        given(jwtManager.verifyUserId(any())).willReturn(userId);
         doNothing().when(userService).deleteUser(any(Long.class));
 
         // when, then
@@ -532,7 +540,7 @@ class UserControllerTest {
     void 유저의_이미지_변경에_성공한다() throws Exception {
         // given
         Long userId = 1L;
-        given(jwtService.verifyUserId(any())).willReturn(userId);
+        given(jwtManager.verifyUserId(any())).willReturn(userId);
         doNothing().when(userService).changeUserProfileImage(any(MultipartFile.class), any(Long.class));
 
         MockMultipartFile userImage = new MockMultipartFile(

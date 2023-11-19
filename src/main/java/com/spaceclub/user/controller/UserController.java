@@ -4,7 +4,7 @@ import com.spaceclub.club.domain.Club;
 import com.spaceclub.event.controller.dto.BookmarkedEventRequest;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.dto.PageResponse;
-import com.spaceclub.global.jwt.service.JwtService;
+import com.spaceclub.global.jwt.service.JwtManager;
 import com.spaceclub.user.controller.dto.UserBookmarkedEventGetResponse;
 import com.spaceclub.user.controller.dto.UserClubGetResponse;
 import com.spaceclub.user.controller.dto.UserCodeRequest;
@@ -48,11 +48,11 @@ public class UserController {
 
     private final UserService userService;
 
-    private final JwtService jwtService;
+    private final JwtManager jwtManager;
 
     @GetMapping("/events")
-    public PageResponse<UserEventGetResponse, Event> getAllEvents(Pageable pageable, HttpServletRequest servletRequest) {
-        Long userId = jwtService.verifyUserId(servletRequest);
+    public PageResponse<UserEventGetResponse, Event> getAllEvents(Pageable pageable, HttpServletRequest request) {
+        Long userId = jwtManager.verifyUserId(request);
         Page<Event> eventPages = userService.findAllEventPages(userId, pageable);
 
         List<UserEventGetResponse> eventGetResponse = eventPages.getContent().stream()
@@ -65,7 +65,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserLoginResponse> updateRequiredInfo(@RequestBody UserRequiredInfoRequest request) {//유저 찾기
         User user = userService.updateRequiredInfo(request.userId(), new UserRequiredInfo(request.name(), request.phoneNumber()));
-        String accessToken = jwtService.createToken(user.getId(), user.getUsername());
+        String accessToken = jwtManager.createAccessToken(user.getId(), user.getUsername());
 
         return ResponseEntity.created(URI.create("/api/v1/users/" + user.getId()))
                 .body(UserLoginResponse.from(user.getId(), accessToken));
@@ -82,7 +82,7 @@ public class UserController {
         }
 
         // 기존 유저면 jwt
-        String accessToken = jwtService.createToken(kakaoUser.getId(), kakaoUser.getUsername());
+        String accessToken = jwtManager.createAccessToken(kakaoUser.getId(), kakaoUser.getUsername());
 
         return UserLoginResponse.from(kakaoUser.getId(), accessToken);
     }
@@ -90,14 +90,14 @@ public class UserController {
 
     @GetMapping("/profiles")
     public UserProfileResponse getUserProfile(HttpServletRequest request) {
-        Long userId = jwtService.verifyUserId(request);
+        Long userId = jwtManager.verifyUserId(request);
 
         return userService.getUserProfile(userId).toResponse();
     }
 
     @PatchMapping("/required-infos")
     public ResponseEntity<Void> updateUserProfile(@RequestBody UserProfileUpdateRequest request, HttpServletRequest servletRequest) {
-        Long userId = jwtService.verifyUserId(servletRequest);
+        Long userId = jwtManager.verifyUserId(servletRequest);
         userService.updateRequiredInfo(userId, new UserRequiredInfo(request.name(), request.phoneNumber()));
 
         return ResponseEntity.noContent().build();
@@ -105,14 +105,14 @@ public class UserController {
 
     @GetMapping("/images")
     public UserProfileImageResponse getUserImage(HttpServletRequest request) {
-        Long userId = jwtService.verifyUserId(request);
+        Long userId = jwtManager.verifyUserId(request);
 
         return new UserProfileImageResponse(userService.getUserProfileImage(userId));
     }
 
     @GetMapping("/clubs")
     public ResponseEntity<List<UserClubGetResponse>> getClubs(HttpServletRequest servletRequest) {
-        Long userId = jwtService.verifyUserId(servletRequest);
+        Long userId = jwtManager.verifyUserId(servletRequest);
         List<Club> clubs = userService.getClubs(userId);
 
         List<UserClubGetResponse> clubResponses = clubs.stream()
@@ -127,7 +127,7 @@ public class UserController {
             Pageable pageable,
             HttpServletRequest servletRequest
     ) {
-        Long userId = jwtService.verifyUserId(servletRequest);
+        Long userId = jwtManager.verifyUserId(servletRequest);
         Page<Event> eventPages = userService.findAllBookmarkedEventPages(userId, pageable);
 
         List<UserBookmarkedEventGetResponse> bookmarkedEvents = eventPages.getContent().stream()
@@ -142,7 +142,7 @@ public class UserController {
                                               @RequestBody BookmarkedEventRequest request,
                                               HttpServletRequest servletRequest
     ){
-        Long userId = jwtService.verifyUserId(servletRequest);
+        Long userId = jwtManager.verifyUserId(servletRequest);
         userService.changeBookmarkStatus(UserBookmarkInfo.of(eventId, userId, request.bookmark()));
 
         return ResponseEntity.ok().build();
@@ -150,7 +150,7 @@ public class UserController {
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletRequest servletRequest) {
-        Long userId = jwtService.verifyUserId(servletRequest);
+        Long userId = jwtManager.verifyUserId(servletRequest);
         userService.logout(userId);
 
         return ResponseEntity.ok().build();
@@ -158,7 +158,7 @@ public class UserController {
 
     @DeleteMapping
     public ResponseEntity<Void> deleteUser(HttpServletRequest servletRequest) {
-        Long userId = jwtService.verifyUserId(servletRequest);
+        Long userId = jwtManager.verifyUserId(servletRequest);
         userService.deleteUser(userId);
 
         return ResponseEntity.noContent().build();
@@ -169,7 +169,7 @@ public class UserController {
             @RequestPart MultipartFile userImage,
             HttpServletRequest servletRequest
     ) {
-        Long userId = jwtService.verifyUserId(servletRequest);
+        Long userId = jwtManager.verifyUserId(servletRequest);
         userService.changeUserProfileImage(userImage, userId);
 
         return ResponseEntity.noContent().build();

@@ -11,13 +11,17 @@ import com.spaceclub.form.service.FormService;
 import com.spaceclub.form.service.vo.FormApplicationGetInfo;
 import com.spaceclub.form.service.vo.FormCreate;
 import com.spaceclub.form.service.vo.FormGet;
-import com.spaceclub.global.jwt.service.JwtService;
+import com.spaceclub.global.interceptor.JwtAuthorizationInterceptor;
+import com.spaceclub.global.jwt.service.JwtManager;
+import com.spaceclub.user.controller.UserController;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -57,7 +61,12 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(FormController.class)
+@WebMvcTest(value = FormController.class,
+        excludeFilters = {
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+                        JwtAuthorizationInterceptor.class,
+                })
+        })
 @AutoConfigureRestDocs
 @DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.class)
 class FormControllerTest {
@@ -72,7 +81,7 @@ class FormControllerTest {
     private FormService formService;
 
     @MockBean
-    private JwtService jwtService;
+    private JwtManager jwtManager;
 
     @Test
     @WithMockUser
@@ -86,7 +95,7 @@ class FormControllerTest {
 
         Long eventId = 1L;
         Long userId = 1L;
-        given(jwtService.verifyUserId(any())).willReturn(userId);
+        given(jwtManager.verifyUserId(any())).willReturn(userId);
         given(formService.createForm(any(FormCreate.class))).willReturn(eventId);
 
         // when, then
@@ -133,7 +142,7 @@ class FormControllerTest {
                 .build();
 
         Long userId = 1L;
-        given(jwtService.verifyUserId(any())).willReturn(userId);
+        given(jwtManager.verifyUserId(any())).willReturn(userId);
         given(formService.getForm(any(Long.class), any(Long.class))).willReturn(formGet);
 
         // when, then
@@ -178,7 +187,7 @@ class FormControllerTest {
         FormApplicationGetInfo formApplicationGetInfo = new FormApplicationGetInfo(form, List.of(FormTestFixture.formOptionUser1(), FormTestFixture.formOptionUser2()), eventUserPages);
 
         Long userId = 1L;
-        given(jwtService.verifyUserId(any())).willReturn(userId);
+        given(jwtManager.verifyUserId(any())).willReturn(userId);
         given(formService.getApplicationForms(any(Long.class), any(Long.class), any(Pageable.class))).willReturn(formApplicationGetInfo);
 
         // when, then

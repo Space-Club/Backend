@@ -15,9 +15,10 @@ public class JwtConfig {
     @Bean
     public Jwt jwt() {
         return Jwt.builder()
-                .issuer(jwtProperties.getIssuer())
-                .clientSecret(jwtProperties.getClientSecret())
-                .expirySeconds(jwtProperties.getExpirySeconds())
+                .issuer(jwtProperties.issuer())
+                .clientSecret(jwtProperties.clientSecret())
+                .expirySeconds(jwtProperties.expirySeconds())
+                .refreshTokenExpirySeconds(jwtProperties.refreshExpirySeconds())
                 .build();
     }
 
