@@ -55,7 +55,7 @@ public class ClubController {
     public ResponseEntity<String> createClub(@RequestPart(value = "request") ClubCreateRequest request,
                                              @RequestPart(value = "logoImage", required = false) MultipartFile logoImage,
                                              UriComponentsBuilder uriBuilder,
-                                             @Authenticated JwtUser jwtUser) throws IOException {
+                                             @Authenticated JwtUser jwtUser) {
         Club newClub = request.toEntity();
 
         Club createdClub = clubService.createClub(newClub, jwtUser.id(), logoImage);

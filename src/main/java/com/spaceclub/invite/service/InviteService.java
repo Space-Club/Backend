@@ -16,6 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+import static com.spaceclub.global.ExceptionCode.CLUB_ALREADY_JOINED;
+import static com.spaceclub.global.ExceptionCode.CLUB_NOT_FOUND;
+import static com.spaceclub.global.ExceptionCode.INVITE_EXPIRED;
+import static com.spaceclub.global.ExceptionCode.INVITE_NOT_FOUND;
+import static com.spaceclub.global.ExceptionCode.NOT_CLUB_MEMBER;
+import static com.spaceclub.global.ExceptionCode.USER_NOT_FOUND;
 import static com.spaceclub.invite.domain.Invite.INVITE_LINK_VALID_HOURS;
 
 @Service
@@ -35,10 +41,10 @@ public class InviteService {
 
     public String getInviteCode(Long clubId, Long userId) {
         if (!clubUserRepository.existsByClub_IdAndUser_Id(clubId, userId))
-            throw new IllegalArgumentException("해당 클럽의 멤버가 아닙니다.");
+            throw new IllegalArgumentException(NOT_CLUB_MEMBER.toString());
 
         Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException(CLUB_NOT_FOUND.toString()));
 
         String inviteCode = codeGenerator.generateCode();
 
@@ -62,17 +68,17 @@ public class InviteService {
 
     public Long joinClub(String code, Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND.toString()));
 
         Invite invite = inviteRepository.findByCode(code)
-                .orElseThrow(() -> new IllegalStateException("해당 초대코드를 보유한 클럽이 없습니다"));
+                .orElseThrow(() -> new IllegalStateException(INVITE_NOT_FOUND.toString()));
 
-        if (invite.isExpired()) throw new IllegalStateException("만료된 초대링크 입니다.");
+        if (invite.isExpired()) throw new IllegalStateException(INVITE_EXPIRED.toString());
 
         Club club = invite.getClub();
 
         if (clubUserRepository.existsByClubAndUser(club, user))
-            throw new IllegalStateException("이미 해당 클럽에 가입되어 있습니다");
+            throw new IllegalStateException(CLUB_ALREADY_JOINED.toString());
 
         ClubUser clubUser = ClubUser.builder()
                 .club(club)
@@ -87,7 +93,7 @@ public class InviteService {
 
     public Club requestToJoinClub(String code) {
         Invite invite = inviteRepository.findByCode(code)
-                .orElseThrow(() -> new IllegalStateException("해당 초대코드를 보유한 클럽이 없습니다"));
+                .orElseThrow(() -> new IllegalStateException(INVITE_NOT_FOUND.toString()));
 
         return invite.getClub();
     }

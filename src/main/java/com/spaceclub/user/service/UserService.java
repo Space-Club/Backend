@@ -29,6 +29,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.spaceclub.global.ExceptionCode.ALREADY_BOOKMARKED;
+import static com.spaceclub.global.ExceptionCode.BAD_REQUEST;
+import static com.spaceclub.global.ExceptionCode.BOOKMARK_NOT_FOUND;
+import static com.spaceclub.global.ExceptionCode.EVENT_NOT_FOUND;
+import static com.spaceclub.global.ExceptionCode.USER_NOT_FOUND;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -69,7 +75,7 @@ public class UserService {
     @Transactional
     public User updateRequiredInfo(Long userId, UserRequiredInfo userRequiredInfo) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."))
+                .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND.toString()))
                 .updateRequiredInfo(userRequiredInfo.name(), userRequiredInfo.phoneNumber());
 
         return userRepository.save(user);
@@ -88,7 +94,7 @@ public class UserService {
     }
 
     public List<Club> getClubs(Long userId) {
-        if (!userRepository.existsById(userId)) throw new IllegalStateException("존재하지 않는 유저입니다.");
+        if (!userRepository.existsById(userId)) throw new IllegalStateException(USER_NOT_FOUND.toString());
         List<ClubUser> clubUsers = clubUserRepository.findByUser_Id(userId);
 
         return clubUsers.stream()
@@ -105,10 +111,10 @@ public class UserService {
     @Transactional
     public void changeBookmarkStatus(UserBookmarkInfo userBookmarkInfo) {
         Event event = eventRepository.findById(userBookmarkInfo.eventId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이벤트입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(EVENT_NOT_FOUND.toString()));
         User user = getUser(userBookmarkInfo.userId());
 
-        if (userBookmarkInfo.bookmarkStatus() && !bookmarkExists(userBookmarkInfo)){
+        if (userBookmarkInfo.bookmarkStatus() && !bookmarkExists(userBookmarkInfo)) {
             Bookmark bookmark = Bookmark.builder()
                     .user(user)
                     .event(event)
@@ -118,16 +124,16 @@ public class UserService {
         }
         if (!userBookmarkInfo.bookmarkStatus() && bookmarkExists(userBookmarkInfo)) {
             Bookmark bookmark = bookmarkRepository.findByUserIdAndEventId(userBookmarkInfo.userId(), userBookmarkInfo.eventId())
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 북마크입니다."));
+                    .orElseThrow(() -> new IllegalArgumentException(BOOKMARK_NOT_FOUND.toString()));
 
             bookmarkRepository.delete(bookmark);
             return;
         }
         if (userBookmarkInfo.bookmarkStatus() && bookmarkExists(userBookmarkInfo)) {
-            throw new IllegalArgumentException("이미 북마크한 이벤트입니다.");
+            throw new IllegalArgumentException(ALREADY_BOOKMARKED.toString());
         }
         if (!userBookmarkInfo.bookmarkStatus() && !bookmarkExists(userBookmarkInfo)) {
-            throw new IllegalArgumentException("잘못된 요청입니다.");
+            throw new IllegalArgumentException(BAD_REQUEST.toString());
         }
     }
 
@@ -161,7 +167,7 @@ public class UserService {
 
     private User getUser(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND.toString()));
     }
 
 }

@@ -24,6 +24,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.spaceclub.event.domain.ApplicationStatus.PENDING;
+import static com.spaceclub.global.ExceptionCode.CLUB_NOT_FOUND;
+import static com.spaceclub.global.ExceptionCode.EVENT_ALREADY_APPLIED;
+import static com.spaceclub.global.ExceptionCode.EVENT_CATEGORY_NOT_ALLOWED;
+import static com.spaceclub.global.ExceptionCode.EVENT_NOT_APPLIED;
+import static com.spaceclub.global.ExceptionCode.EVENT_NOT_FOUND;
+import static com.spaceclub.global.ExceptionCode.EVENT_TICKET_NOT_MANAGED;
+import static com.spaceclub.global.ExceptionCode.EXCEED_TICKET_COUNT;
+import static com.spaceclub.global.ExceptionCode.FORM_OPTION_NOT_FOUND;
+import static com.spaceclub.global.ExceptionCode.NOT_CLUB_MEMBER;
+import static com.spaceclub.global.ExceptionCode.TICKET_COUNT_REQUIRED;
+import static com.spaceclub.global.ExceptionCode.UNAUTHORIZED;
+import static com.spaceclub.global.ExceptionCode.USER_NOT_FOUND;
 
 @Service
 @Transactional(readOnly = true)
@@ -62,7 +74,7 @@ public class EventService {
 
     public Page<Event> getAllEvents(EventCategory eventCategory, Pageable pageable) {
         if (eventCategory == EventCategory.CLUB) {
-            throw new IllegalArgumentException("클럽을 제외한 카테고리의 행사만 조회 가능합니다.");
+            throw new IllegalArgumentException(EVENT_CATEGORY_NOT_ALLOWED.toString());
         }
         return eventRepository.findAllByCategory(eventCategory, pageable);
     }
@@ -81,16 +93,16 @@ public class EventService {
 
     @Transactional
     public void createApplicationForm(EventApplicationCreateInfo info) {
-        User user = userRepository.findById(info.userId()).orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
+        User user = userRepository.findById(info.userId()).orElseThrow(() -> new IllegalStateException(USER_NOT_FOUND.toString()));
         Event event = validateEvent(info.eventId());
 
         validateEventTicketCount(event.getMaxTicketCount(), info.ticketCount());
         if (eventUserRepository.existsByEventIdAndUserId(info.eventId(), info.userId()))
-            throw new IllegalArgumentException("이미 신청한 행사입니다.");
+            throw new IllegalArgumentException(EVENT_ALREADY_APPLIED.toString());
 
         for (FormOptionUser formOptionUser : info.formOptionUsers()) {
             FormOption formOption = formOptionRepository.findById(formOptionUser.getFormOptionId())
-                    .orElseThrow(() -> new IllegalStateException("존재하지 않는 폼 옵션 입니다."));
+                    .orElseThrow(() -> new IllegalStateException(FORM_OPTION_NOT_FOUND.toString()));
 
             FormOptionUser registeredFormOptionUser = formOptionUser.registerFormOptionAndUser(formOption, user);
             formOptionUserRepository.save(registeredFormOptionUser);
@@ -109,10 +121,10 @@ public class EventService {
     }
 
     private void validateEventTicketCount(Integer maxTicketCount, Integer ticketCount) {
-        if (maxTicketCount == null && ticketCount != null) throw new IllegalArgumentException("행사 티켓을 관리하지 않는 행사입니다.");
-        if (maxTicketCount != null && ticketCount == null) throw new IllegalArgumentException("행사 티켓 매수는 필수입니다.");
+        if (maxTicketCount == null && ticketCount != null) throw new IllegalArgumentException(EVENT_TICKET_NOT_MANAGED.toString());
+        if (maxTicketCount != null && ticketCount == null) throw new IllegalArgumentException(TICKET_COUNT_REQUIRED.toString());
         if (ticketCount != null && maxTicketCount < ticketCount)
-            throw new IllegalArgumentException("인 당 티켓 예매 수를 초과하였습니다.");
+            throw new IllegalArgumentException(EXCEED_TICKET_COUNT.toString());
     }
 
     public Event get(Long eventId) {
@@ -124,7 +136,7 @@ public class EventService {
         Event event = validateEvent(eventId);
 
         EventUser eventUser = eventUserRepository.findByEventIdAndUserId(eventId, userId)
-                .orElseThrow(() -> new IllegalArgumentException("신청한 이력이 없는 행사입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(EVENT_NOT_APPLIED.toString()));
 
         EventUser updateEventUser = eventUser.setStatusByManaged(event.isFormManaged());
 
@@ -134,19 +146,19 @@ public class EventService {
     }
 
     private Club validateClubManager(Long clubId, Long userId) {
-        if (!clubRepository.existsById(clubId)) throw new IllegalStateException("존재하지 않는 클럽입니다.");
-        if (!userRepository.existsById(userId)) throw new IllegalStateException("존재하지 않는 유저입니다.");
+        if (!clubRepository.existsById(clubId)) throw new IllegalStateException(CLUB_NOT_FOUND.toString());
+        if (!userRepository.existsById(userId)) throw new IllegalStateException(USER_NOT_FOUND.toString());
 
         ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
-                .orElseThrow(() -> new IllegalStateException("클럽의 멤버가 아닙니다."));
-        if (clubUser.isNotManager()) throw new IllegalStateException("관리자만 접근 가능합니다.");
+                .orElseThrow(() -> new IllegalStateException(NOT_CLUB_MEMBER.toString()));
+        if (clubUser.isNotManager()) throw new IllegalStateException(UNAUTHORIZED.toString());
 
         return clubUser.getClub();
     }
 
     private Event validateEvent(Long eventId) {
         return eventRepository.findById(eventId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 행사입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(EVENT_NOT_FOUND.toString()));
     }
 
 }
