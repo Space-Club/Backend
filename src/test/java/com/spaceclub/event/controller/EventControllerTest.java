@@ -1127,11 +1127,10 @@ class EventControllerTest {
         List<Event> events = List.of(event1(), showEvent(), clubEvent());
         Page<Event> eventPages = new PageImpl<>(events);
 
-        given(eventService.getSearchEvents(any(String.class), any(Pageable.class), any())).willReturn(eventPages);
+        given(eventService.getSearchEvents(any(String.class), any(Pageable.class))).willReturn(eventPages);
 
         // when
         ResultActions actions = mvc.perform(get("/api/v1/events/searches")
-                .header(AUTHORIZATION, "Access Token")
                 .param("keyword", "title")
                 .param("page", "1")
                 .param("size", "3")
@@ -1151,9 +1150,6 @@ class EventControllerTest {
                 .andDo(document("event/search",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestHeaders(
-                                headerWithName(AUTHORIZATION).description("액세스 토큰")
-                        ),
                         queryParameters(
                                 parameterWithName("keyword").description("검색어"),
                                 parameterWithName("page").description("페이지"),
