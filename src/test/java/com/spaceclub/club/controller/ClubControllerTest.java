@@ -14,7 +14,6 @@ import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.interceptor.JwtAuthorizationInterceptor;
-import com.spaceclub.invite.service.InviteService;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +46,6 @@ import static com.spaceclub.club.domain.ClubUserRole.MANAGER;
 import static com.spaceclub.event.EventTestFixture.clubEvent;
 import static com.spaceclub.event.EventTestFixture.event1;
 import static com.spaceclub.event.EventTestFixture.showEvent;
-import static com.spaceclub.event.EventTestFixture.clubEvent;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
@@ -104,9 +102,6 @@ class ClubControllerTest {
     private ClubService clubService;
 
     @MockBean
-    private InviteService inviteService;
-
-    @MockBean
     private UserArgumentResolver userArgumentResolver;
 
     @Test
@@ -146,7 +141,7 @@ class ClubControllerTest {
         ResultActions result = this.mockMvc.perform(multipart("/api/v1/clubs")
                 .file(request)
                 .file(logoImage)
-                .header("Authorization", "token")
+                .header(AUTHORIZATION, "token")
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8)
@@ -165,7 +160,7 @@ class ClubControllerTest {
                                 partWithName("logoImage").description("클럽 썸네일 이미지")
                         ),
                         requestHeaders(
-                                headerWithName("Authorization").description("유저 액세스 토큰")
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
                         ),
                         requestPartFields(
                                 "request",
@@ -182,12 +177,11 @@ class ClubControllerTest {
     @WithMockUser
     void 클럽_조회에_성공한다() throws Exception {
         // given
-        given(clubService.getClub(any(Long.class))).willReturn(club1());
-        given(inviteService.getInviteCode(any(Long.class), any(Long.class))).willReturn("inviteCode");
+        given(clubService.getClub(any(Long.class), any())).willReturn(club1());
 
         // when
         ResultActions result = this.mockMvc.perform(get("/api/v1/clubs/{clubId}", club1().getId())
-                .header(AUTHORIZATION, "Access Token")
+                .header(AUTHORIZATION, "access token")
                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
@@ -199,16 +193,14 @@ class ClubControllerTest {
                         pathParameters(
                                 parameterWithName("clubId").description("클럽 아이디")),
                         requestHeaders(
-                                headerWithName(AUTHORIZATION).description("Access Token")
+                                headerWithName(AUTHORIZATION).description("유저의 액세스 토큰")
                         ),
                         responseFields(
                                 fieldWithPath("name").type(STRING).description("클럽 이름"),
                                 fieldWithPath("logoImageUrl").type(STRING).description("클럽 이미지 Url"),
                                 fieldWithPath("info").type(STRING).description("클럽 소개"),
                                 fieldWithPath("memberCount").type(NUMBER).description("클럽 멤버 수"),
-                                fieldWithPath("coverImageUrl").type(STRING).description("클럽 커버 이미지 Url"),
-                                fieldWithPath("inviteLink").type(STRING).description("클럽 초대 링크"),
-                                fieldWithPath("inviteLink").type(STRING).description("클럽 초대 링크")
+                                fieldWithPath("coverImageUrl").type(STRING).description("클럽 커버 이미지 Url")
                         )));
 
     }
@@ -278,7 +270,7 @@ class ClubControllerTest {
         ResultActions result = this.mockMvc.perform(requestBuilder
                 .file(request)
                 .file(logoImage)
-                .header("Authorization", "token")
+                .header(AUTHORIZATION, "token")
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8)
@@ -299,7 +291,7 @@ class ClubControllerTest {
                                 parameterWithName("clubId").description("클럽 ID")
                         ),
                         requestHeaders(
-                                headerWithName("Authorization").description("유저 액세스 토큰")
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
                         ),
                         requestPartFields(
                                 "request",
@@ -317,7 +309,7 @@ class ClubControllerTest {
 
         // when
         ResultActions result = this.mockMvc.perform(delete("/api/v1/clubs/{clubId}", clubId)
-                .header("Authorization", "access token")
+                .header(AUTHORIZATION, "access token")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -331,7 +323,7 @@ class ClubControllerTest {
                                 parameterWithName("clubId").description("클럽 ID")
                         ),
                         requestHeaders(
-                                headerWithName("Authorization").description("유저 액세스 토큰")
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
                         )
                 ));
     }
@@ -343,11 +335,12 @@ class ClubControllerTest {
         List<Event> events = List.of(event1(), showEvent(), clubEvent());
         Page<Event> eventPages = new PageImpl<>(events);
 
-        given(clubService.getClubEvents(any(Long.class), any(Pageable.class))).willReturn(eventPages);
+        given(clubService.getClubEvents(any(Long.class), any(Pageable.class), any())).willReturn(eventPages);
         Long clubId = 1L;
 
         // when
         ResultActions actions = mockMvc.perform(get("/api/v1/clubs/{clubId}/events", clubId)
+                .header(AUTHORIZATION, "access token")
                 .param("page", "1")
                 .param("size", "3")
                 .param("sort", "id,asc")
@@ -366,6 +359,9 @@ class ClubControllerTest {
                 .andDo(document("club/getAllEvent",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
+                        ),
                         pathParameters(
                                 parameterWithName("clubId").description("클럽 아이디")),
                         queryParameters(
@@ -400,10 +396,12 @@ class ClubControllerTest {
     @WithMockUser
     public void 클럽_멤버_조회에_성공한다() throws Exception {
         // given
-        given(clubService.getMembers(any(Long.class))).willReturn(List.of(club1User1Manager(), club1User2Manager()));
+        given(clubService.getMembers(any(Long.class), any())).willReturn(List.of(club1User1Manager(), club1User2Manager()));
 
         // when
-        ResultActions actions = mockMvc.perform(get("/api/v1/clubs/{clubId}/members", club1().getId()));
+        ResultActions actions = mockMvc.perform(get("/api/v1/clubs/{clubId}/members", club1().getId())
+                .header(AUTHORIZATION, "access token")
+        );
 
         // then
         actions
@@ -411,6 +409,9 @@ class ClubControllerTest {
                 .andDo(document("club/getAllMember",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
+                        ),
                         pathParameters(
                                 parameterWithName("clubId").description("클럽 아이디")),
                         responseFields(
@@ -436,6 +437,7 @@ class ClubControllerTest {
 
         // when
         ResultActions result = this.mockMvc.perform(patch("/api/v1/clubs/{clubId}/members/{memberId}", clubId, memberId)
+                .header(AUTHORIZATION, "access token")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(request))
@@ -447,6 +449,9 @@ class ClubControllerTest {
                 .andDo(document("club/updateMemberRole",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
+                        ),
                         pathParameters(
                                 parameterWithName("clubId").description("클럽 아이디"),
                                 parameterWithName("memberId").description("멤버 아이디")
@@ -464,10 +469,11 @@ class ClubControllerTest {
         Long clubId = 1L;
         Long memberId = 1L;
 
-        doNothing().when(clubService).deleteMember(any(Long.class), any(Long.class));
+        doNothing().when(clubService).deleteMember(any(Long.class), any(Long.class), any(Long.class));
 
         // when
         ResultActions result = this.mockMvc.perform(delete("/api/v1/clubs/{clubId}/members/{memberId}", clubId, memberId)
+                .header(AUTHORIZATION, "access token")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
         );
@@ -478,6 +484,9 @@ class ClubControllerTest {
                 .andDo(document("club/deleteMember",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
+                        ),
                         pathParameters(
                                 parameterWithName("clubId").description("클럽 아이디"),
                                 parameterWithName("memberId").description("멤버 아이디")
@@ -495,7 +504,7 @@ class ClubControllerTest {
 
         // when
         ResultActions result = this.mockMvc.perform(post("/api/v1/clubs/{clubId}/notices", clubId)
-                .header("Authorization", "access token")
+                .header(AUTHORIZATION, "access token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(request))
                 .with(csrf())
@@ -508,7 +517,7 @@ class ClubControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(
-                                headerWithName("Authorization").description("유저 액세스 토큰")
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
                         ),
                         pathParameters(
                                 parameterWithName("clubId").description("클럽 아이디")
@@ -530,7 +539,7 @@ class ClubControllerTest {
 
         // when
         ResultActions result = this.mockMvc.perform(get("/api/v1/clubs/{clubId}/notices", clubId)
-                .header("Authorization", "access token")
+                .header(AUTHORIZATION, "access token")
                 .with(csrf())
         );
 
@@ -541,7 +550,7 @@ class ClubControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(
-                                headerWithName("Authorization").description("유저 액세스 토큰")
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
                         ),
                         pathParameters(
                                 parameterWithName("clubId").description("클럽 아이디")
@@ -564,7 +573,7 @@ class ClubControllerTest {
 
         // when
         ResultActions result = this.mockMvc.perform(patch("/api/v1/clubs/{clubId}/notices/{noticeId}", clubId, noticeId)
-                .header("Authorization", "access token")
+                .header(AUTHORIZATION, "access token")
                 .content(mapper.writeValueAsString(new ClubNoticeUpdateRequest("새로운 공지사항")))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(csrf())
@@ -577,7 +586,7 @@ class ClubControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(
-                                headerWithName("Authorization").description("유저 액세스 토큰")
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
                         ),
                         pathParameters(
                                 parameterWithName("clubId").description("클럽 아이디"),
@@ -598,7 +607,7 @@ class ClubControllerTest {
 
         // when
         ResultActions result = this.mockMvc.perform(delete("/api/v1/clubs/{clubId}/notices/{noticeId}", clubId, noticeId)
-                .header("Authorization", "access token")
+                .header(AUTHORIZATION, "access token")
                 .with(csrf())
         );
 
@@ -609,7 +618,7 @@ class ClubControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(
-                                headerWithName("Authorization").description("유저 액세스 토큰")
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
                         ),
                         pathParameters(
                                 parameterWithName("clubId").description("클럽 아이디"),
@@ -627,11 +636,10 @@ class ClubControllerTest {
         given(clubService.getClubSchedules(any(Long.class), any())).willReturn(
                 List.of(clubEvent())
         );
-        given(clubService.getManagerProfileImageUrl(any(Long.class))).willReturn("profileImageUrl");
 
         // when
         ResultActions result = this.mockMvc.perform(get("/api/v1/clubs/{clubId}/schedules", clubId)
-                .header("Authorization", "access token")
+                .header(AUTHORIZATION, "access token")
         );
 
         // then
@@ -641,7 +649,7 @@ class ClubControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(
-                                headerWithName("Authorization").description("유저 액세스 토큰")
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
                         ),
                         pathParameters(
                                 parameterWithName("clubId").description("클럽 아이디")
@@ -652,8 +660,7 @@ class ClubControllerTest {
                                 fieldWithPath("schedules.[].title").type(STRING).description("일정 제목"),
                                 fieldWithPath("schedules.[].startDateTime").type(STRING).description("일정 시작 날짜와 시간"),
                                 fieldWithPath("schedules.[].endDateTime").type(STRING).description("일정 종료 날짜와 시간"),
-                                fieldWithPath("schedules.[].manager").type(STRING).description("일정 생성자"),
-                                fieldWithPath("schedules.[].profileImageUrl").type(STRING).description("일정 생성자의 프사 URL")
+                                fieldWithPath("schedules.[].manager").type(STRING).description("일정 생성자")
                         )
                 ));
     }

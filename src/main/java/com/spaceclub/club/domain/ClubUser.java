@@ -49,7 +49,7 @@ public class ClubUser extends BaseTimeEntity {
         this.user = user;
         this.role = role;
     }
-    
+
     public ClubUser updateRole(ClubUserRole role) {
         return ClubUser.builder()
                 .id(this.id)
@@ -71,8 +71,8 @@ public class ClubUser extends BaseTimeEntity {
         return user.getProfileImageUrl();
     }
 
-    public boolean isManager() {
-        return this.role.equals(ClubUserRole.MANAGER);
+    public boolean isNotManager() {
+        return !this.role.equals(ClubUserRole.MANAGER);
     }
 
 }

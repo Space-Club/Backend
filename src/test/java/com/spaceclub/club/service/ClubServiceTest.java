@@ -7,6 +7,7 @@ import com.spaceclub.club.domain.ClubUserRole;
 import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
+import com.spaceclub.user.repository.UserRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,9 @@ class ClubServiceTest {
     @Mock
     private ClubUserRepository clubUserRepository;
 
+    @Mock
+    private UserRepository userRepository;
+
     private final ClubUserUpdate clubUserUpdate = ClubUserUpdate.builder()
             .clubId(club1().getId())
             .memberId(user1().getId())
@@ -56,7 +60,7 @@ class ClubServiceTest {
         clubRepository.save(club1());
 
         // when
-        Club myClub = clubService.getClub(id);
+        Club myClub = clubService.getClub(id, user1().getId());
 
         // then
         assertThat(club1()).usingRecursiveComparison().isEqualTo(myClub);
@@ -75,7 +79,7 @@ class ClubServiceTest {
         clubService.deleteClub(clubId, userId);
 
         // then
-        assertThatThrownBy(() -> clubService.getClub(clubId))
+        assertThatThrownBy(() -> clubService.getClub(clubId, user1().getId()))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -115,24 +119,26 @@ class ClubServiceTest {
     @Test
     void 클럽_멤버_탈퇴에_성공한다() {
         // given
-        given(clubRepository.findById(club1().getId())).willReturn(Optional.of(club1()));
+        given(clubRepository.existsById(club1().getId())).willReturn(true);
+        given(userRepository.existsById(user1().getId())).willReturn(true);
         given(clubUserRepository.findByClub_IdAndUser_Id(any(Long.class), any(Long.class))).willReturn(Optional.ofNullable(club1User1Manager()));
         given(clubUserRepository.countByClub_IdAndRole(any(Long.class), any(ClubUserRole.class))).willReturn(2);
 
         // when, then
         assertThatNoException()
-                .isThrownBy(() -> clubService.deleteMember(club1().getId(), user1().getId()));
+                .isThrownBy(() -> clubService.deleteMember(club1().getId(), user1().getId(), user1().getId()));
     }
 
     @Test
     void 마지막_관리자인_경우_클럽_멤버_탈퇴에_실패한다() {
         // given
-        given(clubRepository.findById(club1().getId())).willReturn(Optional.of(club1()));
+        given(clubRepository.existsById(club1().getId())).willReturn(true);
+        given(userRepository.existsById(user1().getId())).willReturn(true);
         given(clubUserRepository.findByClub_IdAndUser_Id(any(Long.class), any(Long.class))).willReturn(Optional.ofNullable(club1User1Manager()));
         given(clubUserRepository.countByClub_IdAndRole(any(Long.class), any(ClubUserRole.class))).willReturn(1);
 
         // when, then
-        assertThatThrownBy(() -> clubService.deleteMember(club1().getId(), user1().getId()))
+        assertThatThrownBy(() -> clubService.deleteMember(club1().getId(), user1().getId(), user1().getId()))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
