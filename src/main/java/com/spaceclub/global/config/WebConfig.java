@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    private final JwtAuthorizationInterceptor jwtAccessTokenInterceptor;
+    private final JwtAuthorizationInterceptor jwtAuthorizationInterceptor;
     private final UserArgumentResolver userArgumentResolver;
 
     @Profile("develop")
@@ -29,34 +29,33 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods("OPTIONS", "GET", "POST", "PATCH", "DELETE")
                 .allowCredentials(true)
                 .exposedHeaders("Location")
-                .maxAge(1800); // 1800초, 30분으로 설정
+                .maxAge(1800);
     }
 
+    /**
+     * 인증 및 인가
+     * 인가 처리가 optional or 필요 없는 endpoint는 인증만 처리 (AuthenticationInterceptor)
+     * 인가 처리가 필수 적인 endpoint는 인가 처리 (JwtAuthorizationInterceptor)
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new AuthenticationInterceptor(jwtAccessTokenInterceptor))
+        registry.addInterceptor(new AuthenticationInterceptor(jwtAuthorizationInterceptor))
                 .addPathPatterns(
-                        "/api/v1/events/{eventId}",
+                        "/api/v1/users/oauth**",
                         "/api/v1/users*",
-                        "/api/v1/clubs/invite/{code}",
-                        "/api/v1/events**",
-                        "/api/v1/users*",
-                        "/api/v1/users/oauths",
-                        "/api/v1/clubs/invite/{code}"
-                        ) // 인가
+                        "/api/v1/clubs/invite**",
+                        "/api/v1/events**"
+                        )
                 .order(1);
 
-        registry.addInterceptor(jwtAccessTokenInterceptor)
+        registry.addInterceptor(jwtAuthorizationInterceptor)
                 .order(2)
                 .addPathPatterns("/api/v1/**")
                 .excludePathPatterns(
-                        "/api/v1/events/{eventId}",
+                        "/api/v1/users/oauth**",
                         "/api/v1/users*",
-                        "/api/v1/clubs/invite/{code}",
-                        "/api/v1/events**",
-                        "/api/v1/users*",
-                        "/api/v1/users/oauths",
-                        "/api/v1/clubs/invite/{code}"
+                        "/api/v1/clubs/invite**",
+                        "/api/v1/events**"
                 );
     }
 

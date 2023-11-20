@@ -3,12 +3,10 @@ package com.spaceclub.global.interceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 
-@Component
 @RequiredArgsConstructor
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
