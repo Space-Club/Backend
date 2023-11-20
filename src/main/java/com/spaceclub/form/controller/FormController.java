@@ -66,9 +66,8 @@ public class FormController {
     }
 
     @PatchMapping("/{eventId}/forms/applications-status")
-    public ResponseEntity<Void> updateApplicationStatus(@PathVariable Long eventId, @RequestBody FormApplicationStatusUpdateRequest request, HttpServletRequest servletRequest) {
-        Long userId = jwtService.verifyUserId(servletRequest);
-        formService.updateApplicationStatus(eventId, userId, request.status());
+    public ResponseEntity<Void> updateApplicationStatus(@PathVariable Long eventId, @RequestBody FormApplicationStatusUpdateRequest request, @Authenticated JwtUser jwtUser) {
+        formService.updateApplicationStatus(eventId, jwtUser.id(), request.status());
 
         return ResponseEntity.noContent().build();
     }

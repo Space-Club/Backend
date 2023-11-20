@@ -240,7 +240,6 @@ class FormControllerTest {
     void 행사의_신청_상태_변경에_성공한다() throws Exception {
         // given
         FormApplicationStatusUpdateRequest request = new FormApplicationStatusUpdateRequest(CONFIRMED);
-        given(jwtService.verifyUserId(any())).willReturn(1L);
         doNothing().when(formService).updateApplicationStatus(any(Long.class), any(Long.class), any(ApplicationStatus.class));
 
         // when, then
