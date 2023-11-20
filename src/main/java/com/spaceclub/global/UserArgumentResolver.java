@@ -38,11 +38,14 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
                                   NativeWebRequest webRequest,
                                   WebDataBinderFactory binderFactory) {
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
+        String authorizationHeader = Objects.requireNonNull(request)
+                .getHeader(AUTHORIZATION);
 
-        String accessToken = Objects.requireNonNull(request)
-                .getHeader(AUTHORIZATION)
-                .replace(TOKEN_PREFIX, "");
+        if (authorizationHeader == null) {
+            return new JwtUser(null, null);
+        }
 
+        String accessToken = authorizationHeader.replace(TOKEN_PREFIX, "");
         Claims claims = jwtManager.getClaims(accessToken);
 
         return new JwtUser(claims.getId(), claims.getUsername());
