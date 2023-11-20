@@ -44,13 +44,13 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/clubs")
 @RequiredArgsConstructor
 public class ClubController {
 
     private final ClubService clubService;
 
-    @PostMapping(value = "/clubs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> createClub(@RequestPart(value = "request") ClubCreateRequest request,
                                              @RequestPart(value = "logoImage", required = false) MultipartFile logoImage,
                                              UriComponentsBuilder uriBuilder,
@@ -68,7 +68,7 @@ public class ClubController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/clubs/{clubId}")
+    @GetMapping("/{clubId}")
     public ResponseEntity<ClubGetResponse> getClub(@PathVariable Long clubId, @Authenticated JwtUser jwtUser) {
         Club club = clubService.getClub(clubId, jwtUser.id());
 
@@ -77,14 +77,14 @@ public class ClubController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/clubs/{clubId}/users")
+    @GetMapping("/{clubId}/users")
     public ResponseEntity<ClubUserRoleResponse> getClubUserRole(@PathVariable Long clubId, @Authenticated JwtUser jwtUser) {
         String role = clubService.getUserRole(clubId, jwtUser.id());
 
         return ResponseEntity.ok(new ClubUserRoleResponse(role));
     }
 
-    @PatchMapping(value = "/clubs/{clubId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PatchMapping(value = "/{clubId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateClub(@PathVariable Long clubId,
                                            @RequestPart(value = "request", required = false) ClubUpdateRequest request,
                                            @RequestPart(value = "logoImage", required = false) MultipartFile logoImage,
@@ -100,13 +100,13 @@ public class ClubController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/clubs/{clubId}")
+    @DeleteMapping("/{clubId}")
     public ResponseEntity<String> deleteClub(@PathVariable Long clubId, @Authenticated JwtUser jwtUser) {
         clubService.deleteClub(clubId, jwtUser.id());
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/clubs/{clubId}/events")
+    @GetMapping("/{clubId}/events")
     public ResponseEntity<PageResponse<ClubEventGetResponse, Event>> getClubEvents(@PathVariable Long clubId, Pageable pageable, @Authenticated JwtUser jwtUser) {
         Page<Event> events = clubService.getClubEvents(clubId, pageable, jwtUser.id());
 
@@ -118,14 +118,14 @@ public class ClubController {
         return ResponseEntity.ok(new PageResponse<>(clubEventGetResponses, events));
     }
 
-    @PatchMapping("/clubs/{clubId}/members/{memberId}")
+    @PatchMapping("/{clubId}/members/{memberId}")
     public ResponseEntity<Void> updateMemberRole(@PathVariable Long clubId, @PathVariable Long memberId, @RequestBody ClubUserUpdateRequest request, @Authenticated JwtUser jwtUser) {
         clubService.updateMemberRole(new ClubUserUpdate(clubId, memberId, request.role(), jwtUser.id()));
 
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/clubs/{clubId}/members")
+    @GetMapping("/{clubId}/members")
     public ResponseEntity<List<MemberGetResponse>> getMembers(@PathVariable Long clubId, @Authenticated JwtUser jwtUser) {
         List<ClubUser> clubUsers = clubService.getMembers(clubId, jwtUser.id());
 
@@ -138,14 +138,14 @@ public class ClubController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/clubs/{clubId}/members/{memberId}")
+    @DeleteMapping("/{clubId}/members/{memberId}")
     public ResponseEntity<Void> deleteMember(@PathVariable Long clubId, @PathVariable Long memberId, @Authenticated JwtUser jwtUser) {
         clubService.deleteMember(clubId, memberId, jwtUser.id());
 
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/clubs/{clubId}/notices")
+    @PostMapping("/{clubId}/notices")
     public ResponseEntity<Void> createNotice(@PathVariable Long clubId,
                                              @RequestBody ClubNoticeCreateRequest request,
                                              @Authenticated JwtUser jwtUser) {
@@ -154,7 +154,7 @@ public class ClubController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/clubs/{clubId}/notices")
+    @GetMapping("/{clubId}/notices")
     public ResponseEntity<ClubNoticeGetResponse> getNotices(@PathVariable Long clubId, @Authenticated JwtUser jwtUser) {
         List<ClubNotice> notices = clubService.getNotices(clubId, jwtUser.id());
 
@@ -163,7 +163,7 @@ public class ClubController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/clubs/{clubId}/notices/{noticeId}")
+    @PatchMapping("/{clubId}/notices/{noticeId}")
     public ResponseEntity<Void> updateNotice(@PathVariable Long clubId,
                                              @PathVariable Long noticeId,
                                              @RequestBody ClubNoticeUpdateRequest request,
@@ -180,7 +180,7 @@ public class ClubController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/clubs/{clubId}/notices/{noticeId}")
+    @DeleteMapping("/{clubId}/notices/{noticeId}")
     public ResponseEntity<Void> deleteNotice(@PathVariable Long clubId,
                                              @PathVariable Long noticeId,
                                              @Authenticated JwtUser jwtUser) {
@@ -195,7 +195,7 @@ public class ClubController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/clubs/{clubId}/schedules")
+    @GetMapping("/{clubId}/schedules")
     public ResponseEntity<ClubScheduleGetResponse> getClubSchedule(@PathVariable Long clubId, @Authenticated JwtUser jwtUser) {
         List<Event> events = clubService.getClubSchedules(clubId, jwtUser.id());
 
@@ -210,6 +210,12 @@ public class ClubController {
                 .toList();
 
         return ResponseEntity.ok(new ClubScheduleGetResponse(schedules));
+    }
+
+    @DeleteMapping("/{clubId}/users")
+    public ResponseEntity<Void> exitClub(@PathVariable Long clubId, @Authenticated JwtUser jwtUser) {
+        clubService.deleteMember(clubId, jwtUser.id());
+        return ResponseEntity.noContent().build();
     }
 
 }

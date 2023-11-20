@@ -81,6 +81,10 @@ public class ClubUser extends BaseTimeEntity {
         return !this.role.equals(ClubUserRole.MANAGER);
     }
 
+    public boolean isManager() {
+        return this.role.equals(ClubUserRole.MANAGER);
+    }
+
     public static Comparator<ClubUser> memberComparator = Comparator
             .comparing((ClubUser clubUser) -> clubUser.role.getSortPriority())
             .thenComparing(ClubUser::getUsername);

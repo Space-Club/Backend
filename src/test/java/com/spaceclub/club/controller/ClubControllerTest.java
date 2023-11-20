@@ -464,7 +464,7 @@ class ClubControllerTest {
 
     @Test
     @WithMockUser
-    void 클럽_멤버_탈퇴에_성공한다() throws Exception {
+    void 클럽_멤버_추방에_성공한다() throws Exception {
         // given
         Long clubId = 1L;
         Long memberId = 1L;
@@ -664,5 +664,27 @@ class ClubControllerTest {
                         )
                 ));
     }
+
+    @Test
+    @WithMockUser
+    void 클럽_멤버일_경우_클럽_탈퇴에_성공한다() throws Exception {
+        doNothing().when(clubService).deleteClub(any(Long.class), any(Long.class));
+        Long clubId = 1L;
+        mockMvc.perform(delete("/api/v1/clubs/{clubId}/users", clubId)
+                .header(AUTHORIZATION, "access token")
+                .with(csrf()))
+                .andExpect(status().isNoContent())
+                .andDo(document("club/exitClub",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("clubId").description("클럽 아이디")
+                        ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
+                        )
+                ));
+    }
+
 
 }
