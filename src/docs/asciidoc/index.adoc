@@ -23,3 +23,5 @@ include::invite-api.adoc[]
 include::event-api.adoc[]
 
 include::form-api.adoc[]
+
+include::exception-api.adoc[]

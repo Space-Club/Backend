@@ -8,7 +8,7 @@ public enum ExceptionCode {
     CLUB_NOT_FOUND("해당하는 클럽이 없습니다"),
     NOTICE_NOT_FOUND("해당하는 공지사항이 없습니다"),
     EVENT_NOT_FOUND("존재하지 않는 행사입니다"),
-    FORM_NOT_FOUND("존재하지 않는 폼입니댜"),
+    FORM_NOT_FOUND("존재하지 않는 폼입니다"),
     FORM_OPTION_NOT_FOUND("존재하지 않는 폼 옵션 입니다"),
     INVITE_NOT_FOUND("해당 초대코드를 보유한 클럽이 없습니다"),
     BOOKMARK_NOT_FOUND("존재하지 않는 북마크입니다"),
