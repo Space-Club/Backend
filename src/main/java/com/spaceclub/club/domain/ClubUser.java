@@ -16,6 +16,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Comparator;
+
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Table(name = "club_user")
@@ -63,6 +65,10 @@ public class ClubUser extends BaseTimeEntity {
         return user.getId();
     }
 
+    public String getUsername() {
+        return user.getUsername();
+    }
+
     public String getName() {
         return user.getName();
     }
@@ -74,5 +80,9 @@ public class ClubUser extends BaseTimeEntity {
     public boolean isNotManager() {
         return !this.role.equals(ClubUserRole.MANAGER);
     }
+
+    public static Comparator<ClubUser> memberComparator = Comparator
+            .comparing((ClubUser clubUser) -> clubUser.role.getSortPriority())
+            .thenComparing(ClubUser::getUsername);
 
 }

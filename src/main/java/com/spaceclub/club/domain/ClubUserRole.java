@@ -2,15 +2,12 @@ package com.spaceclub.club.domain;
 
 public enum ClubUserRole {
 
-    MANAGER("MANAGER", 1),
-    MEMBER("MEMBER", 2);
-
-    private final String role;
+    MANAGER(1),
+    MEMBER(2);
 
     private final int sortPriority;
 
-    ClubUserRole(String role, int sortPriority) {
-        this.role = role;
+    ClubUserRole(int sortPriority) {
         this.sortPriority = sortPriority;
     }
 

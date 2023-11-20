@@ -131,8 +131,8 @@ public class ClubController {
         List<ClubUser> clubUsers = clubService.getMembers(clubId, jwtUser.id());
 
         List<MemberGetResponse> response = clubUsers.stream()
+                .sorted(ClubUser.memberComparator)
                 .map(MemberGetResponse::from)
-                .sorted(MemberGetResponse.memberComparator)
                 .toList();
 
         return ResponseEntity.ok(response);
