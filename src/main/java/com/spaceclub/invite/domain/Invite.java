@@ -15,12 +15,13 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-import static com.spaceclub.invite.service.InviteService.INVITE_LINK_VALID_HOURS;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Invite extends BaseTimeEntity {
+
+    public static final int INVITE_LINK_VALID_HOURS = 48;
 
     @Id
     @Column(name = "invite_id")

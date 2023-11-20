@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+import static com.spaceclub.invite.domain.Invite.INVITE_LINK_VALID_HOURS;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -30,8 +32,6 @@ public class InviteService {
     private final UserRepository userRepository;
 
     private final ClubUserRepository clubUserRepository;
-
-    public static final int INVITE_LINK_VALID_HOURS = 48;
 
     public String getInviteCode(Long clubId, Long userId) {
         if (!clubUserRepository.existsByClub_IdAndUser_Id(clubId, userId))
