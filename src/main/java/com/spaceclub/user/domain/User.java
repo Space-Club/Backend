@@ -30,6 +30,8 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 public class User {
 
+    private static final String USER_PROFILE_S3_URL = "https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/user-profile-image/";
+
     @Id
     @Getter
     @GeneratedValue(strategy = IDENTITY)
@@ -57,7 +59,6 @@ public class User {
     private String refreshToken;
 
     @Lob
-    @Getter
     private String profileImageUrl;
 
     @OneToMany(mappedBy = "user")
@@ -185,6 +186,10 @@ public class User {
                 this.events,
                 this.formOptionUsers
         );
+    }
+
+    public String getProfileImageUrl() {
+        return USER_PROFILE_S3_URL + profileImageUrl;
     }
 
 }
