@@ -5,13 +5,13 @@ import com.spaceclub.event.domain.Event;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public record EventSearchGetResponse(Long id,
-                                     EventInfoResponse eventInfo,
-                                     FormInfoResponse formInfo,
-                                     ClubInfoResponse clubInfo) {
+public record EventOverviewGetResponse(Long id,
+                                       EventInfoResponse eventInfo,
+                                       FormInfoResponse formInfo,
+                                       ClubInfoResponse clubInfo) {
 
-    public static EventSearchGetResponse from(Event event) {
-        return new EventSearchGetResponse(
+    public static EventOverviewGetResponse from(Event event) {
+        return new EventOverviewGetResponse(
                 event.getId(),
                 new EventInfoResponse(
                         event.getTitle(),
