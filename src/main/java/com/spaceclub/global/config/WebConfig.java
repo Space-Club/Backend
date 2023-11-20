@@ -1,6 +1,7 @@
 package com.spaceclub.global.config;
 
 import com.spaceclub.global.UserArgumentResolver;
+import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.JwtAuthorizationInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -33,12 +34,30 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new AuthenticationInterceptor(jwtAccessTokenInterceptor))
+                .addPathPatterns(
+                        "/api/v1/events/{eventId}",
+                        "/api/v1/users*",
+                        "/api/v1/clubs/invite/{code}",
+                        "/api/v1/events**",
+                        "/api/v1/users*",
+                        "/api/v1/users/oauths",
+                        "/api/v1/clubs/invite/{code}"
+                        ) // 인가
+                .order(1);
+
         registry.addInterceptor(jwtAccessTokenInterceptor)
-                .addPathPatterns("**/api/v1/**")
+                .order(2)
+                .addPathPatterns("/api/v1/**")
                 .excludePathPatterns(
-                        "**/api/v1/users",
-                        "**/api/v1/users/oauths",
-                        "**/api/v1/clubs/invite/"); //  path 추후 변경 예정
+                        "/api/v1/events/{eventId}",
+                        "/api/v1/users*",
+                        "/api/v1/clubs/invite/{code}",
+                        "/api/v1/events**",
+                        "/api/v1/users*",
+                        "/api/v1/users/oauths",
+                        "/api/v1/clubs/invite/{code}"
+                );
     }
 
     @Override
