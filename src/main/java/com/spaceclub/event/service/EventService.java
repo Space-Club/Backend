@@ -67,9 +67,7 @@ public class EventService {
         return eventRepository.findAllByCategory(eventCategory, pageable);
     }
 
-    public Page<Event> getSearchEvents(String keyword, Pageable pageable, Long userId) {
-        if (!userRepository.existsById(userId)) throw new IllegalStateException("존재하지 않는 유저입니다.");
-
+    public Page<Event> getSearchEvents(String keyword, Pageable pageable) {
         return eventRepository.findByEventInfo_TitleContainsIgnoreCase(keyword, pageable);
     }
 

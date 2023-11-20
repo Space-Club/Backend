@@ -162,10 +162,9 @@ public class EventController {
     @GetMapping("/searches")
     public ResponseEntity<PageResponse<EventOverviewGetResponse, Event>> getSearchEvents(
             @RequestParam String keyword,
-            Pageable pageable,
-            @Authenticated JwtUser jwtUser
+            Pageable pageable
     ) {
-        Page<Event> events = eventService.getSearchEvents(keyword, pageable, jwtUser.id());
+        Page<Event> events = eventService.getSearchEvents(keyword, pageable);
 
         List<EventOverviewGetResponse> responses = events.getContent().stream().map(EventOverviewGetResponse::from).toList();
 
