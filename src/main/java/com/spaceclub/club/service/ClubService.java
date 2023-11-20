@@ -49,8 +49,8 @@ public class ClubService {
 
     private static final String CLUB_LOGO_S3_URL = "https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/club-logo/";
 
-    public Club createClub(Club club, Long clubId, MultipartFile logoImage) throws IOException {
-        User user = userRepository.findById(clubId)
+    public Club createClub(Club club, Long userId, MultipartFile logoImage) throws IOException {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다"));
 
         if (logoImage != null) {
@@ -113,12 +113,16 @@ public class ClubService {
         validateClubManager(clubId, userId);
 
         int count = clubUserRepository.countByClub_IdAndRole(clubId, ClubUserRole.MANAGER);
-        if (count == MANAGER_MIN_COUNT && userId.equals(memberId)) {
+        if (isLastManager(memberId, userId, count)) {
             throw new IllegalArgumentException("마지막 관리자는 탈퇴가 불가합니다.");
         }
 
         ClubUser clubMember = validateClubUser(clubId, memberId);
         clubUserRepository.delete(clubMember);
+    }
+
+    private boolean isLastManager(Long memberId, Long userId, int count) {
+        return count == MANAGER_MIN_COUNT && userId.equals(memberId);
     }
 
     public void createNotice(String notice, Long clubId, Long userId) {
@@ -228,6 +232,13 @@ public class ClubService {
     private void validateClubManager(Long clubId, Long userId) {
         ClubUser clubUser = validateClubUser(clubId, userId);
         if (clubUser.isNotManager()) throw new IllegalStateException("관리자만 접근 가능합니다.");
+    }
+
+    public String getUserRole(Long clubId, Long userId) {
+        ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
+
+        return clubUser.getRole().name();
     }
 
 }
