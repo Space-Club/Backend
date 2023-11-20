@@ -6,8 +6,7 @@ import com.spaceclub.event.controller.dto.EventApplicationCreateRequest;
 import com.spaceclub.event.controller.dto.EventApplicationDeleteResponse;
 import com.spaceclub.event.controller.dto.EventCreateResponse;
 import com.spaceclub.event.controller.dto.EventDetailGetResponse;
-import com.spaceclub.event.controller.dto.EventGetResponse;
-import com.spaceclub.event.controller.dto.EventSearchGetResponse;
+import com.spaceclub.event.controller.dto.EventOverviewGetResponse;
 import com.spaceclub.event.controller.dto.createRequest.ClubEventCreateRequest;
 import com.spaceclub.event.controller.dto.createRequest.PromotionEventCreateRequest;
 import com.spaceclub.event.controller.dto.createRequest.RecruitmentEventCreateRequest;
@@ -101,15 +100,15 @@ public class EventController {
 
 
     @GetMapping
-    public ResponseEntity<PageResponse<EventGetResponse, Event>> getAllEvents(@RequestParam EventCategory category, Pageable pageable) {
+    public ResponseEntity<PageResponse<EventOverviewGetResponse, Event>> getAllEvents(@RequestParam EventCategory category, Pageable pageable) {
         Page<Event> events = eventService.getAllEvents(category, pageable);
 
-        List<EventGetResponse> eventGetResponses = events.getContent()
+        List<EventOverviewGetResponse> responses = events.getContent()
                 .stream()
-                .map(EventGetResponse::from)
+                .map(EventOverviewGetResponse::from)
                 .toList();
 
-        return ResponseEntity.ok(new PageResponse<>(eventGetResponses, events));
+        return ResponseEntity.ok(new PageResponse<>(responses, events));
     }
 
     @PatchMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -161,16 +160,16 @@ public class EventController {
     }
 
     @GetMapping("/searches")
-    public ResponseEntity<PageResponse<EventSearchGetResponse, Event>> getSearchEvents(
+    public ResponseEntity<PageResponse<EventOverviewGetResponse, Event>> getSearchEvents(
             @RequestParam String keyword,
             Pageable pageable,
             @Authenticated JwtUser jwtUser
     ) {
         Page<Event> events = eventService.getSearchEvents(keyword, pageable, jwtUser.id());
 
-        List<EventSearchGetResponse> eventSearchGetResponses = events.getContent().stream().map(EventSearchGetResponse::from).toList();
+        List<EventOverviewGetResponse> responses = events.getContent().stream().map(EventOverviewGetResponse::from).toList();
 
-        return ResponseEntity.ok(new PageResponse<>(eventSearchGetResponses, events));
+        return ResponseEntity.ok(new PageResponse<>(responses, events));
     }
 
     @GetMapping("/{eventId}")
