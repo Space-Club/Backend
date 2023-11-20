@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 import static com.spaceclub.club.domain.ClubUserRole.MEMBER;
@@ -53,14 +52,14 @@ public class ClubService {
 
     private final S3ImageUploader imageUploader;
 
-    private static final String CLUB_LOGO_S3_URL = "https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/club-logo/";
+    public static final String CLUB_LOGO_S3_URL = "https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/club-logo/";
 
     public Club createClub(Club club, Long userId, MultipartFile logoImage) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND.toString()));
 
         if (logoImage != null) {
-            String logoImageUrl = CLUB_LOGO_S3_URL + imageUploader.uploadClubLogoImage(logoImage);
+            String logoImageUrl = imageUploader.uploadClubLogoImage(logoImage);
             club = club.addLogoImageUrl(logoImageUrl);
         }
 
