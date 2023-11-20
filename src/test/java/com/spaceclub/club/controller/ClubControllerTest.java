@@ -416,7 +416,7 @@ class ClubControllerTest {
                                 parameterWithName("clubId").description("클럽 아이디")),
                         responseFields(
                                 fieldWithPath("[]").type(ARRAY).description("멤버 리스트"),
-                                fieldWithPath("[].id").type(NUMBER).description("멤버 아이디"),
+                                fieldWithPath("[].id").type(NUMBER).description("멤버의 유저 id"),
                                 fieldWithPath("[].name").type(STRING).description("멤버 이름"),
                                 fieldWithPath("[].profileImageUrl").type(STRING).description("멤버 이미지 Url"),
                                 fieldWithPath("[].role").type(STRING).description("멤버 권한")
@@ -454,7 +454,7 @@ class ClubControllerTest {
                         ),
                         pathParameters(
                                 parameterWithName("clubId").description("클럽 아이디"),
-                                parameterWithName("memberId").description("멤버 아이디")
+                                parameterWithName("memberId").description("멤버의 유저 id")
                         ),
                         requestFields(
                                 fieldWithPath("role").description("멤버 권한")
@@ -489,7 +489,7 @@ class ClubControllerTest {
                         ),
                         pathParameters(
                                 parameterWithName("clubId").description("클럽 아이디"),
-                                parameterWithName("memberId").description("멤버 아이디")
+                                parameterWithName("memberId").description("멤버의 유저 id")
                         )
                 ));
     }
