@@ -33,7 +33,7 @@ import static com.spaceclub.club.domain.ClubUserRole.MEMBER;
 @RequiredArgsConstructor
 public class ClubService {
 
-    public static final int MANAGER_MIN_COUNT = 1;
+    private static final int MANAGER_MIN_COUNT = 1;
 
     private final ClubRepository clubRepository;
 
