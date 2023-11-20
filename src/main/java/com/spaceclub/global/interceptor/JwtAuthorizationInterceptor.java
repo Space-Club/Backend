@@ -1,7 +1,7 @@
 package com.spaceclub.global.interceptor;
 
 import com.spaceclub.global.jwt.Jwt;
-import com.spaceclub.global.jwt.service.JwtManager;
+import com.spaceclub.global.jwt.JwtManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

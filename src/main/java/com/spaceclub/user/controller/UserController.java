@@ -5,7 +5,7 @@ import com.spaceclub.event.controller.dto.BookmarkedEventRequest;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.Authenticated;
 import com.spaceclub.global.dto.PageResponse;
-import com.spaceclub.global.jwt.service.JwtManager;
+import com.spaceclub.global.jwt.JwtManager;
 import com.spaceclub.global.jwt.vo.JwtUser;
 import com.spaceclub.user.controller.dto.UserBookmarkedEventGetResponse;
 import com.spaceclub.user.controller.dto.UserClubGetResponse;
