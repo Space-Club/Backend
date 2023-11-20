@@ -221,6 +221,13 @@ public class ClubService {
         return clubUserRepository.countByClub(club);
     }
 
+    public String getUserRole(Long clubId, Long userId) {
+        ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
+
+        return clubUser.getRole().name();
+    }
+
     private ClubUser validateClubUser(Long clubId, Long userId) {
         if (!clubRepository.existsById(clubId)) throw new IllegalStateException("존재하지 않는 클럽입니다.");
         if (!userRepository.existsById(userId)) throw new IllegalStateException("존재하지 않는 유저입니다.");
@@ -232,13 +239,6 @@ public class ClubService {
     private void validateClubManager(Long clubId, Long userId) {
         ClubUser clubUser = validateClubUser(clubId, userId);
         if (clubUser.isNotManager()) throw new IllegalStateException("관리자만 접근 가능합니다.");
-    }
-
-    public String getUserRole(Long clubId, Long userId) {
-        ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
-
-        return clubUser.getRole().name();
     }
 
 }

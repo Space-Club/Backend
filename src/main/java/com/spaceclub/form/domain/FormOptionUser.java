@@ -14,6 +14,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -40,11 +42,12 @@ public class FormOptionUser extends BaseTimeEntity {
     private String content;
 
     @Builder
-    public FormOptionUser(Long id, FormOption formOption, User user, String content) {
+    public FormOptionUser(Long id, FormOption formOption, User user, String content, LocalDateTime createdAt) {
         this.id = id;
         this.formOption = formOption;
         this.user = user;
         this.content = content;
+        this.createdAt = createdAt;
     }
 
     public FormOptionUser registerFormOptionAndUser(FormOption formOption, User user) {
@@ -53,6 +56,7 @@ public class FormOptionUser extends BaseTimeEntity {
                 .formOption(formOption)
                 .user(user)
                 .content(this.content)
+                .createdAt(this.createdAt)
                 .build();
     }
 

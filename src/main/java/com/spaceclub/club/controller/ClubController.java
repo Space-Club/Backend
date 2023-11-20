@@ -133,6 +133,7 @@ public class ClubController {
         List<MemberGetResponse> response = clubUsers.stream()
                 .sorted(ClubUser.memberComparator)
                 .map(MemberGetResponse::from)
+                .sorted(MemberGetResponse.memberComparator)
                 .toList();
 
         return ResponseEntity.ok(response);

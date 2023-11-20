@@ -4,6 +4,8 @@ import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.domain.ClubUserRole;
 import lombok.Builder;
 
+import java.util.Comparator;
+
 public record MemberGetResponse(
         Long id,
         String name,
@@ -14,6 +16,10 @@ public record MemberGetResponse(
     @Builder
     public MemberGetResponse {
     }
+
+    public static Comparator<MemberGetResponse> memberComparator = Comparator
+            .comparing((MemberGetResponse response) -> response.role().getSortPriority())
+            .thenComparing(MemberGetResponse::name);
 
     public static MemberGetResponse from(ClubUser clubUser) {
         return MemberGetResponse.builder()
