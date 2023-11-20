@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <!-- 콘솔 로깅 -->
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                %green(%d{yyyy-MM-dd HH:mm:ss, Asia/Seoul}) [%thread] %highlight(%-5level) %logger{36} - %cyan(%msg) %n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <property name="LOG_PATH" value="src/main/resources/logs"/>
+    <property name="LOG_FILE_NAME" value="current"/>
+
+    <!-- 사용자 요청 추적 로깅 최대 30일, 5기가까지 보관-->
+    <appender name="File" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>
+                time=%d{yyyy-MM-dd HH:mm:ss, Asia/Seoul} level=%level %msg %n
+            </pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}.%d{yyyy-MM-dd, Asia/Seoul}.gz</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>5GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <springProfile name="local">
+        <logger name="com.spaceclub.global.log" level="INFO" additivity="false">
+            <appender-ref ref="Console" />
+<!--            <appender-ref ref="File" />-->
+        </logger>
+    </springProfile>
+
+    <springProfile name="develop">
+        <logger name="com.spaceclub.global.log" level="INFO" additivity="false">
+            <appender-ref ref="Console" />
+            <appender-ref ref="File" />
+        </logger>
+    </springProfile>
+
+</configuration>
