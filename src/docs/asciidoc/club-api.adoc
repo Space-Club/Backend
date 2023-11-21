@@ -296,6 +296,7 @@ include::{snippets}/club/getSchedule/response-fields.adoc[]
 include::{snippets}/club/get/http-request.adoc[]
 
 ===== Request Header
+
 include::{snippets}/club/get/request-headers.adoc[]
 
 ===== Path Parameter
@@ -317,6 +318,7 @@ include::{snippets}/club/get/response-fields.adoc[]
 include::{snippets}/club/getUserRole/http-request.adoc[]
 
 ===== Request Header
+
 include::{snippets}/club/getUserRole/request-headers.adoc[]
 
 ===== Path Parameter

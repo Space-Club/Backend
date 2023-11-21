@@ -100,18 +100,34 @@ public class Club extends BaseTimeEntity {
         }
     }
 
-    private Club(Club club, String logoImageUrl) {
+    private Club updateLogoImage(Club club, String logoImageUrl) {
         this.id = club.getId();
         this.name = club.getName();
         this.info = club.getInfo();
         this.logoImageUrl = logoImageUrl;
         this.coverImageUrl = club.getCoverImageUrl();
+        this.createdAt = club.getCreatedAt();
 
         if (club.getNotices() != null) {
             this.notices = club.getNotices();
         }
 
+        return this;
+    }
+
+    private Club updateCoverImage(Club club, String coverImageUrl) {
+        this.id = club.getId();
+        this.name = club.getName();
+        this.info = club.getInfo();
+        this.logoImageUrl = club.getLogoImageUrl();
+        this.coverImageUrl = coverImageUrl;
         this.createdAt = club.getCreatedAt();
+
+        if (club.getNotices() != null) {
+            this.notices = club.getNotices();
+        }
+
+        return this;
     }
 
     private Club(Club club, String name, String info) {
@@ -127,8 +143,12 @@ public class Club extends BaseTimeEntity {
         return new Club(this, newClub.getName(), newClub.getInfo());
     }
 
-    public Club addLogoImageUrl(String logoImageUrl) {
-        return new Club(this, logoImageUrl);
+    public Club updateLogoImageUrl(String logoImageUrl) {
+        return updateLogoImage(this, logoImageUrl);
+    }
+
+    public Club updateCoverImageUrl(String coverImageUrl) {
+        return updateCoverImage(this, coverImageUrl);
     }
 
 }

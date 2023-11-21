@@ -3,6 +3,7 @@ s3:
       name:
           event-poster: space-club-image-bucket/event-poster
           club-logo: space-club-image-bucket/club-logo
+          club-cover: space-club-image-bucket/club-cover
           user-profile-image: space-club-image-bucket/user-profile-image
   iam:
     access-key: ENC(1G8ZGZQKMoihcCiT2kgRMLqmKHWfk10LtbhDURaLzDs=)

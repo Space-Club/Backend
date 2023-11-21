@@ -28,6 +28,9 @@ public class S3ImageUploader {
     @Value("${s3.folder.name.club-logo}")
     private String clubLogoFolder;
 
+    @Value("${s3.folder.name.club-cover}")
+    private String clubCoverFolder;
+
     @Value("${s3.folder.name.user-profile-image}")
     private String userProfileImageFolder;
 
@@ -41,6 +44,10 @@ public class S3ImageUploader {
 
     public String uploadUserProfileImage(MultipartFile userImage) {
         return upload(userImage, userProfileImageFolder);
+    }
+
+    public String uploadClubCoverImage(MultipartFile coverImage) {
+        return upload(coverImage, clubCoverFolder);
     }
 
     private String upload(MultipartFile image, String folder) {
@@ -73,5 +80,6 @@ public class S3ImageUploader {
 
         return fileName + "_" + timestamp + fileExtension;
     }
+
 
 }
