@@ -6,7 +6,7 @@ import com.spaceclub.event.controller.dto.BookmarkedEventRequest;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.interceptor.JwtAuthorizationInterceptor;
-import com.spaceclub.global.jwt.service.JwtManager;
+import com.spaceclub.global.jwt.JwtManager;
 import com.spaceclub.user.UserTestFixture;
 import com.spaceclub.user.controller.dto.UserProfileUpdateRequest;
 import com.spaceclub.user.controller.dto.UserRequiredInfoRequest;
@@ -295,7 +295,6 @@ class UserControllerTest {
         final User user = UserTestFixture.user1();
         UserProfileInfo userProfileInfo = new UserProfileInfo("멤버명", "010-1234-5678", "www.image.com");
 
-        given(jwtManager.verifyUserId(any())).willReturn(user.getId());
         given(userService.getUserProfile(any())).willReturn(userProfileInfo);
 
         // when, then
@@ -326,7 +325,6 @@ class UserControllerTest {
         final User user = UserTestFixture.user1();
         UserProfileUpdateRequest request = new UserProfileUpdateRequest("멤버명1", "010-1234-6789");
 
-        given(jwtManager.verifyUserId(any())).willReturn(user.getId());
         given(userService.updateRequiredInfo(any(Long.class), any(UserRequiredInfo.class))).willReturn(user);
 
         // when, then
@@ -360,7 +358,6 @@ class UserControllerTest {
         final User user = UserTestFixture.user1();
         final String profileImageUrl = "www.image.com";
 
-        given(jwtManager.verifyUserId(any())).willReturn(user.getId());
         given(userService.getUserProfileImage(any())).willReturn(profileImageUrl);
 
         // when, then
@@ -420,7 +417,6 @@ class UserControllerTest {
         Page<Event> eventPages = new PageImpl<>(events);
 
         Long userId = 1L;
-        given(jwtManager.verifyUserId(any())).willReturn(userId);
         given(userService.findAllBookmarkedEventPages(any(), any(Pageable.class))).willReturn(eventPages);
 
         // when, then
@@ -476,7 +472,6 @@ class UserControllerTest {
     void 개별_행사_북마크_상태_변경에_성공한다() throws Exception {
         // given
         Long userId = 1L;
-        given(jwtManager.verifyUserId(any())).willReturn(userId);
         doNothing().when(userService).changeBookmarkStatus(any(UserBookmarkInfo.class));
         BookmarkedEventRequest bookmarkedEventRequest = new BookmarkedEventRequest(true);
 
@@ -507,7 +502,6 @@ class UserControllerTest {
     void 유저의_로그아웃에_성공한다() throws Exception {
         // given
         Long userId = 1L;
-        given(jwtManager.verifyUserId(any())).willReturn(userId);
         doNothing().when(userService).logout(any(Long.class));
 
         // when, then
@@ -529,7 +523,6 @@ class UserControllerTest {
     void 유저_회원_탈퇴에_성공한다() throws Exception {
         // given
         Long userId = 1L;
-        given(jwtManager.verifyUserId(any())).willReturn(userId);
         doNothing().when(userService).deleteUser(any(Long.class));
 
         // when, then
@@ -551,7 +544,6 @@ class UserControllerTest {
     void 유저의_이미지_변경에_성공한다() throws Exception {
         // given
         Long userId = 1L;
-        given(jwtManager.verifyUserId(any())).willReturn(userId);
         doNothing().when(userService).changeUserProfileImage(any(MultipartFile.class), any(Long.class));
 
         MockMultipartFile userImage = new MockMultipartFile(
