@@ -18,6 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,10 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of = "id", callSuper = false)
 public class Club extends BaseTimeEntity {
+
+    private static final String CLUB_LOGO_S3_URL = "https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/club-logo/";
+
+    private static final String CLUB_COVER_S3_URL = "https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/club-cover/";
 
     @Id
     @Column(name = "club_id")
@@ -39,12 +44,10 @@ public class Club extends BaseTimeEntity {
     private String name;
 
     @Lob
-    @Getter
-    private String logoImageUrl;
+    private String logoImageName;
 
     @Lob
-    @Getter
-    private String coverImageUrl;
+    private String coverImageName;
 
     @Lob
     @Getter
@@ -81,7 +84,15 @@ public class Club extends BaseTimeEntity {
     }
 
     @Builder
-    public Club(Long id, String name, String logoImageUrl, String info, String coverImageUrl, List<ClubNotice> notices, boolean isUpdate) {
+    public Club(Long id,
+                String name,
+                String logoImageName,
+                String info,
+                String coverImageName,
+                List<ClubNotice> notices,
+                List<ClubUser> clubUser,
+                LocalDateTime createdAt,
+                boolean isUpdate) {
         if (!isUpdate) {
             Assert.notNull(name, "이름에 null 값이 올 수 없습니다");
             Assert.hasText(name, "이름이 빈 값일 수 없습니다");
@@ -91,64 +102,64 @@ public class Club extends BaseTimeEntity {
 
         this.id = id;
         this.name = name;
-        this.logoImageUrl = logoImageUrl;
-        this.coverImageUrl = coverImageUrl;
+        this.logoImageName = logoImageName;
+        this.coverImageName = coverImageName;
         this.info = info;
+        this.createdAt = createdAt;
 
         if (notices != null) {
             this.notices = new ArrayList<>(notices);
         }
-    }
-
-    private Club updateLogoImage(Club club, String logoImageUrl) {
-        this.id = club.getId();
-        this.name = club.getName();
-        this.info = club.getInfo();
-        this.logoImageUrl = logoImageUrl;
-        this.coverImageUrl = club.getCoverImageUrl();
-        this.createdAt = club.getCreatedAt();
-
-        if (club.getNotices() != null) {
-            this.notices = club.getNotices();
+        if (clubUser != null) {
+            this.clubUser = new ArrayList<>(clubUser);
         }
-
-        return this;
-    }
-
-    private Club updateCoverImage(Club club, String coverImageUrl) {
-        this.id = club.getId();
-        this.name = club.getName();
-        this.info = club.getInfo();
-        this.logoImageUrl = club.getLogoImageUrl();
-        this.coverImageUrl = coverImageUrl;
-        this.createdAt = club.getCreatedAt();
-
-        if (club.getNotices() != null) {
-            this.notices = club.getNotices();
-        }
-
-        return this;
-    }
-
-    private Club(Club club, String name, String info) {
-        this.id = club.getId();
-        this.logoImageUrl = club.getLogoImageUrl();
-        this.coverImageUrl = club.getCoverImageUrl();
-        this.name = name != null && !name.isEmpty() ? name : club.getName();
-        this.info = info != null && !info.isEmpty() ? info : club.getInfo();
-        this.createdAt = club.getCreatedAt();
     }
 
     public Club update(Club newClub) {
-        return new Club(this, newClub.getName(), newClub.getInfo());
+        return Club.builder()
+                .id(this.id)
+                .name(newClub.name != null ? newClub.name : this.name)
+                .info(newClub.info != null ? newClub.info : this.info)
+                .logoImageName(this.logoImageName)
+                .coverImageName(this.coverImageName)
+                .notices(this.notices != null ? this.notices : null)
+                .clubUser(this.clubUser != null ? this.clubUser : null)
+                .createdAt(this.createdAt)
+                .build();
     }
 
-    public Club updateLogoImageUrl(String logoImageUrl) {
-        return updateLogoImage(this, logoImageUrl);
+    public Club updateLogoImage(String logoImageName) {
+        return Club.builder()
+                .id(this.id)
+                .name(this.name)
+                .logoImageName(logoImageName)
+                .coverImageName(this.coverImageName)
+                .info(this.info)
+                .notices(this.notices != null ? this.notices : null)
+                .clubUser(this.clubUser != null ? this.clubUser : null)
+                .createdAt(this.createdAt)
+                .build();
     }
 
-    public Club updateCoverImageUrl(String coverImageUrl) {
-        return updateCoverImage(this, coverImageUrl);
+    public Club updateCoverImage(String coverImageName) {
+        return Club.builder()
+                .id(this.id)
+                .name(this.name)
+                .logoImageName(this.logoImageName)
+                .coverImageName(coverImageName)
+                .info(this.info)
+                .notices(this.notices != null ? this.notices : null)
+                .clubUser(this.clubUser != null ? this.clubUser : null)
+                .createdAt(this.createdAt)
+                .build();
+    }
+
+    public String getLogoImageUrl() {
+        return CLUB_LOGO_S3_URL + this.logoImageName;
+    }
+
+    public String getCoverImageUrl() {
+        return CLUB_COVER_S3_URL + this.coverImageName;
     }
 
 }

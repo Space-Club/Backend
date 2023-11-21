@@ -8,9 +8,9 @@ public class ClubTestFixture {
         return Club.builder()
                 .id(1L)
                 .name("클럽 명")
-                .logoImageUrl("클럽 이미지 URL")
+                .logoImageName("클럽 이미지 URL")
                 .info("클럽 정보")
-                .coverImageUrl("클럽 커버 이미지 URL")
+                .coverImageName("클럽 커버 이미지 URL")
                 .build();
     }
 
@@ -18,8 +18,8 @@ public class ClubTestFixture {
         return Club.builder()
                 .id(2L)
                 .name("클럽 명")
-                .logoImageUrl("클럽 이미지 URL")
-                .coverImageUrl("클럽 커버 이미지 URL")
+                .logoImageName("클럽 이미지 URL")
+                .coverImageName("클럽 커버 이미지 URL")
                 .info("클럽 정보")
                 .build();
     }

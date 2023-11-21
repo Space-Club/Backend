@@ -2,7 +2,6 @@ package com.spaceclub.user.controller.dto;
 
 import com.spaceclub.club.domain.Club;
 import lombok.Builder;
-import org.springframework.beans.factory.annotation.Value;
 
 public record UserClubGetResponse(Long id, String logoImageUrl, String name) {
 
