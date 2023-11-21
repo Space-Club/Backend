@@ -4,9 +4,9 @@ import lombok.Getter;
 
 public enum ExceptionCode {
 
-    USER_NOT_FOUND("해당하는 유저가 없습니다"),
-    CLUB_NOT_FOUND("해당하는 클럽이 없습니다"),
-    NOTICE_NOT_FOUND("해당하는 공지사항이 없습니다"),
+    USER_NOT_FOUND("존재하지 않는 유저입니다"),
+    CLUB_NOT_FOUND("존재하지 않는 클럽입니다"),
+    NOTICE_NOT_FOUND("존재하지 않는 공지사항입니다"),
     EVENT_NOT_FOUND("존재하지 않는 행사입니다"),
     FORM_NOT_FOUND("존재하지 않는 폼입니다"),
     FORM_OPTION_NOT_FOUND("존재하지 않는 폼 옵션 입니다"),
