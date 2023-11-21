@@ -7,7 +7,7 @@ import lombok.Builder;
 
 import java.util.Comparator;
 
-public record MemberGet(
+public record MemberGetInfo(
         Long id,
         String name,
         String profileImageUrl,
@@ -15,15 +15,15 @@ public record MemberGet(
 ) {
 
     @Builder
-    public MemberGet {
+    public MemberGetInfo {
     }
 
-    public static Comparator<MemberGet> memberComparator = Comparator
-            .comparing((MemberGet response) -> response.role().getSortPriority())
-            .thenComparing(MemberGet::name);
+    public static Comparator<MemberGetInfo> memberComparator = Comparator
+            .comparing((MemberGetInfo response) -> response.role().getSortPriority())
+            .thenComparing(MemberGetInfo::name);
 
-    public static MemberGet from(ClubUser clubUser, UserProfileInfo userProfile) {
-        return MemberGet.builder()
+    public static MemberGetInfo from(ClubUser clubUser, UserProfileInfo userProfile) {
+        return MemberGetInfo.builder()
                 .id(clubUser.getUserId())
                 .name(userProfile.username())
                 .profileImageUrl(userProfile.profileImageUrl())

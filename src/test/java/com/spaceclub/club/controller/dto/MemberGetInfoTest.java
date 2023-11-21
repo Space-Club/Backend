@@ -1,7 +1,7 @@
 package com.spaceclub.club.controller.dto;
 
 import com.spaceclub.club.domain.ClubUserRole;
-import com.spaceclub.club.service.vo.MemberGet;
+import com.spaceclub.club.service.vo.MemberGetInfo;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
 import org.junit.jupiter.api.Test;
@@ -10,12 +10,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.spaceclub.club.service.vo.MemberGet.memberComparator;
+import static com.spaceclub.club.service.vo.MemberGetInfo.memberComparator;
 import static com.spaceclub.user.domain.Status.REGISTERED;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-class MemberGetTest {
+class MemberGetInfoTest {
 
     private User user1() {
         return User.builder()
@@ -76,35 +76,35 @@ class MemberGetTest {
     @Test
     void 클럽_멤버_정렬에_성공한다() {
         // given
-        MemberGet clubUserOrder1 = MemberGet.builder()
+        MemberGetInfo clubUserOrder1 = MemberGetInfo.builder()
                 .id(1L)
                 .name(user1().getName())
                 .profileImageUrl(user1().getProfileImageUrl())
                 .role(ClubUserRole.MANAGER)
                 .build();
 
-        MemberGet clubUserOrder2 = MemberGet.builder()
+        MemberGetInfo clubUserOrder2 = MemberGetInfo.builder()
                 .id(2L)
                 .name(user2().getName())
                 .profileImageUrl(user2().getProfileImageUrl())
                 .role(ClubUserRole.MEMBER)
                 .build();
 
-        MemberGet clubUserOrder3 = MemberGet.builder()
+        MemberGetInfo clubUserOrder3 = MemberGetInfo.builder()
                 .id(3L)
                 .name(user3().getName())
                 .profileImageUrl(user3().getProfileImageUrl())
                 .role(ClubUserRole.MANAGER)
                 .build();
 
-        MemberGet clubUserOrder4 = MemberGet.builder()
+        MemberGetInfo clubUserOrder4 = MemberGetInfo.builder()
                 .id(4L)
                 .name(user4().getName())
                 .profileImageUrl(user4().getProfileImageUrl())
                 .role(ClubUserRole.MEMBER)
                 .build();
 
-        List<MemberGet> response = new ArrayList<>();
+        List<MemberGetInfo> response = new ArrayList<>();
         response.add(clubUserOrder1);
         response.add(clubUserOrder2);
         response.add(clubUserOrder3);

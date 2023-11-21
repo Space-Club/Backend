@@ -71,7 +71,7 @@ class InviteJoinControllerTest {
 
         // when
         ResultActions actions =
-                mockMvc.perform(post("/api/v1/clubs/invite/{code}", code)
+                mockMvc.perform(post("/api/v1/clubs/invites/{code}", code)
                         .header(AUTHORIZATION, "token")
                         .with(csrf()));
 
@@ -104,7 +104,7 @@ class InviteJoinControllerTest {
 
         // when
         ResultActions actions =
-                mockMvc.perform(get("/api/v1/clubs/invite/{code}", code));
+                mockMvc.perform(get("/api/v1/clubs/invites/{code}", code));
 
         // then
         actions.andExpect(status().isOk())

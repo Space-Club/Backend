@@ -4,7 +4,7 @@ import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
-import com.spaceclub.club.service.vo.MemberGet;
+import com.spaceclub.club.service.vo.MemberGetInfo;
 import com.spaceclub.user.service.UserService;
 import com.spaceclub.user.service.vo.UserProfileInfo;
 import lombok.RequiredArgsConstructor;
@@ -47,15 +47,15 @@ public class ClubMemberManagerService {
         clubUserRepository.save(updateClubUser);
     }
 
-    public List<MemberGet> getMembers(Long clubId, Long userId) {
+    public List<MemberGetInfo> getMembers(Long clubId, Long userId) {
         if (!clubUserRepository.existsByClub_IdAndUserId(clubId, userId))
             throw new IllegalArgumentException(NOT_CLUB_MEMBER.toString());
 
         UserProfileInfo userProfile = userService.getUserProfile(userId);
 
         return clubUserRepository.findByClub_Id(clubId).stream()
-                .map((clubUser -> MemberGet.from(clubUser, userProfile)))
-                .sorted(MemberGet.memberComparator)
+                .map((clubUser -> MemberGetInfo.from(clubUser, userProfile)))
+                .sorted(MemberGetInfo.memberComparator)
                 .toList();
     }
 

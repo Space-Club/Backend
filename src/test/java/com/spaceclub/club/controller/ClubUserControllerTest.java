@@ -3,7 +3,7 @@ package com.spaceclub.club.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
-import com.spaceclub.club.service.vo.MemberGet;
+import com.spaceclub.club.service.vo.MemberGetInfo;
 import com.spaceclub.club.domain.ClubUserRole;
 import com.spaceclub.club.service.ClubMemberManagerService;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
@@ -112,14 +112,14 @@ class ClubUserControllerTest {
     public void 클럽_멤버_조회에_성공한다() throws Exception {
         // given
 
-        MemberGet memberGet1 = MemberGet.builder()
+        MemberGetInfo memberGetInfo1 = MemberGetInfo.builder()
                 .id(1L)
                 .name(user1().getName())
                 .profileImageUrl(user1().getProfileImageUrl())
                 .role(ClubUserRole.MANAGER)
                 .build();
 
-        MemberGet memberGet2 = MemberGet.builder()
+        MemberGetInfo memberGetInfo2 = MemberGetInfo.builder()
                 .id(2L)
                 .name(user2().getName())
                 .profileImageUrl(user2().getProfileImageUrl())
@@ -127,7 +127,7 @@ class ClubUserControllerTest {
                 .build();
 
         given(clubMemberManagerService.getMembers(any(Long.class), any()))
-                .willReturn(List.of(memberGet1, memberGet2));
+                .willReturn(List.of(memberGetInfo1, memberGetInfo2));
 
         // when
         ResultActions actions = mockMvc.perform(get("/api/v1/clubs/{clubId}/members", club1().getId())
