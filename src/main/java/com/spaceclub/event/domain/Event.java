@@ -126,6 +126,20 @@ public class Event extends BaseTimeEntity {
                 .build();
     }
 
+    public Event registerPosterImage(String posterImageName) {
+        return Event.builder()
+                .id(this.id)
+                .category(this.category)
+                .eventInfo(this.eventInfo.registerPosterImage(posterImageName))
+                .bankInfo(this.bankInfo)
+                .ticketInfo(this.ticketInfo)
+                .formInfo(this.formInfo)
+                .club(this.club)
+                .form(this.form)
+                .createdAt(this.createdAt)
+                .build();
+    }
+
     public String getTitle() {
         return eventInfo.getTitle();
     }

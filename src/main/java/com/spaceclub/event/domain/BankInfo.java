@@ -31,8 +31,11 @@ public class BankInfo {
     }
 
     private void validate(String bankName, String bankAccountNumber) {
-        Assert.isTrue(bankName.length() <= BANK_NAME_MAX_LENGTH && !bankName.isBlank(), "은행명은 1~20자 사이의 길이입니다.");
-        Assert.isTrue(bankAccountNumber.length() <= BANK_ACCOUNT_NUMBER_MAX_LENGTH && !bankAccountNumber.isBlank(), "은행 계좌번호는 1~30자 사이의 길이입니다.");
+        boolean validateBankNameLength = bankName.length() <= BANK_NAME_MAX_LENGTH && !bankName.isBlank();
+        boolean validateBankAccountNumberLength = bankAccountNumber.length() <= BANK_ACCOUNT_NUMBER_MAX_LENGTH && !bankAccountNumber.isBlank();
+
+        Assert.isTrue(validateBankNameLength, "은행명은 1~20자 사이의 길이입니다.");
+        Assert.isTrue(validateBankAccountNumberLength, "은행 계좌번호는 1~30자 사이의 길이입니다.");
     }
 
 }

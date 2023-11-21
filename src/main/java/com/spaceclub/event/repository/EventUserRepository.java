@@ -12,16 +12,16 @@ import java.util.Optional;
 
 public interface EventUserRepository extends JpaRepository<EventUser, Long> {
 
-    @Query("select eu.event from EventUser eu where eu.user.id = :userId")
+    @Query("select eu.event from EventUser eu where eu.userId = :userId")
     Page<Event> findAllByUserId(@Param("userId") Long userId, Pageable pageable);
 
-    @Query("select eu.status from EventUser eu where eu.user.id = :userId and eu.event = :event")
+    @Query("select eu.status from EventUser eu where eu.userId = :userId and eu.event = :event")
     String findEventStatusByUserId(@Param("userId") Long userId, @Param("event") Event event);
 
-    @Query("select eu from EventUser eu where eu.event.id = :eventId and eu.user.id = :userId")
+    @Query("select eu from EventUser eu where eu.event.id = :eventId and eu.userId = :userId")
     Optional<EventUser> findByEventIdAndUserId(@Param("eventId") Long eventId, @Param("userId") Long userId);
 
-    @Query("select exists (select eu from EventUser eu where eu.event.id = :eventId and eu.user.id = :userId)")
+    @Query("select exists (select eu from EventUser eu where eu.event.id = :eventId and eu.userId = :userId)")
     boolean existsByEventIdAndUserId(@Param("eventId") Long eventId, @Param("userId") Long userId);
 
     Page<EventUser> findByEvent(Event event, Pageable pageable);

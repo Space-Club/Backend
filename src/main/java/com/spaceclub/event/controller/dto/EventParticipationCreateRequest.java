@@ -6,10 +6,10 @@ import lombok.Builder;
 
 import java.util.List;
 
-public record EventApplicationCreateRequest(Long eventId, Integer ticketCount, List<FormRequest> forms) {
+public record EventParticipationCreateRequest(Long eventId, Integer ticketCount, List<FormRequest> forms) {
 
     @Builder
-    public EventApplicationCreateRequest {
+    public EventParticipationCreateRequest {
     }
 
     public record FormRequest(Long optionId, String content) {

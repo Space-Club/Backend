@@ -14,11 +14,11 @@ public record ClubEventUpdateRequest(
         FormInfoRequest formInfo
 ) {
 
-    public Event toEntity(EventCategory category, String posterImageUrl) {
+    public Event toEntity(EventCategory category) {
         return Event.builder()
                 .id(eventId)
                 .category(category)
-                .eventInfo(eventInfo.toEntity(posterImageUrl))
+                .eventInfo(eventInfo.toEntity())
                 .formInfo(formInfo.toEntity())
                 .build();
     }
@@ -52,7 +52,7 @@ public record ClubEventUpdateRequest(
             String managerName
     ) {
 
-        public EventInfo toEntity(String posterImageUrl) {
+        public EventInfo toEntity() {
             return EventInfo.builder()
                     .title(title)
                     .content(content)
@@ -61,7 +61,6 @@ public record ClubEventUpdateRequest(
                     .location(location)
                     .capacity(capacity)
                     .dues(dues)
-                    .posterImageUrl(posterImageUrl)
                     .managerName(managerName)
                     .build();
         }

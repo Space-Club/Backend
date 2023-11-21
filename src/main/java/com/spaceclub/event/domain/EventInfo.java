@@ -88,15 +88,42 @@ public class EventInfo {
         this.managerName = managerName;
     }
 
+    public EventInfo registerPosterImage(String posterImageName) {
+        return EventInfo.builder()
+                .title(this.title)
+                .content(this.content)
+                .startDateTime(this.startDateTime)
+                .location(this.location)
+                .capacity(this.capacity)
+                .posterImageUrl(posterImageName)
+                .activityArea(this.activityArea)
+                .recruitmentTarget(this.recruitmentTarget)
+                .endDateTime(this.endDateTime)
+                .dues(this.dues)
+                .managerName(this.managerName)
+                .build();
+    }
+
     private void validate(String title, String content, String location, Integer capacity) {
         Assert.notNull(title, "행사 내용은 필수값입니다.");
-        Assert.isTrue(title.length() <= TITLE_MAX_LENGTH && !title.isBlank(), "행사 제목은 1~30자 사이의 길이입니다.");
-        if (content != null)
-            Assert.isTrue(content.length() <= CONTENT_MAX_LENGTH && !content.isBlank(), "행사 내용은 1~200자 사이의 길이입니다.");
-        if (location != null)
-            Assert.isTrue(location.length() <= LOCATION_MAX_LENGTH && !location.isBlank(), "행사 위치는 1~30자 사이의 길이입니다.");
-        if (capacity != null)
-            Assert.isTrue(capacity >= CAPACITY_MIN_LENGTH && capacity <= CAPACITY_MAX_LENGTH, "행사 정원은 1~999사이의 값입니다.");
+
+        boolean validateTitleLength = title.length() <= TITLE_MAX_LENGTH && !title.isBlank();
+        Assert.isTrue(validateTitleLength, "행사 제목은 1~30자 사이의 길이입니다.");
+
+        if (content != null) {
+            boolean validateContentLength = content.length() <= CONTENT_MAX_LENGTH && !content.isBlank();
+            Assert.isTrue(validateContentLength, "행사 내용은 1~200자 사이의 길이입니다.");
+        }
+
+        if (location != null) {
+            boolean validateLocationLength = location.length() <= LOCATION_MAX_LENGTH && !location.isBlank();
+            Assert.isTrue(validateLocationLength, "행사 위치는 1~30자 사이의 길이입니다.");
+        }
+
+        if (capacity != null) {
+            boolean validateCapacityLength = capacity >= CAPACITY_MIN_LENGTH && capacity <= CAPACITY_MAX_LENGTH;
+            Assert.isTrue(validateCapacityLength, "행사 정원은 1~999사이의 값입니다.");
+        }
     }
 
 }

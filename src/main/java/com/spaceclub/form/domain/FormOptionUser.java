@@ -1,7 +1,6 @@
 package com.spaceclub.form.domain;
 
 import com.spaceclub.global.BaseTimeEntity;
-import com.spaceclub.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,34 +33,28 @@ public class FormOptionUser extends BaseTimeEntity {
     private FormOption formOption;
 
     @Getter
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private Long userId;
 
     @Getter
     private String content;
 
     @Builder
-    public FormOptionUser(Long id, FormOption formOption, User user, String content, LocalDateTime createdAt) {
+    public FormOptionUser(Long id, FormOption formOption, Long userId, String content, LocalDateTime createdAt) {
         this.id = id;
         this.formOption = formOption;
-        this.user = user;
+        this.userId = userId;
         this.content = content;
         this.createdAt = createdAt;
     }
 
-    public FormOptionUser registerFormOptionAndUser(FormOption formOption, User user) {
+    public FormOptionUser registerFormOptionAndUser(FormOption formOption, Long userId) {
         return FormOptionUser.builder()
                 .id(this.id)
                 .formOption(formOption)
-                .user(user)
+                .userId(userId)
                 .content(this.content)
                 .createdAt(this.createdAt)
                 .build();
-    }
-
-    public Long getUserId() {
-        return user.getId();
     }
 
     public String getOptionTitle() {

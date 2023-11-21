@@ -5,8 +5,6 @@ import com.spaceclub.form.domain.FormOption;
 import com.spaceclub.form.domain.FormOptionType;
 import com.spaceclub.form.domain.FormOptionUser;
 
-import static com.spaceclub.user.UserTestFixture.user1;
-
 public class FormTestFixture {
 
     public static Form form() {
@@ -37,7 +35,7 @@ public class FormTestFixture {
         return FormOptionUser.builder()
                 .id(1L)
                 .formOption(formOption1())
-                .user(user1())
+                .userId(1L)
                 .content("박가네")
                 .build();
     }
@@ -46,7 +44,7 @@ public class FormTestFixture {
         return FormOptionUser.builder()
                 .id(2L)
                 .formOption(formOption2())
-                .user(user1())
+                .userId(1L)
                 .content("010-1111-2222")
                 .build();
     }

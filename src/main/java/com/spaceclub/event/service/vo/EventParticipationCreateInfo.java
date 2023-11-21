@@ -5,7 +5,7 @@ import lombok.Builder;
 
 import java.util.List;
 
-public record EventApplicationCreateInfo(
+public record EventParticipationCreateInfo(
         Long userId,
         Long eventId,
         List<FormOptionUser> formOptionUsers,
@@ -13,7 +13,7 @@ public record EventApplicationCreateInfo(
 ) {
 
     @Builder
-    public EventApplicationCreateInfo {
+    public EventParticipationCreateInfo {
 
     }
 

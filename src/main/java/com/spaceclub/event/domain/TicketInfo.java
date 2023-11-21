@@ -35,8 +35,11 @@ public class TicketInfo {
     }
 
     private void validate(Integer maxTicketCount, Integer cost) {
-        Assert.isTrue(maxTicketCount >= MAX_TICKET_COUNT_MIN_COUNT && maxTicketCount <= MAX_TICKET_COUNT_MAX_COUNT, "인 당 예매 가능 수는 1이상 999이하의 값입니다.");
-        Assert.isTrue(cost >= COST_MIN_LENGTH && cost <= COST_MAX_LENGTH, "비용은 1이상 100만원이하의 값입니다.");
+        boolean validateMaxTicketCountRange = maxTicketCount >= MAX_TICKET_COUNT_MIN_COUNT && maxTicketCount <= MAX_TICKET_COUNT_MAX_COUNT;
+        boolean validateCostRange = cost >= COST_MIN_LENGTH && cost <= COST_MAX_LENGTH;
+
+        Assert.isTrue(validateMaxTicketCountRange, "인 당 예매 가능 수는 1이상 999이하의 값입니다.");
+        Assert.isTrue(validateCostRange, "비용은 1이상 100만원이하의 값입니다.");
     }
 
 }
