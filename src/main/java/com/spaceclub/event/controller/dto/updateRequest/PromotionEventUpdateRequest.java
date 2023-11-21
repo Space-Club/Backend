@@ -14,11 +14,11 @@ public record PromotionEventUpdateRequest(
         FormInfoRequest formInfo
 ) {
 
-    public Event toEntity(EventCategory category, String posterImageUrl) {
+    public Event toEntity(EventCategory category) {
         return Event.builder()
                 .id(eventId)
                 .category(category)
-                .eventInfo(eventInfo.toEntity(posterImageUrl))
+                .eventInfo(eventInfo.toEntity())
                 .formInfo(formInfo.toEntity())
                 .build();
     }
@@ -48,14 +48,13 @@ public record PromotionEventUpdateRequest(
             int capacity
     ) {
 
-        public EventInfo toEntity(String posterImageUrl) {
+        public EventInfo toEntity() {
             return EventInfo.builder()
                     .title(title)
                     .content(content)
                     .startDateTime(startDate.atTime(startTime))
                     .location(location)
                     .capacity(capacity)
-                    .posterImageUrl(posterImageUrl)
                     .build();
         }
 

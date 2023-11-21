@@ -192,19 +192,19 @@ include::{snippets}/event/update/club/http-response.adoc[]
 :sectnums!:
 ==== Request
 
-include::{snippets}/event/createApplications/http-request.adoc[]
+include::{snippets}/event/participate/http-request.adoc[]
 
 =====  Request Header
 
-include::{snippets}/event/createApplications/request-headers.adoc[]
+include::{snippets}/event/participate/request-headers.adoc[]
 
 =====  Request Body
 
-include::{snippets}/event/createApplications/request-fields.adoc[]
+include::{snippets}/event/participate/request-fields.adoc[]
 
 ==== Response
 
-include::{snippets}/event/createApplications/http-response.adoc[]
+include::{snippets}/event/participate/http-response.adoc[]
 
 :sectnums:
 
@@ -212,22 +212,22 @@ include::{snippets}/event/createApplications/http-response.adoc[]
 :sectnums!:
 ==== Request
 
-include::{snippets}/event/cancel/http-request.adoc[]
+include::{snippets}/event/cancelParticipate/http-request.adoc[]
 
 ===== Request Header
 
-include::{snippets}/event/cancel/request-headers.adoc[]
+include::{snippets}/event/cancelParticipate/request-headers.adoc[]
 
 ===== Path Parameter
 
-include::{snippets}/event/cancel/path-parameters.adoc[]
+include::{snippets}/event/cancelParticipate/path-parameters.adoc[]
 
 ==== Response
 
-include::{snippets}/event/cancel/http-response.adoc[]
+include::{snippets}/event/cancelParticipate/http-response.adoc[]
 ===== Response Body
 
-include::{snippets}/event/cancel/response-fields.adoc[]
+include::{snippets}/event/cancelParticipate/response-fields.adoc[]
 :sectnums:
 
 === 모든 행사 조회
@@ -275,6 +275,7 @@ include::{snippets}/event/getShowEvent/http-request.adoc[]
 include::{snippets}/event/getShowEvent/path-parameters.adoc[]
 
 ===== Request Header
+
 include::{snippets}/event/getShowEvent/request-headers.adoc[]
 
 ==== Response
@@ -295,6 +296,7 @@ include::{snippets}/event/getPromotionEvent/http-request.adoc[]
 include::{snippets}/event/getPromotionEvent/path-parameters.adoc[]
 
 ===== Request Header
+
 include::{snippets}/event/getPromotionEvent/request-headers.adoc[]
 
 ==== Response
@@ -309,15 +311,19 @@ include::{snippets}/event/getPromotionEvent/response-fields.adoc[]
 :sectnums!:
 
 ==== Request
+
 include::{snippets}/event/getRecruitmentEvent/http-request.adoc[]
 
 ===== Path Parameter
+
 include::{snippets}/event/getRecruitmentEvent/path-parameters.adoc[]
 
 ===== Request Header
+
 include::{snippets}/event/getRecruitmentEvent/request-headers.adoc[]
 
 ==== Response
+
 include::{snippets}/event/getRecruitmentEvent/http-response.adoc[]
 
 ===== Response Body
@@ -331,12 +337,15 @@ include::{snippets}/event/getRecruitmentEvent/response-fields.adoc[]
 
 include::{snippets}/event/getClubEvent/http-request.adoc[]
 ===== Path Parameter
+
 include::{snippets}/event/getClubEvent/path-parameters.adoc[]
 
 ===== Request Header
+
 include::{snippets}/event/getClubEvent/request-headers.adoc[]
 
 ==== Response
+
 include::{snippets}/event/getClubEvent/http-response.adoc[]
 ===== Response Body
 

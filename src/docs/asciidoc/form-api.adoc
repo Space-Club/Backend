@@ -46,26 +46,26 @@ include::{snippets}/form/get/response-fields.adoc[]
 :sectnums!:
 ==== Request
 
-include::{snippets}/form/getAllApplications/http-request.adoc[]
+include::{snippets}/form/getAllSubmit/http-request.adoc[]
 
 =====  Request Header
 
-include::{snippets}/form/getAllApplications/request-headers.adoc[]
+include::{snippets}/form/getAllSubmit/request-headers.adoc[]
 
 ===== Path Parameter
 
-include::{snippets}/form/getAllApplications/path-parameters.adoc[]
+include::{snippets}/form/getAllSubmit/path-parameters.adoc[]
 
 ===== Query Parameter
 
-include::{snippets}/form/getAllApplications/query-parameters.adoc[]
+include::{snippets}/form/getAllSubmit/query-parameters.adoc[]
 
 ==== Response
 
-include::{snippets}/form/getAllApplications/http-response.adoc[]
+include::{snippets}/form/getAllSubmit/http-response.adoc[]
 =====  Response Body
 
-include::{snippets}/form/getAllApplications/response-fields.adoc[]
+include::{snippets}/form/getAllSubmit/response-fields.adoc[]
 
 :sectnums:
 
@@ -73,21 +73,21 @@ include::{snippets}/form/getAllApplications/response-fields.adoc[]
 :sectnums!:
 ==== Request
 
-include::{snippets}/form/updateApplicationStatus/http-request.adoc[]
+include::{snippets}/form/updateSubmit/http-request.adoc[]
 
 =====  Request Header
 
-include::{snippets}/form/updateApplicationStatus/request-headers.adoc[]
+include::{snippets}/form/updateSubmit/request-headers.adoc[]
 
 ===== Path Parameter
 
-include::{snippets}/form/updateApplicationStatus/path-parameters.adoc[]
+include::{snippets}/form/updateSubmit/path-parameters.adoc[]
 
 ===== Request Body
 
-include::{snippets}/form/updateApplicationStatus/request-fields.adoc[]
+include::{snippets}/form/updateSubmit/request-fields.adoc[]
 
 ==== Response
 
-include::{snippets}/form/updateApplicationStatus/http-response.adoc[]
+include::{snippets}/form/updateSubmit/http-response.adoc[]
 :sectnums:

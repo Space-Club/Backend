@@ -2,14 +2,13 @@ package com.spaceclub.form.controller.dto;
 
 import com.spaceclub.form.domain.FormOption;
 import com.spaceclub.form.domain.FormOptionType;
-import com.spaceclub.form.service.vo.FormGet;
+import com.spaceclub.form.service.vo.FormGetInfo;
 import lombok.Builder;
 
 import java.util.List;
 
 public record FormGetResponse(
         EventResponse event,
-        UserResponse user,
         FormResponse form
 ) {
 
@@ -21,11 +20,6 @@ public record FormGetResponse(
 
     }
 
-    private record UserResponse(String name, String phoneNumber) {
-
-    }
-
-
     private record FormItemResponse(Long id, String title, FormOptionType type) {
 
     }
@@ -34,10 +28,9 @@ public record FormGetResponse(
 
     }
 
-    public static FormGetResponse from(FormGet vo) {
+    public static FormGetResponse from(FormGetInfo vo) {
         return FormGetResponse.builder()
                 .event(new EventResponse(vo.title()))
-                .user(new UserResponse(vo.getUsername(), vo.getPhoneNumber()))
                 .form(new FormResponse(vo.getFormDescription(), from(vo.getFormOptions())))
                 .build();
     }

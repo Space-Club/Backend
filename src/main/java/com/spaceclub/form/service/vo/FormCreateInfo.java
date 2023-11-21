@@ -7,7 +7,7 @@ import lombok.Builder;
 
 import java.util.List;
 
-public record FormCreate(
+public record FormCreateInfo(
         Long userId,
         Long eventId,
         Form form,
@@ -16,11 +16,11 @@ public record FormCreate(
 ) {
 
     @Builder
-    public FormCreate {
+    public FormCreateInfo {
     }
 
-    public static FormCreate from(FormCreateRequest request, Long userId) {
-        return FormCreate.builder()
+    public static FormCreateInfo from(FormCreateRequest request, Long userId) {
+        return FormCreateInfo.builder()
                 .userId(userId)
                 .eventId(request.eventId())
                 .form(request.toForm())

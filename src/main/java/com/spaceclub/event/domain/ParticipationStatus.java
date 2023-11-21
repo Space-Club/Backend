@@ -1,6 +1,6 @@
 package com.spaceclub.event.domain;
 
-public enum ApplicationStatus {
+public enum ParticipationStatus {
 
     PENDING,
     CONFIRMED,

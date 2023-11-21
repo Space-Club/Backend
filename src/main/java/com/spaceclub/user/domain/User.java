@@ -1,7 +1,5 @@
 package com.spaceclub.user.domain;
 
-import com.spaceclub.event.domain.EventUser;
-import com.spaceclub.form.domain.FormOptionUser;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -9,15 +7,11 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
-import jakarta.persistence.OneToMany;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.spaceclub.user.domain.Status.NOT_REGISTERED;
 import static com.spaceclub.user.domain.Status.REGISTERED;
@@ -61,12 +55,6 @@ public class User {
     @Lob
     private String profileImageUrl;
 
-    @OneToMany(mappedBy = "user")
-    private List<EventUser> events = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<FormOptionUser> formOptionUsers = new ArrayList<>();
-
     private User(
             Long id,
             RequiredInfo requiredInfo,
@@ -75,9 +63,7 @@ public class User {
             Provider provider,
             Email email,
             String refreshToken,
-            String profileImageUrl,
-            List<EventUser> events,
-            List<FormOptionUser> formOptionUsers
+            String profileImageUrl
     ) {
         this.id = id;
         this.requiredInfo = requiredInfo;
@@ -87,8 +73,6 @@ public class User {
         this.email = email;
         this.refreshToken = refreshToken;
         this.profileImageUrl = profileImageUrl;
-        this.events = events;
-        this.formOptionUsers = formOptionUsers;
     }
 
     @Builder
@@ -167,9 +151,7 @@ public class User {
                 this.provider,
                 this.email,
                 refreshToken,
-                profileUrl,
-                this.events,
-                this.formOptionUsers
+                profileUrl
         );
     }
 
@@ -182,9 +164,7 @@ public class User {
                 this.provider,
                 this.email,
                 refreshToken,
-                this.profileImageUrl,
-                this.events,
-                this.formOptionUsers
+                this.profileImageUrl
         );
     }
 

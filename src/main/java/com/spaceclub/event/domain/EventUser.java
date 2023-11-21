@@ -1,7 +1,6 @@
 package com.spaceclub.event.domain;
 
 import com.spaceclub.global.BaseTimeEntity;
-import com.spaceclub.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -18,8 +17,8 @@ import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 
-import static com.spaceclub.event.domain.ApplicationStatus.CANCELED;
-import static com.spaceclub.event.domain.ApplicationStatus.CANCEL_REQUESTED;
+import static com.spaceclub.event.domain.ParticipationStatus.CANCELED;
+import static com.spaceclub.event.domain.ParticipationStatus.CANCEL_REQUESTED;
 import static jakarta.persistence.FetchType.EAGER;
 import static lombok.AccessLevel.PROTECTED;
 
@@ -35,12 +34,10 @@ public class EventUser extends BaseTimeEntity {
 
     @Getter
     @Enumerated(EnumType.STRING)
-    private ApplicationStatus status;
+    private ParticipationStatus status;
 
     @Getter
-    @ManyToOne(fetch = EAGER, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private Long userId;
 
     @ManyToOne(fetch = EAGER, optional = false)
     @JoinColumn(name = "event_id", nullable = false)
@@ -49,34 +46,30 @@ public class EventUser extends BaseTimeEntity {
     private Integer ticketCount;
 
     @Builder
-    private EventUser(Long id, ApplicationStatus status, User user, Event event, Integer ticketCount, LocalDateTime createdAt) {
-        validate(user, event);
+    private EventUser(Long id, ParticipationStatus status, Long userId, Event event, Integer ticketCount, LocalDateTime createdAt) {
+        validate(userId, event);
         this.id = id;
         this.status = status;
-        this.user = user;
+        this.userId = userId;
         this.event = event;
         this.ticketCount = ticketCount;
         this.createdAt = createdAt;
     }
 
-    private void validate(User user, Event event) {
-        Assert.notNull(user, "유저는 필수입니다.");
+    private void validate(Long userId, Event event) {
+        Assert.notNull(userId, "유저는 필수입니다.");
         Assert.notNull(event, "이벤트는 필수입니다.");
     }
 
-    public EventUser updateStatus(ApplicationStatus status) {
+    public EventUser updateStatus(ParticipationStatus status) {
         return EventUser.builder()
                 .id(this.id)
                 .status(status)
-                .user(this.user)
+                .userId(this.userId)
                 .event(this.event)
                 .ticketCount(this.ticketCount)
                 .createdAt(this.createdAt)
                 .build();
-    }
-
-    public Long getUserId() {
-        return user.getId();
     }
 
     public EventUser setStatusByManaged(boolean managed) {
@@ -84,7 +77,7 @@ public class EventUser extends BaseTimeEntity {
             return EventUser.builder()
                     .id(this.id)
                     .status(CANCEL_REQUESTED)
-                    .user(this.user)
+                    .userId(this.userId)
                     .event(this.event)
                     .ticketCount(this.ticketCount)
                     .createdAt(this.createdAt)
@@ -94,7 +87,7 @@ public class EventUser extends BaseTimeEntity {
         return EventUser.builder()
                 .id(this.id)
                 .status(CANCELED)
-                .user(this.user)
+                .userId(this.userId)
                 .event(this.event)
                 .ticketCount(this.ticketCount)
                 .createdAt(this.createdAt)

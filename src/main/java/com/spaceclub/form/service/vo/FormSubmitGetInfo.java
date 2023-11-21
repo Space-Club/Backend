@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-public record FormApplicationGetInfo(
+public record FormSubmitGetInfo(
         Form form,
         List<FormOptionUser> formOptionUsers,
         Page<EventUser> eventUsers

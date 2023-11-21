@@ -1,23 +1,23 @@
 package com.spaceclub.form.controller.dto;
 
-import com.spaceclub.event.domain.ApplicationStatus;
 import com.spaceclub.event.domain.EventUser;
+import com.spaceclub.event.domain.ParticipationStatus;
 import com.spaceclub.form.domain.Form;
 import com.spaceclub.form.domain.FormOption;
 import com.spaceclub.form.domain.FormOptionUser;
-import com.spaceclub.form.service.vo.FormApplicationGetInfo;
+import com.spaceclub.form.service.vo.FormSubmitGetInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
 import java.util.List;
 
-public record FormApplicationGetResponse(
+public record FormSubmitGetResponse(
         FormInfoResponse formInfo,
         List<UserFormResponse> userForms,
         PageableResponse pageData
 ) {
 
-    public static FormApplicationGetResponse from(FormApplicationGetInfo vo) {
+    public static FormSubmitGetResponse from(FormSubmitGetInfo vo) {
         Form form = vo.form();
         Page<EventUser> eventUsers = vo.eventUsers();
         List<FormOptionUser> formOptionUsers = vo.formOptionUsers();
@@ -29,7 +29,7 @@ public record FormApplicationGetResponse(
         FormInfoResponse formInfoResponse = new FormInfoResponse(eventUsers.getTotalElements(), optionTitles, form.isManaged());
         Page<UserFormResponse> userFormPages = generateUserFormResponses(eventUsers, formOptionUsers);
 
-        return new FormApplicationGetResponse(formInfoResponse, userFormPages.getContent(), PageableResponse.from(userFormPages));
+        return new FormSubmitGetResponse(formInfoResponse, userFormPages.getContent(), PageableResponse.from(userFormPages));
     }
 
     private static Page<UserFormResponse> generateUserFormResponses(Page<EventUser> eventUsers, List<FormOptionUser> formOptionUsers) {
@@ -57,7 +57,7 @@ public record FormApplicationGetResponse(
     private record UserFormResponse(
             Long userId,
             List<UserFormOptionResponse> options,
-            ApplicationStatus applicationStatus
+            ParticipationStatus participationStatus
     ) {
 
     }

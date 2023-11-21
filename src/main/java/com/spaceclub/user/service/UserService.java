@@ -165,7 +165,7 @@ public class UserService {
         userRepository.save(user.changeProfileImageUrl(profileUrl));
     }
 
-    private User getUser(Long userId) {
+    public User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND.toString()));
     }

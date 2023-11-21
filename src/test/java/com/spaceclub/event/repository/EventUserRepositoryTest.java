@@ -3,9 +3,9 @@ package com.spaceclub.event.repository;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.repository.ClubRepository;
-import com.spaceclub.event.domain.ApplicationStatus;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventUser;
+import com.spaceclub.event.domain.ParticipationStatus;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.repository.UserRepository;
@@ -23,9 +23,9 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
 
+import static com.spaceclub.event.EventTestFixture.clubEvent;
 import static com.spaceclub.event.EventTestFixture.event1;
 import static com.spaceclub.event.EventTestFixture.showEvent;
-import static com.spaceclub.event.EventTestFixture.clubEvent;
 import static com.spaceclub.user.domain.Status.NOT_REGISTERED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -75,21 +75,21 @@ class EventUserRepositoryTest {
 
         EventUser eventUser1 = EventUser.builder()
                 .id(1L)
-                .user(user)
+                .userId(1L)
                 .event(event1())
-                .status(ApplicationStatus.CONFIRMED)
+                .status(ParticipationStatus.CONFIRMED)
                 .build();
         EventUser eventUser2 = EventUser.builder()
                 .id(2L)
-                .user(user)
+                .userId(1L)
                 .event(showEvent())
-                .status(ApplicationStatus.PENDING)
+                .status(ParticipationStatus.PENDING)
                 .build();
         EventUser eventUser3 = EventUser.builder()
                 .id(3L)
-                .user(user)
+                .userId(1L)
                 .event(clubEvent())
-                .status(ApplicationStatus.CANCEL_REQUESTED)
+                .status(ParticipationStatus.CANCEL_REQUESTED)
                 .build();
         eventUserRepository.saveAll(List.of(eventUser1, eventUser2, eventUser3));
     }
@@ -134,4 +134,3 @@ class EventUserRepositoryTest {
     }
 
 }
-
