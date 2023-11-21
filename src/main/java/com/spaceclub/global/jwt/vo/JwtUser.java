@@ -4,6 +4,10 @@ import com.spaceclub.global.jwt.Claims;
 
 public record JwtUser(Long id, String username) {
 
+    public static JwtUser empty() {
+        return new JwtUser(null, null);
+    }
+
     public static JwtUser from(Claims claims) {
         Long userId = claims.getId();
         String username = claims.getUsername();
