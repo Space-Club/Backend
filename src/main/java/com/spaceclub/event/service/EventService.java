@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import static com.spaceclub.event.domain.ApplicationStatus.PENDING;
-import static com.spaceclub.global.ExceptionCode.CLUB_NOT_FOUND;
-import static com.spaceclub.global.ExceptionCode.EVENT_ALREADY_APPLIED;
+import java.util.List;
+
+import static com.spaceclub.event.domain.EventCategory.CLUB;
 import static com.spaceclub.global.ExceptionCode.EVENT_CATEGORY_NOT_ALLOWED;
 
 @Service
@@ -63,7 +63,7 @@ public class EventService {
     }
 
     public Page<Event> getAll(EventCategory eventCategory, Pageable pageable) {
-        if (EventCategory.CLUB.equals(eventCategory)) {
+        if (CLUB.equals(eventCategory)) {
             throw new IllegalArgumentException(EVENT_CATEGORY_NOT_ALLOWED.toString());
         }
         return eventRepository.findAllByCategory(eventCategory, pageable);
@@ -79,42 +79,6 @@ public class EventService {
         clubUserValidator.validateClubManager(event.getClubId(), userId);
 
         eventRepository.deleteById(eventId);
-    }
-
-    @Transactional
-    public void createApplicationForm(EventApplicationCreateInfo info) {
-        User user = userRepository.findById(info.userId()).orElseThrow(() -> new IllegalStateException(USER_NOT_FOUND.toString()));
-        Event event = validateEvent(info.eventId());
-
-        validateEventTicketCount(event.getMaxTicketCount(), info.ticketCount());
-        if (eventUserRepository.existsByEventIdAndUserId(info.eventId(), info.userId()))
-            throw new IllegalArgumentException(EVENT_ALREADY_APPLIED.toString());
-
-        for (FormOptionUser formOptionUser : info.formOptionUsers()) {
-            FormOption formOption = formOptionRepository.findById(formOptionUser.getFormOptionId())
-                    .orElseThrow(() -> new IllegalStateException(FORM_OPTION_NOT_FOUND.toString()));
-
-            FormOptionUser registeredFormOptionUser = formOptionUser.registerFormOptionAndUser(formOption, user);
-            formOptionUserRepository.save(registeredFormOptionUser);
-            formOption.addFormOptionUser(registeredFormOptionUser);
-            formOptionRepository.save(formOption);
-        }
-
-        EventUser newEventUser = EventUser.builder()
-                .user(user)
-                .event(event)
-                .status(PENDING)
-                .ticketCount(info.ticketCount())
-                .build();
-
-        eventUserRepository.save(newEventUser);
-    }
-
-    private void validateEventTicketCount(Integer maxTicketCount, Integer ticketCount) {
-        if (maxTicketCount == null && ticketCount != null) throw new IllegalArgumentException(EVENT_TICKET_NOT_MANAGED.toString());
-        if (maxTicketCount != null && ticketCount == null) throw new IllegalArgumentException(TICKET_COUNT_REQUIRED.toString());
-        if (ticketCount != null && maxTicketCount < ticketCount)
-            throw new IllegalArgumentException(EXCEED_TICKET_COUNT.toString());
     }
 
     public Event get(Long eventId) {

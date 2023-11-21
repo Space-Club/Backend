@@ -27,7 +27,6 @@ public enum ExceptionCode {
     BAD_REQUEST("잘못된 요청입니다"),
     DESERIALIZE_FAILURE("JSON 데이터를 변환하는데 실패했습니다."),
     EVENT_NOT_MANAGED("폼이 없거나 관리모드를 설정하지 않은 폼입니다."),
-    DESERIALIZE_FAILURE("JSON 데이터를 변환하는데 실패했습니다."),
     CAN_NOT_SELF_DEGRADING("혼자 남은 관리자는 강등될 수 없습니다");
 
     @Getter
