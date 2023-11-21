@@ -3,7 +3,6 @@ package com.spaceclub.club.service;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubNotice;
 import com.spaceclub.club.domain.ClubUser;
-import com.spaceclub.club.domain.ClubUserRole;
 import com.spaceclub.club.repository.ClubNoticeRepository;
 import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.club.repository.ClubUserRepository;
@@ -25,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+import static com.spaceclub.club.domain.ClubUserRole.MANAGER;
 import static com.spaceclub.club.domain.ClubUserRole.MEMBER;
 import static com.spaceclub.global.ExceptionCode.CAN_NOT_WITHDRAW;
 import static com.spaceclub.global.ExceptionCode.CLUB_NOT_FOUND;
@@ -66,7 +66,7 @@ public class ClubService {
         ClubUser clubUser = ClubUser.builder()
                 .club(club)
                 .user(user)
-                .role(ClubUserRole.MANAGER)
+                .role(MANAGER)
                 .build();
 
         clubUserRepository.save(clubUser);
@@ -97,7 +97,7 @@ public class ClubService {
     public void updateMemberRole(ClubUserUpdate updateVo) {
         validateClubManager(updateVo.clubId(), updateVo.userId());
 
-        int count = clubUserRepository.countByClub_IdAndRole(updateVo.clubId(), ClubUserRole.MANAGER);
+        int count = clubUserRepository.countByClub_IdAndRole(updateVo.clubId(), MANAGER);
         if (count == MANAGER_MIN_COUNT && updateVo.userId().equals(updateVo.memberId()) && updateVo.role() == MEMBER) {
             throw new IllegalArgumentException(CAN_NOT_WITHDRAW.toString());
         }
@@ -117,12 +117,15 @@ public class ClubService {
     public void deleteMember(Long clubId, Long memberId, Long userId) {
         validateClubManager(clubId, userId);
 
-        int count = clubUserRepository.countByClub_IdAndRole(clubId, ClubUserRole.MANAGER);
+        int count = clubUserRepository.countByClub_IdAndRole(clubId, MANAGER);
         if (isLastManager(memberId, userId, count)) {
             throw new IllegalArgumentException(CAN_NOT_WITHDRAW.toString());
         }
 
         ClubUser clubMember = validateClubUser(clubId, memberId);
+
+        if (clubMember.isManager()) throw new IllegalStateException("관리자는 탈퇴가 불가합니다.");
+
         clubUserRepository.delete(clubMember);
     }
 
@@ -198,6 +201,7 @@ public class ClubService {
         clubNoticeRepository.deleteById(noticeId);
     }
 
+
     public List<Event> getClubSchedules(Long clubId, Long userId) {
         validateClubUser(clubId, userId);
 
@@ -244,6 +248,18 @@ public class ClubService {
     private void validateClubManager(Long clubId, Long userId) {
         ClubUser clubUser = validateClubUser(clubId, userId);
         if (clubUser.isNotManager()) throw new IllegalStateException(UNAUTHORIZED.toString());
+    }
+
+    public void deleteMember(Long clubId, Long userId) {
+        ClubUser clubUser = validateClubUser(clubId, userId);
+        if (isLastManager(clubId, clubUser)) throw new IllegalStateException("마지막 관리자는 탈퇴가 불가합니다.");
+
+        clubUserRepository.delete(clubUser);
+    }
+
+    private boolean isLastManager(Long clubId, ClubUser clubUser) {
+        return clubUser.isManager() &&
+                clubUserRepository.countByClub_IdAndRole(clubId, MANAGER) <= MANAGER_MIN_COUNT;
     }
 
 }

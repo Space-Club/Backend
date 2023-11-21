@@ -115,7 +115,7 @@ include::{snippets}/club/updateMemberRole/path-parameters.adoc[]
 include::{snippets}/club/updateMemberRole/http-response.adoc[]
 :sectnums:
 
-=== 클럽 멤버 탈퇴
+=== 클럽 멤버 추방
 :sectnums!:
 ==== Request
 
@@ -330,4 +330,19 @@ include::{snippets}/club/getUserRole/http-response.adoc[]
 
 include::{snippets}/club/getUserRole/response-fields.adoc[]
 
+:sectnums:
+
+=== 클럽 탈퇴
+:sectnums!:
+==== Request
+include::{snippets}/club/exitClub/http-request.adoc[]
+
+===== Request Header
+include::{snippets}/club/exitClub/request-headers.adoc[]
+
+===== Path Parameter
+include::{snippets}/club/exitClub/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/club/exitClub/http-response.adoc[]
 :sectnums:
