@@ -6,6 +6,7 @@ import com.spaceclub.form.controller.dto.FormCreateRequest;
 import com.spaceclub.form.controller.dto.FormGetResponse;
 import com.spaceclub.form.service.FormService;
 import com.spaceclub.form.service.vo.FormApplicationGetInfo;
+import com.spaceclub.form.service.vo.FormApplicationUpdateInfo;
 import com.spaceclub.form.service.vo.FormCreate;
 import com.spaceclub.form.service.vo.FormGet;
 import com.spaceclub.global.Authenticated;
@@ -67,7 +68,14 @@ public class FormController {
 
     @PatchMapping("/{eventId}/forms/applications-status")
     public ResponseEntity<Void> updateApplicationStatus(@PathVariable Long eventId, @RequestBody FormApplicationStatusUpdateRequest request, @Authenticated JwtUser jwtUser) {
-        formService.updateApplicationStatus(eventId, jwtUser.id(), request.status());
+        FormApplicationUpdateInfo updateInfo = FormApplicationUpdateInfo.builder()
+                .eventId(eventId)
+                .formUserId(request.formUserId())
+                .status(request.status())
+                .userId(jwtUser.id())
+                .build();
+
+        formService.updateApplicationStatus(updateInfo);
 
         return ResponseEntity.noContent().build();
     }

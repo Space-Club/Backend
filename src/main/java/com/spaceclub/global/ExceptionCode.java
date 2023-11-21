@@ -21,11 +21,11 @@ public enum ExceptionCode {
     EVENT_TICKET_NOT_MANAGED("행사 티켓을 관리하지 않는 행사입니다"),
     TICKET_COUNT_REQUIRED("행사 티켓 매수는 필수입니다"),
     EXCEED_TICKET_COUNT("인 당 티켓 예매 가능 수를 초과하였습니다"),
-    EVENT_WITHOUT_FORM("폼이 없는 행사입니다"),
     INVITE_EXPIRED("만료된 초대링크 입니다"),
     CLUB_ALREADY_JOINED("이미 해당 클럽에 가입되어 있습니다"),
     ALREADY_BOOKMARKED("이미 북마크한 이벤트입니다"),
-    BAD_REQUEST("잘못된 요청입니다");
+    BAD_REQUEST("잘못된 요청입니다"),
+    EVENT_NOT_MANAGED("폼이 없거나 관리모드를 설정하지 않은 폼입니다.");
 
     @Getter
     private final String message;
