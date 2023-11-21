@@ -1,6 +1,6 @@
 package com.spaceclub.club.controller.dto;
 
-import lombok.Builder;
+import com.spaceclub.event.service.vo.SchedulesGetInfo;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,8 +17,14 @@ public record ClubScheduleGetResponse(
             String manager
     ) {
 
-        @Builder
-        public ClubScheduleGetResponseInfo {
+        public static ClubScheduleGetResponseInfo from(SchedulesGetInfo vo) {
+            return new ClubScheduleGetResponseInfo(
+                    vo.eventId(),
+                    vo.title(),
+                    vo.startDateTime(),
+                    vo.endDateTime(),
+                    vo.manager()
+            );
         }
 
     }

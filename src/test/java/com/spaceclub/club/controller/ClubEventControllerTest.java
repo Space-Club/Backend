@@ -3,7 +3,8 @@ package com.spaceclub.club.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.service.ClubEventService;
-import com.spaceclub.event.domain.Event;
+import com.spaceclub.event.service.vo.EventGetInfo;
+import com.spaceclub.event.service.vo.SchedulesGetInfo;
 import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.interceptor.JwtAuthorizationInterceptor;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -77,8 +78,10 @@ class ClubEventControllerTest {
     @WithMockUser
     public void 클럽_행사_조회에_성공한다() throws Exception {
         // given
-        List<Event> events = List.of(event1(), showEvent(), clubEvent());
-        Page<Event> eventPages = new PageImpl<>(events);
+        List<EventGetInfo> events = List.of(EventGetInfo.from(event1()),
+                EventGetInfo.from(showEvent()),
+                EventGetInfo.from(clubEvent()));
+        Page<EventGetInfo> eventPages = new PageImpl<>(events);
 
         given(clubEventService.getClubEvents(any(Long.class), any(Pageable.class), any())).willReturn(eventPages);
         Long clubId = 1L;
@@ -143,7 +146,7 @@ class ClubEventControllerTest {
         // given
         Long clubId = 1L;
         given(clubEventService.getClubSchedules(any(Long.class), any())).willReturn(
-                List.of(clubEvent())
+                List.of(SchedulesGetInfo.from(clubEvent()))
         );
 
         // when
