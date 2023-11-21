@@ -88,6 +88,7 @@ public class ClubController {
     public ResponseEntity<Void> updateClub(@PathVariable Long clubId,
                                            @RequestPart(value = "request", required = false) ClubUpdateRequest request,
                                            @RequestPart(value = "logoImage", required = false) MultipartFile logoImage,
+                                           @RequestPart(value = "coverImage", required = false) MultipartFile coverImage,
                                            @Authenticated JwtUser jwtUser) {
 
         if (request == null) {
@@ -95,7 +96,7 @@ public class ClubController {
         }
 
         Club newClub = request.toEntity(clubId);
-        clubService.updateClub(newClub, jwtUser.id(), logoImage);
+        clubService.updateClub(newClub, jwtUser.id(), logoImage, coverImage);
 
         return ResponseEntity.noContent().build();
     }

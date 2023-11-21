@@ -60,7 +60,7 @@ public class ClubService {
 
         if (logoImage != null) {
             String logoImageUrl = imageUploader.uploadClubLogoImage(logoImage);
-            club = club.addLogoImageUrl(logoImageUrl);
+            club = club.updateLogoImageUrl(logoImageUrl);
         }
 
         ClubUser clubUser = ClubUser.builder()
@@ -208,7 +208,7 @@ public class ClubService {
         return eventRepository.findAllByClub_IdAndCategory(clubId, EventCategory.CLUB);
     }
 
-    public void updateClub(Club newClub, Long userId, MultipartFile logoImage) {
+    public void updateClub(Club newClub, Long userId, MultipartFile logoImage, MultipartFile coverImage) {
         Long clubId = newClub.getId();
 
         validateClubManager(clubId, userId);
@@ -217,8 +217,13 @@ public class ClubService {
                 .orElseThrow(() -> new IllegalArgumentException(CLUB_NOT_FOUND.toString()));
 
         if (logoImage != null) {
-            String logoImageUrl = CLUB_LOGO_S3_URL + imageUploader.uploadClubLogoImage(logoImage);
-            club = club.addLogoImageUrl(logoImageUrl);
+            String logoImageUrl = imageUploader.uploadClubLogoImage(logoImage);
+            club = club.updateLogoImageUrl(logoImageUrl);
+        }
+
+        if (coverImage != null) {
+            String coverImageUrl = imageUploader.uploadClubCoverImage(coverImage);
+            club = club.updateCoverImageUrl(coverImageUrl);
         }
 
         Club updatedClub = club.update(newClub);

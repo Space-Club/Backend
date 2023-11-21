@@ -253,6 +253,13 @@ class ClubControllerTest {
                 "<<jpeg data>>".getBytes()
         );
 
+        MockMultipartFile coverImage = new MockMultipartFile(
+                "coverImage",
+                "coverImage.jpg",
+                MediaType.IMAGE_JPEG_VALUE,
+                "<<jpeg data>>".getBytes()
+        );
+
         MockMultipartFile request = new MockMultipartFile(
                 "request",
                 "",
@@ -270,6 +277,7 @@ class ClubControllerTest {
         ResultActions result = this.mockMvc.perform(requestBuilder
                 .file(request)
                 .file(logoImage)
+                .file(coverImage)
                 .header(AUTHORIZATION, "token")
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
@@ -285,7 +293,8 @@ class ClubControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestParts(
                                 partWithName("request").optional().description("클럽 수정 요청 DTO"),
-                                partWithName("logoImage").optional().description("새로운 클럽 로고 이미지")
+                                partWithName("logoImage").optional().description("새로운 클럽 로고 이미지"),
+                                partWithName("coverImage").optional().description("새로운 클럽 배경 이미지")
                         ),
                         pathParameters(
                                 parameterWithName("clubId").description("클럽 ID")
