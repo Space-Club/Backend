@@ -1,7 +1,6 @@
 package com.spaceclub.club.domain;
 
 import com.spaceclub.global.BaseTimeEntity;
-import com.spaceclub.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,8 +14,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.Comparator;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -69,7 +66,4 @@ public class ClubUser extends BaseTimeEntity {
         return this.role.equals(ClubUserRole.MANAGER);
     }
 
-    public int getSortPriority() {
-        return this.role.getSortPriority();
-    }
 }

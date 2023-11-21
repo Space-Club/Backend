@@ -1,10 +1,10 @@
 package com.spaceclub.club.service;
 
-import com.spaceclub.club.service.vo.MemberGet;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
+import com.spaceclub.club.service.vo.MemberGet;
 import com.spaceclub.user.service.UserService;
 import com.spaceclub.user.service.vo.UserProfileInfo;
 import lombok.RequiredArgsConstructor;

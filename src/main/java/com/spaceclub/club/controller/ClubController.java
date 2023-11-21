@@ -77,6 +77,7 @@ public class ClubController {
     @DeleteMapping("/{clubId}")
     public ResponseEntity<String> deleteClub(@PathVariable Long clubId, @Authenticated JwtUser jwtUser) {
         clubService.deleteClub(clubId, jwtUser.id());
+
         return ResponseEntity.noContent().build();
     }
 

@@ -2,9 +2,9 @@ package com.spaceclub.club.controller;
 
 import com.spaceclub.club.controller.dto.ClubUserRoleResponse;
 import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
-import com.spaceclub.club.service.vo.MemberGet;
 import com.spaceclub.club.service.ClubMemberManagerService;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
+import com.spaceclub.club.service.vo.MemberGet;
 import com.spaceclub.global.Authenticated;
 import com.spaceclub.global.jwt.vo.JwtUser;
 import lombok.RequiredArgsConstructor;
