@@ -90,7 +90,7 @@ class SubmitControllerTest {
         given(submitService.getAll(any(), any(Long.class), any(Pageable.class))).willReturn(formSubmitGetInfo);
 
         // when, then
-        mvc.perform(get("/api/v1/events/{eventId}/forms/applications", 1L)
+        mvc.perform(get("/api/v1/events/{eventId}/forms/submit", 1L)
                         .header(AUTHORIZATION, "Access Token")
                         .param("page", "1")
                         .param("size", "3")
@@ -98,7 +98,7 @@ class SubmitControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andDo(
-                        document("form/getAllApplications",
+                        document("form/getAllSubmit",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 requestHeaders(
@@ -144,7 +144,7 @@ class SubmitControllerTest {
         doNothing().when(submitService).updateStatus(any(FormSubmitUpdateInfo.class));
 
         // when, then
-        mvc.perform(patch("/api/v1/events/{eventId}/forms/applications-status", 1L)
+        mvc.perform(patch("/api/v1/events/{eventId}/forms/submit", 1L)
                         .header(AUTHORIZATION, "Access Token")
                         .contentType(APPLICATION_JSON)
                         .content(mapper.writeValueAsString(request))
@@ -152,7 +152,7 @@ class SubmitControllerTest {
                 )
                 .andExpect(status().isNoContent())
                 .andDo(
-                        document("form/updateApplicationStatus",
+                        document("form/updateSubmit",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 requestHeaders(

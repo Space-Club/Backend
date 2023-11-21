@@ -77,7 +77,7 @@ class ParticipationControllerTest {
         given(participationService.cancel(any(Long.class), any())).willReturn(CANCELED);
 
         // when
-        ResultActions actions = mvc.perform(delete("/api/v1/events/{eventId}/applications", 1L)
+        ResultActions actions = mvc.perform(delete("/api/v1/events/{eventId}/participate", 1L)
                 .header(AUTHORIZATION, "Access Token")
                 .with(csrf())
         );
@@ -85,7 +85,7 @@ class ParticipationControllerTest {
         // then
         actions.andExpect(status().isOk())
                 .andDo(print())
-                .andDo(document("event/cancel",
+                .andDo(document("event/cancelParticipate",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(
@@ -124,7 +124,7 @@ class ParticipationControllerTest {
         );
 
         // when, then
-        mvc.perform(post("/api/v1/events/applications")
+        mvc.perform(post("/api/v1/events/participate")
                         .header("Authorization", "Access Token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(request))
@@ -132,7 +132,7 @@ class ParticipationControllerTest {
                 )
                 .andExpect(status().isNoContent())
                 .andDo(
-                        document("event/createApplications",
+                        document("event/participate",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 requestHeaders(
