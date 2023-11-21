@@ -25,6 +25,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.spaceclub.global.ExceptionCode.CLUB_NOT_FOUND;
+import static com.spaceclub.global.ExceptionCode.EVENT_NOT_APPLIED;
+import static com.spaceclub.global.ExceptionCode.EVENT_NOT_FOUND;
+import static com.spaceclub.global.ExceptionCode.EVENT_WITHOUT_FORM;
+import static com.spaceclub.global.ExceptionCode.FORM_NOT_FOUND;
+import static com.spaceclub.global.ExceptionCode.NOT_CLUB_MEMBER;
+import static com.spaceclub.global.ExceptionCode.UNAUTHORIZED;
+import static com.spaceclub.global.ExceptionCode.USER_NOT_FOUND;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -60,8 +69,8 @@ public class FormService {
 
     public FormGet getForm(Long userId, Long eventId) {
         Event event = validateEventAndForm(eventId);
-        Form form = formRepository.findById(event.getFormId()).orElseThrow(() -> new IllegalStateException("존재하지 않는 폼입니댜."));
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니댜."));
+        Form form = formRepository.findById(event.getFormId()).orElseThrow(() -> new IllegalStateException(FORM_NOT_FOUND.toString()));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException(USER_NOT_FOUND.toString()));
 
         return FormGet.from(event, user, form);
     }
@@ -79,7 +88,7 @@ public class FormService {
 
     @Transactional
     public void updateApplicationStatus(Long eventId, Long userId, ApplicationStatus status) {
-        EventUser eventUser = eventUserRepository.findByEventIdAndUserId(eventId, userId).orElseThrow(() -> new IllegalStateException("해당 신청 내역이 없습니다."));
+        EventUser eventUser = eventUserRepository.findByEventIdAndUserId(eventId, userId).orElseThrow(() -> new IllegalStateException(EVENT_NOT_APPLIED.toString()));
         Event event = validateEventAndForm(eventUser.getEventId());
         validateClubManager(event.getClubId(), userId);
 
@@ -90,22 +99,22 @@ public class FormService {
 
     private Event validateEventAndForm(Long eventId) {
         Event event = validateEvent(eventId);
-        if (event.getForm() == null) throw new IllegalStateException("폼이 없는 행사입니다.");
+        if (event.getForm() == null) throw new IllegalStateException(EVENT_WITHOUT_FORM.toString());
 
         return event;
     }
 
     private Event validateEvent(Long eventId) {
-        return eventRepository.findById(eventId).orElseThrow(() -> new IllegalStateException("존재하지 않는 행사입니댜."));
+        return eventRepository.findById(eventId).orElseThrow(() -> new IllegalStateException(EVENT_NOT_FOUND.toString()));
     }
 
     private void validateClubManager(Long clubId, Long userId) {
-        if (!clubRepository.existsById(clubId)) throw new IllegalStateException("존재하지 않는 클럽입니다.");
-        if (!userRepository.existsById(userId)) throw new IllegalStateException("존재하지 않는 유저입니다.");
+        if (!clubRepository.existsById(clubId)) throw new IllegalStateException(CLUB_NOT_FOUND.toString());
+        if (!userRepository.existsById(userId)) throw new IllegalStateException(USER_NOT_FOUND.toString());
 
         ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
-                .orElseThrow(() -> new IllegalStateException("클럽의 멤버가 아닙니다."));
-        if (clubUser.isNotManager()) throw new IllegalStateException("관리자만 접근 가능합니다.");
+                .orElseThrow(() -> new IllegalStateException(NOT_CLUB_MEMBER.toString()));
+        if (clubUser.isNotManager()) throw new IllegalStateException(UNAUTHORIZED.toString());
     }
 
 

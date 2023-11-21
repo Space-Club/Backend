@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import static com.spaceclub.global.ExceptionCode.USER_NOT_FOUND;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
@@ -28,7 +29,7 @@ public class JwtManager {
         String refreshToken = jwt.signRefreshToken();
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."))
+                .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND.toString()))
                 .updateRefreshToken(refreshToken);
         userRepository.save(user);
 
@@ -52,7 +53,7 @@ public class JwtManager {
         jwt.verify(refreshToken);
 
         return userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."))
+                .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND.toString()))
                 .getRefreshToken().equals(refreshToken);
     }
 

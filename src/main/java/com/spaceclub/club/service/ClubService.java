@@ -27,6 +27,12 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.spaceclub.club.domain.ClubUserRole.MEMBER;
+import static com.spaceclub.global.ExceptionCode.CAN_NOT_WITHDRAW;
+import static com.spaceclub.global.ExceptionCode.CLUB_NOT_FOUND;
+import static com.spaceclub.global.ExceptionCode.NOTICE_NOT_FOUND;
+import static com.spaceclub.global.ExceptionCode.NOT_CLUB_MEMBER;
+import static com.spaceclub.global.ExceptionCode.UNAUTHORIZED;
+import static com.spaceclub.global.ExceptionCode.USER_NOT_FOUND;
 
 @Service
 @Transactional
@@ -49,9 +55,9 @@ public class ClubService {
 
     private static final String CLUB_LOGO_S3_URL = "https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/club-logo/";
 
-    public Club createClub(Club club, Long userId, MultipartFile logoImage) throws IOException {
+    public Club createClub(Club club, Long userId, MultipartFile logoImage) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다"));
+                .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND.toString()));
 
         if (logoImage != null) {
             String logoImageUrl = CLUB_LOGO_S3_URL + imageUploader.uploadClubLogoImage(logoImage);
@@ -76,9 +82,9 @@ public class ClubService {
 
     public void deleteClub(Long clubId, Long userId) {
         ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 클럽의 멤버가 아닙니다"));
+                .orElseThrow(() -> new IllegalArgumentException(NOT_CLUB_MEMBER.toString()));
 
-        if (clubUser.isNotManager()) throw new IllegalStateException("클럽을 삭제할 권한이 없습니다.");
+        if (clubUser.isNotManager()) throw new IllegalStateException(UNAUTHORIZED.toString());
 
         clubRepository.deleteById(clubId);
     }
@@ -94,7 +100,7 @@ public class ClubService {
 
         int count = clubUserRepository.countByClub_IdAndRole(updateVo.clubId(), ClubUserRole.MANAGER);
         if (count == MANAGER_MIN_COUNT && updateVo.userId().equals(updateVo.memberId()) && updateVo.role() == MEMBER) {
-            throw new IllegalArgumentException("마지막 관리자는 탈퇴가 불가합니다.");
+            throw new IllegalArgumentException(CAN_NOT_WITHDRAW.toString());
         }
 
         ClubUser clubMember = validateClubUser(updateVo.clubId(), updateVo.memberId());
@@ -114,7 +120,7 @@ public class ClubService {
 
         int count = clubUserRepository.countByClub_IdAndRole(clubId, ClubUserRole.MANAGER);
         if (isLastManager(memberId, userId, count)) {
-            throw new IllegalArgumentException("마지막 관리자는 탈퇴가 불가합니다.");
+            throw new IllegalArgumentException(CAN_NOT_WITHDRAW.toString());
         }
 
         ClubUser clubMember = validateClubUser(clubId, memberId);
@@ -128,10 +134,10 @@ public class ClubService {
     public void createNotice(String notice, Long clubId, Long userId) {
         ClubUser clubUser = validateClubUser(clubId, userId);
 
-        if (clubUser.isNotManager()) throw new IllegalStateException("해당 권한이 없습니다.");
+        if (clubUser.isNotManager()) throw new IllegalStateException(UNAUTHORIZED.toString());
 
         Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException(CLUB_NOT_FOUND.toString()));
 
         ClubNotice clubNotice = ClubNotice.builder()
                 .club(club)
@@ -147,7 +153,7 @@ public class ClubService {
         validateClubUser(clubId, userId);
 
         Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException(CLUB_NOT_FOUND.toString()));
 
         return club.getNotices();
     }
@@ -158,15 +164,15 @@ public class ClubService {
         Long noticeId = updateVo.noticeId();
 
         Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException(CLUB_NOT_FOUND.toString()));
 
         ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
-                .orElseThrow(() -> new IllegalArgumentException("클럽의 멤버가 아닙니다."));
+                .orElseThrow(() -> new IllegalArgumentException(NOT_CLUB_MEMBER.toString()));
 
-        if (clubUser.isNotManager()) throw new IllegalStateException("해당 권한이 없습니다.");
+        if (clubUser.isNotManager()) throw new IllegalStateException(UNAUTHORIZED.toString());
 
         ClubNotice clubNotice = clubNoticeRepository.findById(noticeId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 공지사항이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException(NOTICE_NOT_FOUND.toString()));
         List<ClubNotice> notices = club.getNotices();
 
         for (ClubNotice notice : notices) {
@@ -188,7 +194,7 @@ public class ClubService {
 
         ClubUser clubUser = validateClubUser(clubId, userId);
 
-        if (clubUser.isNotManager()) throw new IllegalStateException("해당 권한이 없습니다.");
+        if (clubUser.isNotManager()) throw new IllegalStateException(UNAUTHORIZED.toString());
 
         clubNoticeRepository.deleteById(noticeId);
     }
@@ -205,7 +211,7 @@ public class ClubService {
         validateClubManager(clubId, userId);
 
         Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 클럽이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException(CLUB_NOT_FOUND.toString()));
 
         if (logoImage != null) {
             String logoImageUrl = CLUB_LOGO_S3_URL + imageUploader.uploadClubLogoImage(logoImage);
@@ -223,22 +229,22 @@ public class ClubService {
 
     public String getUserRole(Long clubId, Long userId) {
         ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException(NOT_CLUB_MEMBER.toString()));
 
         return clubUser.getRole().name();
     }
 
     private ClubUser validateClubUser(Long clubId, Long userId) {
-        if (!clubRepository.existsById(clubId)) throw new IllegalStateException("존재하지 않는 클럽입니다.");
-        if (!userRepository.existsById(userId)) throw new IllegalStateException("존재하지 않는 유저입니다.");
+        if (!clubRepository.existsById(clubId)) throw new IllegalStateException(CLUB_NOT_FOUND.toString());
+        if (!userRepository.existsById(userId)) throw new IllegalStateException(USER_NOT_FOUND.toString());
 
         return clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
-                .orElseThrow(() -> new IllegalStateException("클럽의 멤버가 아닙니다."));
+                .orElseThrow(() -> new IllegalStateException(NOT_CLUB_MEMBER.toString()));
     }
 
     private void validateClubManager(Long clubId, Long userId) {
         ClubUser clubUser = validateClubUser(clubId, userId);
-        if (clubUser.isNotManager()) throw new IllegalStateException("관리자만 접근 가능합니다.");
+        if (clubUser.isNotManager()) throw new IllegalStateException(UNAUTHORIZED.toString());
     }
 
 }
