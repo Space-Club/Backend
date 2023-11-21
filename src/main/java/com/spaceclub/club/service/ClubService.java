@@ -52,15 +52,13 @@ public class ClubService {
 
     private final S3ImageUploader imageUploader;
 
-    public static final String CLUB_LOGO_S3_URL = "https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/club-logo/";
-
     public Club createClub(Club club, Long userId, MultipartFile logoImage) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND.toString()));
 
         if (logoImage != null) {
             String logoImageUrl = imageUploader.uploadClubLogoImage(logoImage);
-            club = club.updateLogoImageUrl(logoImageUrl);
+            club = club.updateLogoImage(logoImageUrl);
         }
 
         ClubUser clubUser = ClubUser.builder()
@@ -218,12 +216,12 @@ public class ClubService {
 
         if (logoImage != null) {
             String logoImageUrl = imageUploader.uploadClubLogoImage(logoImage);
-            club = club.updateLogoImageUrl(logoImageUrl);
+            club = club.updateLogoImage(logoImageUrl);
         }
 
         if (coverImage != null) {
-            String coverImageUrl = imageUploader.uploadClubCoverImage(coverImage);
-            club = club.updateCoverImageUrl(coverImageUrl);
+            String coverImageName = imageUploader.uploadClubCoverImage(coverImage);
+            club = club.updateCoverImage(coverImageName);
         }
 
         Club updatedClub = club.update(newClub);

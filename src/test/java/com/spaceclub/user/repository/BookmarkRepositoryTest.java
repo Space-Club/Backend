@@ -48,7 +48,7 @@ class BookmarkRepositoryTest {
         Club club = Club.builder()
                 .id(1L)
                 .name("클럽 명")
-                .logoImageUrl("클럽 썸네일 이미지 URL")
+                .logoImageName("클럽 썸네일 이미지 URL")
                 .info("클럽 정보")
                 .build();
         clubRepository.save(club);

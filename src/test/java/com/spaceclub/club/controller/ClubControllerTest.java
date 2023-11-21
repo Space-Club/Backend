@@ -114,7 +114,7 @@ class ClubControllerTest {
                         .id(1L)
                         .name("연사모")
                         .info("연어를 사랑하는 모임")
-                        .logoImageUrl("연어.jpg")
+                        .logoImageName("연어.jpg")
                         .build()
         );
 

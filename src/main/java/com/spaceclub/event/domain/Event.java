@@ -161,7 +161,7 @@ public class Event extends BaseTimeEntity {
     }
 
     public String getClubLogoImageUrl() {
-        return club.getLogoImageUrl();
+        return club.getLogoImageName();
     }
 
     public LocalDateTime getFormOpenDateTime() {
