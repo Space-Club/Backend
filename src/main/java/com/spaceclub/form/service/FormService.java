@@ -113,7 +113,7 @@ public class FormService {
         if (!clubRepository.existsById(clubId)) throw new IllegalStateException(CLUB_NOT_FOUND.toString());
         if (!userRepository.existsById(userId)) throw new IllegalStateException(USER_NOT_FOUND.toString());
 
-        ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
+        ClubUser clubUser = clubUserRepository.findByClub_IdAndUserId(clubId, userId)
                 .orElseThrow(() -> new IllegalStateException(NOT_CLUB_MEMBER.toString()));
         if (clubUser.isNotManager()) throw new IllegalStateException(UNAUTHORIZED.toString());
     }

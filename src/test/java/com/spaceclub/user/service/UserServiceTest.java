@@ -37,7 +37,7 @@ class UserServiceTest {
     void 모든_클럽_조회에_성공한다() {
         // given
         given(userRepository.existsById(any(Long.class))).willReturn(true);
-        given(clubUserRepository.findByUser_Id(user1().getId())).willReturn(List.of(club1User1Manager()));
+        given(clubUserRepository.findByUserId(user1().getId())).willReturn(List.of(club1User1Manager()));
 
         // when
         List<Club> clubs = userService.getClubs(user1().getId());

@@ -95,7 +95,7 @@ public class UserService {
 
     public List<Club> getClubs(Long userId) {
         if (!userRepository.existsById(userId)) throw new IllegalStateException(USER_NOT_FOUND.toString());
-        List<ClubUser> clubUsers = clubUserRepository.findByUser_Id(userId);
+        List<ClubUser> clubUsers = clubUserRepository.findByUserId(userId);
 
         return clubUsers.stream()
                 .map(ClubUser::getClub)

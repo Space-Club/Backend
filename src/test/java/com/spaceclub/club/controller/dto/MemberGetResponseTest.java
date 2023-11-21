@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.spaceclub.club.controller.dto.MemberGetResponse.memberComparator;
 import static com.spaceclub.user.domain.Status.REGISTERED;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -75,38 +76,42 @@ class MemberGetResponseTest {
     @Test
     void 클럽_멤버_정렬에_성공한다() {
         // given
-        ClubUser clubUserOrder1 = ClubUser.builder()
+        MemberGetResponse clubUserOrder1 = MemberGetResponse.builder()
                 .id(1L)
-                .user(user1())
+                .name(user1().getName())
+                .profileImageUrl(user1().getProfileImageUrl())
                 .role(ClubUserRole.MANAGER)
                 .build();
 
-        ClubUser clubUserOrder2 = ClubUser.builder()
+        MemberGetResponse clubUserOrder2 = MemberGetResponse.builder()
                 .id(2L)
-                .user(user2())
+                .name(user2().getName())
+                .profileImageUrl(user2().getProfileImageUrl())
                 .role(ClubUserRole.MEMBER)
                 .build();
 
-        ClubUser clubUserOrder3 = ClubUser.builder()
+        MemberGetResponse clubUserOrder3 = MemberGetResponse.builder()
                 .id(3L)
-                .user(user3())
+                .name(user3().getName())
+                .profileImageUrl(user3().getProfileImageUrl())
                 .role(ClubUserRole.MANAGER)
                 .build();
 
-        ClubUser clubUserOrder4 = ClubUser.builder()
+        MemberGetResponse clubUserOrder4 = MemberGetResponse.builder()
                 .id(4L)
-                .user(user4())
+                .name(user4().getName())
+                .profileImageUrl(user4().getProfileImageUrl())
                 .role(ClubUserRole.MEMBER)
                 .build();
 
-        List<ClubUser> response = new ArrayList<>();
+        List<MemberGetResponse> response = new ArrayList<>();
         response.add(clubUserOrder1);
         response.add(clubUserOrder2);
         response.add(clubUserOrder3);
         response.add(clubUserOrder4);
 
         // when
-        response.sort(ClubUser.memberComparator);
+        response.sort(memberComparator);
 
         // then
         assertThat(response).containsExactly(clubUserOrder1, clubUserOrder3, clubUserOrder2, clubUserOrder4);

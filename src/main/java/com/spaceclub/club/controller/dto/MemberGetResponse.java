@@ -2,6 +2,7 @@ package com.spaceclub.club.controller.dto;
 
 import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.domain.ClubUserRole;
+import com.spaceclub.user.service.vo.UserProfileInfo;
 import lombok.Builder;
 
 import java.util.Comparator;
@@ -21,11 +22,11 @@ public record MemberGetResponse(
             .comparing((MemberGetResponse response) -> response.role().getSortPriority())
             .thenComparing(MemberGetResponse::name);
 
-    public static MemberGetResponse from(ClubUser clubUser) {
+    public static MemberGetResponse from(ClubUser clubUser, UserProfileInfo userProfile) {
         return MemberGetResponse.builder()
                 .id(clubUser.getUserId())
-                .name(clubUser.getName())
-                .profileImageUrl(clubUser.getProfileImageUrl())
+                .name(userProfile.username())
+                .profileImageUrl(userProfile.profileImageUrl())
                 .role(clubUser.getRole())
                 .build();
     }
