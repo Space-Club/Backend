@@ -1,4 +1,4 @@
-package com.spaceclub.invite.domain;
+package com.spaceclub.invite.service;
 
 import org.springframework.stereotype.Component;
 

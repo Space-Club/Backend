@@ -1,7 +1,6 @@
 package com.spaceclub.club.domain;
 
 import com.spaceclub.global.BaseTimeEntity;
-import com.spaceclub.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -16,8 +15,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Comparator;
-
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Table(name = "club_user")
@@ -26,6 +23,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 public class ClubUser extends BaseTimeEntity {
 
     @Id
+    @Getter
     @Column(name = "club_user_id")
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
@@ -36,19 +34,18 @@ public class ClubUser extends BaseTimeEntity {
     private Club club;
 
     @Getter
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "user_id")
+    private Long userId;
 
     @Getter
     @Enumerated(EnumType.STRING)
     private ClubUserRole role;
 
     @Builder
-    public ClubUser(Long id, Club club, User user, ClubUserRole role) {
+    public ClubUser(Long id, Club club, Long userId, ClubUserRole role) {
         this.id = id;
         this.club = club;
-        this.user = user;
+        this.userId = userId;
         this.role = role;
     }
 
@@ -56,25 +53,9 @@ public class ClubUser extends BaseTimeEntity {
         return ClubUser.builder()
                 .id(this.id)
                 .club(this.club)
-                .user(this.user)
+                .userId(this.userId)
                 .role(role)
                 .build();
-    }
-
-    public Long getUserId() {
-        return user.getId();
-    }
-
-    public String getUsername() {
-        return user.getUsername();
-    }
-
-    public String getName() {
-        return user.getName();
-    }
-
-    public String getProfileImageUrl() {
-        return user.getProfileImageUrl();
     }
 
     public boolean isNotManager() {
@@ -84,9 +65,5 @@ public class ClubUser extends BaseTimeEntity {
     public boolean isManager() {
         return this.role.equals(ClubUserRole.MANAGER);
     }
-
-    public static Comparator<ClubUser> memberComparator = Comparator
-            .comparing((ClubUser clubUser) -> clubUser.role.getSortPriority())
-            .thenComparing(ClubUser::getUsername);
 
 }

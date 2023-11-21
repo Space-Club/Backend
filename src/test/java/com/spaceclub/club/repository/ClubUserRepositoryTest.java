@@ -63,8 +63,8 @@ class ClubUserRepositoryTest {
     @DirtiesContext
     void 클럽의_유저_조회에_성공한다() {
         // when
-        Optional<ClubUser> getClubUser = clubUserRepository.findByClub_IdAndUser_Id(club1().getId(), user1().getId());
-        Optional<ClubUser> getEmpty = clubUserRepository.findByClub_IdAndUser_Id(club1().getId(), user1().getId() + 1);
+        Optional<ClubUser> getClubUser = clubUserRepository.findByClub_IdAndUserId(club1().getId(), user1().getId());
+        Optional<ClubUser> getEmpty = clubUserRepository.findByClub_IdAndUserId(club1().getId(), user1().getId() + 1);
 
         // then
         assertAll(
@@ -95,7 +95,7 @@ class ClubUserRepositoryTest {
         clubUserRepository.save(club2User1Manager());
 
         // when
-        List<ClubUser> clubUsers = clubUserRepository.findByUser_Id(user1().getId());
+        List<ClubUser> clubUsers = clubUserRepository.findByUserId(user1().getId());
 
         // then
         assertThat(clubUsers.size()).isEqualTo(2);

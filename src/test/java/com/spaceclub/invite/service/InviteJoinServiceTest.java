@@ -16,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static com.spaceclub.club.ClubTestFixture.club1;
 import static com.spaceclub.invite.InviteTestFixture.invite1;
 import static com.spaceclub.user.UserTestFixture.user1;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -26,16 +25,13 @@ import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.class)
-class InviteServiceTest {
+class InviteJoinServiceTest {
 
     @InjectMocks
-    private InviteService inviteService;
+    private InviteJoinService inviteJoinService;
 
     @Mock
     private InviteRepository inviteRepository;
-
-    @Mock
-    private UserRepository userRepository;
 
     @Mock
     private ClubUserRepository clubUserRepository;
@@ -45,11 +41,10 @@ class InviteServiceTest {
         // given
         Invite expiredInvite = invite1();
 
-        given(userRepository.findById(any(Long.class))).willReturn(Optional.of(user1()));
         given(inviteRepository.findByCode(any(String.class))).willReturn(Optional.of(expiredInvite));
 
         // when, then
-        assertThatThrownBy(() -> inviteService.joinClub("123", 1L))
+        assertThatThrownBy(() -> inviteJoinService.joinClub("123", 1L))
                 .isInstanceOf(IllegalStateException.class);
 
     }
@@ -57,13 +52,12 @@ class InviteServiceTest {
     @Test
     void 해당_클럽에_이미_가입한_경우_클럽_가입에_실패한다() {
         // given
-        given(userRepository.findById(any(Long.class))).willReturn(Optional.of(user1()));
         given(inviteRepository.findByCode(any(String.class))).willReturn(Optional.of(invite1()));
         lenient().doReturn(true).when(clubUserRepository)
-                .existsByClubAndUser(any(Club.class), any(User.class));
+                .existsByClubAndUserId(any(Club.class), any(Long.class));
 
         // when, then
-        assertThatThrownBy(() -> inviteService.joinClub("123", 1L))
+        assertThatThrownBy(() -> inviteJoinService.joinClub("123", 1L))
                 .isInstanceOf(IllegalStateException.class);
 
     }

@@ -1,14 +1,10 @@
 package com.spaceclub.invite.controller;
 
-import com.spaceclub.club.domain.Club;
-import com.spaceclub.club.service.ClubService;
 import com.spaceclub.global.Authenticated;
 import com.spaceclub.global.jwt.vo.JwtUser;
-import com.spaceclub.invite.controller.dto.ClubRequestToJoinResponse;
 import com.spaceclub.invite.service.InviteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,47 +13,24 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/clubs")
 @RequiredArgsConstructor
 public class InviteController {
 
     public static final String INVITE_LINK_PREFIX = "https://spaceclub.site/api/v1/clubs/invite/";
 
-    private final InviteService service;
+    private final InviteService inviteService;
 
-    private final ClubService clubService;
-
-    @PostMapping("/clubs/{clubId}/invite")
+    @PostMapping("/{clubId}/invite")
     public ResponseEntity<Map<String, String>> getInviteLink(@PathVariable Long clubId, @Authenticated JwtUser jwtUser) {
 
-        String inviteCode = service.getInviteCode(clubId, jwtUser.id());
+        String inviteCode = inviteService.getInviteCode(clubId, jwtUser.id());
 
         String inviteLink = INVITE_LINK_PREFIX + inviteCode;
 
         return ResponseEntity.ok(
                 Map.of("inviteLink", inviteLink)
         );
-    }
-
-    @PostMapping("/clubs/invite/{code}")
-    public ResponseEntity<Map<String, Long>> joinClub(@PathVariable String code, @Authenticated JwtUser jwtUser) {
-
-        Long clubId = service.joinClub(code, jwtUser.id());
-
-        return ResponseEntity.ok(
-                Map.of("clubId", clubId)
-        );
-    }
-
-    @GetMapping("/clubs/invite/{code}")
-    public ResponseEntity<ClubRequestToJoinResponse> requestToJoinClub(@PathVariable String code) {
-        Club club = service.requestToJoinClub(code);
-
-        Long memberCount = clubService.countMember(club);
-
-        ClubRequestToJoinResponse response = ClubRequestToJoinResponse.from(club, memberCount);
-
-        return ResponseEntity.ok(response);
     }
 
 }

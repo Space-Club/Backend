@@ -13,7 +13,7 @@ public class ClubUserTestFixture {
     public static ClubUser club1User1Manager() {
         return ClubUser.builder()
                 .club(club1())
-                .user(user1())
+                .userId(user1().getId())
                 .role(ClubUserRole.MANAGER)
                 .build();
     }
@@ -21,7 +21,7 @@ public class ClubUserTestFixture {
     public static ClubUser club1User2Manager() {
         return ClubUser.builder()
                 .club(club1())
-                .user(user2())
+                .userId(user2().getId())
                 .role(ClubUserRole.MANAGER)
                 .build();
     }
@@ -29,7 +29,7 @@ public class ClubUserTestFixture {
     public static ClubUser club1User2Member() {
         return ClubUser.builder()
                 .club(club1())
-                .user(user2())
+                .userId(user2().getId())
                 .role(ClubUserRole.MEMBER)
                 .build();
     }
@@ -37,7 +37,7 @@ public class ClubUserTestFixture {
     public static ClubUser club2User1Manager() {
         return ClubUser.builder()
                 .club(club2())
-                .user(user1())
+                .userId(user1().getId())
                 .role(ClubUserRole.MANAGER)
                 .build();
     }

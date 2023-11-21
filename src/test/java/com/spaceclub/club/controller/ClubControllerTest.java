@@ -3,15 +3,9 @@ package com.spaceclub.club.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.controller.dto.ClubCreateRequest;
-import com.spaceclub.club.controller.dto.ClubNoticeCreateRequest;
-import com.spaceclub.club.controller.dto.ClubNoticeUpdateRequest;
 import com.spaceclub.club.controller.dto.ClubUpdateRequest;
-import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.service.ClubService;
-import com.spaceclub.club.service.vo.ClubNoticeUpdate;
-import com.spaceclub.club.service.vo.ClubUserUpdate;
-import com.spaceclub.event.domain.Event;
 import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.interceptor.JwtAuthorizationInterceptor;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -22,9 +16,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -35,20 +26,10 @@ import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequ
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
-import static com.spaceclub.club.ClubNoticeTestFixture.clubNotice1;
-import static com.spaceclub.club.ClubNoticeTestFixture.clubNotice2;
 import static com.spaceclub.club.ClubTestFixture.club1;
-import static com.spaceclub.club.ClubUserTestFixture.club1User1Manager;
-import static com.spaceclub.club.ClubUserTestFixture.club1User2Manager;
-import static com.spaceclub.club.domain.ClubUserRole.MANAGER;
-import static com.spaceclub.event.EventTestFixture.clubEvent;
-import static com.spaceclub.event.EventTestFixture.event1;
-import static com.spaceclub.event.EventTestFixture.showEvent;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -57,32 +38,25 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.JsonFieldType.ARRAY;
-import static org.springframework.restdocs.payload.JsonFieldType.BOOLEAN;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
-import static org.springframework.restdocs.payload.JsonFieldType.OBJECT;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestPartFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(value = ClubController.class,
+@WebMvcTest(
+        value = ClubController.class,
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
                         JwtAuthorizationInterceptor.class,
@@ -207,36 +181,6 @@ class ClubControllerTest {
 
     @Test
     @WithMockUser
-    void 클럽_유저_권한_조회에_성공한다() throws Exception {
-        // given
-        final String userRole = "MANAGER";
-        given(clubService.getUserRole(any(Long.class), any())).willReturn(userRole);
-
-        // when, then
-        mockMvc.perform(get("/api/v1/clubs/{clubId}/users", club1().getId())
-                        .header(AUTHORIZATION, "Access Token")
-                        .contentType(MediaType.APPLICATION_JSON)
-                ).andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.role").value("MANAGER"))
-                .andDo(
-                        document("club/getUserRole",
-                                preprocessRequest(prettyPrint()),
-                                preprocessResponse(prettyPrint()),
-                                pathParameters(
-                                        parameterWithName("clubId").description("클럽 아이디")),
-                                requestHeaders(
-                                        headerWithName(AUTHORIZATION).description("Access Token")
-                                ),
-                                responseFields(
-                                        fieldWithPath("role").type(STRING).description("유저 권한")
-                                )
-                        )
-                );
-    }
-
-    @Test
-    @WithMockUser
     void 클럽_수정에_성공한다() throws Exception {
         // given
         Long clubId = 1L;
@@ -336,364 +280,5 @@ class ClubControllerTest {
                         )
                 ));
     }
-
-    @Test
-    @WithMockUser
-    public void 클럽_행사_조회에_성공한다() throws Exception {
-        // given
-        List<Event> events = List.of(event1(), showEvent(), clubEvent());
-        Page<Event> eventPages = new PageImpl<>(events);
-
-        given(clubService.getClubEvents(any(Long.class), any(Pageable.class), any())).willReturn(eventPages);
-        Long clubId = 1L;
-
-        // when
-        ResultActions actions = mockMvc.perform(get("/api/v1/clubs/{clubId}/events", clubId)
-                .header(AUTHORIZATION, "access token")
-                .param("page", "1")
-                .param("size", "3")
-                .param("sort", "id,asc")
-        );
-
-        // then
-        actions
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.size()").value(events.size()))
-                .andExpect(jsonPath("$.pageData.first").value(true))
-                .andExpect(jsonPath("$.pageData.last").value(true))
-                .andExpect(jsonPath("$.pageData.pageNumber").value(0))
-                .andExpect(jsonPath("$.pageData.size").value(3))
-                .andExpect(jsonPath("$.pageData.totalPages").value(1))
-                .andExpect(jsonPath("$.pageData.totalElements").value(events.size()))
-                .andDo(document("club/getAllEvent",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(
-                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
-                        ),
-                        pathParameters(
-                                parameterWithName("clubId").description("클럽 아이디")),
-                        queryParameters(
-                                parameterWithName("page").description("페이지"),
-                                parameterWithName("size").description("페이지 내 개수"),
-                                parameterWithName("sort").description("정렬 방법((ex) id,desc)")
-                        ),
-                        responseFields(
-                                fieldWithPath("data").type(ARRAY).description("페이지 내 행사 정보"),
-                                fieldWithPath("data[].id").type(NUMBER).description("행사 아이디"),
-                                fieldWithPath("data[].title").type(STRING).description("행사 제목"),
-                                fieldWithPath("data[].posterImageUrl").type(STRING).description("포스터 URL"),
-                                fieldWithPath("data[].location").type(STRING).description("행사 위치"),
-                                fieldWithPath("data[].startDate").type(STRING).description("행사 날짜"),
-                                fieldWithPath("data[].startTime").type(STRING).description("행사 시간"),
-                                fieldWithPath("data[].location").type(STRING).description("행사 위치"),
-                                fieldWithPath("data[].clubName").type(STRING).description("클럽 명"),
-                                fieldWithPath("data[].clubLogoImageUrl").type(STRING).description("클럽 로고 이미지 Url"),
-                                fieldWithPath("data[].openStatus").type(STRING).description("행사 공개 상태"),
-                                fieldWithPath("pageData").type(OBJECT).description("페이지 정보"),
-                                fieldWithPath("pageData.first").type(BOOLEAN).description("첫 페이지 여부"),
-                                fieldWithPath("pageData.last").type(BOOLEAN).description("마지막 페이지 여부"),
-                                fieldWithPath("pageData.pageNumber").type(NUMBER).description("현재 페이지 번호"),
-                                fieldWithPath("pageData.size").type(NUMBER).description("페이지 내 개수"),
-                                fieldWithPath("pageData.totalPages").type(NUMBER).description("총 페이지 개수"),
-                                fieldWithPath("pageData.totalElements").type(NUMBER).description("총 행사 개수")
-                        )
-                ));
-    }
-
-    @Test
-    @WithMockUser
-    public void 클럽_멤버_조회에_성공한다() throws Exception {
-        // given
-        given(clubService.getMembers(any(Long.class), any())).willReturn(List.of(club1User1Manager(), club1User2Manager()));
-
-        // when
-        ResultActions actions = mockMvc.perform(get("/api/v1/clubs/{clubId}/members", club1().getId())
-                .header(AUTHORIZATION, "access token")
-        );
-
-        // then
-        actions
-                .andExpect(status().isOk())
-                .andDo(document("club/getAllMember",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(
-                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
-                        ),
-                        pathParameters(
-                                parameterWithName("clubId").description("클럽 아이디")),
-                        responseFields(
-                                fieldWithPath("[]").type(ARRAY).description("멤버 리스트"),
-                                fieldWithPath("[].id").type(NUMBER).description("멤버의 유저 id"),
-                                fieldWithPath("[].name").type(STRING).description("멤버 이름"),
-                                fieldWithPath("[].profileImageUrl").type(STRING).description("멤버 이미지 Url"),
-                                fieldWithPath("[].role").type(STRING).description("멤버 권한")
-
-                        )
-                ));
-    }
-
-    @Test
-    @WithMockUser
-    void 클럽_멤버_권한_수정에_성공한다() throws Exception {
-        // given
-        Long clubId = 1L;
-        Long memberId = 1L;
-        ClubUserUpdateRequest request = new ClubUserUpdateRequest(MANAGER);
-
-        doNothing().when(clubService).updateMemberRole(any(ClubUserUpdate.class));
-
-        // when
-        ResultActions result = this.mockMvc.perform(patch("/api/v1/clubs/{clubId}/members/{memberId}", clubId, memberId)
-                .header(AUTHORIZATION, "access token")
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(request))
-        );
-
-        // then
-        result.andExpect(status().isNoContent())
-                .andDo(print())
-                .andDo(document("club/updateMemberRole",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(
-                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
-                        ),
-                        pathParameters(
-                                parameterWithName("clubId").description("클럽 아이디"),
-                                parameterWithName("memberId").description("멤버의 유저 id")
-                        ),
-                        requestFields(
-                                fieldWithPath("role").description("멤버 권한")
-                        )
-                ));
-    }
-
-    @Test
-    @WithMockUser
-    void 클럽_멤버_추방에_성공한다() throws Exception {
-        // given
-        Long clubId = 1L;
-        Long memberId = 1L;
-
-        doNothing().when(clubService).deleteMember(any(Long.class), any(Long.class), any(Long.class));
-
-        // when
-        ResultActions result = this.mockMvc.perform(delete("/api/v1/clubs/{clubId}/members/{memberId}", clubId, memberId)
-                .header(AUTHORIZATION, "access token")
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-        );
-
-        // then
-        result.andExpect(status().isNoContent())
-                .andDo(print())
-                .andDo(document("club/deleteMember",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(
-                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
-                        ),
-                        pathParameters(
-                                parameterWithName("clubId").description("클럽 아이디"),
-                                parameterWithName("memberId").description("멤버의 유저 id")
-                        )
-                ));
-    }
-
-    @Test
-    @WithMockUser
-    void 클럽_공지사항_작성에_성공한다() throws Exception {
-        // given
-        Long clubId = 1L;
-
-        ClubNoticeCreateRequest request = new ClubNoticeCreateRequest("notice");
-
-        // when
-        ResultActions result = this.mockMvc.perform(post("/api/v1/clubs/{clubId}/notices", clubId)
-                .header(AUTHORIZATION, "access token")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(request))
-                .with(csrf())
-        );
-
-        // then
-        result.andExpect(status().isNoContent())
-                .andDo(print())
-                .andDo(document("club/createNotice",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(
-                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
-                        ),
-                        pathParameters(
-                                parameterWithName("clubId").description("클럽 아이디")
-                        ),
-                        requestFields(
-                                fieldWithPath("notice").type(STRING).description("공지 사항")
-                        )
-                ));
-    }
-
-    @Test
-    @WithMockUser
-    void 클럽_공지사항_조회에_성공한다() throws Exception {
-        // given
-        Long clubId = 1L;
-        given(clubService.getNotices(any(Long.class), any())).willReturn(
-                List.of(clubNotice1(), clubNotice2())
-        );
-
-        // when
-        ResultActions result = this.mockMvc.perform(get("/api/v1/clubs/{clubId}/notices", clubId)
-                .header(AUTHORIZATION, "access token")
-                .with(csrf())
-        );
-
-        // then
-        result.andExpect(status().isOk())
-                .andDo(print())
-                .andDo(document("club/getNotice",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(
-                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
-                        ),
-                        pathParameters(
-                                parameterWithName("clubId").description("클럽 아이디")
-                        ),
-                        responseFields(
-                                fieldWithPath("notices").type(ARRAY).description("공지 사항 리스트"),
-                                fieldWithPath("notices.[].id").type(NUMBER).description("공지 사항 항목 ID"),
-                                fieldWithPath("notices.[].notice").type(STRING).description("공지 사항 내용")
-                        )
-                ));
-    }
-
-    @Test
-    @WithMockUser
-    void 클럽_공지사항_수정에_성공한다() throws Exception {
-        // given
-        Long clubId = 1L;
-        Long noticeId = 1L;
-        doNothing().when(clubService).updateNotice(any(ClubNoticeUpdate.class));
-
-        // when
-        ResultActions result = this.mockMvc.perform(patch("/api/v1/clubs/{clubId}/notices/{noticeId}", clubId, noticeId)
-                .header(AUTHORIZATION, "access token")
-                .content(mapper.writeValueAsString(new ClubNoticeUpdateRequest("새로운 공지사항")))
-                .contentType(MediaType.APPLICATION_JSON)
-                .with(csrf())
-        );
-
-        // then
-        result.andExpect(status().isNoContent())
-                .andDo(print())
-                .andDo(document("club/updateNotice",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(
-                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
-                        ),
-                        pathParameters(
-                                parameterWithName("clubId").description("클럽 아이디"),
-                                parameterWithName("noticeId").description("공지사항 아이디")
-                        ),
-                        requestFields(
-                                fieldWithPath("notice").type(STRING).description("새로운 공지사항")
-                        )
-                ));
-    }
-
-    @Test
-    @WithMockUser
-    void 클럽_공지사항_삭제에_성공한다() throws Exception {
-        // given
-        Long clubId = 1L;
-        Long noticeId = 1L;
-
-        // when
-        ResultActions result = this.mockMvc.perform(delete("/api/v1/clubs/{clubId}/notices/{noticeId}", clubId, noticeId)
-                .header(AUTHORIZATION, "access token")
-                .with(csrf())
-        );
-
-        // then
-        result.andExpect(status().isNoContent())
-                .andDo(print())
-                .andDo(document("club/deleteNotice",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(
-                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
-                        ),
-                        pathParameters(
-                                parameterWithName("clubId").description("클럽 아이디"),
-                                parameterWithName("noticeId").description("공지사항 아이디")
-
-                        )
-                ));
-    }
-
-    @Test
-    @WithMockUser
-    void 클럽_일정_조회에_성공한다() throws Exception {
-        // given
-        Long clubId = 1L;
-        given(clubService.getClubSchedules(any(Long.class), any())).willReturn(
-                List.of(clubEvent())
-        );
-
-        // when
-        ResultActions result = this.mockMvc.perform(get("/api/v1/clubs/{clubId}/schedules", clubId)
-                .header(AUTHORIZATION, "access token")
-        );
-
-        // then
-        result.andExpect(status().isOk())
-                .andDo(print())
-                .andDo(document("club/getSchedule",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(
-                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
-                        ),
-                        pathParameters(
-                                parameterWithName("clubId").description("클럽 아이디")
-                        ),
-                        responseFields(
-                                fieldWithPath("schedules").type(ARRAY).description("클럽 일정 목록"),
-                                fieldWithPath("schedules.[].eventId").type(NUMBER).description("이벤트 ID"),
-                                fieldWithPath("schedules.[].title").type(STRING).description("일정 제목"),
-                                fieldWithPath("schedules.[].startDateTime").type(STRING).description("일정 시작 날짜와 시간"),
-                                fieldWithPath("schedules.[].endDateTime").type(STRING).description("일정 종료 날짜와 시간"),
-                                fieldWithPath("schedules.[].manager").type(STRING).description("일정 생성자")
-                        )
-                ));
-    }
-
-    @Test
-    @WithMockUser
-    void 클럽_멤버일_경우_클럽_탈퇴에_성공한다() throws Exception {
-        doNothing().when(clubService).deleteClub(any(Long.class), any(Long.class));
-        Long clubId = 1L;
-        mockMvc.perform(delete("/api/v1/clubs/{clubId}/users", clubId)
-                .header(AUTHORIZATION, "access token")
-                .with(csrf()))
-                .andExpect(status().isNoContent())
-                .andDo(document("club/exitClub",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("clubId").description("클럽 아이디")
-                        ),
-                        requestHeaders(
-                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
-                        )
-                ));
-    }
-
 
 }

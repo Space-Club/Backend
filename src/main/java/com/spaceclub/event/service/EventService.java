@@ -23,7 +23,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.spaceclub.event.domain.ApplicationStatus.PENDING;
+import static com.spaceclub.event.domain.EventCategory.CLUB;
 import static com.spaceclub.global.ExceptionCode.CLUB_NOT_FOUND;
 import static com.spaceclub.global.ExceptionCode.EVENT_ALREADY_APPLIED;
 import static com.spaceclub.global.ExceptionCode.EVENT_CATEGORY_NOT_ALLOWED;
@@ -73,7 +76,7 @@ public class EventService {
     }
 
     public Page<Event> getAllEvents(EventCategory eventCategory, Pageable pageable) {
-        if (eventCategory == EventCategory.CLUB) {
+        if (eventCategory == CLUB) {
             throw new IllegalArgumentException(EVENT_CATEGORY_NOT_ALLOWED.toString());
         }
         return eventRepository.findAllByCategory(eventCategory, pageable);
@@ -121,9 +124,15 @@ public class EventService {
     }
 
     private void validateEventTicketCount(Integer maxTicketCount, Integer ticketCount) {
-        if (maxTicketCount == null && ticketCount != null) throw new IllegalArgumentException(EVENT_TICKET_NOT_MANAGED.toString());
-        if (maxTicketCount != null && ticketCount == null) throw new IllegalArgumentException(TICKET_COUNT_REQUIRED.toString());
-        if (ticketCount != null && maxTicketCount < ticketCount)
+        boolean eventTicketNotManaged = maxTicketCount == null && ticketCount != null;
+        boolean ticketCountRequired = maxTicketCount != null && ticketCount == null;
+        boolean exceedTicketCount = ticketCount != null &&
+                maxTicketCount != null &&
+                maxTicketCount < ticketCount;
+
+        if (eventTicketNotManaged) throw new IllegalArgumentException(EVENT_TICKET_NOT_MANAGED.toString());
+        if (ticketCountRequired) throw new IllegalArgumentException(TICKET_COUNT_REQUIRED.toString());
+        if (exceedTicketCount)
             throw new IllegalArgumentException(EXCEED_TICKET_COUNT.toString());
     }
 
@@ -149,7 +158,7 @@ public class EventService {
         if (!clubRepository.existsById(clubId)) throw new IllegalStateException(CLUB_NOT_FOUND.toString());
         if (!userRepository.existsById(userId)) throw new IllegalStateException(USER_NOT_FOUND.toString());
 
-        ClubUser clubUser = clubUserRepository.findByClub_IdAndUser_Id(clubId, userId)
+        ClubUser clubUser = clubUserRepository.findByClub_IdAndUserId(clubId, userId)
                 .orElseThrow(() -> new IllegalStateException(NOT_CLUB_MEMBER.toString()));
         if (clubUser.isNotManager()) throw new IllegalStateException(UNAUTHORIZED.toString());
 
@@ -159,6 +168,14 @@ public class EventService {
     private Event validateEvent(Long eventId) {
         return eventRepository.findById(eventId)
                 .orElseThrow(() -> new IllegalArgumentException(EVENT_NOT_FOUND.toString()));
+    }
+
+    public Page<Event> getByClubId(Long clubId, Pageable pageable) {
+        return eventRepository.findByClub_Id(clubId, pageable);
+    }
+
+    public List<Event> getSchedulesByClubId(Long clubId) {
+        return eventRepository.findAllByClub_IdAndCategory(clubId, CLUB);
     }
 
 }
