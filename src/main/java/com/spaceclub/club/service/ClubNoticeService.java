@@ -20,7 +20,7 @@ import static com.spaceclub.global.ExceptionCode.NOT_CLUB_MEMBER;
 import static com.spaceclub.global.ExceptionCode.UNAUTHORIZED;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ClubNoticeService {
 
@@ -30,6 +30,7 @@ public class ClubNoticeService {
 
     private final ClubNoticeRepository clubNoticeRepository;
 
+    @Transactional
     public void createNotice(String notice, Long clubId, Long userId) {
         ClubUser clubUser = clubUserRepository.findByClub_IdAndUserId(clubId, userId)
                 .orElseThrow(() -> new IllegalArgumentException(NOT_CLUB_MEMBER.toString()));
@@ -59,6 +60,7 @@ public class ClubNoticeService {
         return club.getNotices();
     }
 
+    @Transactional
     public void updateNotice(ClubNoticeUpdate updateVo) {
         Long clubId = updateVo.clubId();
         Long userId = updateVo.userId();
@@ -88,6 +90,7 @@ public class ClubNoticeService {
         clubNoticeRepository.save(newClubNotice);
     }
 
+    @Transactional
     public void deleteNotice(ClubNoticeDelete deleteVo) {
         Long userId = deleteVo.userId();
         Long clubId = deleteVo.clubId();

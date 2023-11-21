@@ -3,7 +3,7 @@ package com.spaceclub.club.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
-import com.spaceclub.club.controller.dto.MemberGetResponse;
+import com.spaceclub.club.service.vo.MemberGet;
 import com.spaceclub.club.domain.ClubUserRole;
 import com.spaceclub.club.service.ClubMemberManagerService;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
@@ -112,14 +112,14 @@ class ClubUserControllerTest {
     public void 클럽_멤버_조회에_성공한다() throws Exception {
         // given
 
-        MemberGetResponse memberGet1 = MemberGetResponse.builder()
+        MemberGet memberGet1 = MemberGet.builder()
                 .id(1L)
                 .name(user1().getName())
                 .profileImageUrl(user1().getProfileImageUrl())
                 .role(ClubUserRole.MANAGER)
                 .build();
 
-        MemberGetResponse memberGet2 = MemberGetResponse.builder()
+        MemberGet memberGet2 = MemberGet.builder()
                 .id(2L)
                 .name(user2().getName())
                 .profileImageUrl(user2().getProfileImageUrl())

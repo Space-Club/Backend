@@ -16,7 +16,7 @@ import static com.spaceclub.global.ExceptionCode.NOT_CLUB_MEMBER;
 import static com.spaceclub.global.ExceptionCode.UNAUTHORIZED;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ClubService {
 
@@ -26,6 +26,7 @@ public class ClubService {
 
     private final S3ImageUploader imageUploader;
 
+    @Transactional
     public Club createClub(Club club, Long userId, MultipartFile logoImage) {
 
         if (logoImage != null) {
@@ -50,6 +51,7 @@ public class ClubService {
         return clubUser.getClub();
     }
 
+    @Transactional
     public void deleteClub(Long clubId, Long userId) {
         ClubUser clubUser = clubUserRepository.findByClub_IdAndUserId(clubId, userId)
                 .orElseThrow(() -> new IllegalArgumentException(NOT_CLUB_MEMBER.toString()));
@@ -59,6 +61,7 @@ public class ClubService {
         clubRepository.deleteById(clubId);
     }
 
+    @Transactional
     public void updateClub(Club newClub, Long userId, MultipartFile logoImage, MultipartFile coverImage) {
         Long clubId = newClub.getId();
 

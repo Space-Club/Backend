@@ -2,7 +2,7 @@ package com.spaceclub.club.controller;
 
 import com.spaceclub.club.controller.dto.ClubUserRoleResponse;
 import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
-import com.spaceclub.club.controller.dto.MemberGetResponse;
+import com.spaceclub.club.service.vo.MemberGet;
 import com.spaceclub.club.service.ClubMemberManagerService;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.global.Authenticated;
@@ -41,8 +41,8 @@ public class ClubUserController {
     }
 
     @GetMapping("/{clubId}/members")
-    public ResponseEntity<List<MemberGetResponse>> getMembers(@PathVariable Long clubId, @Authenticated JwtUser jwtUser) {
-        List<MemberGetResponse> response = clubMemberManagerService.getMembers(clubId, jwtUser.id());
+    public ResponseEntity<List<MemberGet>> getMembers(@PathVariable Long clubId, @Authenticated JwtUser jwtUser) {
+        List<MemberGet> response = clubMemberManagerService.getMembers(clubId, jwtUser.id());
 
         return ResponseEntity.ok(response);
     }

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/clubs")
 @RequiredArgsConstructor
 public class InviteController {
 
@@ -21,7 +21,7 @@ public class InviteController {
 
     private final InviteService inviteService;
 
-    @PostMapping("/clubs/{clubId}/invite")
+    @PostMapping("/{clubId}/invite")
     public ResponseEntity<Map<String, String>> getInviteLink(@PathVariable Long clubId, @Authenticated JwtUser jwtUser) {
 
         String inviteCode = inviteService.getInviteCode(clubId, jwtUser.id());

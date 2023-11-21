@@ -1,8 +1,7 @@
 package com.spaceclub.invite.service;
 
 import com.spaceclub.club.domain.Club;
-import com.spaceclub.club.repository.ClubRepository;
-import com.spaceclub.club.repository.ClubUserRepository;
+import com.spaceclub.club.service.ClubService;
 import com.spaceclub.invite.domain.Invite;
 import com.spaceclub.invite.repository.InviteRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-import static com.spaceclub.global.ExceptionCode.CLUB_NOT_FOUND;
-import static com.spaceclub.global.ExceptionCode.NOT_CLUB_MEMBER;
 import static com.spaceclub.invite.domain.Invite.INVITE_LINK_VALID_HOURS;
 
 @Service
@@ -24,16 +21,10 @@ public class InviteService {
 
     private final InviteRepository inviteRepository;
 
-    private final ClubRepository clubRepository;
-
-    private final ClubUserRepository clubUserRepository;
+    private final ClubService clubService;
 
     public String getInviteCode(Long clubId, Long userId) {
-        if (!clubUserRepository.existsByClub_IdAndUserId(clubId, userId))
-            throw new IllegalArgumentException(NOT_CLUB_MEMBER.toString());
-
-        Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException(CLUB_NOT_FOUND.toString()));
+        Club club = clubService.getClub(clubId, userId);
 
         String inviteCode = inviteCodeGenerator.generateCode();
 

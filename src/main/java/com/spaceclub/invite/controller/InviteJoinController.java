@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/clubs/invite")
 @RequiredArgsConstructor
 public class InviteJoinController {
 
@@ -25,7 +25,7 @@ public class InviteJoinController {
 
     private final ClubMemberManagerService clubMemberManagerService;
 
-    @PostMapping("/clubs/invite/{code}")
+    @PostMapping("/{code}")
     public ResponseEntity<Map<String, Long>> joinClub(@PathVariable String code, @Authenticated JwtUser jwtUser) {
 
         Long clubId = inviteJoinService.joinClub(code, jwtUser.id());
@@ -35,7 +35,7 @@ public class InviteJoinController {
         );
     }
 
-    @GetMapping("/clubs/invite/{code}")
+    @GetMapping("/{code}")
     public ResponseEntity<ClubRequestToJoinResponse> requestToJoinClub(@PathVariable String code) {
         Club club = inviteJoinService.requestToJoinClub(code);
 

@@ -34,9 +34,6 @@ class InviteJoinServiceTest {
     private InviteRepository inviteRepository;
 
     @Mock
-    private UserRepository userRepository;
-
-    @Mock
     private ClubUserRepository clubUserRepository;
 
     @Test
@@ -44,7 +41,6 @@ class InviteJoinServiceTest {
         // given
         Invite expiredInvite = invite1();
 
-        given(userRepository.findById(any(Long.class))).willReturn(Optional.of(user1()));
         given(inviteRepository.findByCode(any(String.class))).willReturn(Optional.of(expiredInvite));
 
         // when, then
@@ -56,7 +52,6 @@ class InviteJoinServiceTest {
     @Test
     void 해당_클럽에_이미_가입한_경우_클럽_가입에_실패한다() {
         // given
-        given(userRepository.findById(any(Long.class))).willReturn(Optional.of(user1()));
         given(inviteRepository.findByCode(any(String.class))).willReturn(Optional.of(invite1()));
         lenient().doReturn(true).when(clubUserRepository)
                 .existsByClubAndUserId(any(Club.class), any(Long.class));

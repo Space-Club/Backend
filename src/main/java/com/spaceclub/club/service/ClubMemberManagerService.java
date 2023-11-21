@@ -1,6 +1,6 @@
 package com.spaceclub.club.service;
 
-import com.spaceclub.club.controller.dto.MemberGetResponse;
+import com.spaceclub.club.service.vo.MemberGet;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.repository.ClubUserRepository;
@@ -21,7 +21,7 @@ import static com.spaceclub.global.ExceptionCode.NOT_CLUB_MEMBER;
 import static com.spaceclub.global.ExceptionCode.UNAUTHORIZED;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ClubMemberManagerService {
 
@@ -31,6 +31,7 @@ public class ClubMemberManagerService {
 
     private final UserService userService;
 
+    @Transactional
     public void updateMemberRole(ClubUserUpdate updateVo) {
         this.validManager(updateVo.clubId(), updateVo.userId());
 
@@ -46,15 +47,15 @@ public class ClubMemberManagerService {
         clubUserRepository.save(updateClubUser);
     }
 
-    public List<MemberGetResponse> getMembers(Long clubId, Long userId) {
+    public List<MemberGet> getMembers(Long clubId, Long userId) {
         if (!clubUserRepository.existsByClub_IdAndUserId(clubId, userId))
             throw new IllegalArgumentException(NOT_CLUB_MEMBER.toString());
 
         UserProfileInfo userProfile = userService.getUserProfile(userId);
 
         return clubUserRepository.findByClub_Id(clubId).stream()
-                .map((clubUser -> MemberGetResponse.from(clubUser, userProfile)))
-                .sorted(MemberGetResponse.memberComparator)
+                .map((clubUser -> MemberGet.from(clubUser, userProfile)))
+                .sorted(MemberGet.memberComparator)
                 .toList();
     }
 
@@ -69,6 +70,7 @@ public class ClubMemberManagerService {
         return clubUser.getRole().name();
     }
 
+    @Transactional
     public void exitClub(Long clubId, Long memberId) {
         ClubUser clubUser = this.getClubUser(clubId, memberId);
         if (isLastManager(clubId, clubUser)) throw new IllegalStateException("마지막 관리자는 탈퇴가 불가합니다.");
@@ -76,6 +78,7 @@ public class ClubMemberManagerService {
         clubUserRepository.delete(clubUser);
     }
 
+    @Transactional
     public void deleteMember(Long clubId, Long memberId, Long userId) {
         this.validManager(clubId, userId);
 
@@ -116,5 +119,13 @@ public class ClubMemberManagerService {
                 .orElseThrow(() -> new IllegalStateException(NOT_CLUB_MEMBER.toString()));
     }
 
+    public boolean isAlreadyJoined(Club club, Long userId) {
+        return clubUserRepository.existsByClub_IdAndUserId(club.getId(), userId);
+    }
+
+    @Transactional
+    public void save(ClubUser clubUser) {
+        clubUserRepository.save(clubUser);
+    }
 
 }

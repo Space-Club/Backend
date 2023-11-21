@@ -14,7 +14,7 @@ import java.util.List;
 import static com.spaceclub.global.ExceptionCode.NOT_CLUB_MEMBER;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ClubEventService {
 
