@@ -27,6 +27,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -139,7 +140,7 @@ class UserControllerTest {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 requestHeaders(
-                                        headerWithName("Authorization").description("액세스 토큰")
+                                        headerWithName(AUTHORIZATION).description("액세스 토큰")
                                 ),
                                 queryParameters(
                                         parameterWithName("page").description("페이지"),
@@ -307,7 +308,7 @@ class UserControllerTest {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 requestHeaders(
-                                        headerWithName("Authorization").description("access token")
+                                        headerWithName(AUTHORIZATION).description("access token")
                                 ),
                                 responseFields(
                                         fieldWithPath("username").type(STRING).description("유저 이름"),
@@ -370,7 +371,7 @@ class UserControllerTest {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 requestHeaders(
-                                        headerWithName("Authorization").description("access token")
+                                        headerWithName(AUTHORIZATION).description("access token")
                                 ),
                                 responseFields(
                                         fieldWithPath("profileImageUrl").type(STRING).description("유저 프로필 이미지 URL")
@@ -398,7 +399,7 @@ class UserControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(
-                                headerWithName("Authorization").description("액세스 토큰")
+                                headerWithName(AUTHORIZATION).description("액세스 토큰")
                         ),
                         responseFields(
                                 fieldWithPath("[]").type(ARRAY).description("클럽"),
