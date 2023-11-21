@@ -1,12 +1,10 @@
 package com.spaceclub.club.controller.dto;
 
-import com.spaceclub.event.domain.Event;
-import com.spaceclub.event.domain.EventCategory;
+import com.spaceclub.event.service.vo.EventGetInfo;
 import lombok.Builder;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-
 
 @Builder
 public record ClubEventGetResponse(
@@ -21,17 +19,17 @@ public record ClubEventGetResponse(
         String openStatus
 ) {
 
-    public static ClubEventGetResponse from(Event event) {
+    public static ClubEventGetResponse from(EventGetInfo eventInfo) {
         return new ClubEventGetResponse(
-                event.getId(),
-                event.getTitle(),
-                event.getPosterImageUrl(),
-                event.getStartDate(),
-                event.getStartTime(),
-                event.getLocation(),
-                event.getClubName(),
-                event.getClubLogoImageUrl(),
-                event.getCategory().equals(EventCategory.CLUB) ? "CLUB" : "ALL"
+                eventInfo.id(),
+                eventInfo.title(),
+                eventInfo.posterImageUrl(),
+                eventInfo.startDate(),
+                eventInfo.startTime(),
+                eventInfo.location(),
+                eventInfo.clubName(),
+                eventInfo.clubLogoImageUrl(),
+                eventInfo.category()
         );
     }
 

@@ -5,6 +5,8 @@ import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.repository.EventRepository;
 import com.spaceclub.event.service.vo.EventCreateInfo;
+import com.spaceclub.event.service.vo.EventGetInfo;
+import com.spaceclub.event.service.vo.SchedulesGetInfo;
 import com.spaceclub.form.service.ClubUserValidator;
 import com.spaceclub.global.S3ImageUploader;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +24,7 @@ import static com.spaceclub.global.ExceptionCode.EVENT_CATEGORY_NOT_ALLOWED;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class EventService {
+public class EventService implements EventProvider {
 
     private final EventRepository eventRepository;
 
@@ -85,12 +87,19 @@ public class EventService {
         return eventValidator.validateEvent(eventId);
     }
 
-    public Page<Event> getByClubId(Long clubId, Pageable pageable) {
-        return eventRepository.findByClub_Id(clubId, pageable);
+    @Override
+    public Page<EventGetInfo> getByClubId(Long clubId, Pageable pageable) {
+        Page<Event> events = eventRepository.findByClub_Id(clubId, pageable);
+
+        return events.map(EventGetInfo::from);
     }
 
-    public List<Event> getSchedulesByClubId(Long clubId) {
-        return eventRepository.findAllByClub_IdAndCategory(clubId, CLUB);
+    @Override
+    public List<SchedulesGetInfo> getSchedulesByClubId(Long clubId) {
+        List<Event> events = eventRepository.findAllByClub_IdAndCategory(clubId, CLUB);
+        return events.stream()
+                .map(SchedulesGetInfo::from)
+                .toList();
     }
 
     public Page<Event> findAllBookmarkedEventPages(Long userId, Pageable pageable) {

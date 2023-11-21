@@ -3,7 +3,6 @@ package com.spaceclub.invite.service;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.domain.ClubUserRole;
-import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.club.service.ClubMemberManagerService;
 import com.spaceclub.invite.domain.Invite;
 import com.spaceclub.invite.repository.InviteRepository;

@@ -4,7 +4,8 @@ import com.spaceclub.club.controller.dto.ClubEventGetResponse;
 import com.spaceclub.club.controller.dto.ClubScheduleGetResponse;
 import com.spaceclub.club.controller.dto.ClubScheduleGetResponse.ClubScheduleGetResponseInfo;
 import com.spaceclub.club.service.ClubEventService;
-import com.spaceclub.event.domain.Event;
+import com.spaceclub.event.service.vo.EventGetInfo;
+import com.spaceclub.event.service.vo.SchedulesGetInfo;
 import com.spaceclub.global.Authenticated;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.vo.JwtUser;
@@ -27,8 +28,8 @@ public class ClubEventController {
     private final ClubEventService clubEventService;
 
     @GetMapping("/{clubId}/events")
-    public ResponseEntity<PageResponse<ClubEventGetResponse, Event>> getClubEvents(@PathVariable Long clubId, Pageable pageable, @Authenticated JwtUser jwtUser) {
-        Page<Event> events = clubEventService.getClubEvents(clubId, pageable, jwtUser.id());
+    public ResponseEntity<PageResponse<ClubEventGetResponse, EventGetInfo>> getClubEvents(@PathVariable Long clubId, Pageable pageable, @Authenticated JwtUser jwtUser) {
+        Page<EventGetInfo> events = clubEventService.getClubEvents(clubId, pageable, jwtUser.id());
 
         List<ClubEventGetResponse> clubEventGetResponses = events.getContent()
                 .stream()
@@ -40,16 +41,10 @@ public class ClubEventController {
 
     @GetMapping("/{clubId}/schedules")
     public ResponseEntity<ClubScheduleGetResponse> getClubSchedule(@PathVariable Long clubId, @Authenticated JwtUser jwtUser) {
-        List<Event> events = clubEventService.getClubSchedules(clubId, jwtUser.id());
+        List<SchedulesGetInfo> events = clubEventService.getClubSchedules(clubId, jwtUser.id());
 
         List<ClubScheduleGetResponseInfo> schedules = events.stream()
-                .map((event -> ClubScheduleGetResponseInfo.builder()
-                        .eventId(event.getId())
-                        .title(event.getTitle())
-                        .startDateTime(event.getFormOpenDateTime())
-                        .endDateTime(event.getFormCloseDateTime())
-                        .manager(event.getManagerName())
-                        .build()))
+                .map(ClubScheduleGetResponseInfo::from)
                 .toList();
 
         return ResponseEntity.ok(new ClubScheduleGetResponse(schedules));
