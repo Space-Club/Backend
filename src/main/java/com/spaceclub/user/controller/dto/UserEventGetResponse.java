@@ -1,6 +1,6 @@
 package com.spaceclub.user.controller.dto;
 
-import com.spaceclub.event.domain.Event;
+import com.spaceclub.event.service.vo.EventPageInfo;
 
 import java.time.LocalDate;
 
@@ -14,15 +14,15 @@ public record UserEventGetResponse(
         String status
 ) {
 
-    public static UserEventGetResponse from(Event event, String eventStatus) {
+    public static UserEventGetResponse from(EventPageInfo event) {
         return new UserEventGetResponse(
-                event.getId(),
-                event.getTitle(),
-                event.getLocation(),
-                event.getClubName(),
-                event.getPosterImageUrl(),
-                event.getStartDate(),
-                eventStatus
+                event.id(),
+                event.title(),
+                event.location(),
+                event.clubName(),
+                event.posterImageUrl(),
+                event.startDate(),
+                event.status()
         );
     }
 

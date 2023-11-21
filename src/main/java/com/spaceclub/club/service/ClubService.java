@@ -4,6 +4,7 @@ import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.club.repository.ClubUserRepository;
+import com.spaceclub.club.service.vo.ClubInfo;
 import com.spaceclub.global.S3ImageUploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.spaceclub.club.domain.ClubUserRole.MANAGER;
 import static com.spaceclub.global.ExceptionCode.CLUB_NOT_FOUND;
@@ -21,7 +21,7 @@ import static com.spaceclub.global.ExceptionCode.UNAUTHORIZED;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class ClubService {
+public class ClubService implements ClubProvider {
 
     private final ClubRepository clubRepository;
 
@@ -91,10 +91,12 @@ public class ClubService {
         clubRepository.save(updatedClub);
     }
 
-    public List<Club> getClubs(Long userId) {
+    @Override
+    public List<ClubInfo> getClubs(Long userId) {
         return clubUserRepository.findByUserId(userId).stream()
                 .map(ClubUser::getClub)
-                .collect(Collectors.toList());
+                .map(ClubInfo::from)
+                .toList();
     }
 
 }
