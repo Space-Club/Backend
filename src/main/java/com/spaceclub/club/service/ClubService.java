@@ -109,7 +109,7 @@ public class ClubService {
     }
 
     public List<ClubUser> getMembers(Long clubId, Long userId) {
-        validateClubManager(clubId, userId);
+        validateClubUser(clubId, userId);
 
         return clubUserRepository.findByClub_Id(clubId);
     }
