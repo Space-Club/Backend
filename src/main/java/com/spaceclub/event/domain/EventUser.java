@@ -39,6 +39,7 @@ public class EventUser extends BaseTimeEntity {
     @Getter
     private Long userId;
 
+    @Getter
     @ManyToOne(fetch = EAGER, optional = false)
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
