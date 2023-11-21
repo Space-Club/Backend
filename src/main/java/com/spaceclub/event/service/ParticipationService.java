@@ -6,7 +6,7 @@ import com.spaceclub.event.domain.ParticipationStatus;
 import com.spaceclub.event.repository.EventUserRepository;
 import com.spaceclub.event.service.vo.EventParticipationCreateInfo;
 import com.spaceclub.form.domain.FormOptionUser;
-import com.spaceclub.form.service.FormOptionService;
+import com.spaceclub.form.service.FormOptionProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +24,7 @@ public class ParticipationService {
 
     private final EventUserRepository eventUserRepository;
 
-    private final FormOptionService formApplicationService;
+    private final FormOptionProvider formOptionProvider;
 
     private final EventValidator eventValidator;
 
@@ -36,7 +36,7 @@ public class ParticipationService {
             throw new IllegalArgumentException(EVENT_ALREADY_APPLIED.toString());
 
         for (FormOptionUser formOptionUser : info.formOptionUsers()) {
-            formApplicationService.createFormOption(info.userId(), formOptionUser);
+            formOptionProvider.createFormOption(info.userId(), formOptionUser);
         }
 
         EventUser newEventUser = EventUser.builder()
