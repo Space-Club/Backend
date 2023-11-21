@@ -44,7 +44,8 @@ public class WebConfig implements WebMvcConfigurer {
                         "/api/v1/users/oauth**",
                         "/api/v1/users*",
                         "/api/v1/clubs/invite**",
-                        "/api/v1/events**"
+                        "/api/v1/events**",
+                        "/api/v1/events/**"
                         )
                 .order(1);
 
@@ -55,7 +56,8 @@ public class WebConfig implements WebMvcConfigurer {
                         "/api/v1/users/oauth**",
                         "/api/v1/users*",
                         "/api/v1/clubs/invite**",
-                        "/api/v1/events**"
+                        "/api/v1/events**",
+                        "/api/v1/events/**"
                 );
     }
 

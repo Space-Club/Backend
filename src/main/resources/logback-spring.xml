@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <property name="LOG_TEMP" value="src/main/resources/logs/spring/" />
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
     <!-- 콘솔 로깅 -->
