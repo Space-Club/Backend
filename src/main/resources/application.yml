@@ -4,6 +4,10 @@ spring:
   jpa:
     open-in-view: false
 
+space-club:
+  system:
+    max-affordable-seconds: 3
+
 ---
 spring:
   config:
