@@ -2,8 +2,9 @@ package com.spaceclub.user.controller;
 
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.service.ClubService;
-import com.spaceclub.event.domain.Event;
-import com.spaceclub.event.service.ParticipationService;
+import com.spaceclub.club.service.vo.ClubInfo;
+import com.spaceclub.event.service.ParticipationProvider;
+import com.spaceclub.event.service.vo.EventPageInfo;
 import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.interceptor.JwtAuthorizationInterceptor;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -14,8 +15,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,9 +25,8 @@ import java.util.List;
 
 import static com.spaceclub.club.ClubTestFixture.club1;
 import static com.spaceclub.club.ClubTestFixture.club2;
-import static com.spaceclub.event.EventTestFixture.clubEvent;
 import static com.spaceclub.event.EventTestFixture.event1;
-import static com.spaceclub.event.EventTestFixture.showEvent;
+import static com.spaceclub.event.EventTestFixture.eventUser;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -64,7 +64,7 @@ class ContentControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    private ParticipationService participationService;
+    private ParticipationProvider participationService;
 
     @MockBean
     private ClubService clubService;
@@ -76,11 +76,8 @@ class ContentControllerTest {
     @WithMockUser
     void 유저의_모든_이벤트_조회에_성공한다() throws Exception {
         // given
-        List<Event> events = List.of(event1(), showEvent(), clubEvent());
-        Page<Event> eventPages = new PageImpl<>(events);
-
+        PageImpl<EventPageInfo> eventPages = new PageImpl<>(List.of(EventPageInfo.from(event1(),eventUser())), PageRequest.of(0, 10), 1);
         given(participationService.findAllEventPages(any(), any(Pageable.class))).willReturn(eventPages);
-        given(participationService.findEventStatus(any(), any(Event.class))).willReturn("CONFIRMED");
 
         // when, then
         mvc.perform(get("/api/v1/users/events")
@@ -90,13 +87,13 @@ class ContentControllerTest {
                         .param("sort", "id,asc")
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.size()").value(events.size()))
+                .andExpect(jsonPath("$.data.size()").value(1))
                 .andExpect(jsonPath("$.pageData.first").value(true))
                 .andExpect(jsonPath("$.pageData.last").value(true))
                 .andExpect(jsonPath("$.pageData.pageNumber").value(0))
-                .andExpect(jsonPath("$.pageData.size").value(3))
+                .andExpect(jsonPath("$.pageData.size").value(10))
                 .andExpect(jsonPath("$.pageData.totalPages").value(1))
-                .andExpect(jsonPath("$.pageData.totalElements").value(events.size()))
+                .andExpect(jsonPath("$.pageData.totalElements").value(1))
                 .andDo(
                         document("user/getAllEvents",
                                 preprocessRequest(prettyPrint()),
@@ -134,7 +131,9 @@ class ContentControllerTest {
     @WithMockUser
     void 유저의_모든_클럽_조회에_성공한다() throws Exception {
         // given
-        given(clubService.getClubs(any())).willReturn(List.of(club1(), club2()));
+        ClubInfo club1 = ClubInfo.from(club1());
+        ClubInfo club2 = ClubInfo.from(club2());
+        given(clubService.getClubs(any())).willReturn(List.of(club1, club2));
 
         // when, then
         mvc.perform(get("/api/v1/users/clubs")

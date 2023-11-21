@@ -44,3 +44,6 @@ out/
 
 ## REST DOCS SETTING
 **/src/main/resources/static/docs/**
+
+## LOG SETTING
+/src/main/resources/logs/**

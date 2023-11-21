@@ -7,7 +7,7 @@ import com.spaceclub.event.repository.EventUserRepository;
 import com.spaceclub.event.service.vo.EventPageInfo;
 import com.spaceclub.event.service.vo.EventParticipationCreateInfo;
 import com.spaceclub.form.domain.FormOptionUser;
-import com.spaceclub.form.service.FormOptionService;
+import com.spaceclub.form.service.FormOptionProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -31,7 +31,7 @@ public class ParticipationService implements ParticipationProvider {
 
     private final EventUserRepository eventUserRepository;
 
-    private final FormOptionService formApplicationService;
+    private final FormOptionProvider formOptionProvider;
 
     private final EventValidator eventValidator;
 
@@ -43,7 +43,7 @@ public class ParticipationService implements ParticipationProvider {
             throw new IllegalArgumentException(EVENT_ALREADY_APPLIED.toString());
 
         for (FormOptionUser formOptionUser : info.formOptionUsers()) {
-            formApplicationService.createFormOption(info.userId(), formOptionUser);
+            formOptionProvider.createFormOption(info.userId(), formOptionUser);
         }
 
         EventUser newEventUser = EventUser.builder()
@@ -77,7 +77,7 @@ public class ParticipationService implements ParticipationProvider {
                 .map(Event::getId)
                 .toList();
 
-        Map<Long, EventUser> eventUsers = eventUserRepository.findAllByUserIdAndEventIdIn(userId, eventIds).stream()
+        Map<Long, EventUser> eventUsers = eventUserRepository.findAllByUserIdAndEvent_IdIn(userId, eventIds).stream()
                 .collect(toMap(EventUser::getEventId, Function.identity()));
 
         List<EventPageInfo> eventPageInfos = eventPages.getContent().stream()

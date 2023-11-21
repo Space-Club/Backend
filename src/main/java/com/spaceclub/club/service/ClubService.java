@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.spaceclub.club.domain.ClubUserRole.MANAGER;
 import static com.spaceclub.global.ExceptionCode.CLUB_NOT_FOUND;
@@ -97,7 +96,7 @@ public class ClubService implements ClubProvider {
         return clubUserRepository.findByUserId(userId).stream()
                 .map(ClubUser::getClub)
                 .map(ClubInfo::from)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 }
