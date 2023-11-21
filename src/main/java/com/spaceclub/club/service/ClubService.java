@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.spaceclub.club.domain.ClubUserRole.MANAGER;
 import static com.spaceclub.global.ExceptionCode.CLUB_NOT_FOUND;
 import static com.spaceclub.global.ExceptionCode.NOT_CLUB_MEMBER;
@@ -86,6 +89,12 @@ public class ClubService {
         Club updatedClub = club.update(newClub);
 
         clubRepository.save(updatedClub);
+    }
+
+    public List<Club> getClubs(Long userId) {
+        return clubUserRepository.findByUserId(userId).stream()
+                .map(ClubUser::getClub)
+                .collect(Collectors.toList());
     }
 
 }

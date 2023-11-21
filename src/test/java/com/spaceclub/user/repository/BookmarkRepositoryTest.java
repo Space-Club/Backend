@@ -43,6 +43,7 @@ class BookmarkRepositoryTest {
     @Autowired
     private ClubRepository clubRepository;
 
+
     @BeforeEach
     void setUp() {
         Club club = Club.builder()
@@ -69,18 +70,18 @@ class BookmarkRepositoryTest {
 
         Bookmark bookmarkEvent1 = Bookmark.builder()
                 .id(1L)
-                .user(user)
-                .event(event1())
+                .userId(1L)
+                .eventId(1L)
                 .build();
         Bookmark bookmarkEvent2 = Bookmark.builder()
                 .id(2L)
-                .user(user)
-                .event(showEvent())
+                .userId(1L)
+                .eventId(2L)
                 .build();
         Bookmark bookmarkEvent3 = Bookmark.builder()
                 .id(3L)
-                .user(user)
-                .event(clubEvent())
+                .userId(1L)
+                .eventId(3L)
                 .build();
         bookmarkRepository.saveAll(List.of(bookmarkEvent1, bookmarkEvent2, bookmarkEvent3));
     }
@@ -91,8 +92,8 @@ class BookmarkRepositoryTest {
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(DESC, "id"));
 
         // when
-        User user = userRepository.findById(1L).orElseThrow();
-        Page<Event> bookmarkedEventPages = bookmarkRepository.findBookmarkedEventPages(user, pageRequest);
+        Long userId= 1L;
+        Page<Event> bookmarkedEventPages = eventRepository.findAllBookmarkedEventPages(userId, pageRequest);
 
         // then
         assertAll(

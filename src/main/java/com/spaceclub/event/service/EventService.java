@@ -93,4 +93,8 @@ public class EventService {
         return eventRepository.findAllByClub_IdAndCategory(clubId, CLUB);
     }
 
+    public Page<Event> findAllBookmarkedEventPages(Long userId, Pageable pageable) {
+        return eventRepository.findAllBookmarkedEventPages(userId, pageable);
+    }
+
 }
