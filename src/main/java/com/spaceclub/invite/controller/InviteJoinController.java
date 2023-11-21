@@ -5,6 +5,7 @@ import com.spaceclub.club.service.ClubMemberManagerService;
 import com.spaceclub.global.Authenticated;
 import com.spaceclub.global.jwt.vo.JwtUser;
 import com.spaceclub.invite.controller.dto.ClubRequestToJoinResponse;
+import com.spaceclub.invite.controller.dto.JoinClubResponse;
 import com.spaceclub.invite.service.InviteJoinService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/clubs/invite")
@@ -26,13 +25,13 @@ public class InviteJoinController {
     private final ClubMemberManagerService clubMemberManagerService;
 
     @PostMapping("/{code}")
-    public ResponseEntity<Map<String, Long>> joinClub(@PathVariable String code, @Authenticated JwtUser jwtUser) {
+    public ResponseEntity<JoinClubResponse> joinClub(@PathVariable String code, @Authenticated JwtUser jwtUser) {
 
         Long clubId = inviteJoinService.joinClub(code, jwtUser.id());
 
-        return ResponseEntity.ok(
-                Map.of("clubId", clubId)
-        );
+        JoinClubResponse response = new JoinClubResponse(clubId);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{code}")
