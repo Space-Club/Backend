@@ -57,8 +57,8 @@ public class ClubService {
                 .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND.toString()));
 
         if (logoImage != null) {
-            String logoImageUrl = imageUploader.uploadClubLogoImage(logoImage);
-            club = club.updateLogoImage(logoImageUrl);
+            String logoImageName = imageUploader.uploadClubLogoImage(logoImage);
+            club = club.updateLogoImage(logoImageName);
         }
 
         ClubUser clubUser = ClubUser.builder()
@@ -215,8 +215,8 @@ public class ClubService {
                 .orElseThrow(() -> new IllegalArgumentException(CLUB_NOT_FOUND.toString()));
 
         if (logoImage != null) {
-            String logoImageUrl = imageUploader.uploadClubLogoImage(logoImage);
-            club = club.updateLogoImage(logoImageUrl);
+            String logoImageName = imageUploader.uploadClubLogoImage(logoImage);
+            club = club.updateLogoImage(logoImageName);
         }
 
         if (coverImage != null) {
