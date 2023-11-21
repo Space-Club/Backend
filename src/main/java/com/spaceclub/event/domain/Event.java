@@ -210,6 +210,10 @@ public class Event extends BaseTimeEntity {
         return form.isManaged();
     }
 
+    public boolean isNotFormManaged() {
+        return !this.isFormManaged();
+    }
+
     public Integer getMaxTicketCount() {
         return ticketInfo.getMaxTicketCount();
     }

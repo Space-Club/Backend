@@ -2,7 +2,6 @@ package com.spaceclub.form.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
-import com.spaceclub.event.domain.ApplicationStatus;
 import com.spaceclub.event.domain.EventUser;
 import com.spaceclub.form.FormTestFixture;
 import com.spaceclub.form.controller.dto.FormApplicationStatusUpdateRequest;
@@ -11,6 +10,7 @@ import com.spaceclub.form.domain.Form;
 import com.spaceclub.form.domain.FormOptionType;
 import com.spaceclub.form.service.FormService;
 import com.spaceclub.form.service.vo.FormApplicationGetInfo;
+import com.spaceclub.form.service.vo.FormApplicationUpdateInfo;
 import com.spaceclub.form.service.vo.FormCreate;
 import com.spaceclub.form.service.vo.FormGet;
 import com.spaceclub.global.UserArgumentResolver;
@@ -239,8 +239,8 @@ class FormControllerTest {
     @WithMockUser
     void 행사의_신청_상태_변경에_성공한다() throws Exception {
         // given
-        FormApplicationStatusUpdateRequest request = new FormApplicationStatusUpdateRequest(CONFIRMED);
-        doNothing().when(formService).updateApplicationStatus(any(Long.class), any(Long.class), any(ApplicationStatus.class));
+        FormApplicationStatusUpdateRequest request = new FormApplicationStatusUpdateRequest(1L, CONFIRMED);
+        doNothing().when(formService).updateApplicationStatus(any(FormApplicationUpdateInfo.class));
 
         // when, then
         mvc.perform(patch("/api/v1/events/{eventId}/forms/applications-status", 1L)
@@ -261,6 +261,7 @@ class FormControllerTest {
                                         parameterWithName("eventId").description("행사 id")
                                 ),
                                 requestFields(
+                                        fieldWithPath("formUserId").type(NUMBER).description("행사를 신청한 유저 id"),
                                         fieldWithPath("status").type(STRING).description("행사 신청 상태")
                                 )
                         )

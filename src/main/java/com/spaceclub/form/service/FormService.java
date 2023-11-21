@@ -3,7 +3,6 @@ package com.spaceclub.form.service;
 import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.club.repository.ClubUserRepository;
-import com.spaceclub.event.domain.ApplicationStatus;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventUser;
 import com.spaceclub.event.repository.EventRepository;
@@ -13,6 +12,7 @@ import com.spaceclub.form.domain.FormOptionUser;
 import com.spaceclub.form.repository.FormOptionUserRepository;
 import com.spaceclub.form.repository.FormRepository;
 import com.spaceclub.form.service.vo.FormApplicationGetInfo;
+import com.spaceclub.form.service.vo.FormApplicationUpdateInfo;
 import com.spaceclub.form.service.vo.FormCreate;
 import com.spaceclub.form.service.vo.FormGet;
 import com.spaceclub.user.domain.User;
@@ -28,7 +28,7 @@ import java.util.List;
 import static com.spaceclub.global.ExceptionCode.CLUB_NOT_FOUND;
 import static com.spaceclub.global.ExceptionCode.EVENT_NOT_APPLIED;
 import static com.spaceclub.global.ExceptionCode.EVENT_NOT_FOUND;
-import static com.spaceclub.global.ExceptionCode.EVENT_WITHOUT_FORM;
+import static com.spaceclub.global.ExceptionCode.EVENT_NOT_MANAGED;
 import static com.spaceclub.global.ExceptionCode.FORM_NOT_FOUND;
 import static com.spaceclub.global.ExceptionCode.NOT_CLUB_MEMBER;
 import static com.spaceclub.global.ExceptionCode.UNAUTHORIZED;
@@ -87,19 +87,20 @@ public class FormService {
     }
 
     @Transactional
-    public void updateApplicationStatus(Long eventId, Long userId, ApplicationStatus status) {
-        EventUser eventUser = eventUserRepository.findByEventIdAndUserId(eventId, userId).orElseThrow(() -> new IllegalStateException(EVENT_NOT_APPLIED.toString()));
+    public void updateApplicationStatus(FormApplicationUpdateInfo updateInfo) {
+        EventUser eventUser = eventUserRepository.findByEventIdAndUserId(updateInfo.eventId(), updateInfo.formUserId())
+                .orElseThrow(() -> new IllegalStateException(EVENT_NOT_APPLIED.toString()));
         Event event = validateEventAndForm(eventUser.getEventId());
-        validateClubManager(event.getClubId(), userId);
+        validateClubManager(event.getClubId(), updateInfo.userId());
 
-        EventUser updatedEventUser = eventUser.updateStatus(status);
+        EventUser updatedEventUser = eventUser.updateStatus(updateInfo.status());
         eventUserRepository.save(updatedEventUser);
     }
 
 
     private Event validateEventAndForm(Long eventId) {
         Event event = validateEvent(eventId);
-        if (event.getForm() == null) throw new IllegalStateException(EVENT_WITHOUT_FORM.toString());
+        if (event.isNotFormManaged()) throw new IllegalStateException(EVENT_NOT_MANAGED.toString());
 
         return event;
     }
