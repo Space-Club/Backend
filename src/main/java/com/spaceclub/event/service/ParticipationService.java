@@ -1,13 +1,15 @@
 package com.spaceclub.event.service;
 
-import com.spaceclub.event.domain.ParticipationStatus;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventUser;
+import com.spaceclub.event.domain.ParticipationStatus;
 import com.spaceclub.event.repository.EventUserRepository;
 import com.spaceclub.event.service.vo.EventParticipationCreateInfo;
 import com.spaceclub.form.domain.FormOptionUser;
 import com.spaceclub.form.service.FormOptionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,6 +60,14 @@ public class ParticipationService {
         eventUserRepository.save(updateEventUser);
 
         return updateEventUser.getStatus();
+    }
+
+    public Page<Event> findAllEventPages(Long userId, Pageable pageable) {
+        return eventUserRepository.findAllByUserId(userId, pageable);
+    }
+
+    public String findEventStatus(Long userId, Event event) {
+        return eventUserRepository.findEventStatusByUserId(userId, event);
     }
 
 }

@@ -3,7 +3,7 @@ package com.spaceclub.user.controller;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.service.ClubService;
 import com.spaceclub.event.domain.Event;
-import com.spaceclub.event.service.EventService;
+import com.spaceclub.event.service.ParticipationService;
 import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.interceptor.JwtAuthorizationInterceptor;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -64,7 +64,7 @@ class ContentControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    private EventService eventService;
+    private ParticipationService participationService;
 
     @MockBean
     private ClubService clubService;
@@ -79,8 +79,8 @@ class ContentControllerTest {
         List<Event> events = List.of(event1(), showEvent(), clubEvent());
         Page<Event> eventPages = new PageImpl<>(events);
 
-        given(eventService.findAllEventPages(any(), any(Pageable.class))).willReturn(eventPages);
-        given(eventService.findEventStatus(any(), any(Event.class))).willReturn("CONFIRMED");
+        given(participationService.findAllEventPages(any(), any(Pageable.class))).willReturn(eventPages);
+        given(participationService.findEventStatus(any(), any(Event.class))).willReturn("CONFIRMED");
 
         // when, then
         mvc.perform(get("/api/v1/users/events")

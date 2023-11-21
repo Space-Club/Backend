@@ -4,6 +4,7 @@ import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.service.ClubService;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.service.EventService;
+import com.spaceclub.event.service.ParticipationService;
 import com.spaceclub.global.Authenticated;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.vo.JwtUser;
@@ -27,15 +28,15 @@ import static com.spaceclub.user.controller.dto.UserEventGetResponse.from;
 @RequiredArgsConstructor
 public class ContentController {
 
-    private final EventService eventService;
+    private final ParticipationService participationService;
     private final ClubService clubService;
 
     @GetMapping("/events")
     public PageResponse<UserEventGetResponse, Event> getAllEvents(Pageable pageable, @Authenticated JwtUser jwtUser) {
-        Page<Event> eventPages = eventService.findAllEventPages(jwtUser.id(), pageable);
+        Page<Event> eventPages = participationService.findAllEventPages(jwtUser.id(), pageable);
 
         List<UserEventGetResponse> eventGetResponse = eventPages.getContent().stream()
-                .map(event -> from(event, eventService.findEventStatus(jwtUser.id(), event)))
+                .map(event -> from(event, participationService.findEventStatus(jwtUser.id(), event)))
                 .toList();
 
         return new PageResponse<>(eventGetResponse, eventPages);

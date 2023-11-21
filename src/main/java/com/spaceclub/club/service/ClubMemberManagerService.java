@@ -6,7 +6,7 @@ import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
 import com.spaceclub.club.service.vo.MemberGetInfo;
 import com.spaceclub.user.service.UserService;
-import com.spaceclub.user.service.vo.UserProfileInfo;
+import com.spaceclub.user.service.vo.UserProfile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +51,7 @@ public class ClubMemberManagerService {
         if (!clubUserRepository.existsByClub_IdAndUserId(clubId, userId))
             throw new IllegalArgumentException(NOT_CLUB_MEMBER.toString());
 
-        UserProfileInfo userProfile = userService.getUserProfile(userId);
+        UserProfile userProfile = userService.getProfile(userId);
 
         return clubUserRepository.findByClub_Id(clubId).stream()
                 .map((clubUser -> MemberGetInfo.from(clubUser, userProfile)))
