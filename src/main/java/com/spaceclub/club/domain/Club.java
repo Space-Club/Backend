@@ -154,11 +154,11 @@ public class Club extends BaseTimeEntity {
                 .build();
     }
 
-    public String getLogoImageName() {
+    public String getLogoImageUrl() {
         return CLUB_LOGO_S3_URL + this.logoImageName;
     }
 
-    public String getCoverImageName() {
+    public String getCoverImageUrl() {
         return CLUB_COVER_S3_URL + this.coverImageName;
     }
 

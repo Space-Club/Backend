@@ -18,10 +18,10 @@ public record ClubGetResponse(
     public static ClubGetResponse from(Club club) {
         return ClubGetResponse.builder()
                 .name(club.getName())
-                .logoImageUrl(club.getLogoImageName())
+                .logoImageUrl(club.getLogoImageUrl())
                 .info(club.getInfo())
                 .memberCount(club.getClubUser().size())
-                .coverImageUrl(club.getCoverImageName())
+                .coverImageUrl(club.getCoverImageUrl())
                 .build();
     }
 

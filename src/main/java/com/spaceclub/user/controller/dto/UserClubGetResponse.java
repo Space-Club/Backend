@@ -15,7 +15,7 @@ public record UserClubGetResponse(Long id, String logoImageUrl, String name) {
     public static UserClubGetResponse from(Club club) {
         return UserClubGetResponse.builder()
                 .id(club.getId())
-                .logoImageUrl(club.getLogoImageName())
+                .logoImageUrl(club.getLogoImageUrl())
                 .name(club.getName())
                 .build();
     }
