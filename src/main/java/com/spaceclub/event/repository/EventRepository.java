@@ -5,6 +5,8 @@ import com.spaceclub.event.domain.EventCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,5 +21,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAllByClub_IdAndCategory(Long clubId, EventCategory category);
 
     Page<Event> findByEventInfo_TitleContainsIgnoreCase(String searchWord, Pageable pageable);
+
+    @Query("select e from Event e join fetch Bookmark b on e.id = b.eventId where b.userId = :userId")
+    Page<Event> findAllBookmarkedEventPages(@Param("userId") Long userId, Pageable pageable);
 
 }
