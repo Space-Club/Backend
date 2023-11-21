@@ -102,7 +102,7 @@ class FormControllerTest {
 
         // when, then
         mvc.perform(post("/api/v1/events/forms")
-                        .header("Authorization", "Access Token")
+                        .header(AUTHORIZATION, "Access Token")
                         .contentType(APPLICATION_JSON)
                         .content(mapper.writeValueAsString(formCreateRequest))
                         .with(csrf())
@@ -114,7 +114,7 @@ class FormControllerTest {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 requestHeaders(
-                                        headerWithName("Authorization").description("액세스 토큰")
+                                        headerWithName(AUTHORIZATION).description("액세스 토큰")
                                 ),
                                 requestFields(
                                         fieldWithPath("eventId").type(NUMBER).description("행사 id"),
@@ -146,7 +146,7 @@ class FormControllerTest {
 
         // when, then
         mvc.perform(get("/api/v1/events/{eventId}/forms", 1L)
-                        .header("Authorization", "Access Token")
+                        .header(AUTHORIZATION, "Access Token")
                 )
                 .andExpect(status().isOk())
                 .andDo(
@@ -154,7 +154,7 @@ class FormControllerTest {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 requestHeaders(
-                                        headerWithName("Authorization").description("액세스 토큰")
+                                        headerWithName(AUTHORIZATION).description("액세스 토큰")
                                 ),
                                 pathParameters(
                                         parameterWithName("eventId").description("행사 id")

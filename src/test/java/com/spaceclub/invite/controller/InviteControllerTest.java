@@ -23,6 +23,7 @@ import java.util.UUID;
 import static com.spaceclub.club.ClubTestFixture.club1;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -74,7 +75,7 @@ class InviteControllerTest {
 
         // when
         ResultActions actions = mockMvc.perform(post("/api/v1/clubs/{clubId}/invite", clubId)
-                .header("Authorization", "token")
+                .header(AUTHORIZATION, "token")
                 .with(csrf()));
 
         // then
@@ -87,7 +88,7 @@ class InviteControllerTest {
                                 parameterWithName("clubId").description("클럽 ID")
                         ),
                         requestHeaders(
-                                headerWithName("Authorization").description("유저 액세스 토큰")
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
                         ),
                         responseFields(
                                 fieldWithPath("inviteLink").type(STRING).description("클럽 초대 링크")
@@ -104,7 +105,7 @@ class InviteControllerTest {
         // when
         ResultActions actions =
                 mockMvc.perform(post("/api/v1/clubs/invite/{code}", code)
-                        .header("Authorization", "token")
+                        .header(AUTHORIZATION, "token")
                         .with(csrf()));
 
         // then
@@ -117,7 +118,7 @@ class InviteControllerTest {
                                 parameterWithName("code").description("클럽 초대 링크 식별자")
                         ),
                         requestHeaders(
-                                headerWithName("Authorization").description("유저 액세스 토큰")
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
                         ),
                         responseFields(
                                 fieldWithPath("clubId").type(NUMBER).description("클럽 ID")
@@ -127,7 +128,7 @@ class InviteControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser // 없음.
     void 초대_링크를_통해_클럽_가입전_가입_의사를_묻는데_성공한다() throws Exception {
         // given
         String code = UUID.randomUUID().toString();

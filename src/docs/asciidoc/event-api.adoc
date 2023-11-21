@@ -274,6 +274,9 @@ include::{snippets}/event/getShowEvent/http-request.adoc[]
 
 include::{snippets}/event/getShowEvent/path-parameters.adoc[]
 
+===== Request Header
+include::{snippets}/event/getShowEvent/request-headers.adoc[]
+
 ==== Response
 
 include::{snippets}/event/getShowEvent/http-response.adoc[]
@@ -291,6 +294,9 @@ include::{snippets}/event/getPromotionEvent/http-request.adoc[]
 
 include::{snippets}/event/getPromotionEvent/path-parameters.adoc[]
 
+===== Request Header
+include::{snippets}/event/getPromotionEvent/request-headers.adoc[]
+
 ==== Response
 
 include::{snippets}/event/getPromotionEvent/http-response.adoc[]
@@ -301,16 +307,19 @@ include::{snippets}/event/getPromotionEvent/response-fields.adoc[]
 
 === 행사 상세 조회 (모집 공고)
 :sectnums!:
+
 ==== Request
-
 include::{snippets}/event/getRecruitmentEvent/http-request.adoc[]
-===== Path Parameter
 
+===== Path Parameter
 include::{snippets}/event/getRecruitmentEvent/path-parameters.adoc[]
 
-==== Response
+===== Request Header
+include::{snippets}/event/getRecruitmentEvent/request-headers.adoc[]
 
+==== Response
 include::{snippets}/event/getRecruitmentEvent/http-response.adoc[]
+
 ===== Response Body
 
 include::{snippets}/event/getRecruitmentEvent/response-fields.adoc[]
@@ -322,11 +331,12 @@ include::{snippets}/event/getRecruitmentEvent/response-fields.adoc[]
 
 include::{snippets}/event/getClubEvent/http-request.adoc[]
 ===== Path Parameter
-
 include::{snippets}/event/getClubEvent/path-parameters.adoc[]
 
-==== Response
+===== Request Header
+include::{snippets}/event/getClubEvent/request-headers.adoc[]
 
+==== Response
 include::{snippets}/event/getClubEvent/http-response.adoc[]
 ===== Response Body
 

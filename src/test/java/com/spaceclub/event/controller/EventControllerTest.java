@@ -848,7 +848,7 @@ class EventControllerTest {
 
     @Test
     @WithMockUser
-    public void 전체_행사_조회에_성공한다() throws Exception {
+    public void 전체_행사_조회에_성공한다() throws Exception { // 없어도됨. 있어도 안씀.
         // given
         List<Event> events = List.of(event1(), showEvent(), clubEvent());
         Page<Event> eventPages = new PageImpl<>(events);
@@ -930,6 +930,9 @@ class EventControllerTest {
                         pathParameters(
                                 parameterWithName("eventId").description("행사 ID")
                         ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰").optional()
+                        ),
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
                                 fieldWithPath("title").type(STRING).description("행사 제목"),
@@ -977,6 +980,9 @@ class EventControllerTest {
                         pathParameters(
                                 parameterWithName("eventId").description("행사 ID")
                         ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰").optional()
+                        ),
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
                                 fieldWithPath("title").type(STRING).description("행사 제목"),
@@ -1020,6 +1026,9 @@ class EventControllerTest {
                         pathParameters(
                                 parameterWithName("eventId").description("행사 ID")
                         ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰").optional()
+                        ),
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
                                 fieldWithPath("title").type(STRING).description("행사 제목"),
@@ -1053,7 +1062,8 @@ class EventControllerTest {
         given(eventService.get(any(Long.class))).willReturn(event);
 
         // when
-        ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}", 1L));
+        ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}", 1L)
+                .header(AUTHORIZATION, "Access Token"));
 
         // then
         actions.andExpect(status().isOk())
@@ -1063,6 +1073,9 @@ class EventControllerTest {
                         preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("eventId").description("행사 ID")
+                        ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
                         ),
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
@@ -1109,7 +1122,7 @@ class EventControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(
-                                headerWithName("Authorization").description("액세스 토큰")
+                                headerWithName(AUTHORIZATION).description("액세스 토큰")
                         ),
                         pathParameters(
                                 parameterWithName("eventId").description("행사 id")
@@ -1122,7 +1135,7 @@ class EventControllerTest {
 
     @Test
     @WithMockUser
-    public void 행사_검색에_성공한다() throws Exception {
+    public void 행사_검색에_성공한다() throws Exception { // 없어도 됨. 있어도 안씀.
         // given
         List<Event> events = List.of(event1(), showEvent(), clubEvent());
         Page<Event> eventPages = new PageImpl<>(events);
@@ -1246,7 +1259,7 @@ class EventControllerTest {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 requestHeaders(
-                                        headerWithName("Authorization").description("액세스 토큰")
+                                        headerWithName(AUTHORIZATION).description("액세스 토큰")
                                 ),
                                 requestFields(
                                         fieldWithPath("eventId").type(NUMBER).description("행사 id"),
