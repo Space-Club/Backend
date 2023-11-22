@@ -889,7 +889,7 @@ class EventControllerTest {
         // given
         Event event = event1();
 
-        given(eventService.get(any(Long.class))).willReturn(event);
+        given(eventService.get(any(Long.class), any(Long.class))).willReturn(event);
 
         // when
         ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}", 1L));
@@ -939,7 +939,7 @@ class EventControllerTest {
         // given
         Event event = promotionEvent();
 
-        given(eventService.get(any(Long.class))).willReturn(event);
+        given(eventService.get(any(Long.class), any(Long.class))).willReturn(event);
 
         // when
         ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}", 1L));
@@ -985,7 +985,7 @@ class EventControllerTest {
         // given
         Event event = recruitmentEvent();
 
-        given(eventService.get(any(Long.class))).willReturn(event);
+        given(eventService.get(any(Long.class), any(Long.class))).willReturn(event);
 
         // when
         ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}", 1L));
@@ -1032,7 +1032,7 @@ class EventControllerTest {
         // given
         Event event = clubEvent();
 
-        given(eventService.get(any(Long.class))).willReturn(event);
+        given(eventService.get(any(Long.class), any(Long.class))).willReturn(event);
 
         // when
         ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}", 1L)
