@@ -48,13 +48,16 @@ public class ClubMemberManagerService {
     }
 
     public List<MemberGetInfo> getMembers(Long clubId, Long userId) {
-        if (!clubUserRepository.existsByClub_IdAndUserId(clubId, userId))
-            throw new IllegalArgumentException(NOT_CLUB_MEMBER.toString());
+        ClubUser clubUser = clubUserRepository.findByClub_IdAndUserId(clubId, userId)
+                .orElseThrow(() -> new IllegalArgumentException(NOT_CLUB_MEMBER.toString()));
 
-        UserProfile userProfile = userService.getProfile(userId);
+        if (clubUser.isNotManager()) throw new IllegalArgumentException(UNAUTHORIZED.toString());
 
         return clubUserRepository.findByClub_Id(clubId).stream()
-                .map((clubUser -> MemberGetInfo.from(clubUser, userProfile)))
+                .map((member -> {
+                    UserProfile userProfile = userService.getProfile(member.getUserId());
+                    return MemberGetInfo.from(member, userProfile);
+                }))
                 .sorted(MemberGetInfo.memberComparator)
                 .toList();
     }
