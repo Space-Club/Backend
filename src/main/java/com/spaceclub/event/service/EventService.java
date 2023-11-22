@@ -52,15 +52,18 @@ public class EventService implements EventProvider {
 
     @Transactional
     public void update(Event event, Long userId, MultipartFile posterImage) {
+        Event existEvent = eventValidator.validateEvent(event.getId());
+        clubUserValidator.validateClubManager(existEvent.getClubId(), userId);
 
-        if (posterImage != null) {
-            String posterImageName = imageUploader.uploadPosterImage(posterImage);
-            event = event.registerPosterImage(posterImageName);
-        }
+        Event updatedEvent = processPosterImage(event, existEvent, posterImage);
 
-        clubUserValidator.validateClubManager(event.getClubId(), userId);
+        eventRepository.save(updatedEvent);
+    }
 
-        eventRepository.save(event);
+    private Event processPosterImage(Event originalEvent, Event existEvent, MultipartFile posterImage) {
+        String posterImageName = (posterImage != null) ? imageUploader.uploadPosterImage(posterImage) : existEvent.getPosterImageName();
+        Event updatedEvent = originalEvent.registerPosterImage(posterImageName);
+        return existEvent.update(updatedEvent);
     }
 
     public Page<Event> getAll(EventCategory eventCategory, Pageable pageable) {
@@ -101,9 +104,7 @@ public class EventService implements EventProvider {
     @Override
     public List<SchedulesGetInfo> getSchedulesByClubId(Long clubId) {
         List<Event> events = eventRepository.findAllByClub_IdAndCategory(clubId, CLUB);
-        return events.stream()
-                .map(SchedulesGetInfo::from)
-                .toList();
+        return events.stream().map(SchedulesGetInfo::from).toList();
     }
 
     public Page<Event> findAllBookmarkedEventPages(Long userId, Pageable pageable) {

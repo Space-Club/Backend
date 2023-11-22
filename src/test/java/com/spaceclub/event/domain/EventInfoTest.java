@@ -57,7 +57,7 @@ class EventInfoTest {
                         .startDateTime(eventInfo().getStartDateTime())
                         .location(eventInfo().getLocation())
                         .capacity(eventInfo().getCapacity())
-                        .posterImageUrl(eventInfo().getPosterImageUrl())
+                        .posterImageUrl(eventInfo().getPosterImageName())
                         .build())
                 .isInstanceOf(IllegalArgumentException.class);
     }
@@ -72,7 +72,7 @@ class EventInfoTest {
                         .startDateTime(eventInfo().getStartDateTime())
                         .location(eventInfo().getLocation())
                         .capacity(eventInfo().getCapacity())
-                        .posterImageUrl(eventInfo().getPosterImageUrl())
+                        .posterImageUrl(eventInfo().getPosterImageName())
                         .build())
                 .isInstanceOf(IllegalArgumentException.class);
     }
@@ -87,7 +87,7 @@ class EventInfoTest {
                         .startDateTime(eventInfo().getStartDateTime())
                         .location(location)
                         .capacity(eventInfo().getCapacity())
-                        .posterImageUrl(eventInfo().getPosterImageUrl())
+                        .posterImageUrl(eventInfo().getPosterImageName())
                         .build())
                 .isInstanceOf(IllegalArgumentException.class);
     }
@@ -102,7 +102,7 @@ class EventInfoTest {
                         .startDateTime(eventInfo().getStartDateTime())
                         .location(eventInfo().getLocation())
                         .capacity(capacity)
-                        .posterImageUrl(eventInfo().getPosterImageUrl())
+                        .posterImageUrl(eventInfo().getPosterImageName())
                         .build())
                 .isInstanceOf(IllegalArgumentException.class);
     }
