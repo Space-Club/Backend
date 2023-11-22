@@ -163,7 +163,7 @@ class SubmitControllerTest {
                                 ),
                                 requestFields(
                                         fieldWithPath("formUserId").type(NUMBER).description("행사를 신청한 유저 id"),
-                                        fieldWithPath("status").type(STRING).description("행사 신청 상태")
+                                        fieldWithPath("participationStatus").type(STRING).description("행사 신청 상태")
                                 )
                         )
                 );

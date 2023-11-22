@@ -1,5 +1,6 @@
 package com.spaceclub.user.controller.dto;
 
+import com.spaceclub.event.domain.ParticipationStatus;
 import com.spaceclub.event.service.vo.EventPageInfo;
 
 import java.time.LocalDate;
@@ -11,7 +12,7 @@ public record UserEventGetResponse(
         String clubName,
         String posterImageUrl,
         LocalDate startDate,
-        String status
+        ParticipationStatus participationStatus
 ) {
 
     public static UserEventGetResponse from(EventPageInfo event) {
@@ -22,7 +23,7 @@ public record UserEventGetResponse(
                 event.clubName(),
                 event.posterImageUrl(),
                 event.startDate(),
-                event.status()
+                event.participationStatus()
         );
     }
 

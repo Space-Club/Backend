@@ -44,7 +44,7 @@ public class SubmitController {
         FormSubmitUpdateInfo updateInfo = FormSubmitUpdateInfo.builder()
                 .eventId(eventId)
                 .formUserId(request.formUserId())
-                .status(request.status())
+                .status(request.participationStatus())
                 .userId(jwtUser.id())
                 .build();
 
