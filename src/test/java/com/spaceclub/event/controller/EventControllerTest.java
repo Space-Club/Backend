@@ -13,6 +13,7 @@ import com.spaceclub.event.controller.dto.updateRequest.ShowEventUpdateRequest;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.service.EventService;
+import com.spaceclub.event.service.EventValidator;
 import com.spaceclub.event.service.vo.EventCreateInfo;
 import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.interceptor.JwtAuthorizationInterceptor;
@@ -103,6 +104,9 @@ class EventControllerTest {
 
     @MockBean
     private EventService eventService;
+
+    @MockBean
+    private EventValidator eventValidator;
 
     @MockBean
     private UserArgumentResolver userArgumentResolver;
@@ -887,9 +891,10 @@ class EventControllerTest {
     @WithMockUser
     void 행사_상세_조회에_성공한다_공연() throws Exception {
         // given
-        Event event = event1();
+        Event event = showEvent();
 
-        given(eventService.get(any(Long.class))).willReturn(event);
+        given(eventValidator.validateEvent(any(Long.class))).willReturn(event);
+        given(eventService.get(any(Long.class), any())).willReturn(event);
 
         // when
         ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}", 1L));
@@ -939,7 +944,7 @@ class EventControllerTest {
         // given
         Event event = promotionEvent();
 
-        given(eventService.get(any(Long.class))).willReturn(event);
+        given(eventService.get(any(Long.class), any())).willReturn(event);
 
         // when
         ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}", 1L));
@@ -985,7 +990,7 @@ class EventControllerTest {
         // given
         Event event = recruitmentEvent();
 
-        given(eventService.get(any(Long.class))).willReturn(event);
+        given(eventService.get(any(Long.class), any())).willReturn(event);
 
         // when
         ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}", 1L));
@@ -1032,7 +1037,7 @@ class EventControllerTest {
         // given
         Event event = clubEvent();
 
-        given(eventService.get(any(Long.class))).willReturn(event);
+        given(eventService.get(any(Long.class), any())).willReturn(event);
 
         // when
         ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}", 1L)

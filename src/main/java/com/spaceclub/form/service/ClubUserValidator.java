@@ -34,4 +34,12 @@ public class ClubUserValidator {
         return clubUser.getClub();
     }
 
+    public void validateClubMember(Long clubId, Long userId) {
+        if (!clubRepository.existsById(clubId)) throw new IllegalStateException(CLUB_NOT_FOUND.toString());
+        if (!userRepository.existsById(userId)) throw new IllegalStateException(USER_NOT_FOUND.toString());
+
+        if (clubUserRepository.existsByClub_IdAndUserId(clubId, userId))
+            throw new IllegalArgumentException(NOT_CLUB_MEMBER.toString());
+    }
+
 }

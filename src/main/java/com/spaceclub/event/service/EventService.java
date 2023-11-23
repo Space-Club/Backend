@@ -34,7 +34,6 @@ public class EventService implements EventProvider {
 
     private final S3ImageUploader imageUploader;
 
-
     @Transactional
     public Long create(EventCreateInfo createInfo) {
         MultipartFile posterImage = createInfo.posterImage();
@@ -83,8 +82,13 @@ public class EventService implements EventProvider {
         eventRepository.deleteById(eventId);
     }
 
-    public Event get(Long eventId) {
-        return eventValidator.validateEvent(eventId);
+    public Event get(Long eventId, Long userId) {
+        Event event = eventValidator.validateEvent(eventId);
+
+        if (event.getCategory() == CLUB)
+            clubUserValidator.validateClubMember(event.getClubId(), userId);
+
+        return event;
     }
 
     @Override

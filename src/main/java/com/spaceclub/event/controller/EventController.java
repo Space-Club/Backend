@@ -108,8 +108,10 @@ public class EventController {
     }
 
     @GetMapping("/{eventId}")
-    public ResponseEntity<EventDetailGetResponse> get(@PathVariable Long eventId) {
-        Event event = eventService.get(eventId);
+    public ResponseEntity<EventDetailGetResponse> get(@PathVariable Long eventId, @Authenticated JwtUser jwtUser) {
+        Long userId = jwtUser.id();
+
+        Event event = eventService.get(eventId, userId);
 
         EventCategory category = event.getCategory();
 
