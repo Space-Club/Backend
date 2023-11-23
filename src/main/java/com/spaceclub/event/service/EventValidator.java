@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_FOUND;
-import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_MANAGED;
 import static com.spaceclub.event.EventExceptionMessage.EVENT_TICKET_NOT_MANAGED;
 import static com.spaceclub.event.EventExceptionMessage.EXCEED_TICKET_COUNT;
 import static com.spaceclub.event.EventExceptionMessage.TICKET_COUNT_REQUIRED;
@@ -18,13 +17,6 @@ import static com.spaceclub.event.EventExceptionMessage.TICKET_COUNT_REQUIRED;
 public class EventValidator {
 
     private final EventRepository eventRepository;
-
-    public Event validateEventAndForm(Long eventId) {
-        Event event = validateEvent(eventId);
-        if (event.isNotFormManaged()) throw new IllegalStateException(EVENT_NOT_MANAGED.toString());
-
-        return event;
-    }
 
     public Event validateEvent(Long eventId) {
         return eventRepository.findById(eventId).orElseThrow(() -> new IllegalStateException(EVENT_NOT_FOUND.toString()));
