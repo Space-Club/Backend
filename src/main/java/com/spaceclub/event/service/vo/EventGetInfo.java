@@ -15,7 +15,11 @@ public record EventGetInfo(
         String location,
         String clubName,
         String clubLogoImageUrl,
-        String category
+        String openStatus,
+        LocalDate formOpenDate,
+        LocalTime formOpenTime,
+        LocalDate formCloseDate,
+        LocalTime formCloseTime
 ) {
 
     public static EventGetInfo from(Event event) {
@@ -28,7 +32,11 @@ public record EventGetInfo(
                 event.getLocation(),
                 event.getClubName(),
                 event.getClubLogoImageUrl(),
-                event.getCategory().equals(EventCategory.CLUB) ? "CLUB" : "ALL"
+                event.getCategory().equals(EventCategory.CLUB) ? "CLUB" : "ALL",
+                event.getFormOpenDate(),
+                event.getFormOpenTime(),
+                event.getFormCloseDate(),
+                event.getFormCloseTime()
         );
     }
 
