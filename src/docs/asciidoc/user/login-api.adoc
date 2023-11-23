@@ -1,0 +1,83 @@
+ifndef::snippets[]
+:snippets: ../../../build/generated-snippets
+endif::[]
+
+
+=== 카카오 로그인으로 회원가입한 유저 - 신규 유저일 경우
+:sectnums!:
+
+==== Request
+include::{snippets}/user/newKakaoLoginUser/http-request.adoc[]
+
+===== Request Body
+include::{snippets}/user/newKakaoLoginUser/request-fields.adoc[]
+
+==== Response
+include::{snippets}/user/newKakaoLoginUser/http-response.adoc[]
+
+===== Response Body
+include::{snippets}/user/newKakaoLoginUser/response-fields.adoc[]
+:sectnums:
+
+
+=== 카카오 로그인으로 회원가입한 유저 - 기존 유저일 경우
+:sectnums!:
+
+==== Request
+include::{snippets}/user/existingKakaoLoginUser/http-request.adoc[]
+
+===== Request Body
+include::{snippets}/user/existingKakaoLoginUser/request-fields.adoc[]
+
+==== Response
+include::{snippets}/user/existingKakaoLoginUser/http-response.adoc[]
+
+===== Response Body
+include::{snippets}/user/existingKakaoLoginUser/response-fields.adoc[]
+:sectnums:
+
+
+=== 신규 유저일 경우 필수 정보 작성
+:sectnums!:
+
+==== Request
+include::{snippets}/user/createUser/http-request.adoc[]
+
+===== Request Body
+include::{snippets}/user/createUser/request-fields.adoc[]
+
+==== Response
+include::{snippets}/user/createUser/http-response.adoc[]
+
+===== Response Body
+include::{snippets}/user/createUser/response-fields.adoc[]
+:sectnums:
+
+
+=== 유저 로그아웃
+:sectnums!:
+
+==== Request
+include::{snippets}/user/logout/http-request.adoc[]
+
+===== Request Header
+include::{snippets}/user/logout/request-headers.adoc[]
+
+===== Response Body
+include::{snippets}/user/logout/http-response.adoc[]
+:sectnums:
+
+
+=== 유저 탈퇴
+:sectnums!:
+
+==== Request
+include::{snippets}/user/delete/http-request.adoc[]
+
+===== Request Header
+include::{snippets}/user/delete/request-headers.adoc[]
+
+===== Response Body
+include::{snippets}/user/delete/http-response.adoc[]
+:sectnums:
+

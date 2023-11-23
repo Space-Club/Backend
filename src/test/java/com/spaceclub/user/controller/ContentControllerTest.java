@@ -76,7 +76,11 @@ class ContentControllerTest {
     @WithMockUser
     void 유저의_모든_이벤트_조회에_성공한다() throws Exception {
         // given
-        PageImpl<EventPageInfo> eventPages = new PageImpl<>(List.of(EventPageInfo.from(event1(),eventUser())), PageRequest.of(0, 10), 1);
+        List<EventPageInfo> pageInfos = List.of(EventPageInfo.from(event1(), eventUser()));
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        int total = 1;
+
+        PageImpl<EventPageInfo> eventPages = new PageImpl<>(pageInfos, pageRequest, total);
         given(participationService.findAllEventPages(any(), any(Pageable.class))).willReturn(eventPages);
 
         // when, then
@@ -137,22 +141,24 @@ class ContentControllerTest {
 
         // when, then
         mvc.perform(get("/api/v1/users/clubs")
-                .header(AUTHORIZATION, "access token"))
+                        .header(AUTHORIZATION, "access token"))
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andDo(document("user/getAllClubs",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(
-                                headerWithName(AUTHORIZATION).description("액세스 토큰")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").type(ARRAY).description("클럽"),
-                                fieldWithPath("[].id").type(NUMBER).description("클럽 아이디"),
-                                fieldWithPath("[].logoImageUrl").type(STRING).description("클럽 이미지 Url"),
-                                fieldWithPath("[].name").type(STRING).description("클럽 이름")
+                .andDo(
+                        document("user/getAllClubs",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName(AUTHORIZATION).description("액세스 토큰")
+                                ),
+                                responseFields(
+                                        fieldWithPath("[]").type(ARRAY).description("클럽"),
+                                        fieldWithPath("[].id").type(NUMBER).description("클럽 아이디"),
+                                        fieldWithPath("[].logoImageUrl").type(STRING).description("클럽 이미지 Url"),
+                                        fieldWithPath("[].name").type(STRING).description("클럽 이름")
+                                )
                         )
-                ));
+                );
     }
 
 }

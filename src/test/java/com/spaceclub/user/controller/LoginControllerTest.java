@@ -138,6 +138,7 @@ class LoginControllerTest {
         UserRequiredInfoRequest request = new UserRequiredInfoRequest(2L, "name", "010-1234-5678");
         UserLoginInfo loginInfo = UserLoginInfo.from(1L, "access token", "refresh token");
         given(accountService.createAccount(any())).willReturn(loginInfo);
+
         // when, then
         mvc.perform(post("/api/v1/users")
                         .content(mapper.writeValueAsString(request))
@@ -180,13 +181,15 @@ class LoginControllerTest {
                         .header(AUTHORIZATION, "Access Token")
                         .with(csrf()))
                 .andExpect(status().isOk())
-                .andDo(document("user/logout",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(
-                                headerWithName(AUTHORIZATION).description("액세스 토큰")
+                .andDo(
+                        document("user/logout",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName(AUTHORIZATION).description("액세스 토큰")
+                                )
                         )
-                ));
+                );
     }
 
     @Test
@@ -200,13 +203,15 @@ class LoginControllerTest {
                         .header(AUTHORIZATION, "Access Token")
                         .with(csrf()))
                 .andExpect(status().isNoContent())
-                .andDo(document("user/delete",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(
-                                headerWithName(AUTHORIZATION).description("액세스 토큰")
+                .andDo(
+                        document("user/delete",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName(AUTHORIZATION).description("액세스 토큰")
+                                )
                         )
-                ));
+                );
     }
 
 }
