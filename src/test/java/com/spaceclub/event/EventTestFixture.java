@@ -26,7 +26,7 @@ public class EventTestFixture {
                 .endDateTime(LocalDateTime.of(2024, 9, 21, 12, 30, 30))
                 .location("위치")
                 .capacity(100)
-                .posterImageUrl("www.aaa.com")
+                .posterImageName("포스터 파일명")
                 .managerName("행사 생성자 이름")
                 .dues(5000)
                 .recruitmentTarget("연어를 좋아하는 사람 누구나")

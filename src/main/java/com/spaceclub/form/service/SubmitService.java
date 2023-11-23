@@ -1,5 +1,6 @@
 package com.spaceclub.form.service;
 
+import com.spaceclub.club.service.ClubUserValidator;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventUser;
 import com.spaceclub.event.repository.EventUserRepository;

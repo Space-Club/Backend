@@ -49,7 +49,7 @@ public class EventInfo {
 
     @Lob
     @Getter
-    private String posterImageUrl;
+    private String posterImageName;
 
     @Getter
     private String activityArea;
@@ -67,7 +67,7 @@ public class EventInfo {
             LocalDateTime startDateTime,
             String location,
             Integer capacity,
-            String posterImageUrl,
+            String posterImageName,
             String activityArea,
             String recruitmentTarget,
             LocalDateTime endDateTime,
@@ -80,7 +80,7 @@ public class EventInfo {
         this.startDateTime = startDateTime;
         this.location = location;
         this.capacity = capacity;
-        this.posterImageUrl = posterImageUrl;
+        this.posterImageName = posterImageName;
         this.activityArea = activityArea;
         this.recruitmentTarget = recruitmentTarget;
         this.endDateTime = endDateTime;
@@ -95,7 +95,7 @@ public class EventInfo {
                 .startDateTime(this.startDateTime)
                 .location(this.location)
                 .capacity(this.capacity)
-                .posterImageUrl(posterImageName)
+                .posterImageName(posterImageName)
                 .activityArea(this.activityArea)
                 .recruitmentTarget(this.recruitmentTarget)
                 .endDateTime(this.endDateTime)

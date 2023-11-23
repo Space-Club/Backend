@@ -74,7 +74,7 @@ public class EventController {
 
     @PatchMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> update(
-            @RequestPart MultipartFile posterImage,
+            @RequestPart(required = false) MultipartFile posterImage,
             @RequestPart String request,
             @RequestPart String category,
             @Authenticated JwtUser jwtUser

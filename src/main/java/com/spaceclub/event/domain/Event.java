@@ -99,44 +99,45 @@ public class Event extends BaseTimeEntity {
         this.createdAt = createdAt;
     }
 
-    public Event registerClub(Club club) {
-        return Event.builder()
+    public EventBuilder event() {
+        return new EventBuilder()
                 .id(this.id)
                 .category(this.category)
                 .eventInfo(this.eventInfo)
-                .bankInfo(this.bankInfo)
-                .ticketInfo(this.ticketInfo)
-                .formInfo(this.formInfo)
-                .club(club)
-                .createdAt(this.createdAt)
-                .build();
-    }
-
-    public Event registerForm(Form form) {
-        return Event.builder()
-                .id(this.id)
-                .category(this.category)
-                .eventInfo(this.eventInfo)
-                .bankInfo(this.bankInfo)
-                .ticketInfo(this.ticketInfo)
-                .formInfo(this.formInfo)
-                .club(this.club)
-                .form(form)
-                .createdAt(this.createdAt)
-                .build();
-    }
-
-    public Event registerPosterImage(String posterImageName) {
-        return Event.builder()
-                .id(this.id)
-                .category(this.category)
-                .eventInfo(this.eventInfo.registerPosterImage(posterImageName))
                 .bankInfo(this.bankInfo)
                 .ticketInfo(this.ticketInfo)
                 .formInfo(this.formInfo)
                 .club(this.club)
                 .form(this.form)
-                .createdAt(this.createdAt)
+                .createdAt(this.createdAt);
+    }
+
+    public Event registerClub(Club club) {
+        return event()
+                .club(club)
+                .build();
+    }
+
+    public Event registerForm(Form form) {
+        return event()
+                .form(form)
+                .build();
+    }
+
+    public Event registerPosterImage(String posterImageName) {
+        return event()
+                .eventInfo(this.eventInfo.registerPosterImage(posterImageName))
+                .build();
+    }
+
+    public Event update(Event event) {
+        return event()
+                .id(event.id)
+                .category(event.category)
+                .eventInfo(event.eventInfo)
+                .bankInfo(event.bankInfo)
+                .ticketInfo(event.ticketInfo)
+                .formInfo(event.formInfo)
                 .build();
     }
 
@@ -145,10 +146,14 @@ public class Event extends BaseTimeEntity {
     }
 
     public String getPosterImageUrl() {
-        if (eventInfo.getPosterImageUrl() == null) {
+        if (eventInfo.getPosterImageName() == null) {
             return null;
         }
-        return EVENT_POSTER_S3_URL + eventInfo.getPosterImageUrl();
+        return EVENT_POSTER_S3_URL + eventInfo.getPosterImageName();
+    }
+
+    public String getPosterImageName() {
+        return eventInfo.getPosterImageName();
     }
 
     public LocalDate getStartDate() {
