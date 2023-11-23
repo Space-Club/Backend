@@ -1,14 +1,12 @@
 package com.spaceclub.global.jwt;
 
-import com.spaceclub.global.jwt.Claims;
-import com.spaceclub.global.jwt.Jwt;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.spaceclub.global.ExceptionCode.USER_NOT_FOUND;
+import static com.spaceclub.user.UserExceptionMessage.USER_NOT_FOUND;
 
 @Component
 @RequiredArgsConstructor

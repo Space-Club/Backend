@@ -7,9 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.spaceclub.global.ExceptionCode.ALREADY_BOOKMARKED;
-import static com.spaceclub.global.ExceptionCode.BAD_REQUEST;
-import static com.spaceclub.global.ExceptionCode.BOOKMARK_NOT_FOUND;
+import static com.spaceclub.global.exception.GlobalExceptionCode.BAD_REQUEST;
+import static com.spaceclub.user.UserExceptionMessage.ALREADY_BOOKMARKED;
+import static com.spaceclub.user.UserExceptionMessage.BOOKMARK_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor

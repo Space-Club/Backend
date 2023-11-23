@@ -6,14 +6,14 @@ import com.spaceclub.global.oauth.config.vo.KakaoTokenInfo;
 import com.spaceclub.global.oauth.config.vo.KakaoUserInfo;
 import com.spaceclub.user.domain.Email;
 import com.spaceclub.user.domain.Provider;
-import com.spaceclub.user.service.vo.UserLoginInfo;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.repository.UserRepository;
+import com.spaceclub.user.service.vo.UserLoginInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.spaceclub.global.ExceptionCode.USER_NOT_FOUND;
+import static com.spaceclub.user.UserExceptionMessage.USER_NOT_FOUND;
 
 @Service
 @Transactional(readOnly = true)

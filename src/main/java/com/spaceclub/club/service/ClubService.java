@@ -13,10 +13,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+import static com.spaceclub.club.ClubExceptionMessage.CLUB_NOT_FOUND;
+import static com.spaceclub.club.ClubExceptionMessage.NOT_CLUB_MEMBER;
+import static com.spaceclub.club.ClubExceptionMessage.UNAUTHORIZED;
 import static com.spaceclub.club.domain.ClubUserRole.MANAGER;
-import static com.spaceclub.global.ExceptionCode.CLUB_NOT_FOUND;
-import static com.spaceclub.global.ExceptionCode.NOT_CLUB_MEMBER;
-import static com.spaceclub.global.ExceptionCode.UNAUTHORIZED;
 
 @Service
 @Transactional(readOnly = true)

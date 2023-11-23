@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.spaceclub.global.ExceptionCode.NOT_CLUB_MEMBER;
+import static com.spaceclub.club.ClubExceptionMessage.NOT_CLUB_MEMBER;
 
 @Service
 @Transactional(readOnly = true)

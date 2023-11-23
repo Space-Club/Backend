@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.spaceclub.global.ExceptionCode.EVENT_NOT_APPLIED;
+import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_APPLIED;
 
 @Service
 @Transactional(readOnly = true)

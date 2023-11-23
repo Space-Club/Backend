@@ -14,10 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.spaceclub.global.ExceptionCode.CLUB_NOT_FOUND;
-import static com.spaceclub.global.ExceptionCode.NOTICE_NOT_FOUND;
-import static com.spaceclub.global.ExceptionCode.NOT_CLUB_MEMBER;
-import static com.spaceclub.global.ExceptionCode.UNAUTHORIZED;
+import static com.spaceclub.club.ClubExceptionMessage.CLUB_NOT_FOUND;
+import static com.spaceclub.club.ClubExceptionMessage.NOTICE_NOT_FOUND;
+import static com.spaceclub.club.ClubExceptionMessage.NOT_CLUB_MEMBER;
+import static com.spaceclub.club.ClubExceptionMessage.UNAUTHORIZED;
 
 @Service
 @Transactional(readOnly = true)
