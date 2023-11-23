@@ -83,41 +83,11 @@ class BookmarkControllerTest {
 
     @Test
     @WithMockUser
-    void 개별_행사_북마크_상태_변경에_성공한다() throws Exception {
-        // given
-        doNothing().when(bookmarkService).changeBookmarkStatus(any(UserBookmarkInfo.class));
-        BookmarkedEventRequest bookmarkedEventRequest = new BookmarkedEventRequest(true);
-
-        // when, then
-        mvc.perform(patch("/api/v1/me/events/{eventId}", 1L)
-                        .header(AUTHORIZATION, "Access Token")
-                        .content(mapper.writeValueAsString(bookmarkedEventRequest))
-                        .contentType(APPLICATION_JSON)
-                        .with(csrf())
-                ).andExpect(status().isOk())
-                .andDo(document("user/bookmark",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(
-                                headerWithName(AUTHORIZATION).description("액세스 토큰")
-                        ),
-                        pathParameters(
-                                parameterWithName("eventId").description("행사 아이디")
-                        ),
-                        requestFields(
-                                fieldWithPath("bookmark").type(BOOLEAN).description("북마크 상태")
-                        )
-                ));
-    }
-
-    @Test
-    @WithMockUser
     void 유저가_북마크한_이벤트_조회에_성공한다() throws Exception {
         // given
         List<Event> events = List.of(event1(), showEvent(), clubEvent());
         Page<Event> eventPages = new PageImpl<>(events);
 
-        Long userId = 1L;
         given(eventService.findAllBookmarkedEventPages(any(), any(Pageable.class))).willReturn(eventPages);
 
         // when, then
@@ -163,6 +133,38 @@ class BookmarkControllerTest {
                                         fieldWithPath("pageData.size").type(NUMBER).description("페이지 내 개수"),
                                         fieldWithPath("pageData.totalPages").type(NUMBER).description("총 페이지 개수"),
                                         fieldWithPath("pageData.totalElements").type(NUMBER).description("총 이벤트 개수")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    @WithMockUser
+    void 개별_행사_북마크_상태_변경에_성공한다() throws Exception {
+        // given
+        Long eventId = 1L;
+        doNothing().when(bookmarkService).changeBookmarkStatus(any(UserBookmarkInfo.class));
+        BookmarkedEventRequest bookmarkedEventRequest = new BookmarkedEventRequest(true);
+
+        // when, then
+        mvc.perform(patch("/api/v1/me/events/{eventId}", eventId)
+                        .header(AUTHORIZATION, "Access Token")
+                        .content(mapper.writeValueAsString(bookmarkedEventRequest))
+                        .contentType(APPLICATION_JSON)
+                        .with(csrf())
+                ).andExpect(status().isOk())
+                .andDo(
+                        document("user/bookmark",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName(AUTHORIZATION).description("액세스 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("eventId").description("행사 아이디")
+                                ),
+                                requestFields(
+                                        fieldWithPath("bookmark").type(BOOLEAN).description("북마크 상태")
                                 )
                         )
                 );
