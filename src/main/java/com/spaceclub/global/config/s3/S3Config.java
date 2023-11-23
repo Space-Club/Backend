@@ -1,31 +1,26 @@
-package com.spaceclub.global.config;
+package com.spaceclub.global.config.s3;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import org.springframework.beans.factory.annotation.Value;
+import com.spaceclub.global.config.s3.properties.S3IamProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@RequiredArgsConstructor
 public class S3Config {
 
-    @Value("${s3.iam.access-key}")
-    private String iamAccessKey;
-
-    @Value("${s3.iam.secret-key}")
-    private String iamSecretKey;
-
-    @Value("${s3.iam.region}")
-    private String region;
+    private final S3IamProperties iamProperties;
 
     @Bean
     public AmazonS3Client amazonS3Client() {
-        BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials(iamAccessKey, iamSecretKey);
+        BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials(iamProperties.accessKey(), iamProperties.secretKey());
 
         return (AmazonS3Client) AmazonS3ClientBuilder.standard()
-                .withRegion(region)
+                .withRegion(iamProperties.region())
                 .withCredentials(new AWSStaticCredentialsProvider(basicAWSCredentials))
                 .build();
     }

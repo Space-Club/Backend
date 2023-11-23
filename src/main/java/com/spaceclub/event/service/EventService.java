@@ -9,7 +9,7 @@ import com.spaceclub.event.repository.EventRepository;
 import com.spaceclub.event.service.vo.EventCreateInfo;
 import com.spaceclub.event.service.vo.EventGetInfo;
 import com.spaceclub.event.service.vo.SchedulesGetInfo;
-import com.spaceclub.global.S3ImageUploader;
+import com.spaceclub.global.config.s3.S3ImageUploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

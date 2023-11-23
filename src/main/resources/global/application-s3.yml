@@ -1,11 +1,17 @@
 s3:
   folder:
-      name:
-          event-poster: space-club-image-bucket/event-poster
-          club-logo: space-club-image-bucket/club-logo
-          club-cover: space-club-image-bucket/club-cover
-          user-profile-image: space-club-image-bucket/user-profile-image
+    event-poster: space-club-image-bucket/event-poster
+    club-logo: space-club-image-bucket/club-logo
+    club-cover: space-club-image-bucket/club-cover
+    user-profile-image: space-club-image-bucket/user-profile-image
+
   iam:
     access-key: ENC(1G8ZGZQKMoihcCiT2kgRMLqmKHWfk10LtbhDURaLzDs=)
     secret-key: ENC(iVBb5DDSSAGVQhCL6/KnOPKWC3x89s+9s9SyvR+7/55uBtkdhmL0aobUoL1uGa+67NYXjP1KRUI=)
     region: ENC(906H8BMOAumiA+H0nevzxJUoUGzBG2Nh)
+
+  url:
+    event-poster: https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/event-poster/
+    club-logo: https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/club-logo/
+    club-cover: https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/club-cover/
+    user-profile-image: https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/user-profile-image/

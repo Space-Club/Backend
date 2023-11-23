@@ -1,11 +1,11 @@
-package com.spaceclub.global;
+package com.spaceclub.global.config.s3;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.spaceclub.global.config.s3.properties.S3FolderProperties;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,32 +22,22 @@ public class S3ImageUploader {
 
     private final AmazonS3Client amazonS3Client;
 
-    @Value("${s3.folder.name.event-poster}")
-    private String eventPosterFolder;
-
-    @Value("${s3.folder.name.club-logo}")
-    private String clubLogoFolder;
-
-    @Value("${s3.folder.name.club-cover}")
-    private String clubCoverFolder;
-
-    @Value("${s3.folder.name.user-profile-image}")
-    private String userProfileImageFolder;
+    private final S3FolderProperties folderProperties;
 
     public String uploadPosterImage(MultipartFile posterImage) {
-        return upload(posterImage, eventPosterFolder);
+        return upload(posterImage, folderProperties.eventPoster());
     }
 
     public String uploadClubLogoImage(MultipartFile logoImage) {
-        return upload(logoImage, clubLogoFolder);
+        return upload(logoImage, folderProperties.clubLogo());
     }
 
     public String uploadUserProfileImage(MultipartFile userImage) {
-        return upload(userImage, userProfileImageFolder);
+        return upload(userImage, folderProperties.userProfileImage());
     }
 
     public String uploadClubCoverImage(MultipartFile coverImage) {
-        return upload(coverImage, clubCoverFolder);
+        return upload(coverImage, folderProperties.clubCover());
     }
 
     private String upload(MultipartFile image, String folder) {
