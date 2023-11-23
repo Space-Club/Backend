@@ -1,5 +1,5 @@
-ifndef::snippets[]
-:snippets: ../../../../build/generated-snippets
+ifndef::snippet[]
+:snippet: ../../../../build/generated-snippets
 endif::[]
 
 
@@ -7,19 +7,19 @@ endif::[]
 :sectnums!:
 
 ==== Request
-include::{snippets}/user/getAllEvents/http-request.adoc[]
+include::{snippet}/user/getAllEvents/http-request.adoc[]
 
 ===== Request Header
-include::{snippets}/user/getAllEvents/request-headers.adoc[]
+include::{snippet}/user/getAllEvents/request-headers.adoc[]
 
 ===== Query Parameter
-include::{snippets}/user/getAllEvents/query-parameters.adoc[]
+include::{snippet}/user/getAllEvents/query-parameters.adoc[]
 
 ==== Response
-include::{snippets}/user/getAllEvents/http-response.adoc[]
+include::{snippet}/user/getAllEvents/http-response.adoc[]
 
 ===== Response Body
-include::{snippets}/user/getAllEvents/response-fields.adoc[]
+include::{snippet}/user/getAllEvents/response-fields.adoc[]
 :sectnums:
 
 
@@ -27,14 +27,14 @@ include::{snippets}/user/getAllEvents/response-fields.adoc[]
 :sectnums!:
 
 ==== Request
-include::{snippets}/user/getAllClubs/http-request.adoc[]
+include::{snippet}/user/getAllClubs/http-request.adoc[]
 
 ===== Request Header
-include::{snippets}/user/getAllClubs/request-headers.adoc[]
+include::{snippet}/user/getAllClubs/request-headers.adoc[]
 
 ==== Response
-include::{snippets}/user/getAllClubs/http-response.adoc[]
+include::{snippet}/user/getAllClubs/http-response.adoc[]
 
 ===== Response Body
-include::{snippets}/user/getAllClubs/response-fields.adoc[]
+include::{snippet}/user/getAllClubs/response-fields.adoc[]
 :sectnums:

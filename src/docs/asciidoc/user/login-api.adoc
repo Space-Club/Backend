@@ -1,5 +1,5 @@
-ifndef::snippets[]
-:snippets: ../../../../build/generated-snippets
+ifndef::snippet[]
+:snippet: ../../../../build/generated-snippets
 endif::[]
 
 
@@ -7,16 +7,16 @@ endif::[]
 :sectnums!:
 
 ==== Request
-include::{snippets}/user/newKakaoLoginUser/http-request.adoc[]
+include::{snippet}/user/newKakaoLoginUser/http-request.adoc[]
 
 ===== Request Body
-include::{snippets}/user/newKakaoLoginUser/request-fields.adoc[]
+include::{snippet}/user/newKakaoLoginUser/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/user/newKakaoLoginUser/http-response.adoc[]
+include::{snippet}/user/newKakaoLoginUser/http-response.adoc[]
 
 ===== Response Body
-include::{snippets}/user/newKakaoLoginUser/response-fields.adoc[]
+include::{snippet}/user/newKakaoLoginUser/response-fields.adoc[]
 :sectnums:
 
 
@@ -24,16 +24,16 @@ include::{snippets}/user/newKakaoLoginUser/response-fields.adoc[]
 :sectnums!:
 
 ==== Request
-include::{snippets}/user/existingKakaoLoginUser/http-request.adoc[]
+include::{snippet}/user/existingKakaoLoginUser/http-request.adoc[]
 
 ===== Request Body
-include::{snippets}/user/existingKakaoLoginUser/request-fields.adoc[]
+include::{snippet}/user/existingKakaoLoginUser/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/user/existingKakaoLoginUser/http-response.adoc[]
+include::{snippet}/user/existingKakaoLoginUser/http-response.adoc[]
 
 ===== Response Body
-include::{snippets}/user/existingKakaoLoginUser/response-fields.adoc[]
+include::{snippet}/user/existingKakaoLoginUser/response-fields.adoc[]
 :sectnums:
 
 
@@ -41,16 +41,16 @@ include::{snippets}/user/existingKakaoLoginUser/response-fields.adoc[]
 :sectnums!:
 
 ==== Request
-include::{snippets}/user/createUser/http-request.adoc[]
+include::{snippet}/user/createUser/http-request.adoc[]
 
 ===== Request Body
-include::{snippets}/user/createUser/request-fields.adoc[]
+include::{snippet}/user/createUser/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/user/createUser/http-response.adoc[]
+include::{snippet}/user/createUser/http-response.adoc[]
 
 ===== Response Body
-include::{snippets}/user/createUser/response-fields.adoc[]
+include::{snippet}/user/createUser/response-fields.adoc[]
 :sectnums:
 
 
@@ -58,13 +58,13 @@ include::{snippets}/user/createUser/response-fields.adoc[]
 :sectnums!:
 
 ==== Request
-include::{snippets}/user/logout/http-request.adoc[]
+include::{snippet}/user/logout/http-request.adoc[]
 
 ===== Request Header
-include::{snippets}/user/logout/request-headers.adoc[]
+include::{snippet}/user/logout/request-headers.adoc[]
 
 ===== Response Body
-include::{snippets}/user/logout/http-response.adoc[]
+include::{snippet}/user/logout/http-response.adoc[]
 :sectnums:
 
 
@@ -72,12 +72,12 @@ include::{snippets}/user/logout/http-response.adoc[]
 :sectnums!:
 
 ==== Request
-include::{snippets}/user/delete/http-request.adoc[]
+include::{snippet}/user/delete/http-request.adoc[]
 
 ===== Request Header
-include::{snippets}/user/delete/request-headers.adoc[]
+include::{snippet}/user/delete/request-headers.adoc[]
 
 ===== Response Body
-include::{snippets}/user/delete/http-response.adoc[]
+include::{snippet}/user/delete/http-response.adoc[]
 :sectnums:
 

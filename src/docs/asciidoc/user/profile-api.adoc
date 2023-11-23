@@ -1,5 +1,5 @@
-ifndef::snippets[]
-:snippets: ../../../../build/generated-snippets
+ifndef::snippet[]
+:snippet: ../../../../build/generated-snippets
 endif::[]
 
 
@@ -7,16 +7,16 @@ endif::[]
 :sectnums!:
 
 ==== Request
-include::{snippets}/user/getUserProfile/http-request.adoc[]
+include::{snippet}/user/getUserProfile/http-request.adoc[]
 
 ===== Request Header
-include::{snippets}/user/getUserProfile/request-headers.adoc[]
+include::{snippet}/user/getUserProfile/request-headers.adoc[]
 
 ==== Response
-include::{snippets}/user/getUserProfile/http-response.adoc[]
+include::{snippet}/user/getUserProfile/http-response.adoc[]
 
 ===== Response Body
-include::{snippets}/user/getUserProfile/response-fields.adoc[]
+include::{snippet}/user/getUserProfile/response-fields.adoc[]
 :sectnums:
 
 
@@ -24,16 +24,16 @@ include::{snippets}/user/getUserProfile/response-fields.adoc[]
 :sectnums!:
 
 ==== Request
-include::{snippets}/user/changeUserProfile/http-request.adoc[]
+include::{snippet}/user/changeUserProfile/http-request.adoc[]
 
 ===== Request Header
-include::{snippets}/user/changeUserProfile/request-headers.adoc[]
+include::{snippet}/user/changeUserProfile/request-headers.adoc[]
 
 ===== Request Body
-include::{snippets}/user/changeUserProfile/request-fields.adoc[]
+include::{snippet}/user/changeUserProfile/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/user/changeUserProfile/http-response.adoc[]
+include::{snippet}/user/changeUserProfile/http-response.adoc[]
 :sectnums:
 
 
@@ -41,14 +41,14 @@ include::{snippets}/user/changeUserProfile/http-response.adoc[]
 :sectnums!:
 
 ==== Request
-include::{snippets}/user/changeProfileImage/http-request.adoc[]
+include::{snippet}/user/changeProfileImage/http-request.adoc[]
 
 ===== Request Header
-include::{snippets}/user/changeProfileImage/request-headers.adoc[]
+include::{snippet}/user/changeProfileImage/request-headers.adoc[]
 
 ===== Request Part
-include::{snippets}/user/changeProfileImage/request-parts.adoc[]
+include::{snippet}/user/changeProfileImage/request-parts.adoc[]
 
 ===== Response Body
-include::{snippets}/user/changeProfileImage/http-response.adoc[]
+include::{snippet}/user/changeProfileImage/http-response.adoc[]
 :sectnums:
