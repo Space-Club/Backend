@@ -1,7 +1,3 @@
-ifndef::snippets[]
-:snippets: ../../../build/generated-snippets
-endif::[]
-
 
 === 유저 프로필 페이지 확인
 :sectnums!:

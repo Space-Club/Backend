@@ -1,7 +1,3 @@
-ifndef::snippets[]
-:snippets: ../../../build/generated-snippets
-endif::[]
-
 
 === 카카오 로그인으로 회원가입한 유저 - 신규 유저일 경우
 :sectnums!:
