@@ -116,10 +116,10 @@ public class EventController {
         EventCategory category = event.getCategory();
 
         EventDetailGetResponse response = switch (category) {
-            case SHOW -> EventDetailGetResponse.withShow(event, true, true, true);
-            case CLUB -> EventDetailGetResponse.withClub(event, true, true, true);
-            case PROMOTION -> EventDetailGetResponse.withPromotion(event, true, true, true);
-            case RECRUITMENT -> EventDetailGetResponse.withRecruitment(event, true, true, true);
+            case SHOW -> EventDetailGetResponse.withShow(event);
+            case CLUB -> EventDetailGetResponse.withClub(event);
+            case PROMOTION -> EventDetailGetResponse.withPromotion(event);
+            case RECRUITMENT -> EventDetailGetResponse.withRecruitment(event);
         };
 
         return ResponseEntity.ok(response);
