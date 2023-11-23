@@ -18,7 +18,7 @@ public record EventDetailGetResponse(
 ) {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    record EventInfo(
+    private record EventInfo(
             String title,
             String content,
             LocalDate startDate,
@@ -39,7 +39,7 @@ public record EventDetailGetResponse(
 
     }
 
-    record TicketInfo(
+    private record TicketInfo(
             Integer cost,
             Integer maxTicketCount
     ) {
@@ -50,7 +50,7 @@ public record EventDetailGetResponse(
 
     }
 
-    record FormInfo(
+    private record FormInfo(
             LocalDate formOpenDate,
             LocalTime formOpenTime,
             LocalDate formCloseDate,
@@ -63,7 +63,7 @@ public record EventDetailGetResponse(
 
     }
 
-    record BankInfo(
+    private record BankInfo(
             String bankName,
             String bankAccountNumber
     ) {
