@@ -33,7 +33,7 @@ public record EventOverviewGetResponse(Long id,
         );
     }
 
-    public record EventInfoResponse(
+    private record EventInfoResponse(
             String title,
             String posterImageUrl,
             String location,
@@ -43,16 +43,16 @@ public record EventOverviewGetResponse(Long id,
 
     }
 
-    public record FormInfoResponse(
-            LocalDate startDate,
-            LocalTime startTime,
-            LocalDate endDate,
-            LocalTime endTime
+    private record FormInfoResponse(
+            LocalDate openDate,
+            LocalTime openTime,
+            LocalDate closeDate,
+            LocalTime closeTime
     ) {
 
     }
 
-    public record ClubInfoResponse(
+    private record ClubInfoResponse(
             String name,
             String logoImageUrl
     ) {

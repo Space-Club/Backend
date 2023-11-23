@@ -7,30 +7,60 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Builder
-public record ClubEventGetResponse(
-        Long id,
-        String title,
-        String posterImageUrl,
-        LocalDate startDate,
-        LocalTime startTime,
-        String location,
-        String clubName,
-        String clubLogoImageUrl,
-        String openStatus
-) {
+public record ClubEventGetResponse(Long id,
+                                   EventInfoResponse eventInfo,
+                                   FormInfoResponse formInfo,
+                                   ClubInfoResponse clubInfo) {
 
-    public static ClubEventGetResponse from(EventGetInfo eventInfo) {
+    public static ClubEventGetResponse from(EventGetInfo eventGetInfo) {
         return new ClubEventGetResponse(
-                eventInfo.id(),
-                eventInfo.title(),
-                eventInfo.posterImageUrl(),
-                eventInfo.startDate(),
-                eventInfo.startTime(),
-                eventInfo.location(),
-                eventInfo.clubName(),
-                eventInfo.clubLogoImageUrl(),
-                eventInfo.category()
+                eventGetInfo.id(),
+                new EventInfoResponse(
+                        eventGetInfo.title(),
+                        eventGetInfo.posterImageUrl(),
+                        eventGetInfo.location(),
+                        eventGetInfo.startDate(),
+                        eventGetInfo.startTime(),
+                        eventGetInfo.openStatus()
+                ),
+                new FormInfoResponse(
+                        eventGetInfo.formOpenDate(),
+                        eventGetInfo.formOpenTime(),
+                        eventGetInfo.formCloseDate(),
+                        eventGetInfo.formCloseTime()
+                ),
+                new ClubInfoResponse(
+                        eventGetInfo.clubName(),
+                        eventGetInfo.clubLogoImageUrl()
+                )
         );
     }
 
+    private record EventInfoResponse(
+            String title,
+            String posterImageUrl,
+            String location,
+            LocalDate startDate,
+            LocalTime startTime,
+            String openStatus
+    ) {
+
+    }
+
+    private record FormInfoResponse(
+            LocalDate openDate,
+            LocalTime openTime,
+            LocalDate closeDate,
+            LocalTime closeTime
+    ) {
+
+    }
+
+    private record ClubInfoResponse(
+            String name,
+            String logoImageUrl
+    ) {
+
+    }
+    
 }
