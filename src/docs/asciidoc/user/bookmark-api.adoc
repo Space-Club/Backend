@@ -1,3 +1,6 @@
+ifndef::snippets[]
+:snippets: ../../../../build/generated-snippets
+endif::[]
 
 === 유저가 북마크한 행사 확인
 :sectnums!:
