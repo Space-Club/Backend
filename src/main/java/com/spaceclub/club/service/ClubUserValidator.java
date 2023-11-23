@@ -1,6 +1,5 @@
-package com.spaceclub.form.service;
+package com.spaceclub.club.service;
 
-import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.club.repository.ClubUserRepository;
@@ -23,15 +22,14 @@ public class ClubUserValidator {
 
     private final UserRepository userRepository;
 
-    public Club validateClubManager(Long clubId, Long userId) {
+    public void validateClubManager(Long clubId, Long userId) {
         if (!clubRepository.existsById(clubId)) throw new IllegalStateException(CLUB_NOT_FOUND.toString());
         if (!userRepository.existsById(userId)) throw new IllegalStateException(USER_NOT_FOUND.toString());
 
         ClubUser clubUser = clubUserRepository.findByClub_IdAndUserId(clubId, userId)
                 .orElseThrow(() -> new IllegalStateException(NOT_CLUB_MEMBER.toString()));
-        if (clubUser.isNotManager()) throw new IllegalStateException(UNAUTHORIZED.toString());
 
-        return clubUser.getClub();
+        if (clubUser.isNotManager()) throw new IllegalStateException(UNAUTHORIZED.toString());
     }
 
     public void validateClubMember(Long clubId, Long userId) {
