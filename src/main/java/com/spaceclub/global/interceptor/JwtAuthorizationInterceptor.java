@@ -1,5 +1,7 @@
 package com.spaceclub.global.interceptor;
 
+import com.spaceclub.global.exception.AccessTokenException;
+import com.spaceclub.global.exception.TokenException;
 import com.spaceclub.global.jwt.Jwt;
 import com.spaceclub.global.jwt.JwtManager;
 import jakarta.servlet.http.HttpServletRequest;
@@ -7,10 +9,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import static com.spaceclub.global.exception.GlobalExceptionCode.INVALID_ACCESS_TOKEN;
+import static com.spaceclub.global.exception.GlobalExceptionCode.INVALID_TOKEN_FORMAT;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 
 @Slf4j
@@ -30,44 +33,39 @@ public class JwtAuthorizationInterceptor implements HandlerInterceptor {
         validate(authorizationHeader);
 
         String accessToken = authorizationHeader.replace(TOKEN_PREFIX, "");
-        if (jwt.isValidFormat(accessToken)) { // 올바른 토큰 아니면 예외 발생 exception handler에서 catch 예정, 만료 시간
-            //JWTDecodeException (dispatcher servlet에서 발생) // 예외 처리 후 제거 예정
-            log.info("access token interceptor preHandle(), access token is valid");
+        String refreshTokenHeader = request.getHeader(REFRESH_TOKEN);
 
-            return true;
-        }
-        log.info("access token interceptor preHandle(), access token is expired");
-
-        Long userId = jwt.getClaims(accessToken).getId();
-        String username = jwt.getClaims(accessToken).getUsername();
-
-        if (isRefreshTokenExists(request)) { // 만료되고 refresh token값이 있으면
-            String refreshTokenHeader = request.getHeader(REFRESH_TOKEN);
+        if (refreshTokenHeader != null) {
             validate(refreshTokenHeader);
-
             String refreshToken = refreshTokenHeader.replace(TOKEN_PREFIX, "");
 
-            if (jwtManager.isValidRefreshToken(refreshToken, userId)) { // refresh token verify ->
+            Long userId = jwt.getClaims(accessToken).getId();
+            String username = jwt.getClaims(accessToken).getUsername();
+
+            if (jwtManager.isValidRefreshToken(refreshToken, userId)) {
                 log.info("access token interceptor preHandle(), refresh token is valid");
                 response.addHeader(AUTHORIZATION, jwtManager.createAccessToken(userId, username));
 
                 return true;
             }
-
-            log.info("access token interceptor preHandle(), refresh token is invalid, redirect to login page"); // 예외 던지기
-            throw new IllegalArgumentException("access token interceptor preHandle(), refresh token is invalid");
         }
-        log.info("access token interceptor preHandle(), refresh token does not exist");
-        throw new IllegalArgumentException("access token interceptor preHandle(), refresh token does not exist");
-    }
 
-    private boolean isRefreshTokenExists(HttpServletRequest request) {
-        return request.getHeader(REFRESH_TOKEN) != null;
+        if (jwt.isValidFormat(accessToken)) {
+            log.info("JWT interceptor preHandle(), access token이 유효합니다.");
+
+            return true;
+        }
+
+        log.info("JWT interceptor preHandle(), 리프레시 토큰이 존재하지 않습니다.");
+        throw new AccessTokenException(INVALID_ACCESS_TOKEN);
     }
 
     private void validate(String token) {
-        Assert.notNull(token, "토큰이 필수입니다.");
-        Assert.isTrue(token.startsWith(TOKEN_PREFIX), "토큰이 유효하지 않은 형식입니다.");
+        boolean isWrongFormat = (token == null) || !token.startsWith(TOKEN_PREFIX);
+
+        if (isWrongFormat) {
+            throw new TokenException(INVALID_TOKEN_FORMAT);
+        }
     }
 
     @Override

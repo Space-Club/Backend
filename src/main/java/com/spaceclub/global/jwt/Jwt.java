@@ -3,11 +3,14 @@ package com.spaceclub.global.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.spaceclub.global.exception.AccessTokenException;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
+
+import static com.spaceclub.global.exception.GlobalExceptionCode.INVALID_ACCESS_TOKEN;
 
 @Slf4j
 public class Jwt {
@@ -37,17 +40,17 @@ public class Jwt {
                 .build();
     }
 
-     public String signAccessToken(Claims claims) {
-         Date now = new Date();
+    public String signAccessToken(Claims claims) {
+        Date now = new Date();
 
-         return JWT.create()
-                 .withIssuer(issuer)
-                 .withIssuedAt(now)
-                 .withExpiresAt(new Date(now.getTime() + (expirySeconds * 1_000L)))
-                 .withClaim(Claims.USER_ID, claims.getId())
-                 .withClaim(Claims.USER_NAME, claims.getUsername())
-                 .sign(algorithm);
-     }
+        return JWT.create()
+                .withIssuer(issuer)
+                .withIssuedAt(now)
+                .withExpiresAt(new Date(now.getTime() + (expirySeconds * 1_000L)))
+                .withClaim(Claims.USER_ID, claims.getId())
+                .withClaim(Claims.USER_NAME, claims.getUsername())
+                .sign(algorithm);
+    }
 
     public String signRefreshToken() {
         Date now = new Date();
@@ -62,10 +65,10 @@ public class Jwt {
     public boolean isValidFormat(String token) { // 디코딩
         try {
             jwtVerifier.verify(token);
-            return true;
-        } catch (TokenExpiredException e) {
-            return false;
+        } catch (JWTVerificationException e) {
+            throw new AccessTokenException(INVALID_ACCESS_TOKEN);
         }
+        return true;
     }
 
     public Claims getClaims(String token) {
