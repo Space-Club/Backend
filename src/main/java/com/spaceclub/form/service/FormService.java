@@ -42,7 +42,7 @@ public class FormService {
     }
 
     public FormGetInfo get(Long eventId) {
-        Event event = eventValidator.validateEventAndForm(eventId);
+        Event event = eventValidator.validateEvent(eventId);
         Form form = formRepository.findById(event.getFormId())
                 .orElseThrow(() -> new IllegalStateException(FORM_NOT_FOUND.toString()));
 

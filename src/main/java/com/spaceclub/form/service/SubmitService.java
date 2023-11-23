@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_APPLIED;
+import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_MANAGED;
 
 @Service
 @Transactional(readOnly = true)
@@ -34,7 +35,7 @@ public class SubmitService {
     private final ClubUserValidator clubUserValidator;
 
     public FormSubmitGetInfo getAll(Long userId, Long eventId, Pageable pageable) {
-        Event event = eventValidator.validateEventAndForm(eventId);
+        Event event = eventValidator.validateEvent(eventId);
         clubUserValidator.validateClubManager(event.getClubId(), userId);
         Form form = event.getForm();
 
@@ -48,7 +49,10 @@ public class SubmitService {
     public void updateStatus(FormSubmitUpdateInfo updateInfo) {
         EventUser eventUser = eventUserRepository.findByEventIdAndUserId(updateInfo.eventId(), updateInfo.formUserId())
                 .orElseThrow(() -> new IllegalStateException(EVENT_NOT_APPLIED.toString()));
-        Event event = eventValidator.validateEventAndForm(eventUser.getEventId());
+
+        Event event = eventValidator.validateEvent(eventUser.getEventId());
+        if (event.isNotFormManaged()) throw new IllegalStateException(EVENT_NOT_MANAGED.toString());
+
         clubUserValidator.validateClubManager(event.getClubId(), updateInfo.userId());
 
         EventUser updatedEventUser = eventUser.updateStatus(updateInfo.status());
