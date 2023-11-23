@@ -10,9 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.spaceclub.global.ExceptionCode.CLUB_ALREADY_JOINED;
-import static com.spaceclub.global.ExceptionCode.INVITE_EXPIRED;
-import static com.spaceclub.global.ExceptionCode.INVITE_NOT_FOUND;
+import static com.spaceclub.club.ClubExceptionMessage.CLUB_ALREADY_JOINED;
+import static com.spaceclub.invite.InviteExceptionMessage.INVITE_EXPIRED;
+import static com.spaceclub.invite.InviteExceptionMessage.INVITE_NOT_FOUND;
 
 @Service
 @Transactional

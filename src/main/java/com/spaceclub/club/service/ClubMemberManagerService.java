@@ -13,12 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.spaceclub.club.ClubExceptionMessage.CAN_NOT_SELF_DEGRADING;
+import static com.spaceclub.club.ClubExceptionMessage.CAN_NOT_WITHDRAW;
+import static com.spaceclub.club.ClubExceptionMessage.NOT_CLUB_MEMBER;
+import static com.spaceclub.club.ClubExceptionMessage.UNAUTHORIZED;
 import static com.spaceclub.club.domain.ClubUserRole.MANAGER;
 import static com.spaceclub.club.domain.ClubUserRole.MEMBER;
-import static com.spaceclub.global.ExceptionCode.CAN_NOT_SELF_DEGRADING;
-import static com.spaceclub.global.ExceptionCode.CAN_NOT_WITHDRAW;
-import static com.spaceclub.global.ExceptionCode.NOT_CLUB_MEMBER;
-import static com.spaceclub.global.ExceptionCode.UNAUTHORIZED;
 
 @Service
 @Transactional(readOnly = true)

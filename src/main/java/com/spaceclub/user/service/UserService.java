@@ -3,14 +3,14 @@ package com.spaceclub.user.service;
 import com.spaceclub.global.S3ImageUploader;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.repository.UserRepository;
-import com.spaceclub.user.service.vo.UserProfile;
 import com.spaceclub.user.service.vo.RequiredProfile;
+import com.spaceclub.user.service.vo.UserProfile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import static com.spaceclub.global.ExceptionCode.USER_NOT_FOUND;
+import static com.spaceclub.user.UserExceptionMessage.USER_NOT_FOUND;
 
 @Service
 @Transactional(readOnly = true)

@@ -1,4 +1,4 @@
-package com.spaceclub.global;
+package com.spaceclub.global.exception;
 
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;

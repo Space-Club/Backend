@@ -7,10 +7,10 @@ import com.spaceclub.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import static com.spaceclub.global.ExceptionCode.CLUB_NOT_FOUND;
-import static com.spaceclub.global.ExceptionCode.NOT_CLUB_MEMBER;
-import static com.spaceclub.global.ExceptionCode.UNAUTHORIZED;
-import static com.spaceclub.global.ExceptionCode.USER_NOT_FOUND;
+import static com.spaceclub.club.ClubExceptionMessage.CLUB_NOT_FOUND;
+import static com.spaceclub.club.ClubExceptionMessage.NOT_CLUB_MEMBER;
+import static com.spaceclub.club.ClubExceptionMessage.UNAUTHORIZED;
+import static com.spaceclub.user.UserExceptionMessage.USER_NOT_FOUND;
 
 @Component
 @RequiredArgsConstructor

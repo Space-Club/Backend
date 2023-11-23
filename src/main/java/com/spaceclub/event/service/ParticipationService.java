@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import static com.spaceclub.event.EventExceptionMessage.EVENT_ALREADY_APPLIED;
+import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_APPLIED;
 import static com.spaceclub.event.domain.ParticipationStatus.PENDING;
-import static com.spaceclub.global.ExceptionCode.EVENT_ALREADY_APPLIED;
-import static com.spaceclub.global.ExceptionCode.EVENT_NOT_APPLIED;
 import static java.util.stream.Collectors.toMap;
 
 @Service

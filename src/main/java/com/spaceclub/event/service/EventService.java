@@ -19,9 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+import static com.spaceclub.club.ClubExceptionMessage.CLUB_NOT_FOUND;
+import static com.spaceclub.event.EventExceptionMessage.EVENT_CATEGORY_NOT_ALLOWED;
 import static com.spaceclub.event.domain.EventCategory.CLUB;
-import static com.spaceclub.global.ExceptionCode.CLUB_NOT_FOUND;
-import static com.spaceclub.global.ExceptionCode.EVENT_CATEGORY_NOT_ALLOWED;
 
 @Service
 @Transactional(readOnly = true)

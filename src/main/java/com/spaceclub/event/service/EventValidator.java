@@ -6,11 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.spaceclub.global.ExceptionCode.EVENT_NOT_FOUND;
-import static com.spaceclub.global.ExceptionCode.EVENT_NOT_MANAGED;
-import static com.spaceclub.global.ExceptionCode.EVENT_TICKET_NOT_MANAGED;
-import static com.spaceclub.global.ExceptionCode.EXCEED_TICKET_COUNT;
-import static com.spaceclub.global.ExceptionCode.TICKET_COUNT_REQUIRED;
+import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_FOUND;
+import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_MANAGED;
+import static com.spaceclub.event.EventExceptionMessage.EVENT_TICKET_NOT_MANAGED;
+import static com.spaceclub.event.EventExceptionMessage.EXCEED_TICKET_COUNT;
+import static com.spaceclub.event.EventExceptionMessage.TICKET_COUNT_REQUIRED;
 
 @Component
 @Transactional(readOnly = true)

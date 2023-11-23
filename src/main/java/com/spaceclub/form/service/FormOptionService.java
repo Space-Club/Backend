@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.spaceclub.global.ExceptionCode.FORM_OPTION_NOT_FOUND;
+import static com.spaceclub.form.FormExceptionMessage.FORM_OPTION_NOT_FOUND;
 
 @Service
 @Transactional

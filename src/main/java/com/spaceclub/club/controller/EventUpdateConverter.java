@@ -9,7 +9,7 @@ import com.spaceclub.event.controller.dto.updateRequest.ShowEventUpdateRequest;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
 
-import static com.spaceclub.global.ExceptionCode.DESERIALIZE_FAILURE;
+import static com.spaceclub.global.exception.GlobalExceptionCode.DESERIALIZE_FAILURE;
 
 public record EventUpdateConverter(Event event) {
 
