@@ -1,3 +1,7 @@
+ifndef::snippets[]
+:snippets: ../../../../build/generated-snippets
+endif::[]
+
 
 === 유저가 신청한 모든 행사 조회
 :sectnums!:
