@@ -54,20 +54,6 @@ include::{snippet}/user/createUser/response-fields.adoc[]
 :sectnums:
 
 
-=== 유저 로그아웃
-:sectnums!:
-
-==== Request
-include::{snippet}/user/logout/http-request.adoc[]
-
-===== Request Header
-include::{snippet}/user/logout/request-headers.adoc[]
-
-===== Response Body
-include::{snippet}/user/logout/http-response.adoc[]
-:sectnums:
-
-
 === 유저 탈퇴
 :sectnums!:
 
