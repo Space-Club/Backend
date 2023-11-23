@@ -10,140 +10,193 @@ import java.time.LocalTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record EventDetailGetResponse(
         Long id,
-        String title,
-        String content,
-        String posterImageUrl,
-        String recruitmentTarget,
-        LocalDate startDate,
-        LocalTime startTime,
-        LocalDate endDate,
-        LocalTime endTime,
-        String location,
-        Integer dues,
-        Integer cost,
-        String activityArea,
-        LocalDate formOpenDate,
-        LocalTime formOpenTime,
-        LocalDate formCloseDate,
-        LocalTime formCloseTime,
-        String clubName,
-        String clubLogoImageUrl,
-        Boolean isBookmarked,
-        Integer applicants,
-        Integer capacity,
-        String eventCategory,
-        Boolean isManager,
-        Boolean hasForm,
-        Integer maxTicketCount,
-        String bankName,
-        String bankAccountNumber
+        String category,
+        EventInfo eventInfo,
+        FormInfo formInfo,
+        TicketInfo ticketInfo,
+        BankInfo bankInfo
 ) {
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private record EventInfo(
+            String title,
+            String content,
+            LocalDate startDate,
+            LocalTime startTime,
+            LocalDate endDate,
+            LocalTime endTime,
+            Integer dues,
+            String location,
+            Integer capacity,
+            String posterImageUrl,
+            String recruitmentTarget,
+            String activityArea
+    ) {
+
+        @Builder
+        EventInfo {
+        }
+
+    }
+
+    private record TicketInfo(
+            Integer cost,
+            Integer maxTicketCount
+    ) {
+
+        @Builder
+        TicketInfo {
+        }
+
+    }
+
+    private record FormInfo(
+            LocalDate formOpenDate,
+            LocalTime formOpenTime,
+            LocalDate formCloseDate,
+            LocalTime formCloseTime
+    ) {
+
+        @Builder
+        FormInfo {
+        }
+
+    }
+
+    private record BankInfo(
+            String bankName,
+            String bankAccountNumber
+    ) {
+
+        @Builder
+        BankInfo {
+        }
+
+    }
 
     @Builder
     public EventDetailGetResponse {
     }
 
-    public static EventDetailGetResponse withShow(Event event, Boolean isBookmarked, Boolean isManager, Boolean hasForm) {
+    public static EventDetailGetResponse withShow(Event event) {
         return EventDetailGetResponse.builder()
                 .id(event.getId())
-                .title(event.getTitle())
-                .content(event.getContent())
-                .posterImageUrl(event.getPosterImageUrl())
-                .startDate(event.getStartDate())
-                .startTime(event.getStartTime())
-                .location(event.getLocation())
-                .cost(event.getCost())
-                .clubName(event.getClubName())
-                .clubLogoImageUrl(event.getClubLogoImageUrl())
-                .formOpenDate(event.getFormOpenDate())
-                .formOpenTime(event.getFormOpenTime())
-                .formCloseDate(event.getFormCloseDate())
-                .formCloseTime(event.getFormCloseTime())
-                .isBookmarked(isBookmarked)
-                .applicants(10)
-                .capacity(10)
-                .eventCategory(event.getCategory().toString())
-                .isManager(isManager)
-                .hasForm(hasForm)
-                .maxTicketCount(event.getMaxTicketCount())
-                .bankName(event.getBankName())
-                .bankAccountNumber(event.getBankAccountNumber())
+                .category(event.getCategory().toString())
+                .eventInfo(
+                        EventInfo.builder()
+                                .title(event.getTitle())
+                                .content(event.getContent())
+                                .startDate(event.getStartDate())
+                                .startTime(event.getStartTime())
+                                .endDate(event.getEndDate())
+                                .endTime(event.getEndTime())
+                                .dues(event.getDues())
+                                .location(event.getLocation())
+                                .capacity(event.getCapacity())
+                                .posterImageUrl(event.getPosterImageUrl())
+                                .build()
+                )
+                .ticketInfo(
+                        TicketInfo.builder()
+                                .cost(event.getCost())
+                                .maxTicketCount(event.getMaxTicketCount())
+                                .build()
+                )
+                .formInfo(
+                        FormInfo.builder()
+                                .formOpenDate(event.getFormOpenDate())
+                                .formOpenTime(event.getFormOpenTime())
+                                .formCloseDate(event.getFormCloseDate())
+                                .formCloseTime(event.getFormCloseTime())
+                                .build()
+                )
+                .bankInfo(BankInfo.builder()
+                        .bankName(event.getBankName())
+                        .bankAccountNumber(event.getBankAccountNumber())
+                        .build()
+                )
                 .build();
     }
 
-    public static EventDetailGetResponse withClub(Event event, Boolean isBookmarked, Boolean isManager, Boolean hasForm) {
+    public static EventDetailGetResponse withClub(Event event) {
         return EventDetailGetResponse.builder()
                 .id(event.getId())
-                .title(event.getTitle())
-                .content(event.getContent())
-                .posterImageUrl(event.getPosterImageUrl())
-                .startDate(event.getStartDate())
-                .startTime(event.getStartTime())
-                .endDate(event.getEndDate() == null ? LocalDate.EPOCH : event.getEndDate())
-                .endTime(event.getEndTime() == null ? LocalTime.MIN : event.getEndTime())
-                .location(event.getLocation())
-                .dues(event.getDues())
-                .clubName(event.getClubName())
-                .clubLogoImageUrl(event.getClubLogoImageUrl())
-                .formOpenDate(event.getFormOpenDate())
-                .formOpenTime(event.getFormOpenTime())
-                .formCloseDate(event.getFormCloseDate())
-                .formCloseTime(event.getFormCloseTime())
-                .isBookmarked(isBookmarked)
-                .applicants(10)
-                .capacity(10)
-                .eventCategory(event.getCategory().toString())
-                .isManager(isManager)
-                .hasForm(hasForm)
+                .category(event.getCategory().toString())
+                .eventInfo(
+                        EventInfo.builder()
+                                .title(event.getTitle())
+                                .content(event.getContent())
+                                .startDate(event.getStartDate())
+                                .startTime(event.getStartTime())
+                                .endDate(event.getEndDate() == null ? LocalDate.EPOCH : event.getEndDate())
+                                .endTime(event.getEndTime() == null ? LocalTime.MIN : event.getEndTime())
+                                .dues(event.getDues())
+                                .location(event.getLocation())
+                                .capacity(event.getCapacity())
+                                .posterImageUrl(event.getPosterImageUrl())
+                                .build()
+                )
+                .formInfo(
+                        FormInfo.builder()
+                                .formOpenDate(event.getFormOpenDate())
+                                .formOpenTime(event.getFormOpenTime())
+                                .formCloseDate(event.getFormCloseDate())
+                                .formCloseTime(event.getFormCloseTime())
+                                .build()
+                )
                 .build();
     }
 
-    public static EventDetailGetResponse withPromotion(Event event, Boolean isBookmarked, Boolean isManager, Boolean hasForm) {
+    public static EventDetailGetResponse withPromotion(Event event) {
         return EventDetailGetResponse.builder()
                 .id(event.getId())
-                .title(event.getTitle())
-                .content(event.getContent())
-                .posterImageUrl(event.getPosterImageUrl())
-                .startDate(event.getStartDate())
-                .startTime(event.getStartTime())
-                .activityArea(event.getActivityArea())
-                .clubName(event.getClubName())
-                .clubLogoImageUrl(event.getClubLogoImageUrl())
-                .formOpenDate(event.getFormOpenDate())
-                .formOpenTime(event.getFormOpenTime())
-                .formCloseDate(event.getFormCloseDate())
-                .formCloseTime(event.getFormCloseTime())
-                .isBookmarked(isBookmarked)
-                .applicants(10)
-                .capacity(10)
-                .eventCategory(event.getCategory().toString())
-                .isManager(isManager)
-                .hasForm(hasForm)
+                .category(event.getCategory().toString())
+                .eventInfo(
+                        EventInfo.builder()
+                                .title(event.getTitle())
+                                .content(event.getContent())
+                                .startDate(event.getStartDate())
+                                .startTime(event.getStartTime())
+                                .capacity(event.getCapacity())
+                                .posterImageUrl(event.getPosterImageUrl())
+                                .activityArea(event.getActivityArea())
+                                .build()
+                )
+                .formInfo(
+                        FormInfo.builder()
+                                .formOpenDate(event.getFormOpenDate())
+                                .formOpenTime(event.getFormOpenTime())
+                                .formCloseDate(event.getFormCloseDate())
+                                .formCloseTime(event.getFormCloseTime())
+                                .build()
+                )
                 .build();
     }
 
-    public static EventDetailGetResponse withRecruitment(Event event, Boolean isBookmarked, Boolean isManager, Boolean hasForm) {
+    public static EventDetailGetResponse withRecruitment(Event event) {
         return EventDetailGetResponse.builder()
                 .id(event.getId())
-                .title(event.getTitle())
-                .content(event.getContent())
-                .posterImageUrl(event.getPosterImageUrl())
-                .startDate(event.getStartDate())
-                .startTime(event.getStartTime())
-                .location(event.getLocation())
-                .clubName(event.getClubName())
-                .clubLogoImageUrl(event.getClubLogoImageUrl())
-                .formOpenDate(event.getFormOpenDate())
-                .formOpenTime(event.getFormOpenTime())
-                .formCloseDate(event.getFormCloseDate())
-                .formCloseTime(event.getFormCloseTime())
-                .isBookmarked(isBookmarked)
-                .applicants(10)
-                .capacity(10)
-                .recruitmentTarget(event.getRecruitmentTarget())
-                .eventCategory(event.getCategory().toString())
-                .isManager(isManager)
-                .hasForm(hasForm)
+                .category(event.getCategory().toString())
+                .eventInfo(
+                        EventInfo.builder()
+                                .title(event.getTitle())
+                                .content(event.getContent())
+                                .startDate(event.getStartDate())
+                                .startTime(event.getStartTime())
+                                .location(event.getLocation())
+                                .capacity(event.getCapacity())
+                                .posterImageUrl(event.getPosterImageUrl())
+                                .recruitmentTarget(event.getRecruitmentTarget())
+                                .build()
+                )
+                .formInfo(
+                        FormInfo.builder()
+                                .formOpenDate(event.getFormOpenDate())
+                                .formOpenTime(event.getFormOpenTime())
+                                .formCloseDate(event.getFormCloseDate())
+                                .formCloseTime(event.getFormCloseTime())
+                                .build()
+                )
                 .build();
     }
 
