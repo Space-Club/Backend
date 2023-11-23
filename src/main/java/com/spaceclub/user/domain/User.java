@@ -169,6 +169,8 @@ public class User {
     }
 
     public String getProfileImageUrl() {
+        if (this.profileImageUrl == null) return null;
+
         return USER_PROFILE_S3_URL + profileImageUrl;
     }
 
