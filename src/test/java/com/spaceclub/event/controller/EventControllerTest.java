@@ -912,6 +912,7 @@ class EventControllerTest {
                         ),
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
+                                fieldWithPath("clubId").type(NUMBER).description("클럽 ID"),
                                 fieldWithPath("category").type(STRING).description("이벤트 종류"),
                                 fieldWithPath("eventInfo").type(OBJECT).description("행사 정보"),
                                 fieldWithPath("eventInfo.title").type(STRING).description("행사 제목"),
@@ -960,6 +961,7 @@ class EventControllerTest {
                         ),
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
+                                fieldWithPath("clubId").type(NUMBER).description("클럽 ID"),
                                 fieldWithPath("category").type(STRING).description("이벤트 종류"),
                                 fieldWithPath("eventInfo").type(OBJECT).description("행사 정보"),
                                 fieldWithPath("eventInfo.title").type(STRING).description("행사 제목"),
@@ -1002,6 +1004,7 @@ class EventControllerTest {
                         ),
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
+                                fieldWithPath("clubId").type(NUMBER).description("클럽 ID"),
                                 fieldWithPath("category").type(STRING).description("이벤트 종류"),
                                 fieldWithPath("eventInfo").type(OBJECT).description("행사 정보"),
                                 fieldWithPath("eventInfo.title").type(STRING).description("행사 제목"),
@@ -1046,6 +1049,7 @@ class EventControllerTest {
                         ),
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
+                                fieldWithPath("clubId").type(NUMBER).description("클럽 ID"),
                                 fieldWithPath("category").type(STRING).description("이벤트 종류"),
                                 fieldWithPath("eventInfo").type(OBJECT).description("행사 정보"),
                                 fieldWithPath("eventInfo.title").type(STRING).description("행사 제목"),

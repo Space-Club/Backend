@@ -10,6 +10,7 @@ import java.time.LocalTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record EventDetailGetResponse(
         Long id,
+        Long clubId,
         String category,
         EventInfo eventInfo,
         FormInfo formInfo,
@@ -81,6 +82,7 @@ public record EventDetailGetResponse(
     public static EventDetailGetResponse withShow(Event event) {
         return EventDetailGetResponse.builder()
                 .id(event.getId())
+                .clubId(event.getClubId())
                 .category(event.getCategory().toString())
                 .eventInfo(
                         EventInfo.builder()
@@ -118,6 +120,7 @@ public record EventDetailGetResponse(
     public static EventDetailGetResponse withClub(Event event) {
         return EventDetailGetResponse.builder()
                 .id(event.getId())
+                .clubId(event.getClubId())
                 .category(event.getCategory().toString())
                 .eventInfo(
                         EventInfo.builder()
@@ -147,6 +150,7 @@ public record EventDetailGetResponse(
     public static EventDetailGetResponse withPromotion(Event event) {
         return EventDetailGetResponse.builder()
                 .id(event.getId())
+                .clubId(event.getClubId())
                 .category(event.getCategory().toString())
                 .eventInfo(
                         EventInfo.builder()
@@ -173,6 +177,7 @@ public record EventDetailGetResponse(
     public static EventDetailGetResponse withRecruitment(Event event) {
         return EventDetailGetResponse.builder()
                 .id(event.getId())
+                .clubId(event.getClubId())
                 .category(event.getCategory().toString())
                 .eventInfo(
                         EventInfo.builder()
