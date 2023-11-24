@@ -38,6 +38,8 @@ public class AccountService {
         String accessToken = jwtManager.createAccessToken(kakaoUser.getId(), kakaoUser.getUsername());
         String refreshToken = jwtManager.createRefreshToken(kakaoUser.getId());
 
+        checkWhenUserStatusIsInactive(kakaoUser);
+
         return UserLoginInfo.from(kakaoUser.getId(), accessToken, refreshToken);
     }
 
@@ -51,6 +53,13 @@ public class AccountService {
 
         return userRepository.findByEmailAndOauthUserName(email, oauthUsername)
                 .orElseGet(() -> userRepository.save(userInfo.toUser()));
+    }
+
+    private void checkWhenUserStatusIsInactive(User kakaoUser) {
+        if (kakaoUser.isInactive()){
+            User user = kakaoUser.changeStatusToRegistered();
+            userRepository.save(user);
+        }
     }
 
     public void logout(Long userId) {

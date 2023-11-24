@@ -187,4 +187,21 @@ public class User {
         );
     }
 
+    public boolean isInactive() {
+        return this.status.equals(INACTIVE);
+    }
+
+    public User changeStatusToRegistered() {
+        return new User(
+                this.id,
+                this.requiredInfo,
+                REGISTERED,
+                this.oauthUserName,
+                this.provider,
+                this.email,
+                this.refreshToken,
+                this.profileImageUrl
+        );
+    }
+
 }
