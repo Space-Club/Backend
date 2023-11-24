@@ -28,6 +28,7 @@ public record EventDetailGetResponse(
             LocalTime endTime,
             Integer dues,
             String location,
+            Integer applicants,
             Integer capacity,
             String posterImageUrl,
             String recruitmentTarget,
@@ -79,7 +80,7 @@ public record EventDetailGetResponse(
     public EventDetailGetResponse {
     }
 
-    public static EventDetailGetResponse withShow(Event event) {
+    public static EventDetailGetResponse withShow(Event event, Integer applicants) {
         return EventDetailGetResponse.builder()
                 .id(event.getId())
                 .clubId(event.getClubId())
@@ -91,6 +92,7 @@ public record EventDetailGetResponse(
                                 .startDate(event.getStartDate())
                                 .startTime(event.getStartTime())
                                 .location(event.getLocation())
+                                .applicants(applicants)
                                 .capacity(event.getCapacity())
                                 .posterImageUrl(event.getPosterImageUrl())
                                 .build()
@@ -117,7 +119,7 @@ public record EventDetailGetResponse(
                 .build();
     }
 
-    public static EventDetailGetResponse withClub(Event event) {
+    public static EventDetailGetResponse withClub(Event event, Integer applicants) {
         return EventDetailGetResponse.builder()
                 .id(event.getId())
                 .clubId(event.getClubId())
@@ -132,6 +134,7 @@ public record EventDetailGetResponse(
                                 .endTime(event.getEndTime() == null ? LocalTime.MIN : event.getEndTime())
                                 .dues(event.getDues())
                                 .location(event.getLocation())
+                                .applicants(applicants)
                                 .capacity(event.getCapacity())
                                 .posterImageUrl(event.getPosterImageUrl())
                                 .build()
@@ -147,7 +150,7 @@ public record EventDetailGetResponse(
                 .build();
     }
 
-    public static EventDetailGetResponse withPromotion(Event event) {
+    public static EventDetailGetResponse withPromotion(Event event, Integer applicants) {
         return EventDetailGetResponse.builder()
                 .id(event.getId())
                 .clubId(event.getClubId())
@@ -158,6 +161,7 @@ public record EventDetailGetResponse(
                                 .content(event.getContent())
                                 .startDate(event.getStartDate())
                                 .startTime(event.getStartTime())
+                                .applicants(applicants)
                                 .capacity(event.getCapacity())
                                 .posterImageUrl(event.getPosterImageUrl())
                                 .activityArea(event.getActivityArea())
@@ -174,7 +178,7 @@ public record EventDetailGetResponse(
                 .build();
     }
 
-    public static EventDetailGetResponse withRecruitment(Event event) {
+    public static EventDetailGetResponse withRecruitment(Event event, Integer applicants) {
         return EventDetailGetResponse.builder()
                 .id(event.getId())
                 .clubId(event.getClubId())
@@ -186,6 +190,7 @@ public record EventDetailGetResponse(
                                 .startDate(event.getStartDate())
                                 .startTime(event.getStartTime())
                                 .location(event.getLocation())
+                                .applicants(applicants)
                                 .capacity(event.getCapacity())
                                 .posterImageUrl(event.getPosterImageUrl())
                                 .recruitmentTarget(event.getRecruitmentTarget())

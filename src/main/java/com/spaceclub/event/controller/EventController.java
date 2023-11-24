@@ -113,13 +113,15 @@ public class EventController {
 
         Event event = eventService.get(eventId, userId);
 
+        Integer applicants = eventService.countApplicants(eventId);
+
         EventCategory category = event.getCategory();
 
         EventDetailGetResponse response = switch (category) {
-            case SHOW -> EventDetailGetResponse.withShow(event);
-            case CLUB -> EventDetailGetResponse.withClub(event);
-            case PROMOTION -> EventDetailGetResponse.withPromotion(event);
-            case RECRUITMENT -> EventDetailGetResponse.withRecruitment(event);
+            case SHOW -> EventDetailGetResponse.withShow(event, applicants);
+            case CLUB -> EventDetailGetResponse.withClub(event, applicants);
+            case PROMOTION -> EventDetailGetResponse.withPromotion(event, applicants);
+            case RECRUITMENT -> EventDetailGetResponse.withRecruitment(event, applicants);
         };
 
         return ResponseEntity.ok(response);
