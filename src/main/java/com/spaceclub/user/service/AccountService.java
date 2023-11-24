@@ -1,9 +1,9 @@
 package com.spaceclub.user.service;
 
-import com.spaceclub.global.jwt.JwtManager;
 import com.spaceclub.global.config.oauth.KakaoOauthInfoSender;
 import com.spaceclub.global.config.oauth.vo.KakaoTokenInfo;
 import com.spaceclub.global.config.oauth.vo.KakaoUserInfo;
+import com.spaceclub.global.jwt.JwtManager;
 import com.spaceclub.user.domain.Email;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
@@ -81,5 +81,13 @@ public class AccountService {
         return UserLoginInfo.from(user.getId(), accessToken, refreshToken);
     }
 
+    public boolean isAuthenticatedUser(Long userId, String username) {
+        User user = getUser(userId);
+
+        if (!user.isValid(username)) {
+            throw new IllegalStateException(USER_NOT_FOUND.toString());
+        }
+        return true;
+    }
 
 }

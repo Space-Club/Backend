@@ -24,8 +24,6 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 public class User {
 
-    private static final String USER_PROFILE_S3_URL = "https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/user-profile-image/";
-
     @Id
     @Getter
     @GeneratedValue(strategy = IDENTITY)
@@ -53,6 +51,7 @@ public class User {
     private String refreshToken;
 
     @Lob
+    @Getter
     private String profileImageUrl;
 
     private User(
@@ -106,10 +105,6 @@ public class User {
         Assert.hasText(phoneNumber, "전화번호는 필수입니다.");
 
         return new RequiredInfo(nickname, new PhoneNumber(phoneNumber));
-    }
-
-    public String getName() {
-        return requiredInfo.getName();
     }
 
     public boolean isNewMember() {
@@ -168,10 +163,8 @@ public class User {
         );
     }
 
-    public String getProfileImageUrl() {
-        if (this.profileImageUrl == null) return null;
-
-        return USER_PROFILE_S3_URL + profileImageUrl;
+    public boolean isValid(String username) {
+        return this.getUsername().equals(username);
     }
 
 }
