@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.CascadeType.REMOVE;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -45,8 +46,8 @@ public class FormOption {
     private Form form;
 
     @Getter
-    @OneToMany(mappedBy = "formOption", fetch = FetchType.EAGER, cascade = {REMOVE})
-    private final List<FormOptionUser> optionUsers = new ArrayList<>();
+    @OneToMany(mappedBy = "formOption", fetch = FetchType.EAGER, cascade = {PERSIST, REMOVE}, orphanRemoval = true)
+    private final List<FormOptionUser> formOptionUsers = new ArrayList<>();
 
     @Builder
     public FormOption(Long id, String title, FormOptionType type, Form form) {
@@ -66,7 +67,11 @@ public class FormOption {
     }
 
     public void addFormOptionUser(FormOptionUser optionUser) {
-        optionUsers.add(optionUser);
+        formOptionUsers.add(optionUser);
+    }
+
+    public void removeFormOptionUser(FormOptionUser optionUser) {
+        formOptionUsers.remove(optionUser);
     }
 
 }

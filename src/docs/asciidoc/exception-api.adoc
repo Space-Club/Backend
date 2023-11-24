@@ -21,6 +21,9 @@
 |`+FORM_OPTION_NOT_FOUND+`
 |존재하지 않는 폼 옵션 입니다
 
+|`+FORM_OPTION_USER_NOT_FOUND+`
+|존재하지 않는 유저의 폼 답변입니다.
+
 |`+INVITE_NOT_FOUND+`
 |해당 초대코드를 보유한 클럽이 없습니다
 
@@ -74,6 +77,5 @@
 
 |`+DESERIALIZE_FAILURE+`
 |JSON 데이터를 변환하는데 실패했습니다.
-
 
 |====

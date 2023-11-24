@@ -17,10 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static com.spaceclub.event.EventExceptionMessage.EVENT_ALREADY_APPLIED;
 import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_APPLIED;
+import static com.spaceclub.event.domain.ParticipationStatus.CANCELED;
 import static com.spaceclub.event.domain.ParticipationStatus.PENDING;
 import static java.util.stream.Collectors.toMap;
 
@@ -39,8 +41,10 @@ public class ParticipationService implements ParticipationProvider {
         Event event = eventValidator.validateEvent(info.eventId());
 
         eventValidator.validateEventTicketCount(event.getMaxTicketCount(), info.ticketCount());
-        if (eventUserRepository.existsByEventIdAndUserId(info.eventId(), info.userId()))
-            throw new IllegalArgumentException(EVENT_ALREADY_APPLIED.toString());
+
+        Optional<EventUser> optionalEventUser = eventUserRepository.findByEventIdAndUserId(info.eventId(), info.userId());
+
+        eventAlreadyParticipated(info, optionalEventUser);
 
         for (FormOptionUser formOptionUser : info.formOptionUsers()) {
             formOptionProvider.createFormOption(info.userId(), formOptionUser);
@@ -54,6 +58,19 @@ public class ParticipationService implements ParticipationProvider {
                 .build();
 
         eventUserRepository.save(newEventUser);
+    }
+
+    private void eventAlreadyParticipated(EventParticipationCreateInfo info, Optional<EventUser> optionalEventUser) {
+        if (optionalEventUser.isPresent()) {
+            EventUser eventUser = optionalEventUser.get();
+
+            if (CANCELED.equals(eventUser.getStatus())) {
+                eventUserRepository.deleteById(eventUser.getId());
+                formOptionProvider.deleteFormOptionUser(info.formOptionUsers(), info.userId());
+            } else {
+                throw new IllegalArgumentException(EVENT_ALREADY_APPLIED.toString());
+            }
+        }
     }
 
     public ParticipationStatus cancel(Long eventId, Long userId) {
