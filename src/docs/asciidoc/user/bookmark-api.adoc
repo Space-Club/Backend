@@ -39,3 +39,22 @@ include::{snippet}/user/bookmark/request-fields.adoc[]
 ===== Response Body
 include::{snippet}/user/bookmark/http-response.adoc[]
 :sectnums:
+
+=== 유저의 행사 북마크 여부 확인
+:sectnums!:
+
+==== Request
+include::{snippet}/user/isBookmarked/http-request.adoc[]
+
+===== Path Parameter
+include::{snippet}/user/isBookmarked/path-parameters.adoc[]
+
+===== Request Header
+include::{snippet}/user/isBookmarked/request-headers.adoc[]
+
+==== Response
+include::{snippet}/user/isBookmarked/http-response.adoc[]
+
+===== Response Body
+include::{snippets}/user/isBookmarked/response-body.adoc[]
+:sectnums:

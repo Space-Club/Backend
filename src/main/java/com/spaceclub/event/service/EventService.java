@@ -6,6 +6,7 @@ import com.spaceclub.club.service.ClubUserValidator;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.repository.EventRepository;
+import com.spaceclub.event.repository.EventUserRepository;
 import com.spaceclub.event.service.vo.EventCreateInfo;
 import com.spaceclub.event.service.vo.EventGetInfo;
 import com.spaceclub.event.service.vo.SchedulesGetInfo;
@@ -31,6 +32,8 @@ public class EventService implements EventProvider {
     private final EventRepository eventRepository;
 
     private final ClubRepository clubRepository;
+
+    private final EventUserRepository eventUserRepository;
 
     private final EventValidator eventValidator;
 
@@ -119,6 +122,10 @@ public class EventService implements EventProvider {
 
     public Page<Event> findAllBookmarkedEventPages(Long userId, Pageable pageable) {
         return eventRepository.findAllBookmarkedEventPages(userId, pageable);
+    }
+
+    public int countApplicants(Long eventId) {
+        return eventUserRepository.countByEvent_Id(eventId);
     }
 
 }

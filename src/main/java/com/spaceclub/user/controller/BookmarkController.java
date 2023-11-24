@@ -57,4 +57,11 @@ public class BookmarkController {
         bookmarkService.changeBookmarkStatus(bookmarkInfo);
     }
 
+    @GetMapping("/events/{eventId}")
+    public boolean isBookmarked(@PathVariable Long eventId, @Authenticated JwtUser jwtUser) {
+        Long userId = jwtUser.id();
+
+        return bookmarkService.isBookmarked(userId, eventId);
+    }
+
 }
