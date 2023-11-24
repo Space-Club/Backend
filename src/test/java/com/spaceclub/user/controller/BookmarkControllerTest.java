@@ -179,7 +179,8 @@ class BookmarkControllerTest {
     @WithMockUser
     void 유저가_북마크한_여부_조회에_성공한다() throws Exception {
         // given
-        given(bookmarkService.isBookmarked(any(), any(Long.class))).willReturn(true);
+        boolean bookmarkStatus = true;
+        given(bookmarkService.isBookmarked(any(), any(Long.class))).willReturn(bookmarkStatus);
 
         // when
         ResultActions actions = mvc.perform(get("/api/v1/me/events/{eventId}", 1L)
