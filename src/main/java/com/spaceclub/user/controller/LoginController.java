@@ -44,6 +44,7 @@ public class LoginController {
         return UserLoginResponse.from(userLoginInfo);
     }
 
+    @Deprecated
     @PostMapping("/logout")
     @ResponseStatus(OK)
     public void logout(@Authenticated JwtUser jwtUser) {

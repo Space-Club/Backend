@@ -38,7 +38,6 @@ public class AccountService {
         return UserLoginInfo.from(kakaoUser.getId(), accessToken, refreshToken);
     }
 
-
     private User createKakaoUser(String code) {
         KakaoTokenInfo accessTokenInfo = kakaoOauthInfoSender.getAccessTokenInfo(code);
         String accessToken = accessTokenInfo.accessToken();
