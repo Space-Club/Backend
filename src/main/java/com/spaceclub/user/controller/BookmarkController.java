@@ -24,14 +24,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = {"/api/v1/me", "/api/v1/users"}) // 스팩 변경
+@RequestMapping("/api/v1/me")
 @RequiredArgsConstructor
 public class BookmarkController {
 
     private final BookmarkService bookmarkService;
     private final EventService eventService;
 
-    @GetMapping(value = {"/events/bookmark", "/bookmarked-events"}) // 스팩 변경
+    @GetMapping(value = {"/events/bookmark"})
     public PageResponse<UserBookmarkedEventGetResponse, Event> getAllBookmarkedEvents(
             Pageable pageable,
             @Authenticated JwtUser jwtUser
@@ -51,7 +51,7 @@ public class BookmarkController {
             @PathVariable Long eventId,
             @RequestBody BookmarkedEventRequest request,
             @Authenticated JwtUser jwtUser
-    ){
+    ) {
         UserBookmarkInfo bookmarkInfo = UserBookmarkInfo.of(eventId, jwtUser.id(), request.bookmark());
 
         bookmarkService.changeBookmarkStatus(bookmarkInfo);
