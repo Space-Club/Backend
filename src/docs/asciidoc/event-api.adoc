@@ -369,26 +369,3 @@ include::{snippets}/event/delete/request-headers.adoc[]
 
 include::{snippets}/event/delete/http-response.adoc[]
 :sectnums:
-
-=== 행사 매니저 여부 확인
-:sectnums!:
-==== Request
-
-include::{snippets}/event/isManager/http-request.adoc[]
-===== Path Parameter
-
-include::{snippets}/event/isManager/path-parameters.adoc[]
-
-===== Request Header
-
-include::{snippets}/event/isManager/request-headers.adoc[]
-
-==== Response
-
-include::{snippets}/event/isManager/http-response.adoc[]
-
-===== Response Body
-
-include::{snippets}/event/isManager/response-body.adoc[]
-
-:sectnums:

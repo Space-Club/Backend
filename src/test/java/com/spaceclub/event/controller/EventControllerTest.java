@@ -74,7 +74,6 @@ import static org.springframework.restdocs.payload.JsonFieldType.OBJECT;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestPartFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseBody;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
@@ -913,6 +912,7 @@ class EventControllerTest {
                         ),
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
+                                fieldWithPath("clubId").type(NUMBER).description("클럽 ID"),
                                 fieldWithPath("category").type(STRING).description("이벤트 종류"),
                                 fieldWithPath("eventInfo").type(OBJECT).description("행사 정보"),
                                 fieldWithPath("eventInfo.title").type(STRING).description("행사 제목"),
@@ -961,6 +961,7 @@ class EventControllerTest {
                         ),
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
+                                fieldWithPath("clubId").type(NUMBER).description("클럽 ID"),
                                 fieldWithPath("category").type(STRING).description("이벤트 종류"),
                                 fieldWithPath("eventInfo").type(OBJECT).description("행사 정보"),
                                 fieldWithPath("eventInfo.title").type(STRING).description("행사 제목"),
@@ -1003,6 +1004,7 @@ class EventControllerTest {
                         ),
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
+                                fieldWithPath("clubId").type(NUMBER).description("클럽 ID"),
                                 fieldWithPath("category").type(STRING).description("이벤트 종류"),
                                 fieldWithPath("eventInfo").type(OBJECT).description("행사 정보"),
                                 fieldWithPath("eventInfo.title").type(STRING).description("행사 제목"),
@@ -1047,6 +1049,7 @@ class EventControllerTest {
                         ),
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
+                                fieldWithPath("clubId").type(NUMBER).description("클럽 ID"),
                                 fieldWithPath("category").type(STRING).description("이벤트 종류"),
                                 fieldWithPath("eventInfo").type(OBJECT).description("행사 정보"),
                                 fieldWithPath("eventInfo.title").type(STRING).description("행사 제목"),
@@ -1156,33 +1159,6 @@ class EventControllerTest {
                                 parameterWithName("eventId").description("행사 ID")
                         ))
                 );
-    }
-
-    @Test
-    @WithMockUser
-    void 행사_상세_조회시_매니저_여부_조회에_성공한다() throws Exception {
-        // given
-        given(eventService.isManager(any(Long.class), any())).willReturn(true);
-
-        // when
-        ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}/me", 1L)
-                .header(AUTHORIZATION, "Access Token"));
-
-        // then
-        actions.andExpect(status().isOk())
-                .andDo(print())
-                .andDo(document("event/isManager",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("eventId").description("이벤트 ID")
-                        ),
-                        requestHeaders(
-                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
-                        ),
-                        responseBody()
-                ));
-
     }
 
 }
