@@ -4,6 +4,7 @@ import com.spaceclub.club.controller.EventCreateConverter;
 import com.spaceclub.club.controller.EventUpdateConverter;
 import com.spaceclub.event.controller.dto.EventCreateResponse;
 import com.spaceclub.event.controller.dto.EventDetailGetResponse;
+import com.spaceclub.event.controller.dto.EventMyDetailGetResponse;
 import com.spaceclub.event.controller.dto.EventOverviewGetResponse;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
