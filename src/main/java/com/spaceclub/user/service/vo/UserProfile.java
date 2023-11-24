@@ -9,12 +9,20 @@ public record UserProfile(
         String profileImageUrl
 ) {
 
-    public static UserProfile of(User user) {
+    public static UserProfile of(User user, String profileImageUrlPrefix) {
         return new UserProfile(
                 user.getUsername(),
                 user.getPhoneNumber(),
-                user.getProfileImageUrl()
+                getProfileImageUrl(user, profileImageUrlPrefix)
         );
+    }
+
+    private static String getProfileImageUrl(User user, String profileImageUrlPrefix) {
+        String profileImageUrl = user.getProfileImageUrl();
+        if (profileImageUrl == null) {
+            return null;
+        }
+        return profileImageUrlPrefix + profileImageUrl;
     }
 
     public UserProfileResponse toResponse() {

@@ -1,4 +1,4 @@
-package com.spaceclub.global.oauth.config.vo;
+package com.spaceclub.global.config.oauth.vo;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

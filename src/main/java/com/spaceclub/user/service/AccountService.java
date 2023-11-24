@@ -1,9 +1,9 @@
 package com.spaceclub.user.service;
 
 import com.spaceclub.global.jwt.JwtManager;
-import com.spaceclub.global.oauth.config.KakaoOauthInfoSender;
-import com.spaceclub.global.oauth.config.vo.KakaoTokenInfo;
-import com.spaceclub.global.oauth.config.vo.KakaoUserInfo;
+import com.spaceclub.global.config.oauth.KakaoOauthInfoSender;
+import com.spaceclub.global.config.oauth.vo.KakaoTokenInfo;
+import com.spaceclub.global.config.oauth.vo.KakaoUserInfo;
 import com.spaceclub.user.domain.Email;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;

@@ -1,6 +1,7 @@
 package com.spaceclub.user.service;
 
-import com.spaceclub.global.S3ImageUploader;
+import com.spaceclub.global.config.s3.S3ImageUploader;
+import com.spaceclub.global.config.s3.properties.S3BucketUrl;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.repository.UserRepository;
 import com.spaceclub.user.service.vo.RequiredProfile;
@@ -19,6 +20,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final S3ImageUploader imageUploader;
+    private final S3BucketUrl s3BucketUrl;
 
     @Transactional
     public void changeUserProfileImage(MultipartFile userImage, Long userId) {
@@ -38,7 +40,7 @@ public class UserService {
     public UserProfile getProfile(Long userId) {
         User user = getUser(userId);
 
-        return UserProfile.of(user);
+        return UserProfile.of(user, s3BucketUrl.userProfileImage());
     }
 
     public User getUser(Long userId) {

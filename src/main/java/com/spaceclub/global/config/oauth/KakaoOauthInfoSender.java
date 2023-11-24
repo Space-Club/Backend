@@ -1,7 +1,7 @@
-package com.spaceclub.global.oauth.config;
+package com.spaceclub.global.config.oauth;
 
-import com.spaceclub.global.oauth.config.vo.KakaoTokenInfo;
-import com.spaceclub.global.oauth.config.vo.KakaoUserInfo;
+import com.spaceclub.global.config.oauth.vo.KakaoTokenInfo;
+import com.spaceclub.global.config.oauth.vo.KakaoUserInfo;
 import com.spaceclub.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -19,15 +19,9 @@ import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 @RequiredArgsConstructor
 public class KakaoOauthInfoSender {
 
-    private static final String REQUEST_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
-    private static final String REQUEST_INFO_URL = "https://kapi.kakao.com/v2/user/me";
-    private static final String GRANT_TYPE = "authorization_code";
-    private static final String LOGOUT_URL = "https://kapi.kakao.com/v1/user/logout";
-    private static final String UNLINK_URL = "https://kapi.kakao.com/v1/user/unlink";
-    private static final String ADMIN_KEY_PREFIX = "KakaoaAK ";
-
     private final RestTemplate restTemplate;
     private final KakaoOauthProperties kakaoProperties;
+    private final KakaoRequestUrlProperties urlProperties;
 
     public KakaoUserInfo getUserInfo(String accessToken) {
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -37,7 +31,7 @@ public class KakaoOauthInfoSender {
         HttpEntity<Object> requestEntity = new HttpEntity<>(httpHeaders);
 
         return restTemplate.exchange(
-                REQUEST_INFO_URL,
+                urlProperties.requestInfo(),
                 POST,
                 requestEntity,
                 KakaoUserInfo.class
@@ -49,16 +43,16 @@ public class KakaoOauthInfoSender {
         httpHeaders.setContentType(APPLICATION_FORM_URLENCODED);
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("grant_type", GRANT_TYPE);
-        body.add("client_id", kakaoProperties.getClientId());
-        body.add("redirect_uri", kakaoProperties.getRedirectUrl());
-        body.add("client_secret", kakaoProperties.getClientSecret());
+        body.add("grant_type", kakaoProperties.grantType());
+        body.add("client_id", kakaoProperties.clientId());
+        body.add("redirect_uri", kakaoProperties.redirectUrl());
+        body.add("client_secret", kakaoProperties.clientSecret());
         body.add("code", code);
 
         HttpEntity<Object> requestEntity = new HttpEntity<>(body, httpHeaders);
 
         return restTemplate.exchange(
-                REQUEST_TOKEN_URL,
+                urlProperties.requestToken(),
                 POST,
                 requestEntity,
                 KakaoTokenInfo.class
@@ -69,7 +63,7 @@ public class KakaoOauthInfoSender {
         HttpEntity<Object> requestEntity = generateRequest(user);
 
         Long id = restTemplate.exchange(
-                LOGOUT_URL,
+                urlProperties.logout(),
                 POST,
                 requestEntity,
                 Long.class
@@ -83,7 +77,7 @@ public class KakaoOauthInfoSender {
         HttpEntity<Object> requestEntity = generateRequest(user);
 
         Long id = restTemplate.exchange(
-                UNLINK_URL,
+                urlProperties.unlink(),
                 POST,
                 requestEntity,
                 Long.class
@@ -96,7 +90,7 @@ public class KakaoOauthInfoSender {
     private HttpEntity<Object> generateRequest(User user) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(APPLICATION_FORM_URLENCODED);
-        httpHeaders.set(AUTHORIZATION, ADMIN_KEY_PREFIX + kakaoProperties.getAdminKey());
+        httpHeaders.set(AUTHORIZATION, kakaoProperties.adminKeyPrefix() + " " + kakaoProperties.adminKey());
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("target_id_type", "user_id");

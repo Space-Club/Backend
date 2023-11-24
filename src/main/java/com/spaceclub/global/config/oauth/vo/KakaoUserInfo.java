@@ -1,4 +1,4 @@
-package com.spaceclub.global.oauth.config.vo;
+package com.spaceclub.global.config.oauth.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.spaceclub.user.domain.Status;
