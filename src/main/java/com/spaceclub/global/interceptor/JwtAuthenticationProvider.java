@@ -23,6 +23,7 @@ public class JwtAuthenticationProvider {
     private static final String TOKEN_PREFIX = "Bearer ";
 
     private final JwtManager jwtManager;
+
     private final Jwt jwt;
 
     public boolean authenticate(String authorizationHeader, String refreshTokenHeader, HttpServletResponse response) {

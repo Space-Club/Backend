@@ -40,11 +40,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .order(1);
 
         registry.addInterceptor(authorizationInterceptor)
-                .order(2)
                 .addPathPatterns("/api/v1/**")
-                .excludePathPatterns( // 반드시 인가 처리가 필수가 아닌 path 추가
-                        "/api/v1/users/oauth**"
-                );
+                .order(2);
     }
 
     @Override

@@ -22,14 +22,17 @@ import static org.springframework.http.HttpMethod.POST;
 public class AuthorizationInterceptor implements HandlerInterceptor {
 
     private static final String TOKEN_PREFIX = "Bearer ";
+
     private static final Map<String, HttpMethod> PATH_TO_EXCLUDE = Map.of(
             "/api/v1/users", POST,
             "/api/v1/clubs/invites/", GET,
             "/api/v1/events", GET,
-            "/api/v1/events/searches", GET
+            "/api/v1/events/searches", GET,
+            "/api/v1/users/oauth", POST
     );
 
     private final AccountService accountService;
+
     private final JwtManager jwtManager;
 
     @Override

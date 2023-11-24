@@ -6,7 +6,8 @@ import com.spaceclub.club.service.vo.ClubInfo;
 import com.spaceclub.event.service.ParticipationProvider;
 import com.spaceclub.event.service.vo.EventPageInfo;
 import com.spaceclub.global.UserArgumentResolver;
-import com.spaceclub.global.interceptor.JwtAuthorizationInterceptor;
+import com.spaceclub.global.interceptor.AuthenticationInterceptor;
+import com.spaceclub.global.interceptor.AuthorizationInterceptor;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(value = ContentController.class,
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-                        JwtAuthorizationInterceptor.class,
+                        AuthorizationInterceptor.class,
+                        AuthenticationInterceptor.class
                 })
         })
 @AutoConfigureRestDocs

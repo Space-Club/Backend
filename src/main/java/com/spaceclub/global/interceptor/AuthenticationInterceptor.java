@@ -21,7 +21,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         String refreshTokenHeader = request.getHeader(REFRESH_TOKEN);
 
-        if (authorizationHeader == null && refreshTokenHeader == null) {
+        boolean isTokenDoesNotExists = authorizationHeader == null && refreshTokenHeader == null;
+        if (isTokenDoesNotExists) {
             return true;
         }
 

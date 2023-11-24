@@ -10,7 +10,8 @@ import com.spaceclub.form.service.SubmitService;
 import com.spaceclub.form.service.vo.FormSubmitGetInfo;
 import com.spaceclub.form.service.vo.FormSubmitUpdateInfo;
 import com.spaceclub.global.UserArgumentResolver;
-import com.spaceclub.global.interceptor.JwtAuthorizationInterceptor;
+import com.spaceclub.global.interceptor.AuthenticationInterceptor;
+import com.spaceclub.global.interceptor.AuthorizationInterceptor;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(value = SubmitController.class,
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-                        JwtAuthorizationInterceptor.class,
+                        AuthorizationInterceptor.class,
+                        AuthenticationInterceptor.class
                 })
         })
 @AutoConfigureRestDocs

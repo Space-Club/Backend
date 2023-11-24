@@ -3,7 +3,8 @@ package com.spaceclub.invite.controller;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.global.UserArgumentResolver;
-import com.spaceclub.global.interceptor.JwtAuthorizationInterceptor;
+import com.spaceclub.global.interceptor.AuthenticationInterceptor;
+import com.spaceclub.global.interceptor.AuthorizationInterceptor;
 import com.spaceclub.invite.service.InviteService;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(value = InviteController.class,
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-                        JwtAuthorizationInterceptor.class,
+                        AuthorizationInterceptor.class,
+                        AuthenticationInterceptor.class
                 })
         })
 @AutoConfigureRestDocs

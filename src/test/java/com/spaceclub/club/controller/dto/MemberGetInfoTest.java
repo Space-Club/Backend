@@ -78,28 +78,28 @@ class MemberGetInfoTest {
         // given
         MemberGetInfo clubUserOrder1 = MemberGetInfo.builder()
                 .id(1L)
-                .name(user1().getName())
+                .name(user1().getUsername())
                 .profileImageUrl(user1().getProfileImageUrl())
                 .role(ClubUserRole.MANAGER)
                 .build();
 
         MemberGetInfo clubUserOrder2 = MemberGetInfo.builder()
                 .id(2L)
-                .name(user2().getName())
+                .name(user2().getUsername())
                 .profileImageUrl(user2().getProfileImageUrl())
                 .role(ClubUserRole.MEMBER)
                 .build();
 
         MemberGetInfo clubUserOrder3 = MemberGetInfo.builder()
                 .id(3L)
-                .name(user3().getName())
+                .name(user3().getUsername())
                 .profileImageUrl(user3().getProfileImageUrl())
                 .role(ClubUserRole.MANAGER)
                 .build();
 
         MemberGetInfo clubUserOrder4 = MemberGetInfo.builder()
                 .id(4L)
-                .name(user4().getName())
+                .name(user4().getUsername())
                 .profileImageUrl(user4().getProfileImageUrl())
                 .role(ClubUserRole.MEMBER)
                 .build();
