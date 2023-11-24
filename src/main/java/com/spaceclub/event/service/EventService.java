@@ -124,4 +124,8 @@ public class EventService implements EventProvider {
         return eventRepository.findAllBookmarkedEventPages(userId, pageable);
     }
 
+    public Integer countApplicants(Long eventId) {
+        return eventUserRepository.countByEvent_Id(eventId);
+    }
+
 }
