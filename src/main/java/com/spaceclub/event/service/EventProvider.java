@@ -13,4 +13,6 @@ public interface EventProvider {
 
     List<SchedulesGetInfo> getSchedulesByClubId(Long clubId);
 
+    Page<EventGetInfo> findAllBookmarkedEventPages(Long userId, Pageable pageable);
+
 }

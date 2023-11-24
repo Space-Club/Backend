@@ -120,8 +120,11 @@ public class EventService implements EventProvider {
                 .toList();
     }
 
-    public Page<Event> findAllBookmarkedEventPages(Long userId, Pageable pageable) {
-        return eventRepository.findAllBookmarkedEventPages(userId, pageable);
+    @Override
+    public Page<EventGetInfo> findAllBookmarkedEventPages(Long userId, Pageable pageable) {
+        Page<Event> events = eventRepository.findAllBookmarkedEventPages(userId, pageable);
+
+        return events.map(EventGetInfo::from);
     }
 
     public int countApplicants(Long eventId) {

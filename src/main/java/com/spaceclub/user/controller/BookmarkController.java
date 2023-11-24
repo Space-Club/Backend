@@ -1,8 +1,8 @@
 package com.spaceclub.user.controller;
 
 import com.spaceclub.event.controller.dto.BookmarkedEventRequest;
-import com.spaceclub.event.domain.Event;
-import com.spaceclub.event.service.EventService;
+import com.spaceclub.event.service.EventProvider;
+import com.spaceclub.event.service.vo.EventGetInfo;
 import com.spaceclub.global.Authenticated;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.vo.JwtUser;
@@ -29,14 +29,14 @@ import java.util.List;
 public class BookmarkController {
 
     private final BookmarkService bookmarkService;
-    private final EventService eventService;
+    private final EventProvider eventProvider;
 
-    @GetMapping(value = {"/events/bookmark"})
-    public PageResponse<UserBookmarkedEventGetResponse, Event> getAllBookmarkedEvents(
+    @GetMapping("/events/bookmark")
+    public PageResponse<UserBookmarkedEventGetResponse, EventGetInfo> getAllBookmarkedEvents(
             Pageable pageable,
             @Authenticated JwtUser jwtUser
     ) {
-        Page<Event> eventPages = eventService.findAllBookmarkedEventPages(jwtUser.id(), pageable);
+        Page<EventGetInfo> eventPages = eventProvider.findAllBookmarkedEventPages(jwtUser.id(), pageable);
 
         List<UserBookmarkedEventGetResponse> bookmarkedEvents = eventPages.getContent().stream()
                 .map(UserBookmarkedEventGetResponse::from)
