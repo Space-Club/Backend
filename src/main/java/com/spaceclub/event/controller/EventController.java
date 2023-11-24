@@ -4,7 +4,6 @@ import com.spaceclub.club.controller.EventCreateConverter;
 import com.spaceclub.club.controller.EventUpdateConverter;
 import com.spaceclub.event.controller.dto.EventCreateResponse;
 import com.spaceclub.event.controller.dto.EventDetailGetResponse;
-import com.spaceclub.event.controller.dto.EventMyDetailGetResponse;
 import com.spaceclub.event.controller.dto.EventOverviewGetResponse;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
@@ -114,7 +113,7 @@ public class EventController {
 
         Event event = eventService.get(eventId, userId);
 
-        Integer applicants = eventService.countApplicants(eventId);
+        int applicants = eventService.countApplicants(eventId);
 
         EventCategory category = event.getCategory();
 
