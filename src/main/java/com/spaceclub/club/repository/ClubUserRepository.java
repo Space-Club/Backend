@@ -26,4 +26,6 @@ public interface ClubUserRepository extends JpaRepository<ClubUser, Long> {
 
     Boolean existsByClub_IdAndUserId(Long clubId, Long userId);
 
+    int countByUserId(Long userId);
+
 }

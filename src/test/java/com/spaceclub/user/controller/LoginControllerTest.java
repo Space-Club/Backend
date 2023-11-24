@@ -2,6 +2,7 @@ package com.spaceclub.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
+import com.spaceclub.club.service.ClubProvider;
 import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
@@ -64,6 +65,9 @@ class LoginControllerTest {
 
     @MockBean
     private AccountService accountService;
+
+    @MockBean
+    private ClubProvider clubProvider;
 
     @MockBean
     private UserArgumentResolver userArgumentResolver;
@@ -200,7 +204,9 @@ class LoginControllerTest {
     @WithMockUser
     void 유저_회원_탈퇴에_성공한다() throws Exception {
         // given
-        doNothing().when(accountService).deleteUser(any(Long.class));
+        int registeredClubCount = 0;
+        given(clubProvider.registeredClubCount(any(Long.class))).willReturn(registeredClubCount);
+        doNothing().when(accountService).deleteUser(any(Long.class), any(Integer.class));
 
         // when, then
         mvc.perform(delete("/api/v1/users")

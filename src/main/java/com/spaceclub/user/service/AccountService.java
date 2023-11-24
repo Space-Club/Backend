@@ -10,11 +10,14 @@ import com.spaceclub.user.domain.User;
 import com.spaceclub.user.repository.UserRepository;
 import com.spaceclub.user.service.vo.UserLoginInfo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.spaceclub.user.UserExceptionMessage.USER_CANNOT_WITHDRAW;
 import static com.spaceclub.user.UserExceptionMessage.USER_NOT_FOUND;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -62,14 +65,18 @@ public class AccountService {
     }
 
     @Transactional
-    public void deleteUser(Long userId) {
-        User user = getUser(userId);
+    public void deleteUser(Long userId, int clubCount) {
+        validateRegisteredClubCount(clubCount);
 
-        userRepository.delete(user); // 추후 정책 반영에 따라 수정 예정
-
-        kakaoOauthInfoSender.unlink(user);
+        User inactiveUser = getUser(userId).changeStatusToInactive();
+        userRepository.save(inactiveUser);
     }
 
+    private void validateRegisteredClubCount(int clubCount) {
+        if (clubCount != 0) {
+            throw new IllegalStateException(USER_CANNOT_WITHDRAW.toString());
+        }
+    }
 
     @Transactional
     public UserLoginInfo createAccount(Long userId) {

@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
+import static com.spaceclub.user.domain.Status.INACTIVE;
 import static com.spaceclub.user.domain.Status.NOT_REGISTERED;
 import static com.spaceclub.user.domain.Status.REGISTERED;
 import static jakarta.persistence.EnumType.STRING;
@@ -40,7 +41,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String oauthUserName;
 
-    @Enumerated(value = STRING)
+    @Enumerated(STRING)
     private Provider provider;
 
     @Embedded
@@ -129,10 +130,16 @@ public class User {
     }
 
     public User updateRequiredInfo(String name, String phoneNumber) {
-        this.requiredInfo = generateRequiredInfo(name, phoneNumber);
-        this.status = REGISTERED;
-
-        return this;
+        return new User(
+                this.id,
+                generateRequiredInfo(name, phoneNumber),
+                REGISTERED,
+                this.oauthUserName,
+                this.provider,
+                this.email,
+                this.refreshToken,
+                this.profileImageUrl
+        );
     }
 
     public User changeProfileImageUrl(String profileUrl) {
@@ -165,6 +172,19 @@ public class User {
 
     public boolean isValid(String username) {
         return this.getUsername().equals(username);
+    }
+
+    public User changeStatusToInactive() {
+        return new User(
+                this.id,
+                this.requiredInfo,
+                INACTIVE,
+                this.oauthUserName,
+                this.provider,
+                this.email,
+                this.refreshToken,
+                this.profileImageUrl
+        );
     }
 
 }

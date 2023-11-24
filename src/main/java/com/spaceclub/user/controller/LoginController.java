@@ -1,5 +1,6 @@
 package com.spaceclub.user.controller;
 
+import com.spaceclub.club.service.ClubProvider;
 import com.spaceclub.global.Authenticated;
 import com.spaceclub.global.jwt.vo.JwtUser;
 import com.spaceclub.user.controller.dto.UserCodeRequest;
@@ -27,6 +28,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class LoginController {
 
     private final AccountService accountService;
+    private final ClubProvider clubProvider;
 
     @PostMapping
     public ResponseEntity<UserLoginResponse> createAccount(@RequestBody UserRequiredInfoRequest request) {
@@ -54,7 +56,10 @@ public class LoginController {
     @DeleteMapping
     @ResponseStatus(NO_CONTENT)
     public void deleteUser(@Authenticated JwtUser jwtUser) {
-        accountService.deleteUser(jwtUser.id());
+        Long userId = jwtUser.id();
+
+        int registeredClubCount = clubProvider.registeredClubCount(userId);
+        accountService.deleteUser(userId, registeredClubCount);
     }
 
 }
