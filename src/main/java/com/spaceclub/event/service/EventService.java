@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 import static com.spaceclub.club.ClubExceptionMessage.CLUB_NOT_FOUND;
-import static com.spaceclub.club.ClubExceptionMessage.UNAUTHORIZED;
 import static com.spaceclub.event.EventExceptionMessage.EVENT_CATEGORY_NOT_ALLOWED;
 import static com.spaceclub.event.domain.EventCategory.CLUB;
 
@@ -120,21 +119,6 @@ public class EventService implements EventProvider {
 
     public Page<Event> findAllBookmarkedEventPages(Long userId, Pageable pageable) {
         return eventRepository.findAllBookmarkedEventPages(userId, pageable);
-    }
-
-    public Boolean isManager(Long eventId, Long userId) {
-        Event event = eventValidator.validateEvent(eventId);
-        Club club = event.getClub();
-
-        try {
-            clubUserValidator.validateClubManager(club.getId(), userId);
-            return true;
-        } catch (IllegalStateException e) {
-            if (e.getMessage().equals(UNAUTHORIZED.toString()))
-                return false;
-            throw e;
-        }
-
     }
 
 }
