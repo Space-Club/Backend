@@ -3,23 +3,29 @@ package com.spaceclub.global.interceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 
+@Component
 @RequiredArgsConstructor
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
-    private final JwtAuthorizationInterceptor jwtAuthorizationInterceptor;
+    private static final String REFRESH_TOKEN = "RefreshToken";
+
+    private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
-        if (authorizationHeader == null) {
+        String refreshTokenHeader = request.getHeader(REFRESH_TOKEN);
+
+        if (authorizationHeader == null && refreshTokenHeader == null) {
             return true;
         }
 
-        return jwtAuthorizationInterceptor.preHandle(request, response, handler);
+        return jwtAuthenticationProvider.authenticate(authorizationHeader, refreshTokenHeader, response);
     }
 
 }
