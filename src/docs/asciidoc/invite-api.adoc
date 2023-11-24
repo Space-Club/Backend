@@ -27,6 +27,29 @@ include::{snippets}/invite/create/response-fields.adoc[]
 
 :sectnums:
 
+=== 클럽 초대 링크 조회
+:sectnums!:
+==== Request
+
+include::{snippets}/invite/get/http-request.adoc[]
+===== Path Parameter
+
+include::{snippets}/invite/get/path-parameters.adoc[]
+
+===== Request Header
+
+include::{snippets}/invite/get/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/invite/get/http-response.adoc[]
+
+===== Response Body
+
+include::{snippets}/invite/get/response-fields.adoc[]
+
+:sectnums:
+
 === 초대 링크를 통한 클럽 가입
 :sectnums!:
 ==== Request
@@ -45,6 +68,7 @@ include::{snippets}/invite/join/request-headers.adoc[]
 include::{snippets}/invite/join/http-response.adoc[]
 
 ===== Response Body
+
 include::{snippets}/invite/join/response-fields.adoc[]
 
 :sectnums:
