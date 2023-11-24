@@ -45,7 +45,7 @@ public class BookmarkService {
         bookmarkRepository.delete(bookmark);
     }
 
-    public Boolean isBookmarked(Long userId, Long eventId) {
+    public boolean isBookmarked(Long userId, Long eventId) {
         return bookmarkRepository.existsByUserIdAndEventId(userId, eventId);
     }
 

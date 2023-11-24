@@ -58,7 +58,7 @@ public class BookmarkController {
     }
 
     @GetMapping("/events/{eventId}")
-    public Boolean isBookmarked(@PathVariable Long eventId, @Authenticated JwtUser jwtUser) {
+    public boolean isBookmarked(@PathVariable Long eventId, @Authenticated JwtUser jwtUser) {
         Long userId = jwtUser.id();
 
         return bookmarkService.isBookmarked(userId, eventId);
