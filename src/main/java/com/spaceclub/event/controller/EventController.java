@@ -125,4 +125,13 @@ public class EventController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{eventId}/me")
+    public ResponseEntity<Boolean> isManager(@PathVariable Long eventId, @Authenticated JwtUser jwtUser) {
+        Long userId = jwtUser.id();
+
+        Boolean isManager = eventService.isManager(eventId, userId);
+
+        return ResponseEntity.ok(isManager);
+    }
+
 }
