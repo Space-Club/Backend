@@ -23,6 +23,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
@@ -49,11 +50,13 @@ import static org.springframework.restdocs.payload.JsonFieldType.OBJECT;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseBody;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -170,6 +173,31 @@ class BookmarkControllerTest {
                                 )
                         )
                 );
+    }
+
+    @Test
+    @WithMockUser
+    void 유저가_북마크한_여부_조회에_성공한다() throws Exception {
+        // given
+
+        // when
+        ResultActions actions = mvc.perform(get("/api/v1/me/events/{eventId}", 1L)
+                .header(AUTHORIZATION, "Access Token"));
+
+        // then
+        actions.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("user/isBookmarked",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("eventId").description("이벤트 ID")
+                        ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
+                        ),
+                        responseBody()
+                ));
     }
 
 }

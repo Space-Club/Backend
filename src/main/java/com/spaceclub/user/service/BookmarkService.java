@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static com.spaceclub.global.exception.GlobalExceptionCode.BAD_REQUEST;
 import static com.spaceclub.user.UserExceptionMessage.ALREADY_BOOKMARKED;
 import static com.spaceclub.user.UserExceptionMessage.BOOKMARK_NOT_FOUND;
@@ -41,6 +43,10 @@ public class BookmarkService {
                 .orElseThrow(() -> new IllegalArgumentException(BOOKMARK_NOT_FOUND.toString()));
 
         bookmarkRepository.delete(bookmark);
+    }
+
+    public Boolean isBookmarked(Long userId, Long eventId) {
+        return bookmarkRepository.existsByUserIdAndEventId(userId, eventId);
     }
 
 }
