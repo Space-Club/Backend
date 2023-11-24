@@ -44,8 +44,23 @@ public class ParticipationService implements ParticipationProvider {
 
         Optional<EventUser> optionalEventUser = eventUserRepository.findByEventIdAndUserId(info.eventId(), info.userId());
 
-        eventAlreadyParticipated(info, optionalEventUser);
+        optionalEventUser.ifPresentOrElse(eventUser -> {
+                    processByParticipationStatus(info, eventUser);
+                    participateEvent(info, event);
+                },
+                () -> participateEvent(info, event));
+    }
 
+    private void processByParticipationStatus(EventParticipationCreateInfo info, EventUser eventUser) {
+        if (CANCELED.equals(eventUser.getStatus())) {
+            eventUserRepository.deleteById(eventUser.getId());
+            formOptionProvider.deleteFormOptionUser(info.formOptionUsers(), info.userId());
+        } else {
+            throw new IllegalArgumentException(EVENT_ALREADY_APPLIED.toString());
+        }
+    }
+
+    private void participateEvent(EventParticipationCreateInfo info, Event event) {
         for (FormOptionUser formOptionUser : info.formOptionUsers()) {
             formOptionProvider.createFormOption(info.userId(), formOptionUser);
         }
@@ -58,19 +73,6 @@ public class ParticipationService implements ParticipationProvider {
                 .build();
 
         eventUserRepository.save(newEventUser);
-    }
-
-    private void eventAlreadyParticipated(EventParticipationCreateInfo info, Optional<EventUser> optionalEventUser) {
-        if (optionalEventUser.isPresent()) {
-            EventUser eventUser = optionalEventUser.get();
-
-            if (CANCELED.equals(eventUser.getStatus())) {
-                eventUserRepository.deleteById(eventUser.getId());
-                formOptionProvider.deleteFormOptionUser(info.formOptionUsers(), info.userId());
-            } else {
-                throw new IllegalArgumentException(EVENT_ALREADY_APPLIED.toString());
-            }
-        }
     }
 
     public ParticipationStatus cancel(Long eventId, Long userId) {
