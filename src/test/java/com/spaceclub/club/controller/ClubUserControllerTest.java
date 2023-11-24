@@ -3,12 +3,13 @@ package com.spaceclub.club.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.controller.dto.ClubUserUpdateRequest;
-import com.spaceclub.club.service.vo.MemberGetInfo;
 import com.spaceclub.club.domain.ClubUserRole;
 import com.spaceclub.club.service.ClubMemberManagerService;
 import com.spaceclub.club.service.vo.ClubUserUpdate;
+import com.spaceclub.club.service.vo.MemberGetInfo;
 import com.spaceclub.global.UserArgumentResolver;
-import com.spaceclub.global.interceptor.JwtAuthorizationInterceptor;
+import com.spaceclub.global.interceptor.AuthenticationInterceptor;
+import com.spaceclub.global.interceptor.AuthorizationInterceptor;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         value = ClubUserController.class,
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-                        JwtAuthorizationInterceptor.class,
+                        AuthorizationInterceptor.class,
+                        AuthenticationInterceptor.class
                 })
         })
 @AutoConfigureRestDocs
@@ -114,14 +116,14 @@ class ClubUserControllerTest {
 
         MemberGetInfo memberGetInfo1 = MemberGetInfo.builder()
                 .id(1L)
-                .name(user1().getName())
+                .name(user1().getUsername())
                 .profileImageUrl(user1().getProfileImageUrl())
                 .role(ClubUserRole.MANAGER)
                 .build();
 
         MemberGetInfo memberGetInfo2 = MemberGetInfo.builder()
                 .id(2L)
-                .name(user2().getName())
+                .name(user2().getUsername())
                 .profileImageUrl(user2().getProfileImageUrl())
                 .role(ClubUserRole.MANAGER)
                 .build();
