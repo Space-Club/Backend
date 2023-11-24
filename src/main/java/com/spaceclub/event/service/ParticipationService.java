@@ -17,10 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static com.spaceclub.event.EventExceptionMessage.EVENT_ALREADY_APPLIED;
 import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_APPLIED;
+import static com.spaceclub.event.domain.ParticipationStatus.CANCELED;
 import static com.spaceclub.event.domain.ParticipationStatus.PENDING;
 import static java.util.stream.Collectors.toMap;
 
@@ -39,9 +41,26 @@ public class ParticipationService implements ParticipationProvider {
         Event event = eventValidator.validateEvent(info.eventId());
 
         eventValidator.validateEventTicketCount(event.getMaxTicketCount(), info.ticketCount());
-        if (eventUserRepository.existsByEventIdAndUserId(info.eventId(), info.userId()))
-            throw new IllegalArgumentException(EVENT_ALREADY_APPLIED.toString());
 
+        Optional<EventUser> optionalEventUser = eventUserRepository.findByEventIdAndUserId(info.eventId(), info.userId());
+
+        optionalEventUser.ifPresentOrElse(eventUser -> {
+                    processByParticipationStatus(info, eventUser);
+                    participateEvent(info, event);
+                },
+                () -> participateEvent(info, event));
+    }
+
+    private void processByParticipationStatus(EventParticipationCreateInfo info, EventUser eventUser) {
+        if (CANCELED.equals(eventUser.getStatus())) {
+            eventUserRepository.deleteById(eventUser.getId());
+            formOptionProvider.deleteFormOptionUser(info.formOptionUsers(), info.userId());
+        } else {
+            throw new IllegalArgumentException(EVENT_ALREADY_APPLIED.toString());
+        }
+    }
+
+    private void participateEvent(EventParticipationCreateInfo info, Event event) {
         for (FormOptionUser formOptionUser : info.formOptionUsers()) {
             formOptionProvider.createFormOption(info.userId(), formOptionUser);
         }
