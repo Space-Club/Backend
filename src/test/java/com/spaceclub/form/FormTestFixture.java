@@ -3,7 +3,7 @@ package com.spaceclub.form;
 import com.spaceclub.form.domain.Form;
 import com.spaceclub.form.domain.FormOption;
 import com.spaceclub.form.domain.FormOptionType;
-import com.spaceclub.form.domain.FormOptionUser;
+import com.spaceclub.form.domain.FormAnswer;
 
 public class FormTestFixture {
 
@@ -31,8 +31,8 @@ public class FormTestFixture {
                 .build();
     }
 
-    public static FormOptionUser formOptionUser1() {
-        return FormOptionUser.builder()
+    public static FormAnswer formAnswerUser1() {
+        return FormAnswer.builder()
                 .id(1L)
                 .formOption(formOption1())
                 .userId(1L)
@@ -40,8 +40,8 @@ public class FormTestFixture {
                 .build();
     }
 
-    public static FormOptionUser formOptionUser2() {
-        return FormOptionUser.builder()
+    public static FormAnswer formAnswerUser2() {
+        return FormAnswer.builder()
                 .id(2L)
                 .formOption(formOption2())
                 .userId(1L)

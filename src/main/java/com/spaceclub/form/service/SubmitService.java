@@ -6,8 +6,8 @@ import com.spaceclub.event.domain.EventUser;
 import com.spaceclub.event.repository.EventUserRepository;
 import com.spaceclub.event.service.EventValidator;
 import com.spaceclub.form.domain.Form;
-import com.spaceclub.form.domain.FormOptionUser;
-import com.spaceclub.form.repository.FormOptionUserRepository;
+import com.spaceclub.form.domain.FormAnswer;
+import com.spaceclub.form.repository.FormAnswerRepository;
 import com.spaceclub.form.service.vo.FormSubmitGetInfo;
 import com.spaceclub.form.service.vo.FormSubmitUpdateInfo;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_MANAGED;
 @RequiredArgsConstructor
 public class SubmitService {
 
-    private final FormOptionUserRepository formOptionUserRepository;
+    private final FormAnswerRepository formAnswerRepository;
 
     private final EventUserRepository eventUserRepository;
 
@@ -39,10 +39,10 @@ public class SubmitService {
         clubUserValidator.validateClubManager(event.getClubId(), userId);
         Form form = event.getForm();
 
-        List<FormOptionUser> formOptionUsers = formOptionUserRepository.findByFormOption_Form_Id(form.getId());
+        List<FormAnswer> formAnswers = formAnswerRepository.findByFormOption_Form_Id(form.getId());
         Page<EventUser> eventUser = eventUserRepository.findByEvent(event, pageable);
 
-        return new FormSubmitGetInfo(form, formOptionUsers, eventUser);
+        return new FormSubmitGetInfo(form, formAnswers, eventUser);
     }
 
     @Transactional

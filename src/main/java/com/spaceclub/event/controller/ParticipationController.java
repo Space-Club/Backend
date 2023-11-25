@@ -29,7 +29,7 @@ public class ParticipationController {
         EventParticipationCreateInfo eventParticipationCreateInfo = EventParticipationCreateInfo.builder()
                 .userId(jwtUser.id())
                 .eventId(request.eventId())
-                .formOptionUsers(request.toEntityList())
+                .formAnswers(request.toEntityList())
                 .ticketCount(request.ticketCount())
                 .build();
 

@@ -4,7 +4,7 @@ import com.spaceclub.event.domain.EventUser;
 import com.spaceclub.event.domain.ParticipationStatus;
 import com.spaceclub.form.domain.Form;
 import com.spaceclub.form.domain.FormOption;
-import com.spaceclub.form.domain.FormOptionUser;
+import com.spaceclub.form.domain.FormAnswer;
 import com.spaceclub.form.service.vo.FormSubmitGetInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -20,26 +20,26 @@ public record FormSubmitGetResponse(
     public static FormSubmitGetResponse from(FormSubmitGetInfo vo) {
         Form form = vo.form();
         Page<EventUser> eventUsers = vo.eventUsers();
-        List<FormOptionUser> formOptionUsers = vo.formOptionUsers();
+        List<FormAnswer> formAnswers = vo.formAnswers();
 
         List<String> optionTitles = form.getOptions().stream()
                 .map(FormOption::getTitle)
                 .toList();
 
         FormInfoResponse formInfoResponse = new FormInfoResponse(eventUsers.getTotalElements(), optionTitles, form.isManaged());
-        Page<UserFormResponse> userFormPages = generateUserFormResponses(eventUsers, formOptionUsers);
+        Page<UserFormResponse> userFormPages = generateUserFormResponses(eventUsers, formAnswers);
 
         return new FormSubmitGetResponse(formInfoResponse, userFormPages.getContent(), PageableResponse.from(userFormPages));
     }
 
-    private static Page<UserFormResponse> generateUserFormResponses(Page<EventUser> eventUsers, List<FormOptionUser> formOptionUsers) {
+    private static Page<UserFormResponse> generateUserFormResponses(Page<EventUser> eventUsers, List<FormAnswer> formAnswers) {
         List<UserFormResponse> userFormResponses = eventUsers.getContent().stream()
                 .map(eventUser -> {
                     Long userId = eventUser.getUserId();
 
-                    List<UserFormOptionResponse> options = formOptionUsers.stream()
-                            .filter(formOptionUser -> formOptionUser.getUserId().equals(userId))
-                            .map(formOptionUser -> new UserFormOptionResponse(formOptionUser.getOptionTitle(), formOptionUser.getContent()))
+                    List<UserFormOptionResponse> options = formAnswers.stream()
+                            .filter(formAnswer -> formAnswer.getUserId().equals(userId))
+                            .map(formAnswer -> new UserFormOptionResponse(formAnswer.getOptionTitle(), formAnswer.getContent()))
                             .toList();
 
                     return new UserFormResponse(userId, options, eventUser.getStatus());

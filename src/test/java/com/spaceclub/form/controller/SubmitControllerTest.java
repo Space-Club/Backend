@@ -87,7 +87,7 @@ class SubmitControllerTest {
         Form form = FormTestFixture.form();
         form.addItems(List.of(FormTestFixture.formOption1(), FormTestFixture.formOption2()));
         Page<EventUser> eventUserPages = new PageImpl<>(List.of(eventUser()));
-        FormSubmitGetInfo formSubmitGetInfo = new FormSubmitGetInfo(form, List.of(FormTestFixture.formOptionUser1(), FormTestFixture.formOptionUser2()), eventUserPages);
+        FormSubmitGetInfo formSubmitGetInfo = new FormSubmitGetInfo(form, List.of(FormTestFixture.formAnswerUser1(), FormTestFixture.formAnswerUser2()), eventUserPages);
 
         given(submitService.getAll(any(), any(Long.class), any(Pageable.class))).willReturn(formSubmitGetInfo);
 
