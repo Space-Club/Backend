@@ -21,7 +21,6 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.util.Assert;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -29,6 +28,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.spaceclub.event.EventExceptionMessage.INVALID_EVENT_CATEGORY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -87,7 +87,7 @@ public class Event extends BaseTimeEntity {
             Form form,
             LocalDateTime createdAt
     ) {
-        Assert.notNull(category, "행사 카테고리는 필수 값입니다.");
+        if (category == null) throw new IllegalArgumentException(INVALID_EVENT_CATEGORY.toString());
         this.id = id;
         this.category = category;
         this.eventInfo = eventInfo;

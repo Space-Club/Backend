@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.util.Assert;
 
 import static com.spaceclub.event.EventExceptionMessage.INVALID_EVENT_BANK_ACCOUNT_NUMBER;
 import static com.spaceclub.event.EventExceptionMessage.INVALID_EVENT_BANK_NAME;
@@ -35,13 +34,13 @@ public class BankInfo {
 
     private void validate(String bankName, String bankAccountNumber) {
         if (bankName != null) {
-            boolean validateBankNameLength = bankName.length() <= BANK_NAME_MAX_LENGTH && !bankName.isBlank();
-            Assert.isTrue(validateBankNameLength, INVALID_EVENT_BANK_NAME.toString());
+            boolean validateBankNameLength = bankName.length() > BANK_NAME_MAX_LENGTH || bankName.isBlank();
+            if (validateBankNameLength) throw new IllegalArgumentException(INVALID_EVENT_BANK_NAME.toString());
         }
 
         if (bankAccountNumber != null) {
-            boolean validateBankAccountNumberLength = bankAccountNumber.length() <= BANK_ACCOUNT_NUMBER_MAX_LENGTH && !bankAccountNumber.isBlank();
-            Assert.isTrue(validateBankAccountNumberLength, INVALID_EVENT_BANK_ACCOUNT_NUMBER.toString());
+            boolean validateBankAccountNumberLength = bankAccountNumber.length() > BANK_ACCOUNT_NUMBER_MAX_LENGTH || bankAccountNumber.isBlank();
+            if (validateBankAccountNumberLength) throw new IllegalArgumentException(INVALID_EVENT_BANK_ACCOUNT_NUMBER.toString());
         }
     }
 

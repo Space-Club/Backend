@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.util.Assert;
 
 import static com.spaceclub.event.EventExceptionMessage.INVALID_EVENT_COST;
 import static com.spaceclub.event.EventExceptionMessage.INVALID_EVENT_MAX_TICKET_COUNT;
@@ -40,13 +39,13 @@ public class TicketInfo {
     private void validate(Integer maxTicketCount, Integer cost) {
 
         if (maxTicketCount != null) {
-            boolean validateMaxTicketCountRange = maxTicketCount >= MAX_TICKET_COUNT_MIN_COUNT && maxTicketCount <= MAX_TICKET_COUNT_MAX_COUNT;
-            Assert.isTrue(validateMaxTicketCountRange, INVALID_EVENT_MAX_TICKET_COUNT.toString());
+            boolean validateMaxTicketCountRange = maxTicketCount < MAX_TICKET_COUNT_MIN_COUNT || maxTicketCount > MAX_TICKET_COUNT_MAX_COUNT;
+            if (validateMaxTicketCountRange) throw new IllegalArgumentException(INVALID_EVENT_MAX_TICKET_COUNT.toString());
         }
 
         if (cost != null) {
-            boolean validateCostRange = cost >= COST_MIN_LENGTH && cost <= COST_MAX_LENGTH;
-            Assert.isTrue(validateCostRange, INVALID_EVENT_COST.toString());
+            boolean validateCostRange = cost < COST_MIN_LENGTH || cost > COST_MAX_LENGTH;
+            if (validateCostRange) throw new IllegalArgumentException(INVALID_EVENT_COST.toString());
         }
 
     }

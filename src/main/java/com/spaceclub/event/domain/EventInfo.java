@@ -112,22 +112,22 @@ public class EventInfo {
     private void validate(String title, String content, String location, Integer capacity) {
         Assert.notNull(title, INVALID_EVENT_TITLE.toString());
 
-        boolean validateTitleLength = title.length() <= TITLE_MAX_LENGTH && !title.isBlank();
-        Assert.isTrue(validateTitleLength, INVALID_EVENT_TITLE.toString());
+        boolean validateTitleLength = title.length() > TITLE_MAX_LENGTH || title.isBlank();
+        if (validateTitleLength) throw new IllegalArgumentException(INVALID_EVENT_TITLE.toString());
 
         if (content != null) {
-            boolean validateContentLength = content.length() <= CONTENT_MAX_LENGTH && !content.isBlank();
-            Assert.isTrue(validateContentLength, INVALID_EVENT_CONTENT.toString());
+            boolean validateContentLength = content.length() > CONTENT_MAX_LENGTH || content.isBlank();
+            if (validateContentLength) throw new IllegalArgumentException(INVALID_EVENT_CONTENT.toString());
         }
 
         if (location != null) {
-            boolean validateLocationLength = location.length() <= LOCATION_MAX_LENGTH && !location.isBlank();
-            Assert.isTrue(validateLocationLength, INVALID_EVENT_LOCATION.toString());
+            boolean validateLocationLength = location.length() > LOCATION_MAX_LENGTH || location.isBlank();
+            if (validateLocationLength) throw new IllegalArgumentException(INVALID_EVENT_LOCATION.toString());
         }
 
         if (capacity != null) {
-            boolean validateCapacityLength = capacity >= CAPACITY_MIN_LENGTH && capacity <= CAPACITY_MAX_LENGTH;
-            Assert.isTrue(validateCapacityLength, INVALID_EVENT_CAPACITY.toString());
+            boolean validateCapacityLength = capacity < CAPACITY_MIN_LENGTH || capacity > CAPACITY_MAX_LENGTH;
+            if (validateCapacityLength) throw new IllegalArgumentException(INVALID_EVENT_CAPACITY.toString());
         }
     }
 
