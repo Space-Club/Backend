@@ -7,7 +7,6 @@ import java.time.LocalTime;
 
 public record EventOverviewGetResponse(Long id,
                                        EventInfoResponse eventInfo,
-                                       FormInfoResponse formInfo,
                                        ClubInfoResponse clubInfo) {
 
     public static EventOverviewGetResponse from(Event event) {
@@ -18,13 +17,9 @@ public record EventOverviewGetResponse(Long id,
                         event.getPosterImageUrl(),
                         event.getLocation(),
                         event.getStartDate(),
-                        event.getStartTime()
-                ),
-                new FormInfoResponse(
-                        event.getFormOpenDate(),
-                        event.getFormOpenTime(),
-                        event.getFormCloseDate(),
-                        event.getFormCloseTime()
+                        event.getStartTime(),
+                        event.getEndDate(),
+                        event.getEndTime()
                 ),
                 new ClubInfoResponse(
                         event.getClubName(),
@@ -38,16 +33,9 @@ public record EventOverviewGetResponse(Long id,
             String posterImageUrl,
             String location,
             LocalDate startDate,
-            LocalTime startTime
-    ) {
-
-    }
-
-    private record FormInfoResponse(
-            LocalDate openDate,
-            LocalTime openTime,
-            LocalDate closeDate,
-            LocalTime closeTime
+            LocalTime startTime,
+            LocalDate endDate,
+            LocalTime endTime
     ) {
 
     }

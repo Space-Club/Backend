@@ -258,10 +258,14 @@ public class Event extends BaseTimeEntity {
     }
 
     public LocalDate getEndDate() {
+        if (this.eventInfo.getEndDateTime() == null) return null;
+
         return this.eventInfo.getEndDateTime().toLocalDate();
     }
 
     public LocalTime getEndTime() {
+        if (this.eventInfo.getEndDateTime() == null) return null;
+
         return this.eventInfo.getEndDateTime().toLocalTime();
     }
 
