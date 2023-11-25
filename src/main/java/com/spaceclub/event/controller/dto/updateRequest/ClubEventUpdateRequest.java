@@ -47,9 +47,8 @@ public record ClubEventUpdateRequest(
             LocalDate endDate,
             LocalTime endTime,
             String location,
-            Integer capacity,
-            Integer dues,
-            String managerName
+            int capacity,
+            int dues
     ) {
 
         public EventInfo toEntity() {
@@ -61,7 +60,6 @@ public record ClubEventUpdateRequest(
                     .location(location)
                     .capacity(capacity)
                     .dues(dues)
-                    .managerName(managerName)
                     .build();
         }
 

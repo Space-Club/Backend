@@ -27,7 +27,6 @@ public class EventTestFixture {
                 .location("위치")
                 .capacity(100)
                 .posterImageName("포스터 파일명")
-                .managerName("행사 생성자 이름")
                 .dues(5000)
                 .recruitmentTarget("연어를 좋아하는 사람 누구나")
                 .activityArea("홍대입구역 근처")

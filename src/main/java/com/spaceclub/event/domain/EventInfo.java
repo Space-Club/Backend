@@ -61,9 +61,6 @@ public class EventInfo {
     @Getter
     private String recruitmentTarget;
 
-    @Getter
-    private String managerName;
-
     @Builder
     private EventInfo(
             String title,
@@ -75,8 +72,7 @@ public class EventInfo {
             String activityArea,
             String recruitmentTarget,
             LocalDateTime endDateTime,
-            Integer dues,
-            String managerName
+            Integer dues
     ) {
         validate(title, content, location, capacity);
         this.title = title;
@@ -89,7 +85,6 @@ public class EventInfo {
         this.recruitmentTarget = recruitmentTarget;
         this.endDateTime = endDateTime;
         this.dues = dues;
-        this.managerName = managerName;
     }
 
     public EventInfo registerPosterImage(String posterImageName) {
@@ -104,7 +99,6 @@ public class EventInfo {
                 .recruitmentTarget(this.recruitmentTarget)
                 .endDateTime(this.endDateTime)
                 .dues(this.dues)
-                .managerName(this.managerName)
                 .build();
     }
 
