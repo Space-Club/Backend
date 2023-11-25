@@ -4,15 +4,13 @@ import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 @Profile({"local", "develop"})
 @Configuration
-@ConfigurationPropertiesScan(basePackages = {"com.spaceclub.global.config"})
-public class PropertiesConfig {
+public class EncryptionConfig {
 
     @Value("${jasypt.encryptor.password}")
     private String password;
