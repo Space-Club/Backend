@@ -30,8 +30,8 @@ public record ShowEventUpdateRequest(
     }
 
     public record TicketInfoRequest(
-            int cost,
-            int maxTicketCount
+            Integer cost,
+            Integer maxTicketCount
     ) {
 
         public TicketInfo toEntity() {
@@ -79,7 +79,7 @@ public record ShowEventUpdateRequest(
             LocalDate startDate,
             LocalTime startTime,
             String location,
-            int capacity
+            Integer capacity
     ) {
 
         public EventInfo toEntity() {

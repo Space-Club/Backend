@@ -11,6 +11,11 @@ import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 
+import static com.spaceclub.event.EventExceptionMessage.INVALID_EVENT_CAPACITY;
+import static com.spaceclub.event.EventExceptionMessage.INVALID_EVENT_CONTENT;
+import static com.spaceclub.event.EventExceptionMessage.INVALID_EVENT_LOCATION;
+import static com.spaceclub.event.EventExceptionMessage.INVALID_EVENT_TITLE;
+
 @Embeddable
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -105,24 +110,24 @@ public class EventInfo {
     }
 
     private void validate(String title, String content, String location, Integer capacity) {
-        Assert.notNull(title, "행사 내용은 필수값입니다.");
+        Assert.notNull(title, INVALID_EVENT_TITLE.toString());
 
         boolean validateTitleLength = title.length() <= TITLE_MAX_LENGTH && !title.isBlank();
-        Assert.isTrue(validateTitleLength, "행사 제목은 1~30자 사이의 길이입니다.");
+        Assert.isTrue(validateTitleLength, INVALID_EVENT_TITLE.toString());
 
         if (content != null) {
             boolean validateContentLength = content.length() <= CONTENT_MAX_LENGTH && !content.isBlank();
-            Assert.isTrue(validateContentLength, "행사 내용은 1~200자 사이의 길이입니다.");
+            Assert.isTrue(validateContentLength, INVALID_EVENT_CONTENT.toString());
         }
 
         if (location != null) {
             boolean validateLocationLength = location.length() <= LOCATION_MAX_LENGTH && !location.isBlank();
-            Assert.isTrue(validateLocationLength, "행사 위치는 1~30자 사이의 길이입니다.");
+            Assert.isTrue(validateLocationLength, INVALID_EVENT_LOCATION.toString());
         }
 
         if (capacity != null) {
             boolean validateCapacityLength = capacity >= CAPACITY_MIN_LENGTH && capacity <= CAPACITY_MAX_LENGTH;
-            Assert.isTrue(validateCapacityLength, "행사 정원은 1~999사이의 값입니다.");
+            Assert.isTrue(validateCapacityLength, INVALID_EVENT_CAPACITY.toString());
         }
     }
 

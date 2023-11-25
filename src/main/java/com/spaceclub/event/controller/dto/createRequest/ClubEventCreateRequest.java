@@ -46,8 +46,8 @@ public record ClubEventCreateRequest(
             LocalDate endDate,
             LocalTime endTime,
             String location,
-            int capacity,
-            int dues,
+            Integer capacity,
+            Integer dues,
             String managerName
     ) {
 
