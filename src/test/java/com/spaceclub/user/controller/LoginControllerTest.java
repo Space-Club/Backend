@@ -204,8 +204,8 @@ class LoginControllerTest {
     @WithMockUser
     void 유저_회원_탈퇴에_성공한다() throws Exception {
         // given
-        int registeredClubCount = 0;
-        given(clubProvider.registeredClubCount(any(Long.class))).willReturn(registeredClubCount);
+        int numberOfClubsUserBelong = 0;
+        given(clubProvider.getNumberOfClubsUserBelong(any(Long.class))).willReturn(numberOfClubsUserBelong);
         doNothing().when(accountService).deleteUser(any(Long.class), any(Integer.class));
 
         // when, then

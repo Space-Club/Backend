@@ -100,7 +100,7 @@ public class ClubService implements ClubProvider {
     }
 
     @Override
-    public int registeredClubCount(Long userId) {
+    public int getNumberOfClubsUserBelong(Long userId) {
         return clubUserRepository.countByUserId(userId);
     }
 

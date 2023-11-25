@@ -58,8 +58,8 @@ public class LoginController {
     public void deleteUser(@Authenticated JwtUser jwtUser) {
         Long userId = jwtUser.id();
 
-        int registeredClubCount = clubProvider.registeredClubCount(userId);
-        accountService.deleteUser(userId, registeredClubCount);
+        int numberOfClubsUserBelong = clubProvider.getNumberOfClubsUserBelong(userId);
+        accountService.deleteUser(userId, numberOfClubsUserBelong);
     }
 
 }
