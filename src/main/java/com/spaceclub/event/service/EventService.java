@@ -7,9 +7,12 @@ import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.repository.EventRepository;
 import com.spaceclub.event.repository.EventUserRepository;
+import com.spaceclub.event.service.vo.ClubEventOverviewGetInfo;
 import com.spaceclub.event.service.vo.EventCreateInfo;
 import com.spaceclub.event.service.vo.UserBookmarkedEventGetInfo;
 import com.spaceclub.global.config.s3.S3ImageUploader;
+import com.spaceclub.user.service.UserProvider;
+import com.spaceclub.user.service.vo.UserProfile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +38,8 @@ public class EventService implements EventProvider {
     private final EventValidator eventValidator;
 
     private final ClubUserValidator clubUserValidator;
+
+    private final UserProvider userProvider;
 
     private final S3ImageUploader imageUploader;
 
@@ -102,10 +107,13 @@ public class EventService implements EventProvider {
     }
 
     @Override
-    public Page<EventGetInfo> getByClubId(Long clubId, Pageable pageable) {
+    public Page<ClubEventOverviewGetInfo> getByClubId(Long clubId, Pageable pageable) {
         Page<Event> events = eventRepository.findByClub_Id(clubId, pageable);
 
-        return events.map(EventGetInfo::from);
+        return events.map(event -> {
+            UserProfile profile = userProvider.getProfile(event.getUserId());
+            return ClubEventOverviewGetInfo.from(event, profile);
+        });
     }
 
     @Override

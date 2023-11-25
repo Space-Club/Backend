@@ -3,10 +3,11 @@ package com.spaceclub.club.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.service.ClubEventService;
-import com.spaceclub.event.service.vo.EventGetInfo;
+import com.spaceclub.event.service.vo.ClubEventOverviewGetInfo;
 import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
+import com.spaceclub.user.service.vo.UserProfile;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,10 +79,11 @@ class ClubEventControllerTest {
     @WithMockUser
     public void 클럽_행사_조회에_성공한다() throws Exception {
         // given
-        List<EventGetInfo> events = List.of(EventGetInfo.from(event1()),
-                EventGetInfo.from(showEvent()),
-                EventGetInfo.from(clubEvent()));
-        Page<EventGetInfo> eventPages = new PageImpl<>(events);
+        UserProfile userProfile = new UserProfile("박씨", "01011112222", "www.aaa.com");
+        List<ClubEventOverviewGetInfo> events = List.of(ClubEventOverviewGetInfo.from(event1(), userProfile),
+                ClubEventOverviewGetInfo.from(showEvent(), userProfile),
+                ClubEventOverviewGetInfo.from(clubEvent(), userProfile));
+        Page<ClubEventOverviewGetInfo> eventPages = new PageImpl<>(events);
 
         given(clubEventService.getClubEvents(any(Long.class), any(Pageable.class), any())).willReturn(eventPages);
         Long clubId = 1L;
@@ -133,6 +135,9 @@ class ClubEventControllerTest {
                                 fieldWithPath("data[].clubInfo").type(OBJECT).description("클럽 정보"),
                                 fieldWithPath("data[].clubInfo.name").type(STRING).description("클럽 명"),
                                 fieldWithPath("data[].clubInfo.logoImageUrl").type(STRING).description("클럽 이미지 Url"),
+                                fieldWithPath("data[].managerInfo").type(OBJECT).description("담당자 정보"),
+                                fieldWithPath("data[].managerInfo.name").type(STRING).description("담당자 이름"),
+                                fieldWithPath("data[].managerInfo.profileImageUrl").type(STRING).description("담당자 이미지 Url"),
                                 fieldWithPath("pageData").type(OBJECT).description("페이지 정보"),
                                 fieldWithPath("pageData.first").type(BOOLEAN).description("첫 페이지 여부"),
                                 fieldWithPath("pageData.last").type(BOOLEAN).description("마지막 페이지 여부"),

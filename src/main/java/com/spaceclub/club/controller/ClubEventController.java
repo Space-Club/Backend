@@ -1,8 +1,8 @@
 package com.spaceclub.club.controller;
 
-import com.spaceclub.club.controller.dto.ClubEventGetResponse;
+import com.spaceclub.club.controller.dto.ClubEventOverviewGetResponse;
 import com.spaceclub.club.service.ClubEventService;
-import com.spaceclub.event.service.vo.EventGetInfo;
+import com.spaceclub.event.service.vo.ClubEventOverviewGetInfo;
 import com.spaceclub.global.Authenticated;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.vo.JwtUser;
@@ -25,15 +25,15 @@ public class ClubEventController {
     private final ClubEventService clubEventService;
 
     @GetMapping("/{clubId}/events")
-    public ResponseEntity<PageResponse<ClubEventGetResponse, EventGetInfo>> getClubEvents(@PathVariable Long clubId, Pageable pageable, @Authenticated JwtUser jwtUser) {
-        Page<EventGetInfo> events = clubEventService.getClubEvents(clubId, pageable, jwtUser.id());
+    public ResponseEntity<PageResponse<ClubEventOverviewGetResponse, ClubEventOverviewGetInfo>> getClubEvents(@PathVariable Long clubId, Pageable pageable, @Authenticated JwtUser jwtUser) {
+        Page<ClubEventOverviewGetInfo> events = clubEventService.getClubEvents(clubId, pageable, jwtUser.id());
 
-        List<ClubEventGetResponse> clubEventGetResponses = events.getContent()
+        List<ClubEventOverviewGetResponse> clubEventOverviewGetResponse = events.getContent()
                 .stream()
-                .map(ClubEventGetResponse::from)
+                .map(ClubEventOverviewGetResponse::from)
                 .toList();
 
-        return ResponseEntity.ok(new PageResponse<>(clubEventGetResponses, events));
+        return ResponseEntity.ok(new PageResponse<>(clubEventOverviewGetResponse, events));
     }
 
 }
