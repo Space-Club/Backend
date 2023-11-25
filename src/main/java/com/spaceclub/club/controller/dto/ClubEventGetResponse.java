@@ -4,6 +4,7 @@ import com.spaceclub.event.service.vo.EventGetInfo;
 import lombok.Builder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Builder
@@ -22,13 +23,22 @@ public record ClubEventGetResponse(Long id,
                         eventGetInfo.startTime(),
                         eventGetInfo.endDate(),
                         eventGetInfo.endTime(),
-                        eventGetInfo.openStatus()
+                        eventGetInfo.openStatus(),
+                        isEventEnded(eventGetInfo)
                 ),
                 new ClubInfoResponse(
                         eventGetInfo.clubName(),
                         eventGetInfo.clubLogoImageUrl()
                 )
         );
+    }
+
+    private static boolean isEventEnded(EventGetInfo eventGetInfo) {
+        if (eventGetInfo.endDate() == null) {
+            return LocalDateTime.now().isAfter(eventGetInfo.startDate().atTime(eventGetInfo.startTime()));
+        }
+
+        return LocalDateTime.now().isAfter(eventGetInfo.endDate().atTime(eventGetInfo.endTime()));
     }
 
     private record EventInfoResponse(
@@ -39,7 +49,8 @@ public record ClubEventGetResponse(Long id,
             LocalTime startTime,
             LocalDate endDate,
             LocalTime endTime,
-            String openStatus
+            String openStatus,
+            boolean isEnded
     ) {
 
     }

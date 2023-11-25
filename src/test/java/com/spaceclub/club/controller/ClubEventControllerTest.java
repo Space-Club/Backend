@@ -131,6 +131,7 @@ class ClubEventControllerTest {
                                 fieldWithPath("data[].eventInfo.endDate").type(STRING).description("행사 종료 날짜"),
                                 fieldWithPath("data[].eventInfo.endTime").type(STRING).description("행사 종료 시간"),
                                 fieldWithPath("data[].eventInfo.openStatus").type(STRING).description("행사 공개 여부"),
+                                fieldWithPath("data[].eventInfo.isEnded").type(BOOLEAN).description("행사 종료 여부"),
                                 fieldWithPath("data[].clubInfo").type(OBJECT).description("클럽 정보"),
                                 fieldWithPath("data[].clubInfo.name").type(STRING).description("클럽 명"),
                                 fieldWithPath("data[].clubInfo.logoImageUrl").type(STRING).description("클럽 이미지 Url"),
