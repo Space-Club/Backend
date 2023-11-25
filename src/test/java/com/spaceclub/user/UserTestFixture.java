@@ -58,6 +58,7 @@ public class UserTestFixture {
         UUID uuid = UUID.randomUUID();
         String emailPrefix = uuid.toString().substring(5);
         String oauthId = uuid.toString().substring(0, 5);
+
         return User.builder()
                 .id(userId)
                 .name(null)

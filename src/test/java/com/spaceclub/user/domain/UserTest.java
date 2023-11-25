@@ -156,14 +156,14 @@ class UserTest {
         final User user = UserTestFixture.user1();
 
         // when, then
-        Assertions.assertThatThrownBy(user::changeStatusToDeleted)
+        assertThatThrownBy(user::changeStatusToDeleted)
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(USER_CANNOT_WITHDRAW.toString());
     }
 
     @ParameterizedTest(name = "{index}: 삭제된 시간: {0}")
     @MethodSource("deletedDateTime")
-    void 유저의_삭제되었는지_상태확인에_성공한다(LocalDateTime deletedAt, boolean expected) {
+    void 유저의_삭제여부_상태확인에_성공한다(LocalDateTime deletedAt, boolean expected) {
         // given
         Long userId = 1L;
         LocalDateTime now = LocalDateTime.of(2023, 12, 4, 0, 0, 0);

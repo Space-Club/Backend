@@ -61,7 +61,6 @@ public class User {
     @Getter
     private String profileImageUrl;
 
-    @Column
     @Getter
     private LocalDateTime deletedAt;
 
