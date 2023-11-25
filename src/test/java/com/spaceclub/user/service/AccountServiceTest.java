@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,7 +52,7 @@ class AccountServiceTest {
         given(userRepository.findByEmailAndOauthUserName(any(), any())).willReturn(Optional.of(user));
 
         // when
-        UserLoginInfo actual = accountService.loginUser("code");
+        UserLoginInfo actual = accountService.loginUser("code", LocalDateTime.now());
         UserLoginInfo expected = new UserLoginInfo(3L, "", "");
 
         // then
@@ -73,7 +74,7 @@ class AccountServiceTest {
         given(jwtManager.createRefreshToken(any())).willReturn("refreshToken");
 
         // when
-        UserLoginInfo actual = accountService.loginUser("code");
+        UserLoginInfo actual = accountService.loginUser("code", LocalDateTime.now());
         UserLoginInfo expected = new UserLoginInfo(1L, "accessToken", "refreshToken");
 
         // then

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -44,7 +45,8 @@ public class LoginController {
 
     @PostMapping("/oauths")
     public UserLoginResponse loginUser(@RequestBody UserCodeRequest userCodeRequest) {
-        UserLoginInfo userLoginInfo = accountService.loginUser(userCodeRequest.code());
+        LocalDateTime now = LocalDateTime.now();
+        UserLoginInfo userLoginInfo = accountService.loginUser(userCodeRequest.code(), now);
 
         return UserLoginResponse.from(userLoginInfo);
     }
