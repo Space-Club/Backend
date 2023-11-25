@@ -8,7 +8,7 @@ import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.repository.EventRepository;
 import com.spaceclub.event.repository.EventUserRepository;
 import com.spaceclub.event.service.vo.EventCreateInfo;
-import com.spaceclub.event.service.vo.EventGetInfo;
+import com.spaceclub.event.service.vo.UserBookmarkedEventGetInfo;
 import com.spaceclub.global.config.s3.S3ImageUploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -109,10 +109,10 @@ public class EventService implements EventProvider {
     }
 
     @Override
-    public Page<EventGetInfo> findAllBookmarkedEventPages(Long userId, Pageable pageable) {
+    public Page<UserBookmarkedEventGetInfo> findAllBookmarkedEventPages(Long userId, Pageable pageable) {
         Page<Event> events = eventRepository.findAllBookmarkedEventPages(userId, pageable);
 
-        return events.map(EventGetInfo::from);
+        return events.map(UserBookmarkedEventGetInfo::from);
     }
 
     public int countApplicants(Long eventId) {

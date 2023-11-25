@@ -5,7 +5,7 @@ import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.event.controller.dto.BookmarkedEventRequest;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.service.EventService;
-import com.spaceclub.event.service.vo.EventGetInfo;
+import com.spaceclub.event.service.vo.UserBookmarkedEventGetInfo;
 import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
@@ -92,7 +92,7 @@ class BookmarkControllerTest {
     void 유저가_북마크한_이벤트_조회에_성공한다() throws Exception {
         // given
         List<Event> events = List.of(event1(), showEvent(), clubEvent());
-        Page<EventGetInfo> eventPages = new PageImpl<>(events).map(EventGetInfo::from);
+        Page<UserBookmarkedEventGetInfo> eventPages = new PageImpl<>(events).map(UserBookmarkedEventGetInfo::from);
 
         given(eventService.findAllBookmarkedEventPages(any(), any(Pageable.class))).willReturn(eventPages);
 

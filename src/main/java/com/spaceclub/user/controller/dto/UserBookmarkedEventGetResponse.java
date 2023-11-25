@@ -1,6 +1,6 @@
 package com.spaceclub.user.controller.dto;
 
-import com.spaceclub.event.service.vo.EventGetInfo;
+import com.spaceclub.event.service.vo.UserBookmarkedEventGetInfo;
 
 import java.time.LocalDate;
 
@@ -14,7 +14,7 @@ public record UserBookmarkedEventGetResponse(
         boolean bookmark
 ) {
 
-    public static UserBookmarkedEventGetResponse from(EventGetInfo event) {
+    public static UserBookmarkedEventGetResponse from(UserBookmarkedEventGetInfo event) {
         return new UserBookmarkedEventGetResponse(
                 event.id(),
                 event.title(),
