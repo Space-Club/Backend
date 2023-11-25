@@ -17,7 +17,7 @@ public record RecruitmentEventCreateRequest(
     public Event toEntity(EventCategory category) {
         return Event.builder()
                 .category(category)
-                .eventInfo(eventInfo.toEntity())
+                .eventInfo(eventInfo.toEntity(formInfo))
                 .formInfo(formInfo.toEntity())
                 .build();
     }
@@ -46,10 +46,12 @@ public record RecruitmentEventCreateRequest(
             Integer capacity
     ) {
 
-        public EventInfo toEntity() {
+        public EventInfo toEntity(FormInfoRequest formInfo) {
             return EventInfo.builder()
                     .title(title)
                     .content(content)
+                    .startDateTime(formInfo.openDate.atTime(formInfo.openTime))
+                    .endDateTime(formInfo.closeDate.atTime(formInfo.closeTime))
                     .activityArea(activityArea)
                     .recruitmentTarget(recruitmentTarget)
                     .capacity(capacity)
