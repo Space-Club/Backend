@@ -13,6 +13,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
+import java.time.LocalDateTime;
+
+import static com.spaceclub.user.UserExceptionMessage.USER_CANNOT_WITHDRAW;
+import static com.spaceclub.user.domain.Status.DELETED;
 import static com.spaceclub.user.domain.Status.INACTIVE;
 import static com.spaceclub.user.domain.Status.NOT_REGISTERED;
 import static com.spaceclub.user.domain.Status.REGISTERED;
@@ -24,6 +28,8 @@ import static lombok.AccessLevel.PROTECTED;
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor(access = PROTECTED)
 public class User {
+
+    private static final int GRACE_DAYS_OF_DELETION = 3;
 
     @Id
     @Getter
@@ -55,6 +61,10 @@ public class User {
     @Getter
     private String profileImageUrl;
 
+    @Column
+    @Getter
+    private LocalDateTime deletedAt;
+
     private User(
             Long id,
             RequiredInfo requiredInfo,
@@ -63,7 +73,8 @@ public class User {
             Provider provider,
             Email email,
             String refreshToken,
-            String profileImageUrl
+            String profileImageUrl,
+            LocalDateTime deletedAt
     ) {
         this.id = id;
         this.requiredInfo = requiredInfo;
@@ -73,6 +84,7 @@ public class User {
         this.email = email;
         this.refreshToken = refreshToken;
         this.profileImageUrl = profileImageUrl;
+        this.deletedAt = deletedAt;
     }
 
     @Builder
@@ -85,7 +97,8 @@ public class User {
             Provider provider,
             String email,
             String refreshToken,
-            String profileImageUrl
+            String profileImageUrl,
+            LocalDateTime deletedAt
     ) {
         Assert.notNull(status, "유저 상태는 필수입니다.");
         this.id = id;
@@ -96,6 +109,7 @@ public class User {
         this.email = new Email(email);
         this.refreshToken = refreshToken;
         this.profileImageUrl = profileImageUrl;
+        this.deletedAt = deletedAt;
     }
 
     private RequiredInfo generateRequiredInfo(String nickname, String phoneNumber) {
@@ -138,7 +152,8 @@ public class User {
                 this.provider,
                 this.email,
                 this.refreshToken,
-                this.profileImageUrl
+                this.profileImageUrl,
+                this.deletedAt
         );
     }
 
@@ -153,7 +168,8 @@ public class User {
                 this.provider,
                 this.email,
                 refreshToken,
-                profileUrl
+                profileUrl,
+                this.deletedAt
         );
     }
 
@@ -166,7 +182,8 @@ public class User {
                 this.provider,
                 this.email,
                 refreshToken,
-                this.profileImageUrl
+                this.profileImageUrl,
+                this.deletedAt
         );
     }
 
@@ -183,7 +200,8 @@ public class User {
                 this.provider,
                 this.email,
                 this.refreshToken,
-                this.profileImageUrl
+                this.profileImageUrl,
+                LocalDateTime.now()
         );
     }
 
@@ -200,8 +218,31 @@ public class User {
                 this.provider,
                 this.email,
                 this.refreshToken,
-                this.profileImageUrl
+                this.profileImageUrl,
+                null
         );
+    }
+
+    public User changeStatusToDeleted() {
+        if (!this.status.equals(INACTIVE)){
+            throw new IllegalStateException(USER_CANNOT_WITHDRAW.toString());
+        }
+
+        return new User(
+                this.id,
+                this.requiredInfo,
+                DELETED,
+                this.oauthUserName,
+                this.provider,
+                this.email,
+                this.refreshToken,
+                this.profileImageUrl,
+                this.deletedAt
+        );
+    }
+
+    public boolean isDeleted(LocalDateTime now) {
+        return this.status.equals(DELETED) || !this.deletedAt.plusDays(GRACE_DAYS_OF_DELETION).isAfter(now);
     }
 
 }
