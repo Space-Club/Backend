@@ -52,7 +52,7 @@ public class EventService implements EventProvider {
         Club club = clubRepository.findById(createInfo.clubId())
                 .orElseThrow(() -> new IllegalStateException(CLUB_NOT_FOUND.toString()));
 
-        Event registeredEvent = event.registerClub(club);
+        Event registeredEvent = event.registerClubAndUser(club, createInfo.userId());
 
         return eventRepository.save(registeredEvent).getId();
     }
