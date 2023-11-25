@@ -34,13 +34,13 @@ public class BankInfo {
 
     private void validate(String bankName, String bankAccountNumber) {
         if (bankName != null) {
-            boolean validateBankNameLength = bankName.length() > BANK_NAME_MAX_LENGTH || bankName.isBlank();
-            if (validateBankNameLength) throw new IllegalArgumentException(INVALID_EVENT_BANK_NAME.toString());
+            boolean invalidBankNameLength = bankName.length() > BANK_NAME_MAX_LENGTH || bankName.isBlank();
+            if (invalidBankNameLength) throw new IllegalArgumentException(INVALID_EVENT_BANK_NAME.toString());
         }
 
         if (bankAccountNumber != null) {
-            boolean validateBankAccountNumberLength = bankAccountNumber.length() > BANK_ACCOUNT_NUMBER_MAX_LENGTH || bankAccountNumber.isBlank();
-            if (validateBankAccountNumberLength) throw new IllegalArgumentException(INVALID_EVENT_BANK_ACCOUNT_NUMBER.toString());
+            boolean invalidBankAccountNumberLength = bankAccountNumber.length() > BANK_ACCOUNT_NUMBER_MAX_LENGTH || bankAccountNumber.isBlank();
+            if (invalidBankAccountNumberLength) throw new IllegalArgumentException(INVALID_EVENT_BANK_ACCOUNT_NUMBER.toString());
         }
     }
 

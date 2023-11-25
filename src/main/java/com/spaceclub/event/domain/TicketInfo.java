@@ -39,13 +39,13 @@ public class TicketInfo {
     private void validate(Integer maxTicketCount, Integer cost) {
 
         if (maxTicketCount != null) {
-            boolean validateMaxTicketCountRange = maxTicketCount < MAX_TICKET_COUNT_MIN_COUNT || maxTicketCount > MAX_TICKET_COUNT_MAX_COUNT;
-            if (validateMaxTicketCountRange) throw new IllegalArgumentException(INVALID_EVENT_MAX_TICKET_COUNT.toString());
+            boolean invalidMaxTicketCountRange = maxTicketCount < MAX_TICKET_COUNT_MIN_COUNT || maxTicketCount > MAX_TICKET_COUNT_MAX_COUNT;
+            if (invalidMaxTicketCountRange) throw new IllegalArgumentException(INVALID_EVENT_MAX_TICKET_COUNT.toString());
         }
 
         if (cost != null) {
-            boolean validateCostRange = cost < COST_MIN_LENGTH || cost > COST_MAX_LENGTH;
-            if (validateCostRange) throw new IllegalArgumentException(INVALID_EVENT_COST.toString());
+            boolean invalidCostRange = cost < COST_MIN_LENGTH || cost > COST_MAX_LENGTH;
+            if (invalidCostRange) throw new IllegalArgumentException(INVALID_EVENT_COST.toString());
         }
 
     }

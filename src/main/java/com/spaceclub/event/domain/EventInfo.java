@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 
@@ -110,24 +109,24 @@ public class EventInfo {
     }
 
     private void validate(String title, String content, String location, Integer capacity) {
-        Assert.notNull(title, INVALID_EVENT_TITLE.toString());
+        if (title == null) throw new IllegalArgumentException(INVALID_EVENT_TITLE.toString());
 
-        boolean validateTitleLength = title.length() > TITLE_MAX_LENGTH || title.isBlank();
-        if (validateTitleLength) throw new IllegalArgumentException(INVALID_EVENT_TITLE.toString());
+        boolean invalidTitleLength = title.length() > TITLE_MAX_LENGTH || title.isBlank();
+        if (invalidTitleLength) throw new IllegalArgumentException(INVALID_EVENT_TITLE.toString());
 
         if (content != null) {
-            boolean validateContentLength = content.length() > CONTENT_MAX_LENGTH || content.isBlank();
-            if (validateContentLength) throw new IllegalArgumentException(INVALID_EVENT_CONTENT.toString());
+            boolean invalidContentLength = content.length() > CONTENT_MAX_LENGTH || content.isBlank();
+            if (invalidContentLength) throw new IllegalArgumentException(INVALID_EVENT_CONTENT.toString());
         }
 
         if (location != null) {
-            boolean validateLocationLength = location.length() > LOCATION_MAX_LENGTH || location.isBlank();
-            if (validateLocationLength) throw new IllegalArgumentException(INVALID_EVENT_LOCATION.toString());
+            boolean invalidLocationLength = location.length() > LOCATION_MAX_LENGTH || location.isBlank();
+            if (invalidLocationLength) throw new IllegalArgumentException(INVALID_EVENT_LOCATION.toString());
         }
 
         if (capacity != null) {
-            boolean validateCapacityLength = capacity < CAPACITY_MIN_LENGTH || capacity > CAPACITY_MAX_LENGTH;
-            if (validateCapacityLength) throw new IllegalArgumentException(INVALID_EVENT_CAPACITY.toString());
+            boolean invalidCapacityLength = capacity < CAPACITY_MIN_LENGTH || capacity > CAPACITY_MAX_LENGTH;
+            if (invalidCapacityLength) throw new IllegalArgumentException(INVALID_EVENT_CAPACITY.toString());
         }
     }
 
