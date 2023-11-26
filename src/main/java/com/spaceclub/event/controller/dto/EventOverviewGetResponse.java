@@ -3,6 +3,7 @@ package com.spaceclub.event.controller.dto;
 import com.spaceclub.event.domain.Event;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public record EventOverviewGetResponse(Long id,
@@ -19,13 +20,22 @@ public record EventOverviewGetResponse(Long id,
                         event.getStartDate(),
                         event.getStartTime(),
                         event.getEndDate(),
-                        event.getEndTime()
+                        event.getEndTime(),
+                        isEventEnded(event)
                 ),
                 new ClubInfoResponse(
                         event.getClubName(),
                         event.getClubLogoImageUrl()
                 )
         );
+    }
+
+    private static boolean isEventEnded(Event event) {
+        if (event.getEndDate() == null) {
+            return LocalDateTime.now().isAfter(event.getStartDate().atTime(event.getStartTime()));
+        }
+
+        return LocalDateTime.now().isAfter(event.getEndDate().atTime(event.getEndTime()));
     }
 
     private record EventInfoResponse(
@@ -35,7 +45,8 @@ public record EventOverviewGetResponse(Long id,
             LocalDate startDate,
             LocalTime startTime,
             LocalDate endDate,
-            LocalTime endTime
+            LocalTime endTime,
+            boolean isEnded
     ) {
 
     }
