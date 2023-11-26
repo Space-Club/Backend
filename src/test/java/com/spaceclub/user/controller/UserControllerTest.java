@@ -6,7 +6,10 @@ import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
 import com.spaceclub.user.controller.dto.UserProfileUpdateRequest;
+import com.spaceclub.user.service.AccountService;
 import com.spaceclub.user.service.UserService;
+import com.spaceclub.user.service.vo.RequiredProfile;
+import com.spaceclub.user.service.vo.UserLoginInfo;
 import com.spaceclub.user.service.vo.UserProfile;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
@@ -43,6 +46,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
@@ -72,6 +76,9 @@ class UserControllerTest {
 
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private AccountService accountService;
 
     @MockBean
     private UserArgumentResolver userArgumentResolver;
@@ -110,8 +117,10 @@ class UserControllerTest {
     void 유저의_프로필_필수정보_수정에_성공한다() throws Exception {
         //given
         UserProfileUpdateRequest request = new UserProfileUpdateRequest("멤버명1", "010-1234-6789");
+        UserLoginInfo userLoginInfo = new UserLoginInfo(1L, "access token", "refresh token");
 
-        doNothing().when(userService).updateRequiredProfile(any(), any());
+        doNothing().when(userService).updateRequiredProfile(any(Long.class), any(RequiredProfile.class));
+        given(accountService.createAccount(any())).willReturn(userLoginInfo);
 
         // when, then
         mvc.perform(put("/api/v1/me/profile")
@@ -120,7 +129,7 @@ class UserControllerTest {
                         .contentType(APPLICATION_JSON)
                         .with(csrf())
                 )
-                .andExpect(status().isNoContent())
+                .andExpect(status().isOk())
                 .andDo(
                         document("user/changeUserProfile",
                                 preprocessRequest(prettyPrint()),
@@ -131,6 +140,11 @@ class UserControllerTest {
                                 requestFields(
                                         fieldWithPath("name").type(STRING).description("유저 이름"),
                                         fieldWithPath("phoneNumber").type(STRING).description("유저 전화번호")
+                                ),
+                                responseFields(
+                                        fieldWithPath("userId").type(NUMBER).description("유저 ID"),
+                                        fieldWithPath("accessToken").type(STRING).description("액세스 토큰"),
+                                        fieldWithPath("refreshToken").type(STRING).description("리프레시 토큰")
                                 )
                         )
                 );
