@@ -434,7 +434,7 @@ class EventControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestParts(
                                 partWithName("posterImage").description("포스터 사진")
-                                        .attributes(key("content-type").value(IMAGE_JPEG_VALUE)),
+                                        .attributes(key("content-type").value(IMAGE_JPEG_VALUE)).optional(),
                                 partWithName("request").description("행사 생성 관련 정보")
                                         .attributes(key("content-type").value(APPLICATION_JSON_VALUE)),
                                 partWithName("category").description("행사 카테고리")
@@ -528,7 +528,7 @@ class EventControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestParts(
                                 partWithName("posterImage").description("포스터 사진")
-                                        .attributes(key("content-type").value(IMAGE_JPEG_VALUE)),
+                                        .attributes(key("content-type").value(IMAGE_JPEG_VALUE)).optional(),
                                 partWithName("request").description("행사 생성 관련 정보")
                                         .attributes(key("content-type").value(APPLICATION_JSON_VALUE)),
                                 partWithName("category").description("행사 카테고리")
@@ -619,7 +619,7 @@ class EventControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestParts(
                                 partWithName("posterImage").description("포스터 사진")
-                                        .attributes(key("content-type").value(IMAGE_JPEG_VALUE)),
+                                        .attributes(key("content-type").value(IMAGE_JPEG_VALUE)).optional(),
                                 partWithName("request").description("행사 생성 관련 정보")
                                         .attributes(key("content-type").value(APPLICATION_JSON_VALUE)),
                                 partWithName("category").description("행사 카테고리")
@@ -705,7 +705,7 @@ class EventControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestParts(
                                 partWithName("posterImage").description("포스터 사진")
-                                        .attributes(key("content-type").value(IMAGE_JPEG_VALUE)),
+                                        .attributes(key("content-type").value(IMAGE_JPEG_VALUE)).optional(),
                                 partWithName("request").description("행사 생성 관련 정보")
                                         .attributes(key("content-type").value(APPLICATION_JSON_VALUE)),
                                 partWithName("category").description("행사 카테고리")
@@ -793,7 +793,7 @@ class EventControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestParts(
                                 partWithName("posterImage").description("포스터 사진")
-                                        .attributes(key("content-type").value(IMAGE_JPEG_VALUE)),
+                                        .attributes(key("content-type").value(IMAGE_JPEG_VALUE)).optional(),
                                 partWithName("request").description("행사 생성 관련 정보")
                                         .attributes(key("content-type").value(APPLICATION_JSON_VALUE)),
                                 partWithName("category").description("행사 카테고리")

@@ -75,6 +75,9 @@
 |`+INVALID_EVENT_CATEGORY+`
 |행사 카테고리는 필수 값입니다
 
+|`+INVALID_POSTER_IMAGE+`
+|행사 포스터는 필수 값입니다
+
 |`+INVALID_EVENT_TITLE+`
 |제목은 1~30자 사이의 길이의 필수값입니다.
 
