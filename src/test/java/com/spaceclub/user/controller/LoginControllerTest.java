@@ -22,6 +22,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -81,7 +82,7 @@ class LoginControllerTest {
     void 유저가_신규유저이면_빈값_토큰과_아이디반환에_성공한다() throws Exception {
         //given
         UserLoginInfo loginInfo = UserLoginInfo.from(1L, "", "");
-        given(accountService.loginUser(any())).willReturn(loginInfo);
+        given(accountService.loginUser(any(), any(LocalDateTime.class))).willReturn(loginInfo);
 
         // when, then
         mvc.perform(post("/api/v1/users/oauths")
@@ -114,7 +115,7 @@ class LoginControllerTest {
     void 유저가_신규유저가_아니면_생성된_토큰과_아이디반환에_성공한다() throws Exception {
         //given
         UserLoginInfo loginInfo = UserLoginInfo.from(1L, "access token", "refresh token");
-        given(accountService.loginUser(any())).willReturn(loginInfo);
+        given(accountService.loginUser(any(), any(LocalDateTime.class))).willReturn(loginInfo);
 
         // when, then
         mvc.perform(post("/api/v1/users/oauths")

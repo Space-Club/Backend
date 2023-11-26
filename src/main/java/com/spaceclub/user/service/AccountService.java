@@ -14,7 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 import static com.spaceclub.user.UserExceptionMessage.USER_CANNOT_WITHDRAW;
+import static com.spaceclub.user.UserExceptionMessage.USER_DELETED;
 import static com.spaceclub.user.UserExceptionMessage.USER_NOT_FOUND;
 
 @Slf4j
@@ -28,7 +31,7 @@ public class AccountService {
     private final KakaoOauthInfoSender kakaoOauthInfoSender;
 
     @Transactional
-    public UserLoginInfo loginUser(String code) {
+    public UserLoginInfo loginUser(String code, LocalDateTime now) {
         User kakaoUser = createKakaoUser(code);
 
         if (kakaoUser.isNewMember()) {
@@ -38,7 +41,7 @@ public class AccountService {
         String accessToken = jwtManager.createAccessToken(kakaoUser.getId(), kakaoUser.getUsername());
         String refreshToken = jwtManager.createRefreshToken(kakaoUser.getId());
 
-        checkWhenUserStatusIsInactive(kakaoUser);
+        checkWhenUserStatusIsInactive(kakaoUser, now);
 
         return UserLoginInfo.from(kakaoUser.getId(), accessToken, refreshToken);
     }
@@ -55,10 +58,15 @@ public class AccountService {
                 .orElseGet(() -> userRepository.save(userInfo.toUser()));
     }
 
-    private void checkWhenUserStatusIsInactive(User kakaoUser) {
+    private void checkWhenUserStatusIsInactive(User kakaoUser, LocalDateTime now) {
         if (kakaoUser.isInactive()){
             User user = kakaoUser.changeStatusToRegistered();
             userRepository.save(user);
+
+            return;
+        }
+        if (kakaoUser.isDeleted(now)) {
+            throw new IllegalStateException(USER_DELETED.toString());
         }
     }
 

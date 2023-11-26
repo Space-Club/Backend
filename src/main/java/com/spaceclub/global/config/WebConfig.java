@@ -4,8 +4,10 @@ import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -15,7 +17,9 @@ import java.util.List;
 
 @Profile({"develop", "local"})
 @Configuration
+@EnableScheduling
 @RequiredArgsConstructor
+@ConfigurationPropertiesScan(basePackages = {"com.spaceclub.global.config"})
 public class WebConfig implements WebMvcConfigurer {
 
     private final UserArgumentResolver userArgumentResolver;
@@ -50,3 +54,4 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
 }
+

@@ -1,7 +1,11 @@
 package com.spaceclub.user;
 
 import com.spaceclub.user.domain.Provider;
+import com.spaceclub.user.domain.Status;
 import com.spaceclub.user.domain.User;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static com.spaceclub.user.domain.Status.NOT_REGISTERED;
 import static com.spaceclub.user.domain.Status.REGISTERED;
@@ -47,6 +51,25 @@ public class UserTestFixture {
                 .email("abce@naver.com")
                 .refreshToken("refreshToken")
                 .profileImageUrl("www.image.com")
+                .build();
+    }
+
+    public static User deletedUser(Long userId, Status status, LocalDateTime deletedAt) {
+        UUID uuid = UUID.randomUUID();
+        String emailPrefix = uuid.toString().substring(5);
+        String oauthId = uuid.toString().substring(0, 5);
+
+        return User.builder()
+                .id(userId)
+                .name(null)
+                .phoneNumber(null)
+                .status(status)
+                .oauthId(oauthId)
+                .provider(Provider.KAKAO)
+                .email(emailPrefix+ "@naver.com")
+                .refreshToken("refreshToken")
+                .profileImageUrl("www.image.com")
+                .deletedAt(deletedAt)
                 .build();
     }
 
