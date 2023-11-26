@@ -6,6 +6,9 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 
 import static com.spaceclub.user.domain.Provider.KAKAO;
+import static com.spaceclub.user.domain.Status.INACTIVE;
+import static com.spaceclub.user.domain.Status.NOT_REGISTERED;
+import static com.spaceclub.user.domain.Status.REGISTERED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -20,7 +23,7 @@ class UserTest {
         User user = User.builder()
                 .oauthId("KAKAO1234")
                 .provider(KAKAO)
-                .status(Status.NOT_REGISTERED)
+                .status(NOT_REGISTERED)
                 .email("test@gmail.com")
                 .build();
 
@@ -105,6 +108,21 @@ class UserTest {
 
         // then
         assertThat(isValid).isFalse();
+    }
+
+    @Test
+    void 유저의_상태를_INACTIVE로_변경에_성공한다() {
+        // given
+        final User user = UserTestFixture.user1();
+
+        // when
+        User inactiveUser = user.changeStatusToInactive();
+
+        // then
+        assertAll(
+                () -> assertThat(inactiveUser.getStatus()).isEqualTo(INACTIVE),
+                () -> assertThat(inactiveUser.getStatus()).isNotEqualTo(REGISTERED)
+        );
     }
 
 }

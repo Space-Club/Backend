@@ -8,4 +8,6 @@ public interface ClubProvider {
 
     List<ClubInfo> getClubs(Long userId);
 
+    int getNumberOfClubsUserBelong(Long userId);
+
 }

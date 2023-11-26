@@ -99,4 +99,9 @@ public class ClubService implements ClubProvider {
                 .toList();
     }
 
+    @Override
+    public int getNumberOfClubsUserBelong(Long userId) {
+        return clubUserRepository.countByUserId(userId);
+    }
+
 }
