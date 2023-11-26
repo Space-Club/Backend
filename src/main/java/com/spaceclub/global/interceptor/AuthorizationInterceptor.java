@@ -1,5 +1,6 @@
 package com.spaceclub.global.interceptor;
 
+import com.spaceclub.global.exception.TokenException;
 import com.spaceclub.global.jwt.Claims;
 import com.spaceclub.global.jwt.JwtManager;
 import com.spaceclub.user.service.AccountService;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Map;
 
+import static com.spaceclub.global.exception.GlobalExceptionCode.BAD_REQUEST;
 import static java.util.Collections.unmodifiableSet;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpMethod.GET;
@@ -46,10 +48,19 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             }
         }
 
-        String header = request.getHeader(AUTHORIZATION).replace(TOKEN_PREFIX, "");
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        validateHeader(authorizationHeader);
+
+        String header = authorizationHeader.replace(TOKEN_PREFIX, "");
         Claims claims = jwtManager.getClaims(header);
 
         return accountService.isAuthenticatedUser(claims.getId(), claims.getUsername());
+    }
+
+    private void validateHeader(String authorizationHeader) {
+        if (authorizationHeader == null) {
+            throw new TokenException(BAD_REQUEST);
+        }
     }
 
 }
