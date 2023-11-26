@@ -8,6 +8,7 @@ import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
 import com.spaceclub.user.controller.dto.UserRequiredInfoRequest;
 import com.spaceclub.user.service.AccountService;
+import com.spaceclub.user.service.UserService;
 import com.spaceclub.user.service.vo.UserLoginInfo;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -68,6 +69,9 @@ class LoginControllerTest {
 
     @MockBean
     private ClubProvider clubProvider;
+
+    @MockBean
+    private UserService userService;
 
     @MockBean
     private UserArgumentResolver userArgumentResolver;
