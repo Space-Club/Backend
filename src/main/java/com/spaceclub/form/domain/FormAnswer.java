@@ -23,7 +23,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 public class FormAnswer extends BaseTimeEntity {
 
     @Id
-    @Column(name = "form_option_user_id")
+    @Column(name = "form_answer_id")
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 

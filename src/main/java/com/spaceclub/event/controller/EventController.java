@@ -61,11 +61,12 @@ public class EventController {
     }
 
     @GetMapping
-    public ResponseEntity<PageResponse<EventOverviewGetResponse, Event>> getAll(@RequestParam EventCategory category, Pageable pageable) {
+    public ResponseEntity<PageResponse<EventOverviewGetResponse, Event>> getAll(@RequestParam(required = false) EventCategory category, @RequestParam(required = false) Boolean isEnded, Pageable pageable) {
         Page<Event> events = eventService.getAll(category, pageable);
 
         List<EventOverviewGetResponse> responses = events.getContent()
                 .stream()
+                .filter(event -> isEnded == null || event.isEventEnded() == isEnded)
                 .map(EventOverviewGetResponse::from)
                 .toList();
 
