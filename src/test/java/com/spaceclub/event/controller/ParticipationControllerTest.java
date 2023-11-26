@@ -120,7 +120,7 @@ class ParticipationControllerTest {
         doNothing().when(participationService).apply(EventParticipationCreateInfo.builder()
                 .userId(userId)
                 .eventId(request.eventId())
-                .formOptionUsers(request.toEntityList())
+                .formAnswers(request.toEntityList())
                 .ticketCount(request.ticketCount())
                 .build()
         );

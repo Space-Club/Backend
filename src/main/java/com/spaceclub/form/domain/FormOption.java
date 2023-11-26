@@ -47,7 +47,7 @@ public class FormOption {
 
     @Getter
     @OneToMany(mappedBy = "formOption", fetch = FetchType.EAGER, cascade = {PERSIST, REMOVE}, orphanRemoval = true)
-    private final List<FormOptionUser> formOptionUsers = new ArrayList<>();
+    private final List<FormAnswer> formAnswers = new ArrayList<>();
 
     @Builder
     public FormOption(Long id, String title, FormOptionType type, Form form) {
@@ -66,12 +66,12 @@ public class FormOption {
                 .build();
     }
 
-    public void addFormOptionUser(FormOptionUser optionUser) {
-        formOptionUsers.add(optionUser);
+    public void addFormAnswer(FormAnswer formAnswer) {
+        formAnswers.add(formAnswer);
     }
 
-    public void removeFormOptionUser(FormOptionUser optionUser) {
-        formOptionUsers.remove(optionUser);
+    public void removeFormAnswer(FormAnswer formAnswer) {
+        formAnswers.remove(formAnswer);
     }
 
 }

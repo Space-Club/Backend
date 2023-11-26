@@ -1,9 +1,9 @@
 package com.spaceclub.form.service;
 
 import com.spaceclub.form.domain.FormOption;
-import com.spaceclub.form.domain.FormOptionUser;
+import com.spaceclub.form.domain.FormAnswer;
 import com.spaceclub.form.repository.FormOptionRepository;
-import com.spaceclub.form.repository.FormOptionUserRepository;
+import com.spaceclub.form.repository.FormAnswerRepository;
 import com.spaceclub.form.service.vo.FormUserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,36 +18,36 @@ import static com.spaceclub.form.FormExceptionMessage.FORM_OPTION_NOT_FOUND;
 @RequiredArgsConstructor
 public class FormOptionService implements FormOptionProvider {
 
-    private final FormOptionUserRepository formOptionUserRepository;
+    private final FormAnswerRepository formAnswerRepository;
 
     private final FormOptionRepository formOptionRepository;
 
     @Override
-    public FormUserInfo createFormOption(Long userId, FormOptionUser formOptionUser) {
-        FormOption formOption = formOptionRepository.findById(formOptionUser.getFormOptionId())
+    public FormUserInfo createFormOption(Long userId, FormAnswer formAnswer) {
+        FormOption formOption = formOptionRepository.findById(formAnswer.getFormOptionId())
                 .orElseThrow(() -> new IllegalStateException(FORM_OPTION_NOT_FOUND.toString()));
 
-        FormOptionUser registeredFormOptionUser = formOptionUser.registerFormOptionAndUser(formOption, userId);
-        formOptionUserRepository.save(registeredFormOptionUser);
+        FormAnswer registeredFormAnswer = formAnswer.registerFormOptionAndUser(formOption, userId);
+        formAnswerRepository.save(registeredFormAnswer);
 
-        formOption.addFormOptionUser(registeredFormOptionUser);
+        formOption.addFormAnswer(registeredFormAnswer);
         formOptionRepository.save(formOption);
 
-        return FormUserInfo.from(formOption, registeredFormOptionUser);
+        return FormUserInfo.from(formOption, registeredFormAnswer);
     }
 
     @Override
-    public void deleteFormOptionUser(List<FormOptionUser> formOptionUserInfos, Long userId) {
-        for (FormOptionUser formOptionUserInfo : formOptionUserInfos) {
-            Long formOptionId = formOptionUserInfo.getFormOptionId();
+    public void deleteFormAnswer(List<FormAnswer> formAnswerInfos, Long userId) {
+        for (FormAnswer formAnswerInfo : formAnswerInfos) {
+            Long formOptionId = formAnswerInfo.getFormOptionId();
 
             FormOption formOption = formOptionRepository.findById(formOptionId)
                     .orElseThrow(() -> new IllegalStateException(FORM_OPTION_NOT_FOUND.toString()));
 
-            FormOptionUser formOptionUser = formOptionUserRepository.findByFormOption_IdAndUserId(formOptionUserInfo.getFormOptionId(), userId)
+            FormAnswer formAnswer = formAnswerRepository.findByFormOption_IdAndUserId(formAnswerInfo.getFormOptionId(), userId)
                     .orElseThrow(() -> new IllegalStateException(FORM_OPTION_NOT_FOUND.toString()));
 
-            formOption.removeFormOptionUser(formOptionUser);
+            formOption.removeFormAnswer(formAnswer);
         }
     }
 

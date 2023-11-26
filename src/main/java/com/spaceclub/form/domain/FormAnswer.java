@@ -20,7 +20,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of = "id", callSuper = false)
-public class FormOptionUser extends BaseTimeEntity {
+public class FormAnswer extends BaseTimeEntity {
 
     @Id
     @Column(name = "form_option_user_id")
@@ -39,7 +39,7 @@ public class FormOptionUser extends BaseTimeEntity {
     private String content;
 
     @Builder
-    public FormOptionUser(Long id, FormOption formOption, Long userId, String content, LocalDateTime createdAt) {
+    public FormAnswer(Long id, FormOption formOption, Long userId, String content, LocalDateTime createdAt) {
         this.id = id;
         this.formOption = formOption;
         this.userId = userId;
@@ -47,8 +47,8 @@ public class FormOptionUser extends BaseTimeEntity {
         this.createdAt = createdAt;
     }
 
-    public FormOptionUser registerFormOptionAndUser(FormOption formOption, Long userId) {
-        return FormOptionUser.builder()
+    public FormAnswer registerFormOptionAndUser(FormOption formOption, Long userId) {
+        return FormAnswer.builder()
                 .id(this.id)
                 .formOption(formOption)
                 .userId(userId)

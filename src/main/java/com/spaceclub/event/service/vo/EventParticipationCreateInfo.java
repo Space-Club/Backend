@@ -1,6 +1,6 @@
 package com.spaceclub.event.service.vo;
 
-import com.spaceclub.form.domain.FormOptionUser;
+import com.spaceclub.form.domain.FormAnswer;
 import lombok.Builder;
 
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 public record EventParticipationCreateInfo(
         Long userId,
         Long eventId,
-        List<FormOptionUser> formOptionUsers,
+        List<FormAnswer> formAnswers,
         Integer ticketCount
 ) {
 

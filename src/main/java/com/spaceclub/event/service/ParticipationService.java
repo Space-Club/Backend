@@ -6,7 +6,7 @@ import com.spaceclub.event.domain.ParticipationStatus;
 import com.spaceclub.event.repository.EventUserRepository;
 import com.spaceclub.event.service.vo.EventPageInfo;
 import com.spaceclub.event.service.vo.EventParticipationCreateInfo;
-import com.spaceclub.form.domain.FormOptionUser;
+import com.spaceclub.form.domain.FormAnswer;
 import com.spaceclub.form.service.FormOptionProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -54,15 +54,15 @@ public class ParticipationService implements ParticipationProvider {
     private void processByParticipationStatus(EventParticipationCreateInfo info, EventUser eventUser) {
         if (CANCELED.equals(eventUser.getStatus())) {
             eventUserRepository.deleteById(eventUser.getId());
-            formOptionProvider.deleteFormOptionUser(info.formOptionUsers(), info.userId());
+            formOptionProvider.deleteFormAnswer(info.formAnswers(), info.userId());
         } else {
             throw new IllegalArgumentException(EVENT_ALREADY_APPLIED.toString());
         }
     }
 
     private void participateEvent(EventParticipationCreateInfo info, Event event) {
-        for (FormOptionUser formOptionUser : info.formOptionUsers()) {
-            formOptionProvider.createFormOption(info.userId(), formOptionUser);
+        for (FormAnswer formAnswer : info.formAnswers()) {
+            formOptionProvider.createFormOption(info.userId(), formAnswer);
         }
 
         EventUser newEventUser = EventUser.builder()

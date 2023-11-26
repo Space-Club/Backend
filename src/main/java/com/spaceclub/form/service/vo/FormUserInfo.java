@@ -1,17 +1,17 @@
 package com.spaceclub.form.service.vo;
 
 import com.spaceclub.form.domain.FormOption;
-import com.spaceclub.form.domain.FormOptionUser;
+import com.spaceclub.form.domain.FormAnswer;
 
 public record FormUserInfo(Long formOptionId, FormSubmitInfo submitInfo) {
 
-    public static FormUserInfo from(FormOption formOption, FormOptionUser formOptionUser) {
+    public static FormUserInfo from(FormOption formOption, FormAnswer formAnswer) {
         return new FormUserInfo(
                 formOption.getId(),
                 new FormSubmitInfo(
-                        formOptionUser.getUserId(),
+                        formAnswer.getUserId(),
                         formOption.getTitle(),
-                        formOptionUser.getContent()
+                        formAnswer.getContent()
                 ));
     }
 
