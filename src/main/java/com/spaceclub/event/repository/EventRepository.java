@@ -9,16 +9,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
 
     Page<Event> findByClub_Id(Long clubId, Pageable pageable);
 
     Page<Event> findAllByCategory(EventCategory category, Pageable pageable);
-
-    List<Event> findAllByClub_IdAndCategory(Long clubId, EventCategory category);
 
     Page<Event> findByEventInfo_TitleContainsIgnoreCase(String searchWord, Pageable pageable);
 

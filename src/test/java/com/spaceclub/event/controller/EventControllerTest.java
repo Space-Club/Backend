@@ -390,8 +390,7 @@ class EventControllerTest {
                         LocalTime.of(18, 0),
                         "행사 장소",
                         100,
-                        5000,
-                        "담당자 이름"
+                        5000
                 ),
                 new ClubEventCreateRequest.FormInfoRequest(
                         LocalDate.of(2023, 11, 1),
@@ -452,7 +451,6 @@ class EventControllerTest {
                                 fieldWithPath("eventInfo.location").type(STRING).description("행사 장소"),
                                 fieldWithPath("eventInfo.capacity").type(NUMBER).description("행사 정원"),
                                 fieldWithPath("eventInfo.dues").type(NUMBER).description("행사 회비"),
-                                fieldWithPath("eventInfo.managerName").type(STRING).description("담당자 이름"),
                                 fieldWithPath("formInfo.openDate").type(STRING).description("폼 오픈 날짜"),
                                 fieldWithPath("formInfo.openTime").type(STRING).description("폼 오픈 시간"),
                                 fieldWithPath("formInfo.closeDate").type(STRING).description("폼 마감 날짜"),
@@ -746,8 +744,7 @@ class EventControllerTest {
                         LocalTime.of(18, 0),
                         "행사 장소",
                         100,
-                        5000,
-                        "담당자 이름"
+                        5000
                 ),
                 new ClubEventUpdateRequest.FormInfoRequest(
                         LocalDate.of(2023, 11, 1),
@@ -813,7 +810,6 @@ class EventControllerTest {
                                 fieldWithPath("eventInfo.location").type(STRING).description("행사 장소"),
                                 fieldWithPath("eventInfo.capacity").type(NUMBER).description("행사 정원"),
                                 fieldWithPath("eventInfo.dues").type(NUMBER).description("행사 회비"),
-                                fieldWithPath("eventInfo.managerName").type(STRING).description("담당자 이름"),
                                 fieldWithPath("formInfo.openDate").type(STRING).description("폼 오픈 날짜"),
                                 fieldWithPath("formInfo.openTime").type(STRING).description("폼 오픈 시간"),
                                 fieldWithPath("formInfo.closeDate").type(STRING).description("폼 마감 날짜"),

@@ -1,11 +1,8 @@
 package com.spaceclub.club.controller;
 
 import com.spaceclub.club.controller.dto.ClubEventGetResponse;
-import com.spaceclub.club.controller.dto.ClubScheduleGetResponse;
-import com.spaceclub.club.controller.dto.ClubScheduleGetResponse.ClubScheduleGetResponseInfo;
 import com.spaceclub.club.service.ClubEventService;
 import com.spaceclub.event.service.vo.EventGetInfo;
-import com.spaceclub.event.service.vo.SchedulesGetInfo;
 import com.spaceclub.global.Authenticated;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.vo.JwtUser;
@@ -37,17 +34,6 @@ public class ClubEventController {
                 .toList();
 
         return ResponseEntity.ok(new PageResponse<>(clubEventGetResponses, events));
-    }
-
-    @GetMapping("/{clubId}/schedules")
-    public ResponseEntity<ClubScheduleGetResponse> getClubSchedule(@PathVariable Long clubId, @Authenticated JwtUser jwtUser) {
-        List<SchedulesGetInfo> events = clubEventService.getClubSchedules(clubId, jwtUser.id());
-
-        List<ClubScheduleGetResponseInfo> schedules = events.stream()
-                .map(ClubScheduleGetResponseInfo::from)
-                .toList();
-
-        return ResponseEntity.ok(new ClubScheduleGetResponse(schedules));
     }
 
 }
