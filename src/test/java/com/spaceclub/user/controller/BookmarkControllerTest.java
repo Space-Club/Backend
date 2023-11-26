@@ -119,9 +119,9 @@ class BookmarkControllerTest {
                                         headerWithName(AUTHORIZATION).description("액세스 토큰")
                                 ),
                                 queryParameters(
-                                        parameterWithName("page").description("페이지"),
-                                        parameterWithName("size").description("페이지 내 개수"),
-                                        parameterWithName("sort").description("정렬 방법((ex) id,asc)")
+                                        parameterWithName("page").optional().description("페이지"),
+                                        parameterWithName("size").optional().description("페이지 내 개수"),
+                                        parameterWithName("sort").optional().description("정렬 방법(ex. id,desc)")
                                 ),
                                 responseFields(
                                         fieldWithPath("data").type(ARRAY).description("페이지 내 이벤트 정보"),

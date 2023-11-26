@@ -110,9 +110,9 @@ class SubmitControllerTest {
                                         parameterWithName("eventId").description("행사 id")
                                 ),
                                 queryParameters(
-                                        parameterWithName("page").description("페이지"),
-                                        parameterWithName("size").description("페이지 내 개수"),
-                                        parameterWithName("sort").description("정렬 방법(ex. id,desc)")
+                                        parameterWithName("page").optional().description("페이지"),
+                                        parameterWithName("size").optional().description("페이지 내 개수"),
+                                        parameterWithName("sort").optional().description("정렬 방법(ex. id,desc)")
                                 ),
                                 responseFields(
                                         fieldWithPath("formInfo").type(OBJECT).description("폼 정보"),

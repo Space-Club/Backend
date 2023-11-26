@@ -823,7 +823,7 @@ class EventControllerTest {
 
     @Test
     @WithMockUser
-    public void 전체_행사_조회에_성공한다() throws Exception { // 없어도됨. 있어도 안씀.
+    public void 전체_행사_조회에_성공한다() throws Exception {
         // given
         List<Event> events = List.of(event1(), showEvent(), clubEvent());
         Page<Event> eventPages = new PageImpl<>(events);
@@ -833,6 +833,7 @@ class EventControllerTest {
         // when
         ResultActions actions = mvc.perform(get("/api/v1/events")
                 .param("category", "SHOW")
+                .param("isEnded", "false")
                 .param("page", "1")
                 .param("size", "3")
                 .param("sort", "id,asc")
@@ -852,10 +853,11 @@ class EventControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         queryParameters(
-                                parameterWithName("page").description("페이지"),
-                                parameterWithName("size").description("페이지 내 개수"),
-                                parameterWithName("sort").description("정렬 방법(ex. id,desc)"),
-                                parameterWithName("category").description("행사 카테고리 (ex. SHOW, RECRUITMENT, PROMOTION, CLUB)")
+                                parameterWithName("category").description("행사 카테고리 (ex. SHOW, RECRUITMENT, PROMOTION, CLUB)"),
+                                parameterWithName("isEnded").optional().description("행사 종료 여부"),
+                                parameterWithName("page").optional().description("페이지"),
+                                parameterWithName("size").optional().description("페이지 내 개수"),
+                                parameterWithName("sort").optional().description("정렬 방법(ex. id,desc)")
                         ),
                         responseFields(
                                 fieldWithPath("data").type(ARRAY).description("페이지 내 행사 정보"),
@@ -1103,9 +1105,9 @@ class EventControllerTest {
                         preprocessResponse(prettyPrint()),
                         queryParameters(
                                 parameterWithName("keyword").description("검색어"),
-                                parameterWithName("page").description("페이지"),
-                                parameterWithName("size").description("페이지 내 개수"),
-                                parameterWithName("sort").description("정렬 방법((ex) id,desc)")
+                                parameterWithName("page").optional().description("페이지"),
+                                parameterWithName("size").optional().description("페이지 내 개수"),
+                                parameterWithName("sort").optional().description("정렬 방법(ex. id,desc)")
                         ),
                         responseFields(
                                 fieldWithPath("data").type(ARRAY).description("페이지 내 행사 정보"),
@@ -1122,7 +1124,6 @@ class EventControllerTest {
                                 fieldWithPath("data[].clubInfo").type(OBJECT).description("클럽 정보"),
                                 fieldWithPath("data[].clubInfo.name").type(STRING).description("클럽 명"),
                                 fieldWithPath("data[].clubInfo.logoImageUrl").type(STRING).description("클럽 이미지 Url"),
-                                fieldWithPath("data[].clubInfo.coverImageUrl").type(STRING).description("클럽 커버 이미지 Url"),
                                 fieldWithPath("pageData").type(OBJECT).description("페이지 정보"),
                                 fieldWithPath("pageData.first").type(BOOLEAN).description("첫 페이지 여부"),
                                 fieldWithPath("pageData.last").type(BOOLEAN).description("마지막 페이지 여부"),
