@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.service.ClubEventService;
 import com.spaceclub.event.service.vo.EventGetInfo;
-import com.spaceclub.event.service.vo.SchedulesGetInfo;
 import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
@@ -48,7 +47,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -142,43 +140,6 @@ class ClubEventControllerTest {
                                 fieldWithPath("pageData.size").type(NUMBER).description("페이지 내 개수"),
                                 fieldWithPath("pageData.totalPages").type(NUMBER).description("총 페이지 개수"),
                                 fieldWithPath("pageData.totalElements").type(NUMBER).description("총 행사 개수")
-                        )
-                ));
-    }
-
-    @Test
-    @WithMockUser
-    void 클럽_일정_조회에_성공한다() throws Exception {
-        // given
-        Long clubId = 1L;
-        given(clubEventService.getClubSchedules(any(Long.class), any())).willReturn(
-                List.of(SchedulesGetInfo.from(clubEvent()))
-        );
-
-        // when
-        ResultActions result = this.mockMvc.perform(get("/api/v1/clubs/{clubId}/schedules", clubId)
-                .header(AUTHORIZATION, "access token")
-        );
-
-        // then
-        result.andExpect(status().isOk())
-                .andDo(print())
-                .andDo(document("club/getSchedule",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestHeaders(
-                                headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
-                        ),
-                        pathParameters(
-                                parameterWithName("clubId").description("클럽 아이디")
-                        ),
-                        responseFields(
-                                fieldWithPath("schedules").type(ARRAY).description("클럽 일정 목록"),
-                                fieldWithPath("schedules.[].eventId").type(NUMBER).description("이벤트 ID"),
-                                fieldWithPath("schedules.[].title").type(STRING).description("일정 제목"),
-                                fieldWithPath("schedules.[].startDateTime").type(STRING).description("일정 시작 날짜와 시간"),
-                                fieldWithPath("schedules.[].endDateTime").type(STRING).description("일정 종료 날짜와 시간"),
-                                fieldWithPath("schedules.[].manager").type(STRING).description("일정 생성자")
                         )
                 ));
     }

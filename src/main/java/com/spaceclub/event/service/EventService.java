@@ -9,7 +9,6 @@ import com.spaceclub.event.repository.EventRepository;
 import com.spaceclub.event.repository.EventUserRepository;
 import com.spaceclub.event.service.vo.EventCreateInfo;
 import com.spaceclub.event.service.vo.EventGetInfo;
-import com.spaceclub.event.service.vo.SchedulesGetInfo;
 import com.spaceclub.global.config.s3.S3ImageUploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,8 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 import static com.spaceclub.club.ClubExceptionMessage.CLUB_NOT_FOUND;
 import static com.spaceclub.event.EventExceptionMessage.EVENT_CATEGORY_NOT_ALLOWED;
@@ -109,15 +106,6 @@ public class EventService implements EventProvider {
         Page<Event> events = eventRepository.findByClub_Id(clubId, pageable);
 
         return events.map(EventGetInfo::from);
-    }
-
-    @Override
-    public List<SchedulesGetInfo> getSchedulesByClubId(Long clubId) {
-        List<Event> events = eventRepository.findAllByClub_IdAndCategory(clubId, CLUB);
-
-        return events.stream()
-                .map(SchedulesGetInfo::from)
-                .toList();
     }
 
     @Override
