@@ -12,14 +12,12 @@ public record EventGetInfo(
         String posterImageUrl,
         LocalDate startDate,
         LocalTime startTime,
+        LocalDate endDate,
+        LocalTime endTime,
         String location,
         String clubName,
         String clubLogoImageUrl,
-        String openStatus,
-        LocalDate formOpenDate,
-        LocalTime formOpenTime,
-        LocalDate formCloseDate,
-        LocalTime formCloseTime
+        String openStatus
 ) {
 
     public static EventGetInfo from(Event event) {
@@ -29,14 +27,12 @@ public record EventGetInfo(
                 event.getPosterImageUrl(),
                 event.getStartDate(),
                 event.getStartTime(),
+                event.getEndDate(),
+                event.getEndTime(),
                 event.getLocation(),
                 event.getClubName(),
                 event.getClubLogoImageUrl(),
-                event.getCategory().equals(EventCategory.CLUB) ? "CLUB" : "ALL",
-                event.getFormOpenDate(),
-                event.getFormOpenTime(),
-                event.getFormCloseDate(),
-                event.getFormCloseTime()
+                event.getCategory().equals(EventCategory.CLUB) ? "CLUB" : "ALL"
         );
     }
 

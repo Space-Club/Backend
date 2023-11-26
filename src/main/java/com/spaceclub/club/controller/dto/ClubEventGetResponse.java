@@ -9,7 +9,6 @@ import java.time.LocalTime;
 @Builder
 public record ClubEventGetResponse(Long id,
                                    EventInfoResponse eventInfo,
-                                   FormInfoResponse formInfo,
                                    ClubInfoResponse clubInfo) {
 
     public static ClubEventGetResponse from(EventGetInfo eventGetInfo) {
@@ -21,13 +20,9 @@ public record ClubEventGetResponse(Long id,
                         eventGetInfo.location(),
                         eventGetInfo.startDate(),
                         eventGetInfo.startTime(),
+                        eventGetInfo.endDate(),
+                        eventGetInfo.endTime(),
                         eventGetInfo.openStatus()
-                ),
-                new FormInfoResponse(
-                        eventGetInfo.formOpenDate(),
-                        eventGetInfo.formOpenTime(),
-                        eventGetInfo.formCloseDate(),
-                        eventGetInfo.formCloseTime()
                 ),
                 new ClubInfoResponse(
                         eventGetInfo.clubName(),
@@ -42,16 +37,9 @@ public record ClubEventGetResponse(Long id,
             String location,
             LocalDate startDate,
             LocalTime startTime,
+            LocalDate endDate,
+            LocalTime endTime,
             String openStatus
-    ) {
-
-    }
-
-    private record FormInfoResponse(
-            LocalDate openDate,
-            LocalTime openTime,
-            LocalDate closeDate,
-            LocalTime closeTime
     ) {
 
     }
@@ -62,5 +50,5 @@ public record ClubEventGetResponse(Long id,
     ) {
 
     }
-    
+
 }
