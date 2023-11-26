@@ -21,21 +21,14 @@ public record EventOverviewGetResponse(Long id,
                         event.getStartTime(),
                         event.getEndDate(),
                         event.getEndTime(),
-                        isEventEnded(event)
+                        event.isEventEnded()
                 ),
                 new ClubInfoResponse(
                         event.getClubName(),
-                        event.getClubLogoImageUrl()
+                        event.getClubLogoImageUrl(),
+                        event.getClubCoverImageUrl()
                 )
         );
-    }
-
-    private static boolean isEventEnded(Event event) {
-        if (event.getEndDate() == null) {
-            return LocalDateTime.now().isAfter(event.getStartDate().atTime(event.getStartTime()));
-        }
-
-        return LocalDateTime.now().isAfter(event.getEndDate().atTime(event.getEndTime()));
     }
 
     private record EventInfoResponse(
@@ -53,7 +46,8 @@ public record EventOverviewGetResponse(Long id,
 
     private record ClubInfoResponse(
             String name,
-            String logoImageUrl
+            String logoImageUrl,
+            String coverImageUrl
     ) {
 
     }

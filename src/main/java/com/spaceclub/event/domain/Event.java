@@ -148,6 +148,15 @@ public class Event extends BaseTimeEntity {
                 .build();
     }
 
+    public boolean isEventEnded() {
+        if (this.getEndDate() == null) {
+            return LocalDateTime.now().isAfter(this.getStartDate().atTime(this.getStartTime()));
+        }
+
+        return LocalDateTime.now().isAfter(this.getEndDate().atTime(this.getEndTime()));
+    }
+
+
     public String getTitle() {
         return eventInfo.getTitle();
     }
@@ -188,6 +197,10 @@ public class Event extends BaseTimeEntity {
 
     public String getClubLogoImageUrl() {
         return club.getLogoImageUrl();
+    }
+
+    public String getClubCoverImageUrl() {
+        return club.getCoverImageUrl();
     }
 
     public LocalDateTime getFormOpenDateTime() {
