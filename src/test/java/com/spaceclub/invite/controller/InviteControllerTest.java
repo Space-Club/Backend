@@ -25,8 +25,10 @@ import static com.spaceclub.club.ClubTestFixture.club1;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -70,7 +72,7 @@ class InviteControllerTest {
         Club club = club1();
         Long clubId = club.getId();
 
-        given(inviteService.createAndGetInviteLink(any(Long.class), any())).willReturn("650d2d91-a8cf-45e7-8a43-a0c798173ecb");
+        given(inviteService.createInviteCode(any(Long.class), any())).willReturn("650d2d91-a8cf-45e7-8a43-a0c798173ecb");
 
         // when
         ResultActions actions = mockMvc.perform(post("/api/v1/clubs/{clubId}/invite", clubId)
@@ -78,7 +80,7 @@ class InviteControllerTest {
                 .with(csrf()));
 
         // then
-        actions.andExpect(status().isOk())
+        actions.andExpect(status().isCreated())
                 .andDo(print())
                 .andDo(document("invite/create",
                         preprocessRequest(prettyPrint()),
@@ -89,8 +91,8 @@ class InviteControllerTest {
                         requestHeaders(
                                 headerWithName(AUTHORIZATION).description("유저 액세스 토큰")
                         ),
-                        responseFields(
-                                fieldWithPath("inviteLink").type(STRING).description("클럽 초대 링크")
+                        responseHeaders(
+                                headerWithName(LOCATION).description("클럽 초대 링크")
                         )
                 ));
     }

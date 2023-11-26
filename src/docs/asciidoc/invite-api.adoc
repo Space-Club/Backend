@@ -21,9 +21,9 @@ include::{snippets}/invite/create/request-headers.adoc[]
 
 include::{snippets}/invite/create/http-response.adoc[]
 
-===== Response Body
+===== Response Header
 
-include::{snippets}/invite/create/response-fields.adoc[]
+include::{snippets}/invite/create/response-headers.adoc[]
 
 :sectnums:
 

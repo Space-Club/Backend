@@ -28,19 +28,19 @@ public class InviteService {
 
     private final ClubService clubService;
 
-    public String createAndGetInviteLink(Long clubId, Long userId) {
+    public String createInviteCode(Long clubId, Long userId) {
         Club club = clubService.getClub(clubId, userId);
 
         String inviteCode = inviteCodeGenerator.generateCode();
 
+        Invite tempInvite = Invite.builder()
+                .code(inviteCode)
+                .club(club)
+                .expiredAt(LocalDateTime.now().plusHours(INVITE_LINK_VALID_HOURS))
+                .build();
+
         Invite invite = inviteRepository.findByClub(club)
-                .orElse(
-                        Invite.builder()
-                                .code(inviteCode)
-                                .club(club)
-                                .expiredAt(LocalDateTime.now().plusHours(INVITE_LINK_VALID_HOURS))
-                                .build()
-                );
+                .orElse(tempInvite);
 
         if (invite.isExpired()) {
             invite = invite.updateCode(inviteCode);

@@ -2,7 +2,6 @@ package com.spaceclub.invite.controller;
 
 import com.spaceclub.global.Authenticated;
 import com.spaceclub.global.jwt.vo.JwtUser;
-import com.spaceclub.invite.controller.dto.InviteCreateAndGetResponse;
 import com.spaceclub.invite.controller.dto.InviteGetResponse;
 import com.spaceclub.invite.service.InviteService;
 import com.spaceclub.invite.service.vo.InviteGetInfo;
@@ -13,6 +12,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/v1/clubs")
@@ -24,13 +26,18 @@ public class InviteController {
     private final InviteService inviteService;
 
     @PostMapping("/{clubId}/invite")
-    public ResponseEntity<InviteCreateAndGetResponse> createAndGetInviteLink(@PathVariable Long clubId, @Authenticated JwtUser jwtUser) {
+    public ResponseEntity<Void> createInviteCode(@PathVariable Long clubId,
+                                                 @Authenticated JwtUser jwtUser,
+                                                 UriComponentsBuilder uriBuilder) {
 
-        String inviteCode = inviteService.createAndGetInviteLink(clubId, jwtUser.id());
+        String inviteCode = inviteService.createInviteCode(clubId, jwtUser.id());
 
-        String inviteLink = INVITE_LINK_PREFIX + inviteCode;
+        URI location = uriBuilder
+                .path("/api/v1/clubs/{clubId}/invite/{inviteCode}")
+                .buildAndExpand(clubId, inviteCode)
+                .toUri();
 
-        return ResponseEntity.ok(new InviteCreateAndGetResponse(inviteLink));
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/{clubId}/invite")
@@ -39,7 +46,7 @@ public class InviteController {
         InviteGetInfo vo = inviteService.getInviteLink(clubId, userId);
 
         String inviteLink = INVITE_LINK_PREFIX + vo.inviteCode();
-        Boolean expired = vo.isExpired();
+        boolean expired = vo.isExpired();
 
         return ResponseEntity.ok(new InviteGetResponse(inviteLink, expired));
     }
