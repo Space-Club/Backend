@@ -5,6 +5,7 @@ import com.spaceclub.club.controller.EventUpdateConverter;
 import com.spaceclub.event.controller.dto.EventCreateResponse;
 import com.spaceclub.event.controller.dto.EventDetailGetResponse;
 import com.spaceclub.event.controller.dto.EventOverviewGetResponse;
+import com.spaceclub.event.controller.dto.EventSearchOverviewGetResponse;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.service.EventService;
@@ -97,13 +98,13 @@ public class EventController {
     }
 
     @GetMapping("/searches")
-    public ResponseEntity<PageResponse<EventOverviewGetResponse, Event>> search(
+    public ResponseEntity<PageResponse<EventSearchOverviewGetResponse, Event>> search(
             @RequestParam String keyword,
             Pageable pageable
     ) {
         Page<Event> events = eventService.search(keyword, pageable);
 
-        List<EventOverviewGetResponse> responses = events.getContent().stream().map(EventOverviewGetResponse::from).toList();
+        List<EventSearchOverviewGetResponse> responses = events.getContent().stream().map(EventSearchOverviewGetResponse::from).toList();
 
         return ResponseEntity.ok(new PageResponse<>(responses, events));
     }
