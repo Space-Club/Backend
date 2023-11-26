@@ -43,7 +43,7 @@ public record RecruitmentEventCreateRequest(
             String content,
             String activityArea,
             String recruitmentTarget,
-            int capacity
+            Integer capacity
     ) {
 
         public EventInfo toEntity() {

@@ -29,8 +29,8 @@ public record ShowEventCreateRequest(
     }
 
     public record TicketInfoRequest(
-            int cost,
-            int maxTicketCount
+            Integer cost,
+            Integer maxTicketCount
     ) {
 
         public TicketInfo toEntity() {
@@ -78,7 +78,7 @@ public record ShowEventCreateRequest(
             LocalDate startDate,
             LocalTime startTime,
             String location,
-            int capacity
+            Integer capacity
     ) {
 
         public EventInfo toEntity() {

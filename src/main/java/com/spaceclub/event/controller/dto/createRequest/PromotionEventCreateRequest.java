@@ -44,7 +44,7 @@ public record PromotionEventCreateRequest(
             LocalDate startDate,
             LocalTime startTime,
             String location,
-            int capacity
+            Integer capacity
     ) {
 
         public EventInfo toEntity() {
