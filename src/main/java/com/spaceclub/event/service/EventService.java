@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import static com.spaceclub.club.ClubExceptionMessage.CLUB_NOT_FOUND;
 import static com.spaceclub.event.EventExceptionMessage.EVENT_CATEGORY_NOT_ALLOWED;
+import static com.spaceclub.event.EventExceptionMessage.INVALID_POSTER_IMAGE;
 import static com.spaceclub.event.domain.EventCategory.CLUB;
 
 @Service
@@ -47,6 +48,10 @@ public class EventService implements EventProvider {
     public Long create(EventCreateInfo createInfo) {
         MultipartFile posterImage = createInfo.posterImage();
         Event event = createInfo.event();
+
+        if (event.getCategory() != CLUB && posterImage == null) {
+            throw new IllegalStateException(INVALID_POSTER_IMAGE.toString());
+        }
 
         if (posterImage != null) {
             String posterImageName = imageUploader.uploadPosterImage(posterImage);

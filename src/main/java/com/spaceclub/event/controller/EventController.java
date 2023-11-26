@@ -40,7 +40,7 @@ public class EventController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<EventCreateResponse> create(
-            @RequestPart MultipartFile posterImage,
+            @RequestPart(required = false) MultipartFile posterImage,
             @RequestPart String request,
             @RequestPart String category,
             @Authenticated JwtUser jwtUser
@@ -62,7 +62,7 @@ public class EventController {
     }
 
     @GetMapping
-    public ResponseEntity<PageResponse<EventOverviewGetResponse, Event>> getAll(@RequestParam(required = false) EventCategory category, @RequestParam(required = false) Boolean isEnded, Pageable pageable) {
+    public ResponseEntity<PageResponse<EventOverviewGetResponse, Event>> getAll(@RequestParam EventCategory category, @RequestParam(required = false) Boolean isEnded, Pageable pageable) {
         Page<Event> events = eventService.getAll(category, pageable);
 
         List<EventOverviewGetResponse> responses = events.getContent()
