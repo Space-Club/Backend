@@ -16,10 +16,12 @@ import static com.spaceclub.user.UserExceptionMessage.USER_NOT_FOUND;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserProvider {
 
     private final UserRepository userRepository;
+
     private final S3ImageUploader imageUploader;
+
     private final S3BucketUrl s3BucketUrl;
 
     @Transactional
@@ -37,6 +39,7 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Override
     public UserProfile getProfile(Long userId) {
         User user = getUser(userId);
 

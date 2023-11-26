@@ -67,6 +67,9 @@ public class Event extends BaseTimeEntity {
     private Club club;
 
     @Getter
+    private Long userId;
+
+    @Getter
     @OneToMany(mappedBy = "event", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<EventUser> eventUsers = new ArrayList<>();
 
@@ -85,6 +88,7 @@ public class Event extends BaseTimeEntity {
             FormInfo formInfo,
             Club club,
             Form form,
+            Long userId,
             LocalDateTime createdAt
     ) {
         if (category == null) throw new IllegalArgumentException(INVALID_EVENT_CATEGORY.toString());
@@ -96,6 +100,7 @@ public class Event extends BaseTimeEntity {
         this.formInfo = formInfo;
         this.club = club;
         this.form = form;
+        this.userId = userId;
         this.createdAt = createdAt;
     }
 
@@ -109,12 +114,14 @@ public class Event extends BaseTimeEntity {
                 .formInfo(this.formInfo)
                 .club(this.club)
                 .form(this.form)
+                .userId(this.userId)
                 .createdAt(this.createdAt);
     }
 
-    public Event registerClub(Club club) {
+    public Event registerClubAndUser(Club club, Long userId) {
         return event()
                 .club(club)
+                .userId(userId)
                 .build();
     }
 

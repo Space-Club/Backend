@@ -2,7 +2,7 @@ package com.spaceclub.club.service;
 
 import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.event.service.EventProvider;
-import com.spaceclub.event.service.vo.EventGetInfo;
+import com.spaceclub.event.service.vo.ClubEventOverviewGetInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +20,7 @@ public class ClubEventService {
 
     private final ClubUserRepository clubUserRepository;
 
-    public Page<EventGetInfo> getClubEvents(Long clubId, Pageable pageable, Long userId) {
+    public Page<ClubEventOverviewGetInfo> getClubEvents(Long clubId, Pageable pageable, Long userId) {
         checkClubMember(clubId, userId);
 
         return eventProvider.getByClubId(clubId, pageable);

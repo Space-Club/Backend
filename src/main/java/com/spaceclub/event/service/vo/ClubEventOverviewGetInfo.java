@@ -2,11 +2,12 @@ package com.spaceclub.event.service.vo;
 
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
+import com.spaceclub.user.service.vo.UserProfile;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public record EventGetInfo(
+public record ClubEventOverviewGetInfo(
         Long id,
         String title,
         String posterImageUrl,
@@ -15,13 +16,15 @@ public record EventGetInfo(
         LocalDate endDate,
         LocalTime endTime,
         String location,
+        String openStatus,
         String clubName,
         String clubLogoImageUrl,
-        String openStatus
+        String managerName,
+        String managerProfileImageUrl
 ) {
 
-    public static EventGetInfo from(Event event) {
-        return new EventGetInfo(
+    public static ClubEventOverviewGetInfo from(Event event, UserProfile userProfile) {
+        return new ClubEventOverviewGetInfo(
                 event.getId(),
                 event.getTitle(),
                 event.getPosterImageUrl(),
@@ -30,9 +33,11 @@ public record EventGetInfo(
                 event.getEndDate(),
                 event.getEndTime(),
                 event.getLocation(),
+                event.getCategory().equals(EventCategory.CLUB) ? "CLUB" : "ALL",
                 event.getClubName(),
                 event.getClubLogoImageUrl(),
-                event.getCategory().equals(EventCategory.CLUB) ? "CLUB" : "ALL"
+                userProfile.username(),
+                userProfile.profileImageUrl()
         );
     }
 
