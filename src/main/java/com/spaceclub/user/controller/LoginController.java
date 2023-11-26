@@ -7,6 +7,7 @@ import com.spaceclub.user.controller.dto.UserCodeRequest;
 import com.spaceclub.user.controller.dto.UserLoginResponse;
 import com.spaceclub.user.controller.dto.UserRequiredInfoRequest;
 import com.spaceclub.user.service.AccountService;
+import com.spaceclub.user.service.UserService;
 import com.spaceclub.user.service.vo.UserLoginInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,9 +30,11 @@ public class LoginController {
 
     private final AccountService accountService;
     private final ClubProvider clubProvider;
+    private final UserService userService;
 
     @PostMapping
     public ResponseEntity<UserLoginResponse> createAccount(@RequestBody UserRequiredInfoRequest request) {
+        userService.updateRequiredProfile(request.userId(), request.toRequiredProfile());
         UserLoginInfo userLoginInfo = accountService.createAccount(request.userId());
         UserLoginResponse response = UserLoginResponse.from(userLoginInfo);
 
