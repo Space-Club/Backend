@@ -12,4 +12,6 @@ public interface InviteRepository extends JpaRepository<Invite, Long> {
 
     Optional<Invite> findByCode(String code);
 
+    Optional<Invite> findByClub_Id(Long clubId);
+
 }
