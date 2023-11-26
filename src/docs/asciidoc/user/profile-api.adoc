@@ -34,6 +34,9 @@ include::{snippet}/user/changeUserProfile/request-fields.adoc[]
 
 ==== Response
 include::{snippet}/user/changeUserProfile/http-response.adoc[]
+
+===== Response Body
+include::{snippet}/user/changeUserProfile/response-fields.adoc[]
 :sectnums:
 
 

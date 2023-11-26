@@ -2,12 +2,16 @@ package com.spaceclub.user.controller;
 
 import com.spaceclub.global.Authenticated;
 import com.spaceclub.global.jwt.vo.JwtUser;
+import com.spaceclub.user.controller.dto.UserLoginResponse;
 import com.spaceclub.user.controller.dto.UserProfileResponse;
 import com.spaceclub.user.controller.dto.UserProfileUpdateRequest;
+import com.spaceclub.user.service.AccountService;
 import com.spaceclub.user.service.UserService;
 import com.spaceclub.user.service.vo.RequiredProfile;
+import com.spaceclub.user.service.vo.UserLoginInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -26,6 +30,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 public class UserController {
 
     private final UserService userService;
+    private final AccountService accountService;
 
     @GetMapping
     public UserProfileResponse getProfile(@Authenticated JwtUser jwtUser) {
@@ -33,11 +38,12 @@ public class UserController {
     }
 
     @PutMapping
-    @ResponseStatus(NO_CONTENT)
-    public void updateProfile(@RequestBody UserProfileUpdateRequest request, @Authenticated JwtUser jwtUser) {
+    public ResponseEntity<UserLoginResponse> updateProfile(@RequestBody UserProfileUpdateRequest request, @Authenticated JwtUser jwtUser) {
         RequiredProfile requiredProfile = new RequiredProfile(request.name(), request.phoneNumber());
-
         userService.updateRequiredProfile(jwtUser.id(), requiredProfile);
+        UserLoginInfo accountInfo = accountService.createAccount(jwtUser.id());
+
+        return ResponseEntity.ok(UserLoginResponse.from(accountInfo));
     }
 
     @PatchMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
