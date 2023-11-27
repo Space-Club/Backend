@@ -9,6 +9,7 @@ import com.spaceclub.global.jwt.vo.JwtUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +26,7 @@ public class ClubEventController {
     private final ClubEventService clubEventService;
 
     @GetMapping("/{clubId}/events")
-    public ResponseEntity<PageResponse<ClubEventOverviewGetResponse, ClubEventOverviewGetInfo>> getClubEvents(@PathVariable Long clubId, Pageable pageable, @Authenticated JwtUser jwtUser) {
+    public ResponseEntity<PageResponse<ClubEventOverviewGetResponse, ClubEventOverviewGetInfo>> getClubEvents(@PathVariable Long clubId, @PageableDefault(size = 1000) Pageable pageable, @Authenticated JwtUser jwtUser) {
         Page<ClubEventOverviewGetInfo> events = clubEventService.getClubEvents(clubId, pageable, jwtUser.id());
 
         List<ClubEventOverviewGetResponse> clubEventOverviewGetResponse = events.getContent()

@@ -16,6 +16,7 @@ import com.spaceclub.global.jwt.vo.JwtUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -62,7 +63,7 @@ public class EventController {
     }
 
     @GetMapping
-    public ResponseEntity<PageResponse<EventOverviewGetResponse, Event>> getAll(@RequestParam EventCategory category, @RequestParam(required = false) Boolean isEnded, Pageable pageable) {
+    public ResponseEntity<PageResponse<EventOverviewGetResponse, Event>> getAll(@RequestParam EventCategory category, @RequestParam(required = false) Boolean isEnded, @PageableDefault(size = 1000) Pageable pageable) {
         Page<Event> events = eventService.getAll(category, pageable);
 
         List<EventOverviewGetResponse> responses = events.getContent()
