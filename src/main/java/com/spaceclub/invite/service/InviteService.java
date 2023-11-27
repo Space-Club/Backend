@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
-import static com.spaceclub.invite.InviteExceptionMessage.INVITE_NOT_FOUND;
 import static com.spaceclub.invite.domain.Invite.INVITE_LINK_VALID_HOURS;
 
 @Service
@@ -54,8 +54,13 @@ public class InviteService {
     public InviteGetInfo getInviteLink(Long clubId, Long userId) {
         clubUserValidator.validateClubManager(clubId, userId);
 
-        Invite invite = inviteRepository.findByClub_Id(clubId)
-                .orElseThrow(() -> new IllegalArgumentException(INVITE_NOT_FOUND.toString()));
+        Optional<Invite> optionalInvite = inviteRepository.findByClub_Id(clubId);
+
+        if (optionalInvite.isEmpty()) {
+            return new InviteGetInfo(null, false);
+        }
+
+        Invite invite = optionalInvite.get();
 
         String code = invite.getCode();
         boolean expired = invite.isExpired();

@@ -45,7 +45,7 @@ public class InviteController {
         Long userId = jwtUser.id();
         InviteGetInfo vo = inviteService.getInviteLink(clubId, userId);
 
-        String inviteLink = INVITE_LINK_PREFIX + vo.inviteCode();
+        String inviteLink = vo.inviteCode() != null ? INVITE_LINK_PREFIX + vo.inviteCode() : null;
         boolean expired = vo.isExpired();
 
         return ResponseEntity.ok(new InviteGetResponse(inviteLink, expired));
