@@ -12,6 +12,7 @@ import com.spaceclub.user.service.vo.UserLoginInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -44,6 +45,12 @@ public class UserController {
         UserLoginInfo accountInfo = accountService.createAccount(jwtUser.id());
 
         return ResponseEntity.ok(UserLoginResponse.from(accountInfo));
+    }
+
+    @DeleteMapping("/images")
+    @ResponseStatus(NO_CONTENT)
+    public void removeProfileImage(@Authenticated JwtUser jwtUser) {
+        userService.removeUserProfileImage(jwtUser.id());
     }
 
     @PatchMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

@@ -58,4 +58,11 @@ public class UserService implements UserProvider {
         userRepository.save(user.changeProfileImageUrl(profileUrl));
     }
 
+    @Transactional
+    public void removeUserProfileImage(Long id) {
+        User user = getUser(id);
+
+        userRepository.save(user.removeProfileImageUrl());
+    }
+
 }
