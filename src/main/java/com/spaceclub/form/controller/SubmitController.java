@@ -24,7 +24,7 @@ public class SubmitController {
 
     private final SubmitService submitService;
 
-    @GetMapping(value = {"/{eventId}/forms/applications", "/{eventId}/forms/submit"})
+    @GetMapping(value = {"/{eventId}/forms/submit"})
     public ResponseEntity<FormSubmitGetResponse> getAll(
             @PathVariable Long eventId,
             Pageable pageable,
@@ -35,7 +35,7 @@ public class SubmitController {
         return ResponseEntity.ok(FormSubmitGetResponse.from(formSubmitGetInfo));
     }
 
-    @PatchMapping(value = {"/{eventId}/forms/applications-status", "/{eventId}/forms/submit"})
+    @PatchMapping(value = {"/{eventId}/forms/submit"})
     public ResponseEntity<Void> updateStatus(
             @PathVariable Long eventId,
             @RequestBody FormSubmitUpdateRequest request,
