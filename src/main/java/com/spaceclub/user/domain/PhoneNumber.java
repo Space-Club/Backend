@@ -9,6 +9,7 @@ import org.springframework.util.Assert;
 
 import java.util.regex.Pattern;
 
+import static com.spaceclub.user.UserExceptionMessage.INVALID_PHONE_NUMBER;
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter
@@ -35,8 +36,8 @@ public class PhoneNumber {
     }
 
     private void validatePhoneNumber(String phoneNumber) {
-        Assert.hasText(phoneNumber, "올바른 전화번호를 입력해 주세요.");
-        Assert.isTrue(VALID_PHONE_NUMBER_REGEX.matcher(phoneNumber).find(), "올바른 전화번호를 입력해 주세요.");
+        Assert.hasText(phoneNumber, INVALID_PHONE_NUMBER.toString());
+        Assert.isTrue(VALID_PHONE_NUMBER_REGEX.matcher(phoneNumber).find(), INVALID_PHONE_NUMBER.toString());
     }
 
 }

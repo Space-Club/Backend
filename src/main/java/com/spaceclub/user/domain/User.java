@@ -15,6 +15,9 @@ import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 
+import static com.spaceclub.user.UserExceptionMessage.INVALID_NAME;
+import static com.spaceclub.user.UserExceptionMessage.INVALID_PHONE_NUMBER;
+import static com.spaceclub.user.UserExceptionMessage.NULL_REQUEST;
 import static com.spaceclub.user.UserExceptionMessage.USER_CANNOT_WITHDRAW;
 import static com.spaceclub.user.domain.Status.DELETED;
 import static com.spaceclub.user.domain.Status.INACTIVE;
@@ -99,7 +102,7 @@ public class User {
             String profileImageUrl,
             LocalDateTime deletedAt
     ) {
-        Assert.notNull(status, "유저 상태는 필수입니다.");
+        Assert.notNull(status, NULL_REQUEST.toString());
         this.id = id;
         this.requiredInfo = generateRequiredInfo(name, phoneNumber);
         this.status = status;
@@ -115,8 +118,8 @@ public class User {
         if (nickname == null && phoneNumber == null) {
             return new RequiredInfo();
         }
-        Assert.hasText(nickname, "닉네임은 필수입니다.");
-        Assert.hasText(phoneNumber, "전화번호는 필수입니다.");
+        Assert.hasText(nickname, INVALID_NAME.toString());
+        Assert.hasText(phoneNumber, INVALID_PHONE_NUMBER.toString());
 
         return new RequiredInfo(nickname, new PhoneNumber(phoneNumber));
     }
@@ -157,7 +160,7 @@ public class User {
     }
 
     public User changeProfileImageUrl(String profileUrl) {
-        if (profileUrl == null) throw new IllegalArgumentException("프로필 이미지는 null이 될 수 없습니다.");
+        if (profileUrl == null) throw new IllegalArgumentException(NULL_REQUEST.toString());
 
         return new User(
                 this.id,

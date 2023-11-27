@@ -21,7 +21,7 @@ public class TicketInfo {
 
     private static final Integer COST_MIN_LENGTH = 1;
 
-    private static final Integer COST_MAX_LENGTH = 1000000;
+    private static final Integer COST_MAX_LENGTH = 1_000_000;
 
     @Getter
     private Integer maxTicketCount;

@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
+import static com.spaceclub.user.UserExceptionMessage.INVALID_NAME;
 import static lombok.AccessLevel.PROTECTED;
 
 @Embeddable
@@ -32,8 +33,8 @@ public class RequiredInfo {
     }
 
     private void validate(String name) {
-        Assert.hasText(name, "이름을 입력해 주세요.");
-        Assert.isTrue(isValidRange(name.trim()), "이름은 2자 이상 10자 이하로 입력해 주세요.");
+        Assert.hasText(name, INVALID_NAME.toString());
+        Assert.isTrue(isValidRange(name.trim()), INVALID_NAME.toString());
     }
 
     private boolean isValidRange(String name) {

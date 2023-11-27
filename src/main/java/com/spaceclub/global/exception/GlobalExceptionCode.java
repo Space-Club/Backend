@@ -13,7 +13,9 @@ public enum GlobalExceptionCode implements ExceptionMessageInterface {
     INVALID_ACCESS_TOKEN("유효하지 않은 엑세스 토큰입니다"),
     INVALID_REFRESH_TOKEN("유효하지 않은 리프레시 토큰입니다"),
     INVALID_FILE_EXTENSION("유효한 파일 확장자가 아닙니다"),
-    FAIL_FILE_UPLOAD("파일 업로드에 실패했습니다.");
+    FAIL_FILE_UPLOAD("파일 업로드에 실패했습니다."),
+    MAX_IMAGE_SIZE_EXCEEDED("이미지의 최대 크기를 초과했습니다"),
+    INVALID_REQUEST("HTTP 요청(메서드)이 잘못되었습니다");
 
     private final String message;
 
