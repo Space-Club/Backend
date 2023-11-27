@@ -120,6 +120,7 @@ public class EventTestFixture {
                 .status(ParticipationStatus.PENDING)
                 .userId(1L)
                 .event(event1())
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 

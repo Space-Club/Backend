@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static com.spaceclub.event.domain.ParticipationStatus.CANCELED;
 import static com.spaceclub.event.domain.ParticipationStatus.CANCEL_REQUESTED;
@@ -97,6 +98,12 @@ public class EventUser extends BaseTimeEntity {
 
     public Long getEventId() {
         return event.getId();
+    }
+
+    public String getParticipationDateTime() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        return createdAt.format(formatter);
     }
 
 }
