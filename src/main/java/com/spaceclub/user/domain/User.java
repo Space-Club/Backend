@@ -241,7 +241,7 @@ public class User {
     }
 
     public boolean isDeleted(LocalDateTime now) {
-        if (now == null) {
+        if (deletedAt == null) {
             return false;
         }
 
