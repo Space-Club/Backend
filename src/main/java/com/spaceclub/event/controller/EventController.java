@@ -11,7 +11,7 @@ import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.service.EventService;
 import com.spaceclub.event.service.vo.EventCreateInfo;
 import com.spaceclub.global.Authenticated;
-import com.spaceclub.global.config.s3.properties.S3Properties;
+import com.spaceclub.global.config.s3.S3Properties;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.vo.JwtUser;
 import lombok.RequiredArgsConstructor;

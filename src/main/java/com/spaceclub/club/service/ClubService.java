@@ -7,7 +7,7 @@ import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.club.service.vo.ClubInfo;
 import com.spaceclub.global.config.s3.S3Folder;
 import com.spaceclub.global.config.s3.S3ImageUploader;
-import com.spaceclub.global.config.s3.properties.S3Properties;
+import com.spaceclub.global.config.s3.S3Properties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,4 +1,4 @@
-package com.spaceclub.global.config.s3.properties;
+package com.spaceclub.global.config.s3;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

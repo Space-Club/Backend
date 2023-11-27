@@ -8,7 +8,7 @@ import com.spaceclub.event.service.vo.EventPageInfo;
 import com.spaceclub.event.service.vo.EventParticipationCreateInfo;
 import com.spaceclub.form.domain.FormAnswer;
 import com.spaceclub.form.service.FormOptionProvider;
-import com.spaceclub.global.config.s3.properties.S3Properties;
+import com.spaceclub.global.config.s3.S3Properties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

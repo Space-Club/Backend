@@ -12,7 +12,7 @@ import com.spaceclub.event.service.vo.EventCreateInfo;
 import com.spaceclub.event.service.vo.UserBookmarkedEventGetInfo;
 import com.spaceclub.global.config.s3.S3Folder;
 import com.spaceclub.global.config.s3.S3ImageUploader;
-import com.spaceclub.global.config.s3.properties.S3Properties;
+import com.spaceclub.global.config.s3.S3Properties;
 import com.spaceclub.user.service.UserProvider;
 import com.spaceclub.user.service.vo.UserProfile;
 import lombok.RequiredArgsConstructor;

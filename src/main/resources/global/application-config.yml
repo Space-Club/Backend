@@ -1,0 +1,18 @@
+interceptor:
+  token-prefix: "Bearer "
+
+  path-to-exclude:
+    - path: /api/v1/users
+      method: POST
+
+    - path: /api/v1/clubs/invites/
+      method: GET
+
+    - path: /api/v1/events
+      method: GET
+
+    - path: /api/v1/events/searches
+      method: GET
+
+    - path: /api/v1/users/oauth
+      method: POST

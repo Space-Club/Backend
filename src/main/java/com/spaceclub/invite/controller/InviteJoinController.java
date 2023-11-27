@@ -3,7 +3,7 @@ package com.spaceclub.invite.controller;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.service.ClubMemberManagerService;
 import com.spaceclub.global.Authenticated;
-import com.spaceclub.global.config.s3.properties.S3Properties;
+import com.spaceclub.global.config.s3.S3Properties;
 import com.spaceclub.global.jwt.vo.JwtUser;
 import com.spaceclub.invite.controller.dto.ClubRequestToJoinResponse;
 import com.spaceclub.invite.controller.dto.JoinClubResponse;
