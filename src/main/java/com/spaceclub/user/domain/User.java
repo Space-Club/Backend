@@ -241,6 +241,10 @@ public class User {
     }
 
     public boolean isDeleted(LocalDateTime now) {
+        if (now == null) {
+            return false;
+        }
+
         return this.status.equals(DELETED) || !this.deletedAt.plusDays(GRACE_DAYS_OF_DELETION).isAfter(now);
     }
 
