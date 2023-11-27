@@ -5,17 +5,18 @@ import com.spaceclub.event.domain.Event;
 import lombok.Builder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record EventDetailGetResponse(
         Long id,
-        Long clubId,
         String category,
         EventInfo eventInfo,
         FormInfo formInfo,
         TicketInfo ticketInfo,
-        BankInfo bankInfo
+        BankInfo bankInfo,
+        ClubInfo clubInfo
 ) {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -26,6 +27,7 @@ public record EventDetailGetResponse(
             LocalTime startTime,
             LocalDate endDate,
             LocalTime endTime,
+            boolean isEnded,
             Integer dues,
             String location,
             int applicants,
@@ -56,7 +58,8 @@ public record EventDetailGetResponse(
             LocalDate formOpenDate,
             LocalTime formOpenTime,
             LocalDate formCloseDate,
-            LocalTime formCloseTime
+            LocalTime formCloseTime,
+            Boolean isAbleToApply
     ) {
 
         @Builder
@@ -76,14 +79,32 @@ public record EventDetailGetResponse(
 
     }
 
+    private record ClubInfo(
+            Long clubId,
+            String clubName
+    ) {
+
+        @Builder
+        private ClubInfo {
+        }
+
+    }
+
+
     @Builder
     public EventDetailGetResponse {
     }
 
     public static EventDetailGetResponse withShow(Event event, int applicants) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime formOpenDateTime = event.getFormOpenDateTime();
+        LocalDateTime formCloseDateTime = event.getFormCloseDateTime();
+
+        boolean isAbleToApply = formOpenDateTime.isBefore(now)
+                && formCloseDateTime.isAfter(now);
+
         return EventDetailGetResponse.builder()
                 .id(event.getId())
-                .clubId(event.getClubId())
                 .category(event.getCategory().toString())
                 .eventInfo(
                         EventInfo.builder()
@@ -91,6 +112,7 @@ public record EventDetailGetResponse(
                                 .content(event.getContent())
                                 .startDate(event.getStartDate())
                                 .startTime(event.getStartTime())
+                                .isEnded(event.isEventEnded())
                                 .location(event.getLocation())
                                 .applicants(applicants)
                                 .capacity(event.getCapacity())
@@ -109,6 +131,7 @@ public record EventDetailGetResponse(
                                 .formOpenTime(event.getFormOpenTime())
                                 .formCloseDate(event.getFormCloseDate())
                                 .formCloseTime(event.getFormCloseTime())
+                                .isAbleToApply(isAbleToApply)
                                 .build()
                 )
                 .bankInfo(BankInfo.builder()
@@ -116,13 +139,23 @@ public record EventDetailGetResponse(
                         .bankAccountNumber(event.getBankAccountNumber())
                         .build()
                 )
+                .clubInfo(ClubInfo.builder()
+                        .clubId(event.getClubId())
+                        .clubName(event.getClubName())
+                        .build()
+                )
                 .build();
     }
 
     public static EventDetailGetResponse withClub(Event event, int applicants) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime formOpenDateTime = event.getFormOpenDateTime();
+        LocalDateTime formCloseDateTime = event.getFormCloseDateTime();
+        Boolean isAbleToApply = formOpenDateTime.isBefore(now)
+                && formCloseDateTime.isAfter(now);
+
         return EventDetailGetResponse.builder()
                 .id(event.getId())
-                .clubId(event.getClubId())
                 .category(event.getCategory().toString())
                 .eventInfo(
                         EventInfo.builder()
@@ -132,6 +165,7 @@ public record EventDetailGetResponse(
                                 .startTime(event.getStartTime())
                                 .endDate(event.getEndDate() == null ? LocalDate.EPOCH : event.getEndDate())
                                 .endTime(event.getEndTime() == null ? LocalTime.MIN : event.getEndTime())
+                                .isEnded(event.isEventEnded())
                                 .dues(event.getDues())
                                 .location(event.getLocation())
                                 .applicants(applicants)
@@ -145,15 +179,26 @@ public record EventDetailGetResponse(
                                 .formOpenTime(event.getFormOpenTime())
                                 .formCloseDate(event.getFormCloseDate())
                                 .formCloseTime(event.getFormCloseTime())
+                                .isAbleToApply(isAbleToApply)
                                 .build()
+                )
+                .clubInfo(ClubInfo.builder()
+                        .clubId(event.getClubId())
+                        .clubName(event.getClubName())
+                        .build()
                 )
                 .build();
     }
 
     public static EventDetailGetResponse withPromotion(Event event, int applicants) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime formOpenDateTime = event.getFormOpenDateTime();
+        LocalDateTime formCloseDateTime = event.getFormCloseDateTime();
+        Boolean isAbleToApply = formOpenDateTime.isBefore(now)
+                && formCloseDateTime.isAfter(now);
+
         return EventDetailGetResponse.builder()
                 .id(event.getId())
-                .clubId(event.getClubId())
                 .category(event.getCategory().toString())
                 .eventInfo(
                         EventInfo.builder()
@@ -161,6 +206,7 @@ public record EventDetailGetResponse(
                                 .content(event.getContent())
                                 .startDate(event.getStartDate())
                                 .startTime(event.getStartTime())
+                                .isEnded(event.isEventEnded())
                                 .applicants(applicants)
                                 .capacity(event.getCapacity())
                                 .posterImageUrl(event.getPosterImageUrl())
@@ -173,15 +219,26 @@ public record EventDetailGetResponse(
                                 .formOpenTime(event.getFormOpenTime())
                                 .formCloseDate(event.getFormCloseDate())
                                 .formCloseTime(event.getFormCloseTime())
+                                .isAbleToApply(isAbleToApply)
                                 .build()
+                )
+                .clubInfo(ClubInfo.builder()
+                        .clubId(event.getClubId())
+                        .clubName(event.getClubName())
+                        .build()
                 )
                 .build();
     }
 
     public static EventDetailGetResponse withRecruitment(Event event, int applicants) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime formOpenDateTime = event.getFormOpenDateTime();
+        LocalDateTime formCloseDateTime = event.getFormCloseDateTime();
+        Boolean isAbleToApply = formOpenDateTime.isBefore(now)
+                && formCloseDateTime.isAfter(now);
+
         return EventDetailGetResponse.builder()
                 .id(event.getId())
-                .clubId(event.getClubId())
                 .category(event.getCategory().toString())
                 .eventInfo(
                         EventInfo.builder()
@@ -189,6 +246,7 @@ public record EventDetailGetResponse(
                                 .content(event.getContent())
                                 .startDate(event.getStartDate())
                                 .startTime(event.getStartTime())
+                                .isEnded(event.isEventEnded())
                                 .location(event.getLocation())
                                 .applicants(applicants)
                                 .capacity(event.getCapacity())
@@ -202,7 +260,13 @@ public record EventDetailGetResponse(
                                 .formOpenTime(event.getFormOpenTime())
                                 .formCloseDate(event.getFormCloseDate())
                                 .formCloseTime(event.getFormCloseTime())
+                                .isAbleToApply(isAbleToApply)
                                 .build()
+                )
+                .clubInfo(ClubInfo.builder()
+                        .clubId(event.getClubId())
+                        .clubName(event.getClubName())
+                        .build()
                 )
                 .build();
     }
