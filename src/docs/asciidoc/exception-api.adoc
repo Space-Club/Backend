@@ -151,4 +151,10 @@
 |`+INVALID_REFRESH_TOKEN+`
 |유효하지 않은 리프레시 토큰입니다
 
+|`+INVALID_FILE_EXTENSION+`
+|유효한 파일 확장자가 아닙니다
+
+|`+FAIL_FILE_UPLOAD+`
+|파일 업로드에 실패했습니다
+
 |====
