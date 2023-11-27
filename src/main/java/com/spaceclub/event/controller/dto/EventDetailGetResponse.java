@@ -95,7 +95,7 @@ public record EventDetailGetResponse(
     public EventDetailGetResponse {
     }
 
-    public static EventDetailGetResponse withShow(Event event, int applicants) {
+    public static EventDetailGetResponse withShow(Event event, int applicants, String bucketUrl) {
         return EventDetailGetResponse.builder()
                 .id(event.getId())
                 .category(event.getCategory().toString())
@@ -110,7 +110,7 @@ public record EventDetailGetResponse(
                                 .location(event.getLocation())
                                 .applicants(applicants)
                                 .capacity(event.getCapacity())
-                                .posterImageUrl(event.getPosterImageUrl())
+                                .posterImageUrl(event.getPosterImageName() != null ? bucketUrl + event.getPosterImageName() : null)
                                 .build()
                 )
                 .ticketInfo(
@@ -141,7 +141,7 @@ public record EventDetailGetResponse(
                 .build();
     }
 
-    public static EventDetailGetResponse withClub(Event event, int applicants) {
+    public static EventDetailGetResponse withClub(Event event, int applicants, String bucketUrl) {
         return EventDetailGetResponse.builder()
                 .id(event.getId())
                 .category(event.getCategory().toString())
@@ -159,7 +159,7 @@ public record EventDetailGetResponse(
                                 .location(event.getLocation())
                                 .applicants(applicants)
                                 .capacity(event.getCapacity())
-                                .posterImageUrl(event.getPosterImageUrl())
+                                .posterImageUrl(event.getPosterImageName() != null ? bucketUrl + event.getPosterImageName() : null)
                                 .build()
                 )
                 .formInfo(
@@ -179,7 +179,7 @@ public record EventDetailGetResponse(
                 .build();
     }
 
-    public static EventDetailGetResponse withPromotion(Event event, int applicants) {
+    public static EventDetailGetResponse withPromotion(Event event, int applicants, String bucketUrl) {
         return EventDetailGetResponse.builder()
                 .id(event.getId())
                 .category(event.getCategory().toString())
@@ -193,7 +193,7 @@ public record EventDetailGetResponse(
                                 .isEnded(event.isEventEnded())
                                 .applicants(applicants)
                                 .capacity(event.getCapacity())
-                                .posterImageUrl(event.getPosterImageUrl())
+                                .posterImageUrl(event.getPosterImageName() != null ? bucketUrl + event.getPosterImageName() : null)
                                 .activityArea(event.getActivityArea())
                                 .build()
                 )
@@ -214,7 +214,7 @@ public record EventDetailGetResponse(
                 .build();
     }
 
-    public static EventDetailGetResponse withRecruitment(Event event, int applicants) {
+    public static EventDetailGetResponse withRecruitment(Event event, int applicants, String bucketUrl) {
         return EventDetailGetResponse.builder()
                 .id(event.getId())
                 .category(event.getCategory().toString())
@@ -229,7 +229,7 @@ public record EventDetailGetResponse(
                                 .location(event.getLocation())
                                 .applicants(applicants)
                                 .capacity(event.getCapacity())
-                                .posterImageUrl(event.getPosterImageUrl())
+                                .posterImageUrl(event.getPosterImageName() != null ? bucketUrl + event.getPosterImageName() : null)
                                 .recruitmentTarget(event.getRecruitmentTarget())
                                 .build()
                 )

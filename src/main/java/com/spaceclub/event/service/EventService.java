@@ -10,7 +10,9 @@ import com.spaceclub.event.repository.EventUserRepository;
 import com.spaceclub.event.service.vo.ClubEventOverviewGetInfo;
 import com.spaceclub.event.service.vo.EventCreateInfo;
 import com.spaceclub.event.service.vo.UserBookmarkedEventGetInfo;
+import com.spaceclub.global.config.s3.S3Folder;
 import com.spaceclub.global.config.s3.S3ImageUploader;
+import com.spaceclub.global.config.s3.properties.S3Properties;
 import com.spaceclub.user.service.UserProvider;
 import com.spaceclub.user.service.vo.UserProfile;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +46,8 @@ public class EventService implements EventProvider {
 
     private final S3ImageUploader imageUploader;
 
+    private final S3Properties s3Properties;
+
     @Transactional
     public Long create(EventCreateInfo createInfo) {
         MultipartFile posterImage = createInfo.posterImage();
@@ -54,7 +58,7 @@ public class EventService implements EventProvider {
         }
 
         if (posterImage != null) {
-            String posterImageName = imageUploader.uploadPosterImage(posterImage);
+            String posterImageName = imageUploader.upload(posterImage, S3Folder.EVENT_POSTER);
             event = event.registerPosterImage(posterImageName);
         }
 
@@ -78,7 +82,7 @@ public class EventService implements EventProvider {
     }
 
     private Event processPosterImage(Event originalEvent, Event existEvent, MultipartFile posterImage) {
-        String posterImageName = (posterImage != null) ? imageUploader.uploadPosterImage(posterImage) : existEvent.getPosterImageName();
+        String posterImageName = (posterImage != null) ? imageUploader.upload(posterImage, S3Folder.EVENT_POSTER) : existEvent.getPosterImageName();
         Event updatedEvent = originalEvent.registerPosterImage(posterImageName);
         return existEvent.update(updatedEvent);
     }
@@ -117,7 +121,7 @@ public class EventService implements EventProvider {
 
         return events.map(event -> {
             UserProfile profile = userProvider.getProfile(event.getUserId());
-            return ClubEventOverviewGetInfo.from(event, profile);
+            return ClubEventOverviewGetInfo.from(event, profile, s3Properties.url());
         });
     }
 
@@ -125,7 +129,7 @@ public class EventService implements EventProvider {
     public Page<UserBookmarkedEventGetInfo> findAllBookmarkedEventPages(Long userId, Pageable pageable) {
         Page<Event> events = eventRepository.findAllBookmarkedEventPages(userId, pageable);
 
-        return events.map(UserBookmarkedEventGetInfo::from);
+        return events.map(event -> UserBookmarkedEventGetInfo.from(event, s3Properties.url()));
     }
 
     public int countApplicants(Long eventId) {

@@ -15,13 +15,13 @@ public record ClubRequestToJoinResponse(
     public ClubRequestToJoinResponse {
     }
 
-    public static ClubRequestToJoinResponse from(Club club, Long memberCount) {
+    public static ClubRequestToJoinResponse from(Club club, Long memberCount, String bucketUrl) {
         return ClubRequestToJoinResponse.builder()
                 .clubId(club.getId())
                 .name(club.getName())
                 .info(club.getInfo())
                 .memberCount(memberCount)
-                .logoImageUrl(club.getLogoImageUrl())
+                .logoImageUrl(bucketUrl + club.getLogoImageName())
                 .build();
     }
 

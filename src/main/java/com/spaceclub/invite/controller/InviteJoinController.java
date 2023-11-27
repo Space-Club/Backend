@@ -3,6 +3,7 @@ package com.spaceclub.invite.controller;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.service.ClubMemberManagerService;
 import com.spaceclub.global.Authenticated;
+import com.spaceclub.global.config.s3.properties.S3Properties;
 import com.spaceclub.global.jwt.vo.JwtUser;
 import com.spaceclub.invite.controller.dto.ClubRequestToJoinResponse;
 import com.spaceclub.invite.controller.dto.JoinClubResponse;
@@ -24,6 +25,8 @@ public class InviteJoinController {
 
     private final ClubMemberManagerService clubMemberManagerService;
 
+    private final S3Properties s3Properties;
+
     @PostMapping("/{code}")
     public ResponseEntity<JoinClubResponse> joinClub(@PathVariable String code, @Authenticated JwtUser jwtUser) {
 
@@ -40,7 +43,7 @@ public class InviteJoinController {
 
         Long memberCount = clubMemberManagerService.countMember(club);
 
-        ClubRequestToJoinResponse response = ClubRequestToJoinResponse.from(club, memberCount);
+        ClubRequestToJoinResponse response = ClubRequestToJoinResponse.from(club, memberCount, s3Properties.url());
 
         return ResponseEntity.ok(response);
     }

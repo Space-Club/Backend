@@ -6,6 +6,7 @@ import com.spaceclub.club.controller.dto.ClubUpdateRequest;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.service.ClubService;
 import com.spaceclub.global.Authenticated;
+import com.spaceclub.global.config.s3.properties.S3Properties;
 import com.spaceclub.global.jwt.vo.JwtUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -30,6 +31,8 @@ public class ClubController {
 
     private final ClubService clubService;
 
+    private final S3Properties properties;
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> createClub(@RequestPart(value = "request") ClubCreateRequest request,
                                              @RequestPart(value = "logoImage", required = false) MultipartFile logoImage,
@@ -52,7 +55,7 @@ public class ClubController {
     public ResponseEntity<ClubGetResponse> getClub(@PathVariable Long clubId, @Authenticated JwtUser jwtUser) {
         Club club = clubService.getClub(clubId, jwtUser.id());
 
-        ClubGetResponse response = ClubGetResponse.from(club);
+        ClubGetResponse response = ClubGetResponse.from(club, properties.url());
 
         return ResponseEntity.ok(response);
     }

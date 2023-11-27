@@ -13,13 +13,13 @@ public record UserBookmarkedEventGetInfo(
         LocalDate startDate
 ) {
 
-    public static UserBookmarkedEventGetInfo from(Event event) {
+    public static UserBookmarkedEventGetInfo from(Event event, String bucketUrl) {
         return new UserBookmarkedEventGetInfo(
                 event.getId(),
                 event.getTitle(),
                 event.getLocation(),
                 event.getClubName(),
-                event.getPosterImageUrl(),
+                event.getPosterImageName() != null ? bucketUrl + event.getPosterImageName() : null,
                 event.getStartDate()
         );
     }

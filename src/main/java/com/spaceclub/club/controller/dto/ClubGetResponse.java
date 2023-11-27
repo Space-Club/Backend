@@ -15,13 +15,13 @@ public record ClubGetResponse(
     public ClubGetResponse {
     }
 
-    public static ClubGetResponse from(Club club) {
+    public static ClubGetResponse from(Club club, String bucketUrl) {
         return ClubGetResponse.builder()
                 .name(club.getName())
-                .logoImageUrl(club.getLogoImageUrl())
+                .logoImageUrl(club.getLogoImageName() != null ? bucketUrl + club.getLogoImageName() : null)
                 .info(club.getInfo())
                 .memberCount(club.getClubUser().size())
-                .coverImageUrl(club.getCoverImageUrl())
+                .coverImageUrl(club.getCoverImageName() != null ? bucketUrl + club.getCoverImageName() : null)
                 .build();
     }
 

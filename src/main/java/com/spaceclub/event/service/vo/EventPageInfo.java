@@ -16,13 +16,13 @@ public record EventPageInfo(
         ParticipationStatus participationStatus
 ) {
 
-    public static EventPageInfo from(Event event, EventUser eventUser) {
+    public static EventPageInfo from(Event event, EventUser eventUser, String bucketUrl) {
         return new EventPageInfo(
                 event.getId(),
                 event.getTitle(),
                 event.getLocation(),
                 event.getClubName(),
-                event.getPosterImageUrl(),
+                event.getPosterImageName() != null ? bucketUrl + event.getPosterImageName() : null,
                 event.getStartDate(),
                 eventUser.getStatus()
         );
