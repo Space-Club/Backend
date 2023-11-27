@@ -1,0 +1,332 @@
+ifndef::snippet[]
+:snippet: ../../../../build/generated-snippets
+endif::[]
+
+=== 전체 행사 조회
+:sectnums!:
+==== Request
+
+include::{snippets}/event/getAll/http-request.adoc[]
+===== Query Parameter
+
+include::{snippets}/event/getAll/query-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/event/getAll/http-response.adoc[]
+===== Response Body
+
+include::{snippets}/event/getAll/response-fields.adoc[]
+:sectnums:
+
+=== 행사 검색
+:sectnums!:
+==== Request
+
+include::{snippets}/event/search/http-request.adoc[]
+
+===== Query Parameter
+
+include::{snippets}/event/search/query-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/event/search/http-response.adoc[]
+===== Response Body
+
+include::{snippets}/event/search/response-fields.adoc[]
+
+:sectnums:
+
+=== 행사 개설 (공연)
+:sectnums!:
+==== Request
+
+include::{snippets}/event/create/show/http-request.adoc[]
+===== Request Header
+
+include::{snippets}/event/create/show/request-headers.adoc[]
+
+===== Multipart Form Data
+
+include::{snippets}/event/create/show/request-parts.adoc[]
+
+===== Request Form Data
+
+include::{snippets}/event/create/show/request-part-request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/event/create/show/http-response.adoc[]
+===== Response Body
+
+include::{snippets}/event/create/show/response-fields.adoc[]
+:sectnums:
+
+=== 행사 개설 (홍보)
+:sectnums!:
+==== Request
+
+include::{snippets}/event/create/promotion/http-request.adoc[]
+===== Request Header
+
+include::{snippets}/event/create/promotion/request-headers.adoc[]
+
+===== Multipart Form Data
+
+include::{snippets}/event/create/promotion/request-parts.adoc[]
+
+===== Request Form Data
+
+include::{snippets}/event/create/promotion/request-part-request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/event/create/promotion/http-response.adoc[]
+===== Response Body
+
+include::{snippets}/event/create/promotion/response-fields.adoc[]
+:sectnums:
+
+=== 행사 개설 (모집 공고)
+:sectnums!:
+==== Request
+
+include::{snippets}/event/create/recruitment/http-request.adoc[]
+===== Request Header
+
+include::{snippets}/event/create/recruitment/request-headers.adoc[]
+
+===== Multipart Form Data
+
+include::{snippets}/event/create/recruitment/request-parts.adoc[]
+
+===== Request Form Data
+
+include::{snippets}/event/create/recruitment/request-part-request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/event/create/recruitment/http-response.adoc[]
+===== Response Body
+
+include::{snippets}/event/create/recruitment/response-fields.adoc[]
+:sectnums:
+
+=== 행사 개설 (클럽 일정)
+:sectnums!:
+==== Request
+
+include::{snippets}/event/create/club/http-request.adoc[]
+===== Request Header
+
+include::{snippets}/event/create/club/request-headers.adoc[]
+
+===== Multipart Form Data
+
+include::{snippets}/event/create/club/request-parts.adoc[]
+
+===== Request Form Data
+
+include::{snippets}/event/create/club/request-part-request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/event/create/club/http-response.adoc[]
+===== Response Body
+
+include::{snippets}/event/create/club/response-fields.adoc[]
+:sectnums:
+
+=== 행사 수정 (공연)
+:sectnums!:
+==== Request
+
+include::{snippets}/event/update/show/http-request.adoc[]
+===== Request Header
+
+include::{snippets}/event/update/show/request-headers.adoc[]
+
+===== Multipart Form Data
+
+include::{snippets}/event/update/show/request-parts.adoc[]
+
+===== Request Form Data
+
+include::{snippets}/event/update/show/request-part-request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/event/update/show/http-response.adoc[]
+:sectnums:
+
+=== 행사 수정 (홍보)
+:sectnums!:
+==== Request
+
+include::{snippets}/event/update/promotion/http-request.adoc[]
+===== Request Header
+
+include::{snippets}/event/update/promotion/request-headers.adoc[]
+
+===== Multipart Form Data
+
+include::{snippets}/event/update/promotion/request-parts.adoc[]
+
+===== Request Form Data
+
+include::{snippets}/event/update/promotion/request-part-request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/event/update/promotion/http-response.adoc[]
+:sectnums:
+
+=== 행사 수정 (모집 공고)
+:sectnums!:
+==== Request
+
+include::{snippets}/event/update/recruitment/http-request.adoc[]
+===== Request Header
+
+include::{snippets}/event/update/recruitment/request-headers.adoc[]
+
+===== Multipart Form Data
+
+include::{snippets}/event/update/recruitment/request-parts.adoc[]
+
+===== Request Form Data
+
+include::{snippets}/event/update/recruitment/request-part-request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/event/update/recruitment/http-response.adoc[]
+:sectnums:
+
+=== 행사 수정 (클럽 일정)
+:sectnums!:
+==== Request
+
+include::{snippets}/event/update/club/http-request.adoc[]
+===== Request Header
+
+include::{snippets}/event/update/club/request-headers.adoc[]
+
+===== Multipart Form Data
+
+include::{snippets}/event/update/club/request-parts.adoc[]
+
+===== Request Form Data
+
+include::{snippets}/event/update/club/request-part-request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/event/update/club/http-response.adoc[]
+:sectnums:
+
+=== 행사 상세 조회 (공연)
+:sectnums!:
+==== Request
+
+include::{snippets}/event/getShowEvent/http-request.adoc[]
+===== Path Parameter
+
+include::{snippets}/event/getShowEvent/path-parameters.adoc[]
+
+===== Request Header
+
+include::{snippets}/event/getShowEvent/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/event/getShowEvent/http-response.adoc[]
+===== Response Body
+
+include::{snippets}/event/getShowEvent/response-fields.adoc[]
+:sectnums:
+
+=== 행사 상세 조회 (홍보)
+:sectnums!:
+==== Request
+
+include::{snippets}/event/getPromotionEvent/http-request.adoc[]
+===== Path Parameter
+
+include::{snippets}/event/getPromotionEvent/path-parameters.adoc[]
+
+===== Request Header
+
+include::{snippets}/event/getPromotionEvent/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/event/getPromotionEvent/http-response.adoc[]
+===== Response Body
+
+include::{snippets}/event/getPromotionEvent/response-fields.adoc[]
+:sectnums:
+
+=== 행사 상세 조회 (모집 공고)
+:sectnums!:
+
+==== Request
+
+include::{snippets}/event/getRecruitmentEvent/http-request.adoc[]
+
+===== Path Parameter
+
+include::{snippets}/event/getRecruitmentEvent/path-parameters.adoc[]
+
+===== Request Header
+
+include::{snippets}/event/getRecruitmentEvent/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/event/getRecruitmentEvent/http-response.adoc[]
+
+===== Response Body
+
+include::{snippets}/event/getRecruitmentEvent/response-fields.adoc[]
+:sectnums:
+
+=== 행사 상세 조회 (클럽 일정)
+:sectnums!:
+==== Request
+
+include::{snippets}/event/getClubEvent/http-request.adoc[]
+===== Path Parameter
+
+include::{snippets}/event/getClubEvent/path-parameters.adoc[]
+
+===== Request Header
+
+include::{snippets}/event/getClubEvent/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/event/getClubEvent/http-response.adoc[]
+===== Response Body
+
+include::{snippets}/event/getClubEvent/response-fields.adoc[]
+:sectnums:
+
+=== 행사 삭제
+:sectnums!:
+==== Request
+
+include::{snippets}/event/delete/http-request.adoc[]
+===== Path Parameter
+
+include::{snippets}/event/delete/path-parameters.adoc[]
+
+===== Request Header
+
+include::{snippets}/event/delete/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/event/delete/http-response.adoc[]
+:sectnums:

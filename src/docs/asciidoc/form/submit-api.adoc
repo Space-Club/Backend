@@ -1,0 +1,54 @@
+ifndef::snippet[]
+:snippet: ../../../../build/generated-snippets
+endif::[]
+
+
+=== 행사의 신청된 폼 조회하기
+:sectnums!:
+==== Request
+
+include::{snippets}/form/getAllSubmit/http-request.adoc[]
+
+=====  Request Header
+
+include::{snippets}/form/getAllSubmit/request-headers.adoc[]
+
+===== Path Parameter
+
+include::{snippets}/form/getAllSubmit/path-parameters.adoc[]
+
+===== Query Parameter
+
+include::{snippets}/form/getAllSubmit/query-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/form/getAllSubmit/http-response.adoc[]
+=====  Response Body
+
+include::{snippets}/form/getAllSubmit/response-fields.adoc[]
+
+:sectnums:
+
+=== 행사의 신청 상태 변경
+:sectnums!:
+==== Request
+
+include::{snippets}/form/updateSubmit/http-request.adoc[]
+
+=====  Request Header
+
+include::{snippets}/form/updateSubmit/request-headers.adoc[]
+
+===== Path Parameter
+
+include::{snippets}/form/updateSubmit/path-parameters.adoc[]
+
+===== Request Body
+
+include::{snippets}/form/updateSubmit/request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/form/updateSubmit/http-response.adoc[]
+:sectnums:
