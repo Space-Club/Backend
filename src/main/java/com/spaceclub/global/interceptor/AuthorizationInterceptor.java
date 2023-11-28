@@ -32,9 +32,8 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        System.out.println("interceptorProperties.tokenPrefix() = " + interceptorProperties.tokenPrefix());
-
-        Map<String, HttpMethod> PATH_TO_EXCLUDE = interceptorProperties.pathToExclude().stream()
+        Map<String, HttpMethod> PATH_TO_EXCLUDE = interceptorProperties.pathToExclude()
+                .stream()
                 .collect(Collectors.toMap(pathMethod::path, pathMethod::method));
 
         for (Map.Entry<String, HttpMethod> entry : unmodifiableSet(PATH_TO_EXCLUDE.entrySet())) {
