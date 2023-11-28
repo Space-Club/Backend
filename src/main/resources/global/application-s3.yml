@@ -15,3 +15,9 @@ s3:
     club-logo: https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/club-logo/
     club-cover: https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/club-cover/
     user-profile-image: https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/user-profile-image/
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB

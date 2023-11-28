@@ -7,18 +7,28 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.spaceclub.global.config.s3.properties.S3FolderProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
+import static com.spaceclub.global.exception.GlobalExceptionCode.FAIL_FILE_UPLOAD;
+import static com.spaceclub.global.exception.GlobalExceptionCode.INVALID_FILE_EXTENSION;
 
 @Component
 @RequiredArgsConstructor
 public class S3ImageUploader {
 
     private static final String DOT = ".";
+
     private static final String DATE_FORMAT = "yyyyMMdd_HHmmss";
+
+    public static final String UNDERSCORE = "_";
+
+    private static final List<String> validExtensions = List.of("jpeg", "jpg", "png");
 
     private final AmazonS3Client amazonS3Client;
 
@@ -42,7 +52,7 @@ public class S3ImageUploader {
 
     private String upload(MultipartFile image, String folder) {
         String originalFilename = image.getOriginalFilename();
-        if (originalFilename == null) throw new IllegalArgumentException("파일 이름이 존재하지 않습니다.");
+        if (originalFilename == null) throw new IllegalArgumentException(FAIL_FILE_UPLOAD.toString());
 
         String fileName = createFileName(originalFilename);
         ObjectMetadata objectMetaData = new ObjectMetadata();
@@ -55,7 +65,7 @@ public class S3ImageUploader {
                     new PutObjectRequest(folder, fileName, image.getInputStream(), objectMetaData)
                             .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (IOException e) {
-            throw new IllegalStateException("파일 업로드에 실패했습니다.");
+            throw new IllegalStateException(FAIL_FILE_UPLOAD.toString());
         }
 
         return fileName;
@@ -66,10 +76,18 @@ public class S3ImageUploader {
 
         int lastDot = originalName.lastIndexOf(DOT);
         String fileName = originalName.substring(0, lastDot);
-        String fileExtension = originalName.substring(lastDot);
+        String fileExtension = originalName.substring(lastDot + 1);
+        validateFileExtension(fileExtension);
 
-        return fileName + "_" + timestamp + fileExtension;
+        return fileName + UNDERSCORE + timestamp + DOT + fileExtension;
     }
 
+    private void validateFileExtension(String fileExtension) {
+        boolean invalidExtension = validExtensions
+                .stream()
+                .noneMatch(extension -> extension.equalsIgnoreCase(fileExtension));
+
+        if (invalidExtension) throw new MultipartException(INVALID_FILE_EXTENSION.toString());
+    }
 
 }
