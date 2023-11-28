@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +23,7 @@ public class ParticipationController {
 
     private final ParticipationService participationService;
 
-    @PostMapping(value = {"/applications", "/participate"})
+    @PostMapping(value = {"/participate"})
     public ResponseEntity<Void> apply(@RequestBody EventParticipationCreateRequest request, @Authenticated JwtUser jwtUser) {
         EventParticipationCreateInfo eventParticipationCreateInfo = EventParticipationCreateInfo.builder()
                 .userId(jwtUser.id())
@@ -38,7 +37,7 @@ public class ParticipationController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping(value = {"/{eventId}/applications", "/{eventId}/participate"})
+    @DeleteMapping(value = {"/{eventId}/participate"})
     public ResponseEntity<EventParticipationDeleteResponse> cancel(@PathVariable Long eventId, @Authenticated JwtUser jwtUser) {
         ParticipationStatus status = participationService.cancel(eventId, jwtUser.id());
 
