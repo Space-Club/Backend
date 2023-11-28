@@ -6,19 +6,19 @@ endif::[]
 :sectnums!:
 ==== Request
 
-include::{snippets}/event/participate/http-request.adoc[]
+include::{snippet}/event/participate/http-request.adoc[]
 
 =====  Request Header
 
-include::{snippets}/event/participate/request-headers.adoc[]
+include::{snippet}/event/participate/request-headers.adoc[]
 
 =====  Request Body
 
-include::{snippets}/event/participate/request-fields.adoc[]
+include::{snippet}/event/participate/request-fields.adoc[]
 
 ==== Response
 
-include::{snippets}/event/participate/http-response.adoc[]
+include::{snippet}/event/participate/http-response.adoc[]
 
 :sectnums:
 
@@ -26,20 +26,20 @@ include::{snippets}/event/participate/http-response.adoc[]
 :sectnums!:
 ==== Request
 
-include::{snippets}/event/cancelParticipate/http-request.adoc[]
+include::{snippet}/event/cancelParticipate/http-request.adoc[]
 
 ===== Request Header
 
-include::{snippets}/event/cancelParticipate/request-headers.adoc[]
+include::{snippet}/event/cancelParticipate/request-headers.adoc[]
 
 ===== Path Parameter
 
-include::{snippets}/event/cancelParticipate/path-parameters.adoc[]
+include::{snippet}/event/cancelParticipate/path-parameters.adoc[]
 
 ==== Response
 
-include::{snippets}/event/cancelParticipate/http-response.adoc[]
+include::{snippet}/event/cancelParticipate/http-response.adoc[]
 ===== Response Body
 
-include::{snippets}/event/cancelParticipate/response-fields.adoc[]
+include::{snippet}/event/cancelParticipate/response-fields.adoc[]
 :sectnums:
