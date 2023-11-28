@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import static com.spaceclub.global.exception.GlobalExceptionCode.FAIL_FILE_UPLOAD;
 import static com.spaceclub.global.exception.GlobalExceptionCode.INVALID_FILE_EXTENSION;

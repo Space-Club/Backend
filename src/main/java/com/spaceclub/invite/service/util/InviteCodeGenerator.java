@@ -1,4 +1,4 @@
-package com.spaceclub.invite.service;
+package com.spaceclub.invite.service.util;
 
 @FunctionalInterface
 public interface InviteCodeGenerator {

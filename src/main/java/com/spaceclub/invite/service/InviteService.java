@@ -5,6 +5,8 @@ import com.spaceclub.club.service.ClubService;
 import com.spaceclub.club.service.ClubUserValidator;
 import com.spaceclub.invite.domain.Invite;
 import com.spaceclub.invite.repository.InviteRepository;
+import com.spaceclub.invite.service.util.InviteCodeGenerator;
+import com.spaceclub.invite.service.util.UuidCodeGenerator;
 import com.spaceclub.invite.service.vo.InviteGetInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,7 @@ import static com.spaceclub.invite.domain.Invite.INVITE_LINK_VALID_HOURS;
 @RequiredArgsConstructor
 public class InviteService {
 
-    private final InviteCodeGenerator inviteCodeGenerator;
+    private final InviteCodeGenerator inviteCodeGenerator = new UuidCodeGenerator();
 
     private final InviteRepository inviteRepository;
 
