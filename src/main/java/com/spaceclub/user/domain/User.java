@@ -166,7 +166,7 @@ public class User {
                 this.oauthUserName,
                 this.provider,
                 this.email,
-                refreshToken,
+                this.refreshToken,
                 profileUrl,
                 this.deletedAt
         );

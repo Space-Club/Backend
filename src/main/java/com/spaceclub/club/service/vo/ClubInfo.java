@@ -4,10 +4,10 @@ import com.spaceclub.club.domain.Club;
 
 public record ClubInfo(Long id, String logoImageUrl, String name) {
 
-    public static ClubInfo from(Club club) {
+    public static ClubInfo from(Club club, String bucketUrl) {
         return new ClubInfo(
                 club.getId(),
-                club.getLogoImageUrl(),
+                bucketUrl + club.getLogoImageName(),
                 club.getName()
         );
     }

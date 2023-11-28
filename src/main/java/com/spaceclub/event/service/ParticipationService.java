@@ -8,6 +8,7 @@ import com.spaceclub.event.service.vo.EventPageInfo;
 import com.spaceclub.event.service.vo.EventParticipationCreateInfo;
 import com.spaceclub.form.domain.FormAnswer;
 import com.spaceclub.form.service.FormOptionProvider;
+import com.spaceclub.global.config.s3.S3Properties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -36,6 +37,8 @@ public class ParticipationService implements ParticipationProvider {
     private final FormOptionProvider formOptionProvider;
 
     private final EventValidator eventValidator;
+
+    private final S3Properties s3Properties;
 
     public void apply(EventParticipationCreateInfo info) {
         Event event = eventValidator.validateEvent(info.eventId());
@@ -100,7 +103,7 @@ public class ParticipationService implements ParticipationProvider {
                 .collect(toMap(EventUser::getEventId, Function.identity()));
 
         List<EventPageInfo> eventPageInfos = eventPages.getContent().stream()
-                .map(event -> EventPageInfo.from(event, eventUsers.get(event.getId())))
+                .map(event -> EventPageInfo.from(event, eventUsers.get(event.getId()), s3Properties.url()))
                 .toList();
 
         return new PageImpl<>(eventPageInfos, eventPages.getPageable(), eventPages.getTotalElements());

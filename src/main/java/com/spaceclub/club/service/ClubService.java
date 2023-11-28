@@ -5,7 +5,9 @@ import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.club.service.vo.ClubInfo;
+import com.spaceclub.global.config.s3.S3Folder;
 import com.spaceclub.global.config.s3.S3ImageUploader;
+import com.spaceclub.global.config.s3.S3Properties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,11 +31,13 @@ public class ClubService implements ClubProvider {
 
     private final S3ImageUploader imageUploader;
 
+    private final S3Properties s3Properties;
+
     @Transactional
     public Club createClub(Club club, Long userId, MultipartFile logoImage) {
 
         if (logoImage != null) {
-            String logoImageName = imageUploader.uploadClubLogoImage(logoImage);
+            String logoImageName = imageUploader.upload(logoImage, S3Folder.LOGO);
             club = club.updateLogoImage(logoImageName);
         }
 
@@ -77,12 +81,12 @@ public class ClubService implements ClubProvider {
                 .orElseThrow(() -> new IllegalArgumentException(CLUB_NOT_FOUND.toString()));
 
         if (logoImage != null) {
-            String logoImageName = imageUploader.uploadClubLogoImage(logoImage);
+            String logoImageName = imageUploader.upload(logoImage, S3Folder.LOGO);
             club = club.updateLogoImage(logoImageName);
         }
 
         if (coverImage != null) {
-            String coverImageName = imageUploader.uploadClubCoverImage(coverImage);
+            String coverImageName = imageUploader.upload(coverImage, S3Folder.COVER);
             club = club.updateCoverImage(coverImageName);
         }
 
@@ -95,7 +99,7 @@ public class ClubService implements ClubProvider {
     public List<ClubInfo> getClubs(Long userId) {
         return clubUserRepository.findByUserId(userId).stream()
                 .map(ClubUser::getClub)
-                .map(ClubInfo::from)
+                .map(club -> ClubInfo.from(club, s3Properties.url()))
                 .toList();
     }
 

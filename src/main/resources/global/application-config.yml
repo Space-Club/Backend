@@ -1,0 +1,26 @@
+interceptor:
+  token-prefix: "Bearer "
+
+  path-to-exclude:
+    - path: /api/v1/users
+      method: POST
+
+    - path: /api/v1/clubs/invites/
+      method: GET
+
+    - path: /api/v1/events
+      method: GET
+
+    - path: /api/v1/events/searches
+      method: GET
+
+    - path: /api/v1/users/oauth
+      method: POST
+
+web:
+  allowed-origins:
+    - http://localhost:5173
+    - https://spaceclub.vercel.app
+    - https://spaceclub.site
+
+  interceptor-path-pattern: /api/v1/**

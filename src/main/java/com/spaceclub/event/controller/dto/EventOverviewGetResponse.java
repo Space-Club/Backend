@@ -10,12 +10,12 @@ public record EventOverviewGetResponse(Long id,
                                        EventInfoResponse eventInfo,
                                        ClubInfoResponse clubInfo) {
 
-    public static EventOverviewGetResponse from(Event event) {
+    public static EventOverviewGetResponse from(Event event, String bucketUrl) {
         return new EventOverviewGetResponse(
                 event.getId(),
                 new EventInfoResponse(
                         event.getTitle(),
-                        event.getPosterImageUrl(),
+                        event.getPosterImageName() != null ? bucketUrl + event.getPosterImageName() : null,
                         event.getLocation(),
                         event.getStartDate(),
                         event.getStartTime(),
@@ -25,8 +25,8 @@ public record EventOverviewGetResponse(Long id,
                 ),
                 new ClubInfoResponse(
                         event.getClubName(),
-                        event.getClubLogoImageUrl(),
-                        event.getClubCoverImageUrl()
+                        bucketUrl + event.getClubLogoImageName(),
+                        bucketUrl + event.getClubCoverImageName()
                 )
         );
     }

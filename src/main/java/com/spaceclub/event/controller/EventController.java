@@ -11,6 +11,7 @@ import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.service.EventService;
 import com.spaceclub.event.service.vo.EventCreateInfo;
 import com.spaceclub.global.Authenticated;
+import com.spaceclub.global.config.s3.S3Properties;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.vo.JwtUser;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,8 @@ import java.util.List;
 public class EventController {
 
     private final EventService eventService;
+
+    private final S3Properties s3Properties;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<EventCreateResponse> create(
@@ -69,7 +72,7 @@ public class EventController {
         List<EventOverviewGetResponse> responses = events.getContent()
                 .stream()
                 .filter(event -> isEnded == null || event.isEventEnded() == isEnded)
-                .map(EventOverviewGetResponse::from)
+                .map(event -> EventOverviewGetResponse.from(event, s3Properties.url()))
                 .toList();
 
         return ResponseEntity.ok(new PageResponse<>(responses, events));
@@ -105,7 +108,9 @@ public class EventController {
     ) {
         Page<Event> events = eventService.search(keyword, pageable);
 
-        List<EventSearchOverviewGetResponse> responses = events.getContent().stream().map(EventSearchOverviewGetResponse::from).toList();
+        List<EventSearchOverviewGetResponse> responses = events.getContent().stream()
+                .map(event -> EventSearchOverviewGetResponse.from(event, s3Properties.url()))
+                .toList();
 
         return ResponseEntity.ok(new PageResponse<>(responses, events));
     }
@@ -121,10 +126,10 @@ public class EventController {
         EventCategory category = event.getCategory();
 
         EventDetailGetResponse response = switch (category) {
-            case SHOW -> EventDetailGetResponse.withShow(event, applicants);
-            case CLUB -> EventDetailGetResponse.withClub(event, applicants);
-            case PROMOTION -> EventDetailGetResponse.withPromotion(event, applicants);
-            case RECRUITMENT -> EventDetailGetResponse.withRecruitment(event, applicants);
+            case SHOW -> EventDetailGetResponse.withShow(event, applicants, s3Properties.url());
+            case CLUB -> EventDetailGetResponse.withClub(event, applicants, s3Properties.url());
+            case PROMOTION -> EventDetailGetResponse.withPromotion(event, applicants, s3Properties.url());
+            case RECRUITMENT -> EventDetailGetResponse.withRecruitment(event, applicants, s3Properties.url());
         };
 
         return ResponseEntity.ok(response);

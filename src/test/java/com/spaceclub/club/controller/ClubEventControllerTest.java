@@ -5,6 +5,7 @@ import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.service.ClubEventService;
 import com.spaceclub.event.service.vo.ClubEventOverviewGetInfo;
 import com.spaceclub.global.UserArgumentResolver;
+import com.spaceclub.global.config.s3.S3Properties;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
 import com.spaceclub.user.service.vo.UserProfile;
@@ -75,14 +76,17 @@ class ClubEventControllerTest {
     @MockBean
     private UserArgumentResolver userArgumentResolver;
 
+    @MockBean
+    private S3Properties s3Properties;
+
     @Test
     @WithMockUser
     public void 클럽_행사_조회에_성공한다() throws Exception {
         // given
         UserProfile userProfile = new UserProfile("박씨", "01011112222", "www.aaa.com");
-        List<ClubEventOverviewGetInfo> events = List.of(ClubEventOverviewGetInfo.from(event1(), userProfile),
-                ClubEventOverviewGetInfo.from(showEvent(), userProfile),
-                ClubEventOverviewGetInfo.from(clubEvent(), userProfile));
+        List<ClubEventOverviewGetInfo> events = List.of(ClubEventOverviewGetInfo.from(event1(), userProfile, s3Properties.url()),
+                ClubEventOverviewGetInfo.from(showEvent(), userProfile, s3Properties.url()),
+                ClubEventOverviewGetInfo.from(clubEvent(), userProfile, s3Properties.url()));
         Page<ClubEventOverviewGetInfo> eventPages = new PageImpl<>(events);
 
         given(clubEventService.getClubEvents(any(Long.class), any(Pageable.class), any())).willReturn(eventPages);

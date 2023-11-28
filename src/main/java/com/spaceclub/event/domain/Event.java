@@ -156,16 +156,8 @@ public class Event extends BaseTimeEntity {
         return LocalDateTime.now().isAfter(this.getEndDate().atTime(this.getEndTime()));
     }
 
-
     public String getTitle() {
         return eventInfo.getTitle();
-    }
-
-    public String getPosterImageUrl() {
-        if (eventInfo.getPosterImageName() == null) {
-            return null;
-        }
-        return EVENT_POSTER_S3_URL + eventInfo.getPosterImageName();
     }
 
     public String getPosterImageName() {
@@ -199,12 +191,12 @@ public class Event extends BaseTimeEntity {
         return club.getName();
     }
 
-    public String getClubLogoImageUrl() {
-        return club.getLogoImageUrl();
+    public String getClubLogoImageName() {
+        return club.getLogoImageName();
     }
 
-    public String getClubCoverImageUrl() {
-        return club.getCoverImageUrl();
+    public String getClubCoverImageName() {
+        return club.getCoverImageName();
     }
 
     public LocalDateTime getFormOpenDateTime() {

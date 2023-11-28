@@ -4,7 +4,6 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.spaceclub.global.config.s3.properties.S3FolderProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartException;
@@ -32,25 +31,9 @@ public class S3ImageUploader {
 
     private final AmazonS3Client amazonS3Client;
 
-    private final S3FolderProperties folderProperties;
+    private final S3Properties s3Properties;
 
-    public String uploadPosterImage(MultipartFile posterImage) {
-        return upload(posterImage, folderProperties.eventPoster());
-    }
-
-    public String uploadClubLogoImage(MultipartFile logoImage) {
-        return upload(logoImage, folderProperties.clubLogo());
-    }
-
-    public String uploadUserProfileImage(MultipartFile userImage) {
-        return upload(userImage, folderProperties.userProfileImage());
-    }
-
-    public String uploadClubCoverImage(MultipartFile coverImage) {
-        return upload(coverImage, folderProperties.clubCover());
-    }
-
-    private String upload(MultipartFile image, String folder) {
+    public String upload(MultipartFile image, S3Folder folder) {
         String originalFilename = image.getOriginalFilename();
         if (originalFilename == null) throw new IllegalArgumentException(FAIL_FILE_UPLOAD.toString());
 
@@ -60,15 +43,18 @@ public class S3ImageUploader {
         objectMetaData.setContentType(image.getContentType());
         objectMetaData.setContentLength(image.getSize());
 
+        String bucket = s3Properties.bucket();
+        String key = folder.getFolder() + "/" + fileName;
+
         try {
             amazonS3Client.putObject(
-                    new PutObjectRequest(folder, fileName, image.getInputStream(), objectMetaData)
+                    new PutObjectRequest(bucket, key, image.getInputStream(), objectMetaData)
                             .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (IOException e) {
             throw new IllegalStateException(FAIL_FILE_UPLOAD.toString());
         }
 
-        return fileName;
+        return key;
     }
 
     private String createFileName(String originalName) {

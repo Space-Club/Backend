@@ -9,11 +9,11 @@ public record UserProfile(
         String profileImageUrl
 ) {
 
-    public static UserProfile of(User user, String profileImageUrlPrefix) {
+    public static UserProfile of(User user, String bucketUrl) {
         return new UserProfile(
                 user.getUsername(),
                 user.getPhoneNumber(),
-                getProfileImageUrl(user, profileImageUrlPrefix)
+                getProfileImageUrl(user, bucketUrl)
         );
     }
 

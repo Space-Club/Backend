@@ -7,6 +7,7 @@ import com.spaceclub.club.controller.dto.ClubUpdateRequest;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.service.ClubService;
 import com.spaceclub.global.UserArgumentResolver;
+import com.spaceclub.global.config.s3.S3Properties;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -79,6 +80,9 @@ class ClubControllerTest {
 
     @MockBean
     private UserArgumentResolver userArgumentResolver;
+
+    @MockBean
+    private S3Properties s3Properties;
 
     @Test
     @WithMockUser

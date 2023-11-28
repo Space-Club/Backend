@@ -23,11 +23,11 @@ public record ClubEventOverviewGetInfo(
         String managerProfileImageUrl
 ) {
 
-    public static ClubEventOverviewGetInfo from(Event event, UserProfile userProfile) {
+    public static ClubEventOverviewGetInfo from(Event event, UserProfile userProfile, String bucketUrl) {
         return new ClubEventOverviewGetInfo(
                 event.getId(),
                 event.getTitle(),
-                event.getPosterImageUrl(),
+                event.getPosterImageName() != null ? bucketUrl + event.getPosterImageName() : null,
                 event.getStartDate(),
                 event.getStartTime(),
                 event.getEndDate(),
@@ -35,7 +35,7 @@ public record ClubEventOverviewGetInfo(
                 event.getLocation(),
                 event.getCategory().equals(EventCategory.CLUB) ? "CLUB" : "ALL",
                 event.getClubName(),
-                event.getClubLogoImageUrl(),
+                bucketUrl + event.getClubLogoImageName(),
                 userProfile.username(),
                 userProfile.profileImageUrl()
         );

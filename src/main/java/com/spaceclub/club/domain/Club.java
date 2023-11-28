@@ -29,10 +29,6 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @EqualsAndHashCode(of = "id", callSuper = false)
 public class Club extends BaseTimeEntity {
 
-    private static final String CLUB_LOGO_S3_URL = "https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/club-logo/";
-
-    private static final String CLUB_COVER_S3_URL = "https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/club-cover/";
-
     @Id
     @Column(name = "club_id")
     @Getter
@@ -44,9 +40,11 @@ public class Club extends BaseTimeEntity {
     private String name;
 
     @Lob
+    @Getter
     private String logoImageName;
 
     @Lob
+    @Getter
     private String coverImageName;
 
     @Lob
@@ -152,18 +150,6 @@ public class Club extends BaseTimeEntity {
                 .clubUser(this.clubUser != null ? this.clubUser : null)
                 .createdAt(this.createdAt)
                 .build();
-    }
-
-    public String getLogoImageUrl() {
-        if (this.logoImageName == null) return null;
-
-        return CLUB_LOGO_S3_URL + this.logoImageName;
-    }
-
-    public String getCoverImageUrl() {
-        if (this.coverImageName == null) return null;
-
-        return CLUB_COVER_S3_URL + this.coverImageName;
     }
 
 }

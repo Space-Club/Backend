@@ -16,6 +16,7 @@ import com.spaceclub.event.service.EventService;
 import com.spaceclub.event.service.EventValidator;
 import com.spaceclub.event.service.vo.EventCreateInfo;
 import com.spaceclub.global.UserArgumentResolver;
+import com.spaceclub.global.config.s3.S3Properties;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -112,6 +113,9 @@ class EventControllerTest {
 
     @MockBean
     private UserArgumentResolver userArgumentResolver;
+
+    @MockBean
+    private S3Properties s3Properties;
 
     private final MockMultipartFile posterImage = new MockMultipartFile(
             "posterImage",

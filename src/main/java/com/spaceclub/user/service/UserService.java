@@ -1,7 +1,8 @@
 package com.spaceclub.user.service;
 
+import com.spaceclub.global.config.s3.S3Folder;
 import com.spaceclub.global.config.s3.S3ImageUploader;
-import com.spaceclub.global.config.s3.properties.S3BucketUrl;
+import com.spaceclub.global.config.s3.S3Properties;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.repository.UserRepository;
 import com.spaceclub.user.service.vo.RequiredProfile;
@@ -22,12 +23,14 @@ public class UserService implements UserProvider {
 
     private final S3ImageUploader imageUploader;
 
-    private final S3BucketUrl s3BucketUrl;
+    private final S3Properties s3Properties;
 
     @Transactional
     public void changeUserProfileImage(MultipartFile userImage, Long userId) {
-        String profileUrl = imageUploader.uploadUserProfileImage(userImage);
-        changeProfileImageUrl(userId, profileUrl);
+        String profileUrl = imageUploader.upload(userImage, S3Folder.USER_PROFILE);
+        User user = getUser(userId);
+
+        userRepository.save(user.changeProfileImageUrl(profileUrl));
     }
 
     @Transactional
@@ -43,7 +46,7 @@ public class UserService implements UserProvider {
     public UserProfile getProfile(Long userId) {
         User user = getUser(userId);
 
-        return UserProfile.of(user, s3BucketUrl.userProfileImage());
+        return UserProfile.of(user, s3Properties.url());
     }
 
     public User getUser(Long userId) {

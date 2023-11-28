@@ -23,14 +23,18 @@ import java.util.List;
 public class WebConfig implements WebMvcConfigurer {
 
     private final UserArgumentResolver userArgumentResolver;
+
     private final AuthenticationInterceptor authenticationInterceptor;
+
     private final AuthorizationInterceptor authorizationInterceptor;
+
+    private final WebProperties webProperties;
 
     @Profile("develop")
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173", "https://spaceclub.vercel.app", "https://spaceclub.site")
+                .allowedOrigins(webProperties.allowedOrigins().toArray(String[]::new))
                 .allowedMethods("*")
                 .allowCredentials(true)
                 .exposedHeaders("Location")
@@ -40,11 +44,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authenticationInterceptor)
-                .addPathPatterns("/api/v1/**")
+                .addPathPatterns(webProperties.interceptorPathPattern())
                 .order(1);
 
         registry.addInterceptor(authorizationInterceptor)
-                .addPathPatterns("/api/v1/**")
+                .addPathPatterns(webProperties.interceptorPathPattern())
                 .order(2);
     }
 
