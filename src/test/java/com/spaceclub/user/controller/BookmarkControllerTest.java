@@ -7,6 +7,7 @@ import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.service.EventService;
 import com.spaceclub.event.service.vo.UserBookmarkedEventGetInfo;
 import com.spaceclub.global.UserArgumentResolver;
+import com.spaceclub.global.config.s3.S3Properties;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
 import com.spaceclub.user.service.BookmarkService;
@@ -87,12 +88,16 @@ class BookmarkControllerTest {
     @MockBean
     private UserArgumentResolver userArgumentResolver;
 
+    @MockBean
+    private S3Properties s3Properties;
+
     @Test
     @WithMockUser
     void 유저가_북마크한_이벤트_조회에_성공한다() throws Exception {
         // given
         List<Event> events = List.of(event1(), showEvent(), clubEvent());
-        Page<UserBookmarkedEventGetInfo> eventPages = new PageImpl<>(events).map(UserBookmarkedEventGetInfo::from);
+        Page<UserBookmarkedEventGetInfo> eventPages = new PageImpl<>(events)
+                .map(event -> UserBookmarkedEventGetInfo.from(event, s3Properties.url()));
 
         given(eventService.findAllBookmarkedEventPages(any(), any(Pageable.class))).willReturn(eventPages);
 

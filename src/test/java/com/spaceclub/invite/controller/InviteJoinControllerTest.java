@@ -3,6 +3,7 @@ package com.spaceclub.invite.controller;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.service.ClubMemberManagerService;
 import com.spaceclub.global.UserArgumentResolver;
+import com.spaceclub.global.config.s3.S3Properties;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
 import com.spaceclub.invite.service.InviteJoinService;
@@ -64,6 +65,9 @@ class InviteJoinControllerTest {
 
     @MockBean
     private UserArgumentResolver userArgumentResolver;
+
+    @MockBean
+    private S3Properties s3Properties;
 
     @Test
     @WithMockUser

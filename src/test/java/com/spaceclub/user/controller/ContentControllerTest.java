@@ -6,6 +6,7 @@ import com.spaceclub.club.service.vo.ClubInfo;
 import com.spaceclub.event.service.ParticipationProvider;
 import com.spaceclub.event.service.vo.EventPageInfo;
 import com.spaceclub.global.UserArgumentResolver;
+import com.spaceclub.global.config.s3.S3Properties;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -74,11 +75,14 @@ class ContentControllerTest {
     @MockBean
     private UserArgumentResolver userArgumentResolver;
 
+    @MockBean
+    private S3Properties s3Properties;
+
     @Test
     @WithMockUser
     void 유저의_모든_이벤트_조회에_성공한다() throws Exception {
         // given
-        List<EventPageInfo> pageInfos = List.of(EventPageInfo.from(event1(), eventUser()));
+        List<EventPageInfo> pageInfos = List.of(EventPageInfo.from(event1(), eventUser(), s3Properties.url()));
         PageRequest pageRequest = PageRequest.of(0, 10);
         int total = 1;
 
@@ -137,8 +141,8 @@ class ContentControllerTest {
     @WithMockUser
     void 유저의_모든_클럽_조회에_성공한다() throws Exception {
         // given
-        ClubInfo club1 = ClubInfo.from(club1());
-        ClubInfo club2 = ClubInfo.from(club2());
+        ClubInfo club1 = ClubInfo.from(club1(), s3Properties.url());
+        ClubInfo club2 = ClubInfo.from(club2(), s3Properties.url());
         given(clubService.getClubs(any())).willReturn(List.of(club1, club2));
 
         // when, then
