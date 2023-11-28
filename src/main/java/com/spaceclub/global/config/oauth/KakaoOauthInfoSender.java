@@ -11,6 +11,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import static com.spaceclub.global.exception.GlobalExceptionCode.KAKAO_LOGOUT_FAIL;
+import static com.spaceclub.global.exception.GlobalExceptionCode.KAKAO_UNLINK_FAIL;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
@@ -69,8 +71,8 @@ public class KakaoOauthInfoSender {
                 Long.class
         ).getBody();
 
-        if (id == null) throw new IllegalArgumentException("로그아웃 실패");
-        if (id != Long.parseLong(user.getOauthId())) throw new IllegalArgumentException("로그아웃 실패");
+        if (id == null) throw new IllegalArgumentException(KAKAO_LOGOUT_FAIL.toString());
+        if (id != Long.parseLong(user.getOauthId())) throw new IllegalArgumentException(KAKAO_LOGOUT_FAIL.toString());
     }
 
     public void unlink(User user) {
@@ -83,8 +85,8 @@ public class KakaoOauthInfoSender {
                 Long.class
         ).getBody();
 
-        if (id == null) throw new IllegalArgumentException("카카오 계정 연결 끊기에 실패했습니다.");
-        if (id != Long.parseLong(user.getOauthId())) throw new IllegalArgumentException("카카오 계정 연결 끊기에 실패했습니다.");
+        if (id == null) throw new IllegalArgumentException(KAKAO_UNLINK_FAIL.toString());
+        if (id != Long.parseLong(user.getOauthId())) throw new IllegalArgumentException(KAKAO_UNLINK_FAIL.toString());
     }
 
     private HttpEntity<Object> generateRequest(User user) {

@@ -37,7 +37,7 @@ public class AccountService {
         User kakaoUser = createKakaoUser(code);
 
         if (kakaoUser.isNewMember()) {
-            return UserLoginInfo.from(kakaoUser.getId(),BLANK, BLANK);
+            return UserLoginInfo.from(kakaoUser.getId(), BLANK, BLANK);
         }
 
         String accessToken = jwtManager.createAccessToken(kakaoUser.getId(), kakaoUser.getUsername());
@@ -61,7 +61,7 @@ public class AccountService {
     }
 
     private void checkWhenUserStatusIsInactive(User kakaoUser, LocalDateTime now) {
-        if (kakaoUser.isInactive()){
+        if (kakaoUser.isInactive()) {
             User user = kakaoUser.changeStatusToRegistered();
             userRepository.save(user);
 
