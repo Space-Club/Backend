@@ -10,6 +10,7 @@ import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.service.EventService;
 import com.spaceclub.event.service.vo.EventCreateInfo;
+import com.spaceclub.event.service.vo.EventGetInfo;
 import com.spaceclub.global.Authenticated;
 import com.spaceclub.global.config.s3.S3Properties;
 import com.spaceclub.global.dto.PageResponse;
@@ -119,17 +120,16 @@ public class EventController {
     public ResponseEntity<EventDetailGetResponse> get(@PathVariable Long eventId, @Authenticated JwtUser jwtUser) {
         Long userId = jwtUser.id();
 
-        Event event = eventService.get(eventId, userId);
-
-        int applicants = eventService.countApplicants(eventId);
+        EventGetInfo vo = eventService.get(eventId, userId);
+        Event event = vo.event();
 
         EventCategory category = event.getCategory();
 
         EventDetailGetResponse response = switch (category) {
-            case SHOW -> EventDetailGetResponse.withShow(event, applicants, s3Properties.url());
-            case CLUB -> EventDetailGetResponse.withClub(event, applicants, s3Properties.url());
-            case PROMOTION -> EventDetailGetResponse.withPromotion(event, applicants, s3Properties.url());
-            case RECRUITMENT -> EventDetailGetResponse.withRecruitment(event, applicants, s3Properties.url());
+            case SHOW -> EventDetailGetResponse.withShow(vo, s3Properties.url());
+            case CLUB -> EventDetailGetResponse.withClub(vo, s3Properties.url());
+            case PROMOTION -> EventDetailGetResponse.withPromotion(vo, s3Properties.url());
+            case RECRUITMENT -> EventDetailGetResponse.withRecruitment(vo, s3Properties.url());
         };
 
         return ResponseEntity.ok(response);

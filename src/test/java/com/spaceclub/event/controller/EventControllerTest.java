@@ -15,6 +15,7 @@ import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.service.EventService;
 import com.spaceclub.event.service.EventValidator;
 import com.spaceclub.event.service.vo.EventCreateInfo;
+import com.spaceclub.event.service.vo.EventGetInfo;
 import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.config.s3.S3Properties;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
@@ -895,8 +896,9 @@ class EventControllerTest {
     void 행사_상세_조회에_성공한다_공연() throws Exception {
         // given
         Event event = showEvent();
+        EventGetInfo vo = new EventGetInfo(event, false, 5);
 
-        given(eventService.get(any(Long.class), any())).willReturn(event);
+        given(eventService.get(any(Long.class), any())).willReturn(vo);
 
         // when
         ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}", 1L));
@@ -917,6 +919,7 @@ class EventControllerTest {
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
                                 fieldWithPath("category").type(STRING).description("이벤트 종류"),
                                 fieldWithPath("hasForm").type(BOOLEAN).description("폼 존재 여부"),
+                                fieldWithPath("hasAlreadyApplied").type(BOOLEAN).description("폼 신청 여부"),
                                 fieldWithPath("eventInfo").type(OBJECT).description("행사 정보"),
                                 fieldWithPath("eventInfo.title").type(STRING).description("행사 제목"),
                                 fieldWithPath("eventInfo.content").type(STRING).description("행사 내용"),
@@ -949,8 +952,9 @@ class EventControllerTest {
     void 행사_상세_조회에_성공한다_홍보() throws Exception {
         // given
         Event event = promotionEvent();
+        EventGetInfo vo = new EventGetInfo(event, false, 5);
 
-        given(eventService.get(any(Long.class), any())).willReturn(event);
+        given(eventService.get(any(Long.class), any())).willReturn(vo);
 
         // when
         ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}", 1L));
@@ -971,6 +975,7 @@ class EventControllerTest {
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
                                 fieldWithPath("category").type(STRING).description("이벤트 종류"),
                                 fieldWithPath("hasForm").type(BOOLEAN).description("폼 존재 여부"),
+                                fieldWithPath("hasAlreadyApplied").type(BOOLEAN).description("폼 신청 여부"),
                                 fieldWithPath("eventInfo").type(OBJECT).description("행사 정보"),
                                 fieldWithPath("eventInfo.title").type(STRING).description("행사 제목"),
                                 fieldWithPath("eventInfo.content").type(STRING).description("행사 내용"),
@@ -997,8 +1002,9 @@ class EventControllerTest {
     void 행사_상세_조회에_성공한다_모집_공고() throws Exception {
         // given
         Event event = recruitmentEvent();
+        EventGetInfo vo = new EventGetInfo(event, false, 5);
 
-        given(eventService.get(any(Long.class), any())).willReturn(event);
+        given(eventService.get(any(Long.class), any())).willReturn(vo);
 
         // when
         ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}", 1L));
@@ -1019,6 +1025,7 @@ class EventControllerTest {
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
                                 fieldWithPath("category").type(STRING).description("이벤트 종류"),
                                 fieldWithPath("hasForm").type(BOOLEAN).description("폼 존재 여부"),
+                                fieldWithPath("hasAlreadyApplied").type(BOOLEAN).description("폼 신청 여부"),
                                 fieldWithPath("eventInfo").type(OBJECT).description("행사 정보"),
                                 fieldWithPath("eventInfo.title").type(STRING).description("행사 제목"),
                                 fieldWithPath("eventInfo.content").type(STRING).description("행사 내용"),
@@ -1046,8 +1053,9 @@ class EventControllerTest {
     void 행사_상세_조회에_성공한다_클럽_일정() throws Exception {
         // given
         Event event = clubEvent();
+        EventGetInfo vo = new EventGetInfo(event, false, 5);
 
-        given(eventService.get(any(Long.class), any())).willReturn(event);
+        given(eventService.get(any(Long.class), any())).willReturn(vo);
 
         // when
         ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}", 1L)
@@ -1069,6 +1077,7 @@ class EventControllerTest {
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
                                 fieldWithPath("category").type(STRING).description("이벤트 종류"),
                                 fieldWithPath("hasForm").type(BOOLEAN).description("폼 존재 여부"),
+                                fieldWithPath("hasAlreadyApplied").type(BOOLEAN).description("폼 신청 여부"),
                                 fieldWithPath("eventInfo").type(OBJECT).description("행사 정보"),
                                 fieldWithPath("eventInfo.title").type(STRING).description("행사 제목"),
                                 fieldWithPath("eventInfo.content").type(STRING).description("행사 제목"),
