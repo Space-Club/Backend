@@ -47,8 +47,8 @@ public record ClubEventUpdateRequest(
             LocalDate endDate,
             LocalTime endTime,
             String location,
-            int capacity,
-            int dues
+            Integer capacity,
+            Integer dues
     ) {
 
         public EventInfo toEntity() {
