@@ -55,3 +55,16 @@ include::{snippet}/user/changeProfileImage/request-parts.adoc[]
 ===== Response Body
 include::{snippet}/user/changeProfileImage/http-response.adoc[]
 :sectnums:
+
+=== 유저 프로필 이미지 제거(기본 이미지로 변경)
+:sectnums!:
+
+==== Request
+include::{snippet}/user/removeProfileImage/http-request.adoc[]
+
+===== Request Header
+include::{snippet}/user/removeProfileImage/request-headers.adoc[]
+
+===== Response Body
+include::{snippet}/user/removeProfileImage/http-response.adoc[]
+:sectnums:

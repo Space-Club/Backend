@@ -2,7 +2,6 @@ package com.spaceclub.user.domain;
 
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.user.UserTestFixture;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -159,6 +158,18 @@ class UserTest {
         assertThatThrownBy(user::changeStatusToDeleted)
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(USER_CANNOT_WITHDRAW.toString());
+    }
+
+    @Test
+    void 유저의_이미지를_기본이미지로_변경하는데_성공한다() {
+        // given
+        final User user = UserTestFixture.user1();
+
+        // when
+        final User userWithDefaultProfileImage = user.removeProfileImageUrl();
+
+        // then
+        assertThat(userWithDefaultProfileImage.getProfileImageUrl()).isNull();
     }
 
     @ParameterizedTest(name = "{index}: 삭제된 시간: {0}")

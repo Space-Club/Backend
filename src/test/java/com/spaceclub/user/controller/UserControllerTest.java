@@ -40,6 +40,7 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
@@ -188,6 +189,27 @@ class UserControllerTest {
                                 requestHeaders(
                                         headerWithName(AUTHORIZATION).description("액세스 토큰"),
                                         headerWithName(CONTENT_TYPE).description(MULTIPART_FORM_DATA_VALUE)
+                                )
+                        )
+                );
+    }
+
+    @Test
+    @WithMockUser
+    void 유저_이미지를_기본이미지로_변경하는데_성공한다() throws Exception {
+        doNothing().when(userService).removeUserProfileImage(any(Long.class));
+
+        mvc.perform(delete("/api/v1/me/profile/images")
+                        .header(AUTHORIZATION, "Access Token")
+                        .with(csrf()))
+                .andDo(print())
+                .andExpect(status().isNoContent())
+                .andDo(
+                        document("user/removeProfileImage",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName(AUTHORIZATION).description("액세스 토큰")
                                 )
                         )
                 );

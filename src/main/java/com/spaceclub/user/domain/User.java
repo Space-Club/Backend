@@ -248,4 +248,18 @@ public class User {
         return this.status.equals(DELETED) || !this.deletedAt.plusDays(GRACE_DAYS_OF_DELETION).isAfter(now);
     }
 
+    public User removeProfileImageUrl() {
+        return new User(
+                this.id,
+                this.requiredInfo,
+                this.status,
+                this.oauthUserName,
+                this.provider,
+                this.email,
+                this.refreshToken,
+                null,
+                this.deletedAt
+        );
+    }
+
 }
