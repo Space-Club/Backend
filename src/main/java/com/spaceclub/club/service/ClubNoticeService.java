@@ -16,6 +16,9 @@ import java.util.List;
 
 import static com.spaceclub.club.ClubExceptionMessage.CLUB_NOT_FOUND;
 import static com.spaceclub.club.ClubExceptionMessage.NOTICE_NOT_FOUND;
+import static com.spaceclub.club.ClubExceptionMessage.NOTICE_NOT_NULL;
+import static com.spaceclub.club.ClubExceptionMessage.NOTICE_WITH_BLANK;
+import static com.spaceclub.club.ClubExceptionMessage.NOTICE_WITH_MARGIN;
 import static com.spaceclub.club.ClubExceptionMessage.NOT_CLUB_MEMBER;
 import static com.spaceclub.club.ClubExceptionMessage.UNAUTHORIZED;
 
@@ -32,6 +35,8 @@ public class ClubNoticeService {
 
     @Transactional
     public void createNotice(String notice, Long clubId, Long userId) {
+        validateNotice(notice);
+
         ClubUser clubUser = clubUserRepository.findByClub_IdAndUserId(clubId, userId)
                 .orElseThrow(() -> new IllegalArgumentException(NOT_CLUB_MEMBER.toString()));
 
@@ -50,6 +55,12 @@ public class ClubNoticeService {
         clubNoticeRepository.save(clubNotice);
     }
 
+    private void validateNotice(String notice) {
+        if (notice == null) throw new IllegalArgumentException(NOTICE_NOT_NULL.toString());
+        if (notice.isBlank()) throw new IllegalArgumentException(NOTICE_WITH_BLANK.toString());
+        if (!notice.strip().equals(notice)) throw new IllegalArgumentException(NOTICE_WITH_MARGIN.toString());
+    }
+
     public List<ClubNotice> getNotices(Long clubId, Long userId) {
         if (!clubUserRepository.existsByClub_IdAndUserId(clubId, userId))
             throw new IllegalArgumentException(NOT_CLUB_MEMBER.toString());
@@ -62,6 +73,8 @@ public class ClubNoticeService {
 
     @Transactional
     public void updateNotice(ClubNoticeUpdate updateVo) {
+        validateNotice(updateVo.notice());
+
         Long clubId = updateVo.clubId();
         Long userId = updateVo.userId();
         Long noticeId = updateVo.noticeId();
