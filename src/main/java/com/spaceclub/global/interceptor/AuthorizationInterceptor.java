@@ -32,11 +32,11 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        Map<String, HttpMethod> PATH_TO_EXCLUDE = interceptorProperties.pathToExclude()
+        Map<String, HttpMethod> pathToExclude = interceptorProperties.pathToExclude()
                 .stream()
                 .collect(Collectors.toMap(pathMethod::path, pathMethod::method));
 
-        for (Map.Entry<String, HttpMethod> entry : unmodifiableSet(PATH_TO_EXCLUDE.entrySet())) {
+        for (Map.Entry<String, HttpMethod> entry : unmodifiableSet(pathToExclude.entrySet())) {
             boolean matchesPathAndMethod = request.getRequestURI().contains(entry.getKey()) &&
                     request.getMethod().equals(entry.getValue().name());
 
