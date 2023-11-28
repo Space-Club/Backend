@@ -9,7 +9,7 @@ import com.spaceclub.event.controller.dto.updateRequest.ShowEventUpdateRequest;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
 
-import static com.spaceclub.global.exception.GlobalExceptionCode.DESERIALIZE_FAILURE;
+import static com.spaceclub.global.exception.GlobalExceptionCode.FAIL_DESERIALIZE;
 
 public record EventUpdateConverter(Event event) {
 
@@ -52,7 +52,7 @@ public record EventUpdateConverter(Event event) {
         try {
             return objectMapper.readValue(data, valueType);
         } catch (Exception e) {
-            throw new IllegalStateException(DESERIALIZE_FAILURE.toString());
+            throw new IllegalStateException(FAIL_DESERIALIZE.toString());
         }
     }
 

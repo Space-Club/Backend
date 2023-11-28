@@ -9,7 +9,7 @@ import com.spaceclub.event.controller.dto.createRequest.ShowEventCreateRequest;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
 
-import static com.spaceclub.global.exception.GlobalExceptionCode.DESERIALIZE_FAILURE;
+import static com.spaceclub.global.exception.GlobalExceptionCode.FAIL_DESERIALIZE;
 
 public record EventCreateConverter(Long clubId, Event event) {
 
@@ -56,7 +56,7 @@ public record EventCreateConverter(Long clubId, Event event) {
         try {
             return objectMapper.readValue(data, valueType);
         } catch (Exception e) {
-            throw new RuntimeException(DESERIALIZE_FAILURE.getMessage());
+            throw new RuntimeException(FAIL_DESERIALIZE.getMessage());
         }
     }
 
