@@ -1,4 +1,4 @@
-package com.spaceclub.global.config.s3;
+package com.spaceclub.global.s3;
 
 import lombok.Getter;
 

@@ -1,7 +1,7 @@
 package com.spaceclub.user.service;
 
-import com.spaceclub.global.config.s3.S3Folder;
-import com.spaceclub.global.config.s3.S3ImageUploader;
+import com.spaceclub.global.s3.S3Folder;
+import com.spaceclub.global.s3.S3ImageUploader;
 import com.spaceclub.global.config.s3.S3Properties;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.repository.UserRepository;
