@@ -1,0 +1,45 @@
+ifndef::snippet[]
+:snippet: ../../../../build/generated-snippets
+endif::[]
+
+=== 행사 신청
+:sectnums!:
+==== Request
+
+include::{snippets}/event/participate/http-request.adoc[]
+
+=====  Request Header
+
+include::{snippets}/event/participate/request-headers.adoc[]
+
+=====  Request Body
+
+include::{snippets}/event/participate/request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/event/participate/http-response.adoc[]
+
+:sectnums:
+
+=== 행사 신청 취소
+:sectnums!:
+==== Request
+
+include::{snippets}/event/cancelParticipate/http-request.adoc[]
+
+===== Request Header
+
+include::{snippets}/event/cancelParticipate/request-headers.adoc[]
+
+===== Path Parameter
+
+include::{snippets}/event/cancelParticipate/path-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/event/cancelParticipate/http-response.adoc[]
+===== Response Body
+
+include::{snippets}/event/cancelParticipate/response-fields.adoc[]
+:sectnums:
