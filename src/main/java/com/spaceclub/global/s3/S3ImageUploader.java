@@ -1,9 +1,10 @@
-package com.spaceclub.global.config.s3;
+package com.spaceclub.global.s3;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.spaceclub.global.config.s3.S3Properties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartException;
@@ -12,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import static com.spaceclub.global.exception.GlobalExceptionCode.FAIL_FILE_UPLOAD;
 import static com.spaceclub.global.exception.GlobalExceptionCode.INVALID_FILE_EXTENSION;
@@ -25,10 +25,6 @@ public class S3ImageUploader {
 
     private static final String DATE_FORMAT = "yyyyMMdd_HHmmss";
 
-    public static final String UNDERSCORE = "_";
-
-    private static final List<String> validExtensions = List.of("jpeg", "jpg", "png");
-
     private final AmazonS3Client amazonS3Client;
 
     private final S3Properties s3Properties;
@@ -37,14 +33,13 @@ public class S3ImageUploader {
         String originalFilename = image.getOriginalFilename();
         if (originalFilename == null) throw new IllegalArgumentException(FAIL_FILE_UPLOAD.toString());
 
-        String fileName = createFileName(originalFilename);
+        String key = createKey(originalFilename, folder);
+        String bucket = s3Properties.bucket();
+
         ObjectMetadata objectMetaData = new ObjectMetadata();
 
         objectMetaData.setContentType(image.getContentType());
         objectMetaData.setContentLength(image.getSize());
-
-        String bucket = s3Properties.bucket();
-        String key = folder.getFolder() + "/" + fileName;
 
         try {
             amazonS3Client.putObject(
@@ -57,7 +52,7 @@ public class S3ImageUploader {
         return key;
     }
 
-    private String createFileName(String originalName) {
+    private String createKey(String originalName, S3Folder folder) {
         String timestamp = new SimpleDateFormat(DATE_FORMAT).format(new Date());
 
         int lastDot = originalName.lastIndexOf(DOT);
@@ -65,11 +60,11 @@ public class S3ImageUploader {
         String fileExtension = originalName.substring(lastDot + 1);
         validateFileExtension(fileExtension);
 
-        return fileName + UNDERSCORE + timestamp + DOT + fileExtension;
+        return String.format("%s/%s_%s.%s", folder.getFolder(), fileName, timestamp, fileExtension);
     }
 
     private void validateFileExtension(String fileExtension) {
-        boolean invalidExtension = validExtensions
+        boolean invalidExtension = s3Properties.validExtensions()
                 .stream()
                 .noneMatch(extension -> extension.equalsIgnoreCase(fileExtension));
 

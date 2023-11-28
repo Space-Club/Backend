@@ -22,10 +22,7 @@ spring:
       on-profile: develop
     import:
       - develop/application-develop.yml
-      - global/application-oauth.yml
-      - global/application-s3.yml
-      - global/application-config.yml
-
+      - application-global.yml
 ---
 spring:
   config:
@@ -33,6 +30,4 @@ spring:
       on-profile: local
     import:
       - local/application-local.yml
-      - global/application-oauth.yml
-      - global/application-s3.yml
-      - global/application-config.yml
+      - application-global.yml

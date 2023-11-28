@@ -1,10 +1,7 @@
-package com.spaceclub.invite.service;
-
-import org.springframework.stereotype.Component;
+package com.spaceclub.invite.service.util;
 
 import java.util.UUID;
 
-@Component
 public class UuidCodeGenerator implements InviteCodeGenerator {
 
     @Override

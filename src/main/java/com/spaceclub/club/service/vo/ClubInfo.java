@@ -7,7 +7,7 @@ public record ClubInfo(Long id, String logoImageUrl, String name) {
     public static ClubInfo from(Club club, String bucketUrl) {
         return new ClubInfo(
                 club.getId(),
-                bucketUrl + club.getLogoImageName(),
+                club.getLogoImageName() != null ? bucketUrl + club.getLogoImageName() : null,
                 club.getName()
         );
     }

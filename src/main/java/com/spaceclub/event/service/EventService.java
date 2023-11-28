@@ -9,9 +9,10 @@ import com.spaceclub.event.repository.EventRepository;
 import com.spaceclub.event.repository.EventUserRepository;
 import com.spaceclub.event.service.vo.ClubEventOverviewGetInfo;
 import com.spaceclub.event.service.vo.EventCreateInfo;
+import com.spaceclub.event.service.vo.EventGetInfo;
 import com.spaceclub.event.service.vo.UserBookmarkedEventGetInfo;
-import com.spaceclub.global.config.s3.S3Folder;
-import com.spaceclub.global.config.s3.S3ImageUploader;
+import com.spaceclub.global.s3.S3Folder;
+import com.spaceclub.global.s3.S3ImageUploader;
 import com.spaceclub.global.config.s3.S3Properties;
 import com.spaceclub.user.service.UserProvider;
 import com.spaceclub.user.service.vo.UserProfile;
@@ -106,13 +107,16 @@ public class EventService implements EventProvider {
         eventRepository.deleteById(eventId);
     }
 
-    public Event get(Long eventId, Long userId) {
+    public EventGetInfo get(Long eventId, Long userId) {
         Event event = eventValidator.validateEvent(eventId);
 
         if (event.getCategory() == CLUB)
             clubUserValidator.validateClubMember(event.getClubId(), userId);
 
-        return event;
+        boolean hasAlreadyApplied = eventUserRepository.existsByEventIdAndUserId(eventId, userId);
+        int applicants = eventUserRepository.countByEvent_Id(eventId);
+
+        return new EventGetInfo(event, hasAlreadyApplied, applicants);
     }
 
     @Override
@@ -130,10 +134,6 @@ public class EventService implements EventProvider {
         Page<Event> events = eventRepository.findAllBookmarkedEventPages(userId, pageable);
 
         return events.map(event -> UserBookmarkedEventGetInfo.from(event, s3Properties.url()));
-    }
-
-    public int countApplicants(Long eventId) {
-        return eventUserRepository.countByEvent_Id(eventId);
     }
 
 }

@@ -6,10 +6,7 @@ import lombok.Builder;
 public record UserClubGetResponse(Long id, String logoImageUrl, String name) {
 
     @Builder
-    public UserClubGetResponse(Long id, String logoImageUrl, String name) {
-        this.id = id;
-        this.logoImageUrl = logoImageUrl;
-        this.name = name;
+    public UserClubGetResponse {
     }
 
     public static UserClubGetResponse from(ClubInfo clubInfo) {

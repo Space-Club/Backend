@@ -2,6 +2,7 @@ package com.spaceclub.event.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.spaceclub.event.domain.Event;
+import com.spaceclub.event.service.vo.EventGetInfo;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ public record EventDetailGetResponse(
         Long id,
         String category,
         boolean hasForm,
+        boolean hasAlreadyApplied,
         EventInfo eventInfo,
         FormInfo formInfo,
         TicketInfo ticketInfo,
@@ -95,11 +97,13 @@ public record EventDetailGetResponse(
     public EventDetailGetResponse {
     }
 
-    public static EventDetailGetResponse withShow(Event event, int applicants, String bucketUrl) {
+    public static EventDetailGetResponse withShow(EventGetInfo vo, String bucketUrl) {
+        Event event = vo.event();
         return EventDetailGetResponse.builder()
                 .id(event.getId())
                 .category(event.getCategory().toString())
                 .hasForm(event.hasForm())
+                .hasAlreadyApplied(vo.hasAlreadyApplied())
                 .eventInfo(
                         EventInfo.builder()
                                 .title(event.getTitle())
@@ -108,7 +112,7 @@ public record EventDetailGetResponse(
                                 .startTime(event.getStartTime())
                                 .isEnded(event.isEventEnded())
                                 .location(event.getLocation())
-                                .applicants(applicants)
+                                .applicants(vo.applicants())
                                 .capacity(event.getCapacity())
                                 .posterImageUrl(event.getPosterImageName() != null ? bucketUrl + event.getPosterImageName() : null)
                                 .build()
@@ -141,11 +145,13 @@ public record EventDetailGetResponse(
                 .build();
     }
 
-    public static EventDetailGetResponse withClub(Event event, int applicants, String bucketUrl) {
+    public static EventDetailGetResponse withClub(EventGetInfo vo, String bucketUrl) {
+        Event event = vo.event();
         return EventDetailGetResponse.builder()
                 .id(event.getId())
                 .category(event.getCategory().toString())
                 .hasForm(event.hasForm())
+                .hasAlreadyApplied(vo.hasAlreadyApplied())
                 .eventInfo(
                         EventInfo.builder()
                                 .title(event.getTitle())
@@ -157,7 +163,7 @@ public record EventDetailGetResponse(
                                 .isEnded(event.isEventEnded())
                                 .dues(event.getDues())
                                 .location(event.getLocation())
-                                .applicants(applicants)
+                                .applicants(vo.applicants())
                                 .capacity(event.getCapacity())
                                 .posterImageUrl(event.getPosterImageName() != null ? bucketUrl + event.getPosterImageName() : null)
                                 .build()
@@ -179,46 +185,13 @@ public record EventDetailGetResponse(
                 .build();
     }
 
-    public static EventDetailGetResponse withPromotion(Event event, int applicants, String bucketUrl) {
+    public static EventDetailGetResponse withPromotion(EventGetInfo vo, String bucketUrl) {
+        Event event = vo.event();
         return EventDetailGetResponse.builder()
                 .id(event.getId())
                 .category(event.getCategory().toString())
                 .hasForm(event.hasForm())
-                .eventInfo(
-                        EventInfo.builder()
-                                .title(event.getTitle())
-                                .content(event.getContent())
-                                .startDate(event.getStartDate())
-                                .startTime(event.getStartTime())
-                                .isEnded(event.isEventEnded())
-                                .applicants(applicants)
-                                .capacity(event.getCapacity())
-                                .posterImageUrl(event.getPosterImageName() != null ? bucketUrl + event.getPosterImageName() : null)
-                                .activityArea(event.getActivityArea())
-                                .build()
-                )
-                .formInfo(
-                        FormInfo.builder()
-                                .openDate(event.getFormOpenDate())
-                                .openTime(event.getFormOpenTime())
-                                .closeDate(event.getFormCloseDate())
-                                .closeTime(event.getFormCloseTime())
-                                .isAbleToApply(event.isAbleToApply())
-                                .build()
-                )
-                .clubInfo(ClubInfo.builder()
-                        .clubId(event.getClubId())
-                        .clubName(event.getClubName())
-                        .build()
-                )
-                .build();
-    }
-
-    public static EventDetailGetResponse withRecruitment(Event event, int applicants, String bucketUrl) {
-        return EventDetailGetResponse.builder()
-                .id(event.getId())
-                .category(event.getCategory().toString())
-                .hasForm(event.hasForm())
+                .hasAlreadyApplied(vo.hasAlreadyApplied())
                 .eventInfo(
                         EventInfo.builder()
                                 .title(event.getTitle())
@@ -227,9 +200,46 @@ public record EventDetailGetResponse(
                                 .startTime(event.getStartTime())
                                 .isEnded(event.isEventEnded())
                                 .location(event.getLocation())
-                                .applicants(applicants)
+                                .applicants(vo.applicants())
                                 .capacity(event.getCapacity())
                                 .posterImageUrl(event.getPosterImageName() != null ? bucketUrl + event.getPosterImageName() : null)
+                                .build()
+                )
+                .formInfo(
+                        FormInfo.builder()
+                                .openDate(event.getFormOpenDate())
+                                .openTime(event.getFormOpenTime())
+                                .closeDate(event.getFormCloseDate())
+                                .closeTime(event.getFormCloseTime())
+                                .isAbleToApply(event.isAbleToApply())
+                                .build()
+                )
+                .clubInfo(ClubInfo.builder()
+                        .clubId(event.getClubId())
+                        .clubName(event.getClubName())
+                        .build()
+                )
+                .build();
+    }
+
+    public static EventDetailGetResponse withRecruitment(EventGetInfo vo, String bucketUrl) {
+        Event event = vo.event();
+        return EventDetailGetResponse.builder()
+                .id(event.getId())
+                .category(event.getCategory().toString())
+                .hasForm(event.hasForm())
+                .hasAlreadyApplied(vo.hasAlreadyApplied())
+                .eventInfo(
+                        EventInfo.builder()
+                                .title(event.getTitle())
+                                .content(event.getContent())
+                                .startDate(event.getStartDate())
+                                .startTime(event.getStartTime())
+                                .isEnded(event.isEventEnded())
+                                .applicants(vo.applicants())
+                                .capacity(event.getCapacity())
+                                .posterImageUrl(event.getPosterImageName() != null ? bucketUrl + event.getPosterImageName() : null)
+                                .activityArea(event.getActivityArea())
                                 .recruitmentTarget(event.getRecruitmentTarget())
                                 .build()
                 )
