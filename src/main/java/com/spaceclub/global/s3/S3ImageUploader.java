@@ -26,10 +26,6 @@ public class S3ImageUploader {
 
     private static final String DATE_FORMAT = "yyyyMMdd_HHmmss";
 
-    public static final String UNDERSCORE = "_";
-
-    private static final List<String> validExtensions = List.of("jpeg", "jpg", "png");
-
     private final AmazonS3Client amazonS3Client;
 
     private final S3Properties s3Properties;
@@ -38,14 +34,13 @@ public class S3ImageUploader {
         String originalFilename = image.getOriginalFilename();
         if (originalFilename == null) throw new IllegalArgumentException(FAIL_FILE_UPLOAD.toString());
 
-        String fileName = createFileName(originalFilename);
+        String key = createKey(originalFilename, folder);
+        String bucket = s3Properties.bucket();
+
         ObjectMetadata objectMetaData = new ObjectMetadata();
 
         objectMetaData.setContentType(image.getContentType());
         objectMetaData.setContentLength(image.getSize());
-
-        String bucket = s3Properties.bucket();
-        String key = folder.getFolder() + "/" + fileName;
 
         try {
             amazonS3Client.putObject(
@@ -58,7 +53,7 @@ public class S3ImageUploader {
         return key;
     }
 
-    private String createFileName(String originalName) {
+    private String createKey(String originalName, S3Folder folder) {
         String timestamp = new SimpleDateFormat(DATE_FORMAT).format(new Date());
 
         int lastDot = originalName.lastIndexOf(DOT);
@@ -66,11 +61,11 @@ public class S3ImageUploader {
         String fileExtension = originalName.substring(lastDot + 1);
         validateFileExtension(fileExtension);
 
-        return fileName + UNDERSCORE + timestamp + DOT + fileExtension;
+        return String.format("%s/%s_%s.%s", folder.getFolder(), fileName, timestamp, fileExtension);
     }
 
     private void validateFileExtension(String fileExtension) {
-        boolean invalidExtension = validExtensions
+        boolean invalidExtension = s3Properties.validExtensions()
                 .stream()
                 .noneMatch(extension -> extension.equalsIgnoreCase(fileExtension));
 
