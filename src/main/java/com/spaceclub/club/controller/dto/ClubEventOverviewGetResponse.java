@@ -39,11 +39,10 @@ public record ClubEventOverviewGetResponse(Long id,
     }
 
     private static boolean isEventEnded(ClubEventOverviewGetInfo clubEventOverviewGetInfo) {
-        if (clubEventOverviewGetInfo.endDate() == null) { // 공연, 홍보 -> 시작만 받는다
+        if (clubEventOverviewGetInfo.endDate() == null) {
             return LocalDateTime.now().isAfter(clubEventOverviewGetInfo.startDate().atTime(clubEventOverviewGetInfo.startTime()));
         }
 
-        // 모집공고, 클럽일정 -> endDateTime 기준으로
         return LocalDateTime.now().isAfter(clubEventOverviewGetInfo.endDate().atTime(clubEventOverviewGetInfo.endTime()));
     }
 

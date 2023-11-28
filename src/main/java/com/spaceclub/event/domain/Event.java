@@ -297,4 +297,14 @@ public class Event extends BaseTimeEntity {
         return this.form != null;
     }
 
+    public Boolean isAbleToApply() {
+        if (this.formInfo.getFormOpenDateTime() == null) return null;
+        if (this.formInfo.getFormCloseDateTime() == null) return null;
+
+        LocalDateTime now = LocalDateTime.now();
+
+        return this.formInfo.getFormOpenDateTime().isBefore(now)
+                && this.formInfo.getFormCloseDateTime().isAfter(now);
+    }
+
 }
