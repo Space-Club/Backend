@@ -911,13 +911,14 @@ class EventControllerTest {
                         ),
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
-                                fieldWithPath("clubId").type(NUMBER).description("클럽 ID"),
                                 fieldWithPath("category").type(STRING).description("이벤트 종류"),
+                                fieldWithPath("hasForm").type(BOOLEAN).description("폼 존재 여부"),
                                 fieldWithPath("eventInfo").type(OBJECT).description("행사 정보"),
                                 fieldWithPath("eventInfo.title").type(STRING).description("행사 제목"),
                                 fieldWithPath("eventInfo.content").type(STRING).description("행사 내용"),
                                 fieldWithPath("eventInfo.startDate").type(STRING).description("행사 시작 날짜"),
                                 fieldWithPath("eventInfo.startTime").type(STRING).description("행사 시작 시각"),
+                                fieldWithPath("eventInfo.isEnded").type(BOOLEAN).description("행사 종료 여부"),
                                 fieldWithPath("eventInfo.location").type(STRING).description("행사 위치"),
                                 fieldWithPath("eventInfo.applicants").type(NUMBER).description("신청 인원"),
                                 fieldWithPath("eventInfo.capacity").type(NUMBER).description("신청 정원"),
@@ -926,13 +927,16 @@ class EventControllerTest {
                                 fieldWithPath("ticketInfo.cost").type(NUMBER).description("참가 비용"),
                                 fieldWithPath("ticketInfo.maxTicketCount").type(NUMBER).description("인당 최대 예매 가능 수"),
                                 fieldWithPath("formInfo").type(OBJECT).description("폼 정보"),
-                                fieldWithPath("formInfo.formOpenDate").type(STRING).description("행사 참여 신청 시작 날짜"),
-                                fieldWithPath("formInfo.formOpenTime").type(STRING).description("행사 참여 신청 시작 시간"),
-                                fieldWithPath("formInfo.formCloseDate").type(STRING).description("행사 참여 신청 종료 날짜"),
-                                fieldWithPath("formInfo.formCloseTime").type(STRING).description("행사 참여 신청 종료 시간"),
+                                fieldWithPath("formInfo.openDate").type(STRING).description("행사 참여 신청 시작 날짜"),
+                                fieldWithPath("formInfo.openTime").type(STRING).description("행사 참여 신청 시작 시간"),
+                                fieldWithPath("formInfo.closeDate").type(STRING).description("행사 참여 신청 종료 날짜"),
+                                fieldWithPath("formInfo.closeTime").type(STRING).description("행사 참여 신청 종료 시간"),
+                                fieldWithPath("formInfo.isAbleToApply").type(BOOLEAN).description("참여 신청 가능 여부"),
                                 fieldWithPath("bankInfo").type(OBJECT).description("은행 정보"),
                                 fieldWithPath("bankInfo.bankName").type(STRING).description("은행 명"),
-                                fieldWithPath("bankInfo.bankAccountNumber").type(STRING).description("계좌 번호")
+                                fieldWithPath("bankInfo.bankAccountNumber").type(STRING).description("계좌 번호"),
+                                fieldWithPath("clubInfo.clubId").type(NUMBER).description("클럽 ID"),
+                                fieldWithPath("clubInfo.clubName").type(STRING).description("클럽 이름")
                         )));
     }
 
@@ -961,22 +965,26 @@ class EventControllerTest {
                         ),
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
-                                fieldWithPath("clubId").type(NUMBER).description("클럽 ID"),
                                 fieldWithPath("category").type(STRING).description("이벤트 종류"),
+                                fieldWithPath("hasForm").type(BOOLEAN).description("폼 존재 여부"),
                                 fieldWithPath("eventInfo").type(OBJECT).description("행사 정보"),
                                 fieldWithPath("eventInfo.title").type(STRING).description("행사 제목"),
                                 fieldWithPath("eventInfo.content").type(STRING).description("행사 내용"),
                                 fieldWithPath("eventInfo.startDate").type(STRING).description("행사 시작 날짜"),
                                 fieldWithPath("eventInfo.startTime").type(STRING).description("행사 시작 시각"),
+                                fieldWithPath("eventInfo.isEnded").type(BOOLEAN).description("행사 종료 여부"),
                                 fieldWithPath("eventInfo.applicants").type(NUMBER).description("신청 인원"),
                                 fieldWithPath("eventInfo.capacity").type(NUMBER).description("신청 정원"),
                                 fieldWithPath("eventInfo.posterImageUrl").type(STRING).description("행사 포스터 URL"),
                                 fieldWithPath("eventInfo.activityArea").type(STRING).description("활동 영역"),
                                 fieldWithPath("formInfo").type(OBJECT).description("폼 정보"),
-                                fieldWithPath("formInfo.formOpenDate").type(STRING).description("행사 참여 신청 시작 날짜"),
-                                fieldWithPath("formInfo.formOpenTime").type(STRING).description("행사 참여 신청 시작 시간"),
-                                fieldWithPath("formInfo.formCloseDate").type(STRING).description("행사 참여 신청 종료 날짜"),
-                                fieldWithPath("formInfo.formCloseTime").type(STRING).description("행사 참여 신청 종료 시간")
+                                fieldWithPath("formInfo.openDate").type(STRING).description("행사 참여 신청 시작 날짜"),
+                                fieldWithPath("formInfo.openTime").type(STRING).description("행사 참여 신청 시작 시간"),
+                                fieldWithPath("formInfo.closeDate").type(STRING).description("행사 참여 신청 종료 날짜"),
+                                fieldWithPath("formInfo.closeTime").type(STRING).description("행사 참여 신청 종료 시간"),
+                                fieldWithPath("formInfo.isAbleToApply").type(BOOLEAN).description("참여 신청 가능 여부"),
+                                fieldWithPath("clubInfo.clubId").type(NUMBER).description("클럽 ID"),
+                                fieldWithPath("clubInfo.clubName").type(STRING).description("클럽 이름")
                         )));
     }
 
@@ -1005,23 +1013,27 @@ class EventControllerTest {
                         ),
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
-                                fieldWithPath("clubId").type(NUMBER).description("클럽 ID"),
                                 fieldWithPath("category").type(STRING).description("이벤트 종류"),
+                                fieldWithPath("hasForm").type(BOOLEAN).description("폼 존재 여부"),
                                 fieldWithPath("eventInfo").type(OBJECT).description("행사 정보"),
                                 fieldWithPath("eventInfo.title").type(STRING).description("행사 제목"),
                                 fieldWithPath("eventInfo.content").type(STRING).description("행사 내용"),
                                 fieldWithPath("eventInfo.startDate").type(STRING).description("행사 시작 날짜"),
                                 fieldWithPath("eventInfo.startTime").type(STRING).description("행사 시작 시각"),
+                                fieldWithPath("eventInfo.isEnded").type(BOOLEAN).description("행사 종료 여부"),
                                 fieldWithPath("eventInfo.location").type(STRING).description("행사 위치"),
                                 fieldWithPath("eventInfo.applicants").type(NUMBER).description("신청 인원"),
                                 fieldWithPath("eventInfo.capacity").type(NUMBER).description("모집 정원"),
                                 fieldWithPath("eventInfo.posterImageUrl").type(STRING).description("행사 포스터 URL"),
                                 fieldWithPath("eventInfo.recruitmentTarget").type(STRING).description("모집 대상"),
                                 fieldWithPath("formInfo").type(OBJECT).description("폼 정보"),
-                                fieldWithPath("formInfo.formOpenDate").type(STRING).description("행사 참여 신청 시작 날짜"),
-                                fieldWithPath("formInfo.formOpenTime").type(STRING).description("행사 참여 신청 시작 시간"),
-                                fieldWithPath("formInfo.formCloseDate").type(STRING).description("행사 참여 신청 종료 날짜"),
-                                fieldWithPath("formInfo.formCloseTime").type(STRING).description("행사 참여 신청 종료 시간")
+                                fieldWithPath("formInfo.openDate").type(STRING).description("행사 참여 신청 시작 날짜"),
+                                fieldWithPath("formInfo.openTime").type(STRING).description("행사 참여 신청 시작 시간"),
+                                fieldWithPath("formInfo.closeDate").type(STRING).description("행사 참여 신청 종료 날짜"),
+                                fieldWithPath("formInfo.closeTime").type(STRING).description("행사 참여 신청 종료 시간"),
+                                fieldWithPath("formInfo.isAbleToApply").type(BOOLEAN).description("참여 신청 가능 여부"),
+                                fieldWithPath("clubInfo.clubId").type(NUMBER).description("클럽 ID"),
+                                fieldWithPath("clubInfo.clubName").type(STRING).description("클럽 이름")
                         )));
     }
 
@@ -1051,8 +1063,8 @@ class EventControllerTest {
                         ),
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
-                                fieldWithPath("clubId").type(NUMBER).description("클럽 ID"),
                                 fieldWithPath("category").type(STRING).description("이벤트 종류"),
+                                fieldWithPath("hasForm").type(BOOLEAN).description("폼 존재 여부"),
                                 fieldWithPath("eventInfo").type(OBJECT).description("행사 정보"),
                                 fieldWithPath("eventInfo.title").type(STRING).description("행사 제목"),
                                 fieldWithPath("eventInfo.content").type(STRING).description("행사 제목"),
@@ -1060,16 +1072,20 @@ class EventControllerTest {
                                 fieldWithPath("eventInfo.startTime").type(STRING).description("행사 시작 시각"),
                                 fieldWithPath("eventInfo.endDate").type(STRING).description("행사 종료 날짜"),
                                 fieldWithPath("eventInfo.endTime").type(STRING).description("행사 종료 시각"),
+                                fieldWithPath("eventInfo.isEnded").type(BOOLEAN).description("행사 종료 여부"),
                                 fieldWithPath("eventInfo.dues").type(NUMBER).description("행사 참가 회비"),
                                 fieldWithPath("eventInfo.location").type(STRING).description("행사 위치"),
                                 fieldWithPath("eventInfo.applicants").type(NUMBER).description("신청 인원"),
                                 fieldWithPath("eventInfo.capacity").type(NUMBER).description("모집 정원"),
                                 fieldWithPath("eventInfo.posterImageUrl").type(STRING).description("행사 포스터 URL"),
                                 fieldWithPath("formInfo").type(OBJECT).description("폼 정보"),
-                                fieldWithPath("formInfo.formOpenDate").type(STRING).description("행사 참여 신청 시작 날짜"),
-                                fieldWithPath("formInfo.formOpenTime").type(STRING).description("행사 참여 신청 시작 시간"),
-                                fieldWithPath("formInfo.formCloseDate").type(STRING).description("행사 참여 신청 종료 날짜"),
-                                fieldWithPath("formInfo.formCloseTime").type(STRING).description("행사 참여 신청 종료 시간")
+                                fieldWithPath("formInfo.openDate").type(STRING).description("행사 참여 신청 시작 날짜"),
+                                fieldWithPath("formInfo.openTime").type(STRING).description("행사 참여 신청 시작 시간"),
+                                fieldWithPath("formInfo.closeDate").type(STRING).description("행사 참여 신청 종료 날짜"),
+                                fieldWithPath("formInfo.closeTime").type(STRING).description("행사 참여 신청 종료 시간"),
+                                fieldWithPath("formInfo.isAbleToApply").type(BOOLEAN).description("참여 신청 가능 여부"),
+                                fieldWithPath("clubInfo.clubId").type(NUMBER).description("클럽 ID"),
+                                fieldWithPath("clubInfo.clubName").type(STRING).description("클럽 이름")
                         )));
     }
 

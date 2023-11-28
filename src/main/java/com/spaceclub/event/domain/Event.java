@@ -182,6 +182,10 @@ public class Event extends BaseTimeEntity {
         return eventInfo.getStartDateTime().toLocalTime();
     }
 
+    public LocalDateTime getStartDateTime() {
+        return eventInfo.getStartDateTime();
+    }
+
     public String getLocation() {
         if (eventInfo.getLocation() == null) return null;
         return eventInfo.getLocation();
@@ -238,11 +242,7 @@ public class Event extends BaseTimeEntity {
     }
 
     public boolean isFormManaged() {
-        if (form == null || !form.isManaged()) {
-            return false;
-
-        }
-        return form.isManaged();
+        return form != null && form.isManaged();
     }
 
     public boolean isNotFormManaged() {
@@ -291,6 +291,20 @@ public class Event extends BaseTimeEntity {
 
     public String getBankAccountNumber() {
         return this.bankInfo.getBankAccountNumber();
+    }
+
+    public boolean hasForm() {
+        return this.form != null;
+    }
+
+    public Boolean isAbleToApply() {
+        if (this.formInfo.getFormOpenDateTime() == null) return null;
+        if (this.formInfo.getFormCloseDateTime() == null) return null;
+
+        LocalDateTime now = LocalDateTime.now();
+
+        return this.formInfo.getFormOpenDateTime().isBefore(now)
+                && this.formInfo.getFormCloseDateTime().isAfter(now);
     }
 
 }
