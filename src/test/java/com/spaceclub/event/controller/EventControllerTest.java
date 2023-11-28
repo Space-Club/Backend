@@ -912,6 +912,7 @@ class EventControllerTest {
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
                                 fieldWithPath("category").type(STRING).description("이벤트 종류"),
+                                fieldWithPath("hasForm").type(BOOLEAN).description("폼 존재 여부"),
                                 fieldWithPath("eventInfo").type(OBJECT).description("행사 정보"),
                                 fieldWithPath("eventInfo.title").type(STRING).description("행사 제목"),
                                 fieldWithPath("eventInfo.content").type(STRING).description("행사 내용"),
@@ -965,6 +966,7 @@ class EventControllerTest {
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
                                 fieldWithPath("category").type(STRING).description("이벤트 종류"),
+                                fieldWithPath("hasForm").type(BOOLEAN).description("폼 존재 여부"),
                                 fieldWithPath("eventInfo").type(OBJECT).description("행사 정보"),
                                 fieldWithPath("eventInfo.title").type(STRING).description("행사 제목"),
                                 fieldWithPath("eventInfo.content").type(STRING).description("행사 내용"),
@@ -1012,6 +1014,7 @@ class EventControllerTest {
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
                                 fieldWithPath("category").type(STRING).description("이벤트 종류"),
+                                fieldWithPath("hasForm").type(BOOLEAN).description("폼 존재 여부"),
                                 fieldWithPath("eventInfo").type(OBJECT).description("행사 정보"),
                                 fieldWithPath("eventInfo.title").type(STRING).description("행사 제목"),
                                 fieldWithPath("eventInfo.content").type(STRING).description("행사 내용"),
@@ -1061,6 +1064,7 @@ class EventControllerTest {
                         responseFields(
                                 fieldWithPath("id").type(NUMBER).description("행사 ID"),
                                 fieldWithPath("category").type(STRING).description("이벤트 종류"),
+                                fieldWithPath("hasForm").type(BOOLEAN).description("폼 존재 여부"),
                                 fieldWithPath("eventInfo").type(OBJECT).description("행사 정보"),
                                 fieldWithPath("eventInfo.title").type(STRING).description("행사 제목"),
                                 fieldWithPath("eventInfo.content").type(STRING).description("행사 제목"),

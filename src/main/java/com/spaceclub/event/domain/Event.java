@@ -242,11 +242,7 @@ public class Event extends BaseTimeEntity {
     }
 
     public boolean isFormManaged() {
-        if (form == null || !form.isManaged()) {
-            return false;
-
-        }
-        return form.isManaged();
+        return form != null && form.isManaged();
     }
 
     public boolean isNotFormManaged() {
@@ -295,6 +291,10 @@ public class Event extends BaseTimeEntity {
 
     public String getBankAccountNumber() {
         return this.bankInfo.getBankAccountNumber();
+    }
+
+    public boolean hasForm() {
+        return this.form != null;
     }
 
 }

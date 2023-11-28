@@ -12,6 +12,7 @@ import java.time.LocalTime;
 public record EventDetailGetResponse(
         Long id,
         String category,
+        boolean hasForm,
         EventInfo eventInfo,
         FormInfo formInfo,
         TicketInfo ticketInfo,
@@ -106,6 +107,7 @@ public record EventDetailGetResponse(
         return EventDetailGetResponse.builder()
                 .id(event.getId())
                 .category(event.getCategory().toString())
+                .hasForm(event.hasForm())
                 .eventInfo(
                         EventInfo.builder()
                                 .title(event.getTitle())
@@ -157,6 +159,7 @@ public record EventDetailGetResponse(
         return EventDetailGetResponse.builder()
                 .id(event.getId())
                 .category(event.getCategory().toString())
+                .hasForm(event.hasForm())
                 .eventInfo(
                         EventInfo.builder()
                                 .title(event.getTitle())
@@ -200,6 +203,7 @@ public record EventDetailGetResponse(
         return EventDetailGetResponse.builder()
                 .id(event.getId())
                 .category(event.getCategory().toString())
+                .hasForm(event.hasForm())
                 .eventInfo(
                         EventInfo.builder()
                                 .title(event.getTitle())
@@ -240,6 +244,7 @@ public record EventDetailGetResponse(
         return EventDetailGetResponse.builder()
                 .id(event.getId())
                 .category(event.getCategory().toString())
+                .hasForm(event.hasForm())
                 .eventInfo(
                         EventInfo.builder()
                                 .title(event.getTitle())
