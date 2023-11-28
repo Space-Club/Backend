@@ -26,6 +26,8 @@ import static com.spaceclub.user.UserExceptionMessage.USER_NOT_FOUND;
 @RequiredArgsConstructor
 public class AccountService {
 
+    private static final String BLANK = "";
+
     private final JwtManager jwtManager;
     private final UserRepository userRepository;
     private final KakaoOauthInfoSender kakaoOauthInfoSender;
@@ -35,7 +37,7 @@ public class AccountService {
         User kakaoUser = createKakaoUser(code);
 
         if (kakaoUser.isNewMember()) {
-            return UserLoginInfo.from(kakaoUser.getId(), "", "");
+            return UserLoginInfo.from(kakaoUser.getId(), BLANK, BLANK);
         }
 
         String accessToken = jwtManager.createAccessToken(kakaoUser.getId(), kakaoUser.getUsername());
@@ -59,7 +61,7 @@ public class AccountService {
     }
 
     private void checkWhenUserStatusIsInactive(User kakaoUser, LocalDateTime now) {
-        if (kakaoUser.isInactive()){
+        if (kakaoUser.isInactive()) {
             User user = kakaoUser.changeStatusToRegistered();
             userRepository.save(user);
 
@@ -111,6 +113,7 @@ public class AccountService {
         if (!user.isValid(username)) {
             throw new IllegalStateException(USER_NOT_FOUND.toString());
         }
+
         return true;
     }
 

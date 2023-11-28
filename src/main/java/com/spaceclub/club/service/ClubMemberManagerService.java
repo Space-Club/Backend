@@ -74,7 +74,7 @@ public class ClubMemberManagerService {
     @Transactional
     public void exitClub(Long clubId, Long memberId) {
         ClubUser clubUser = this.getClubUser(clubId, memberId);
-        if (isLastManager(clubId, clubUser)) throw new IllegalStateException("마지막 관리자는 탈퇴가 불가합니다.");
+        if (isLastManager(clubId, clubUser)) throw new IllegalStateException(CAN_NOT_WITHDRAW.toString());
 
         clubUserRepository.delete(clubUser);
     }
@@ -93,7 +93,7 @@ public class ClubMemberManagerService {
 
         ClubUser clubMember = this.getClubUser(clubId, memberId);
 
-        if (clubMember.isManager()) throw new IllegalStateException("관리자는 탈퇴가 불가합니다.");
+        if (clubMember.isManager()) throw new IllegalStateException(UNAUTHORIZED.toString());
 
         clubUserRepository.delete(clubMember);
     }

@@ -9,6 +9,7 @@ import org.springframework.util.Assert;
 
 import java.util.regex.Pattern;
 
+import static com.spaceclub.user.UserExceptionMessage.INVALID_EMAIL;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static lombok.AccessLevel.PROTECTED;
 
@@ -30,8 +31,8 @@ public class Email {
     }
 
     private void validate(String email) {
-        Assert.hasText(email, "올바른 이메일을 입력해 주세요.");
-        Assert.isTrue(isValid(email), "올바른 이메일을 입력해 주세요.");
+        Assert.hasText(email, INVALID_EMAIL.toString());
+        Assert.isTrue(isValid(email), INVALID_EMAIL.toString());
     }
 
     private boolean isValid(String email) {

@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static com.spaceclub.user.UserExceptionMessage.NULL_REQUEST;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
@@ -35,7 +36,7 @@ public class Bookmark {
 
     private void validate(Long userId, Long eventId) {
         if (userId == null || eventId == null) {
-            throw new IllegalArgumentException("userId나 eventId가 null입니다.");
+            throw new IllegalArgumentException(NULL_REQUEST.toString());
         }
     }
 

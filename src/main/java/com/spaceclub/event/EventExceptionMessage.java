@@ -25,7 +25,9 @@ public enum EventExceptionMessage implements ExceptionMessageInterface {
     INVALID_EVENT_BANK_ACCOUNT_NUMBER("은행 계좌번호는 1~30자 사이의 길이입니다."),
     INVALID_EVENT_MAX_TICKET_COUNT("인 당 예매 가능 수는 1이상 999이하의 값입니다."),
     INVALID_EVENT_CATEGORY("행사 카테고리는 필수 값입니다."),
-    INVALID_POSTER_IMAGE("행사 포스터는 필수 값입니다.");
+    INVALID_POSTER_IMAGE("행사 포스터는 필수 값입니다."),
+    INVALID_EVENT_USER("올바르지 못한 이벤트 유저 입니다"),
+    INVALID_EVENT("올바르지 못한 이벤트 입니다");
 
     private final String message;
 

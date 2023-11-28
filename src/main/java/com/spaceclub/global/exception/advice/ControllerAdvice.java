@@ -7,7 +7,11 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 
+import static com.spaceclub.global.exception.GlobalExceptionCode.INVALID_REQUEST;
+import static com.spaceclub.global.exception.GlobalExceptionCode.MAX_IMAGE_SIZE_EXCEEDED;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
@@ -22,7 +26,7 @@ public class ControllerAdvice {
         String exceptionName = exception.getClass().getSimpleName();
         log.info("토큰 관련 에러, exception name: {}", exceptionName);
 
-        return new ErrorResponse(exceptionName, exception.getMessage());
+        return new ErrorResponse(exception.getMessage(), exception.getMessage());
     }
 
     @ResponseStatus(BAD_REQUEST)
@@ -33,13 +37,26 @@ public class ControllerAdvice {
         return new ErrorResponse(exceptionName, exception.getMessage());
     }
 
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler
+    public ErrorResponse multipartExceptionHandler(MultipartException exception) {
+        String exceptionName = exception.getClass().getSimpleName();
+        log.warn("파일 업로드 에러, exception name: {}", exceptionName);
+
+        if (exception.getCause() instanceof MaxUploadSizeExceededException) {
+            return new ErrorResponse(exceptionName, MAX_IMAGE_SIZE_EXCEEDED.toString());
+        }
+
+        return new ErrorResponse(exceptionName, exception.getMessage());
+    }
+
     @ResponseStatus(METHOD_NOT_ALLOWED)
     @ExceptionHandler({HttpRequestMethodNotSupportedException.class, HttpMessageNotReadableException.class})
     public ErrorResponse httpRequestMethodNotSupportedExceptionHandle(Exception exception) {
         String exceptionName = exception.getClass().getSimpleName();
         log.warn("잘못된 요청, exception name: {}", exceptionName);
 
-        return new ErrorResponse(exceptionName, exception.getMessage());
+        return new ErrorResponse(exceptionName, INVALID_REQUEST.toString());
     }
 
     @ResponseStatus(INTERNAL_SERVER_ERROR)

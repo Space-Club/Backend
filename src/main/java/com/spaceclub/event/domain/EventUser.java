@@ -18,6 +18,8 @@ import org.springframework.util.Assert;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import static com.spaceclub.event.EventExceptionMessage.INVALID_EVENT;
+import static com.spaceclub.event.EventExceptionMessage.INVALID_EVENT_USER;
 import static com.spaceclub.event.domain.ParticipationStatus.CANCELED;
 import static com.spaceclub.event.domain.ParticipationStatus.CANCEL_REQUESTED;
 import static jakarta.persistence.FetchType.EAGER;
@@ -59,8 +61,8 @@ public class EventUser extends BaseTimeEntity {
     }
 
     private void validate(Long userId, Event event) {
-        Assert.notNull(userId, "유저는 필수입니다.");
-        Assert.notNull(event, "이벤트는 필수입니다.");
+        Assert.notNull(userId, INVALID_EVENT_USER.toString());
+        Assert.notNull(event, INVALID_EVENT.toString());
     }
 
     public EventUser updateStatus(ParticipationStatus status) {
