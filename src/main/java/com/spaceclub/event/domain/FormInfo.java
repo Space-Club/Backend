@@ -15,10 +15,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FormInfo {
 
-    @Getter
     private LocalDateTime formOpenDateTime;
 
-    @Getter
     private LocalDateTime formCloseDateTime;
 
     @Builder

@@ -11,9 +11,9 @@ import com.spaceclub.event.service.vo.ClubEventOverviewGetInfo;
 import com.spaceclub.event.service.vo.EventCreateInfo;
 import com.spaceclub.event.service.vo.EventGetInfo;
 import com.spaceclub.event.service.vo.UserBookmarkedEventGetInfo;
+import com.spaceclub.global.config.s3.S3Properties;
 import com.spaceclub.global.s3.S3Folder;
 import com.spaceclub.global.s3.S3ImageUploader;
-import com.spaceclub.global.config.s3.S3Properties;
 import com.spaceclub.user.service.UserProvider;
 import com.spaceclub.user.service.vo.UserProfile;
 import lombok.RequiredArgsConstructor;
@@ -142,7 +142,7 @@ public class EventService implements EventProvider {
     }
 
     public List<Event> getBanner(LocalDateTime now, int limit) {
-        PageRequest pageable = PageRequest.of(0, limit, Sort.by(Sort.Direction.ASC, "formCloseDateTime"));
+        PageRequest pageable = PageRequest.of(0, limit, Sort.by(Sort.Direction.ASC, "formInfo.formCloseDateTime"));
 
         return eventRepository.findAllByFormCloseDateTimeGreaterThan(now, pageable).getContent();
     }
