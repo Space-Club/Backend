@@ -83,24 +83,23 @@ public class EventService implements EventProvider {
 
     @Transactional
     public void update(Event event, Long userId, MultipartFile posterImage) {
-        clubUserValidator.validateClubManager(event.getClubId(), userId);
-        EventValidator.validateEvent(event);
-
         Event existEvent = eventRepository.findById(event.getId())
                 .orElseThrow(() -> new IllegalArgumentException(EVENT_NOT_FOUND.toString()));
 
-        Event updatedEvent = processPosterImage(event, existEvent, posterImage);
+        EventValidator.validateEvent(event);
+        clubUserValidator.validateClubManager(existEvent.getClubId(), userId);
+
+        Event updatedEvent = processPosterImage(existEvent, posterImage);
 
         eventRepository.save(updatedEvent);
     }
 
-    private Event processPosterImage(Event newEvent, Event existEvent, MultipartFile posterImage) {
-        String posterImageName = (posterImage != null) ?
-                imageUploader.upload(posterImage, S3Folder.EVENT_POSTER) :
-                existEvent.getPosterImageName();
+    private Event processPosterImage(Event existEvent, MultipartFile posterImage) {
+        if (posterImage == null) return existEvent;
 
-        Event updatedEvent = newEvent.registerPosterImage(posterImageName);
-        return existEvent.update(updatedEvent);
+        String posterImageName = imageUploader.upload(posterImage, S3Folder.EVENT_POSTER);
+
+        return existEvent.registerPosterImage(posterImageName);
     }
 
     public Page<Event> getAll(EventCategory eventCategory, Pageable pageable) {

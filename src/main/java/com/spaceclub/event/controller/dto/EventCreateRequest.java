@@ -26,24 +26,26 @@ public record EventCreateRequest(
             String location,
             Integer capacity,
             String recruitmentTarget,
-            String activityArea
+            String activityArea,
+            Integer recruitmentLimit
     ) {
 
         @Builder
         EventInfo {
         }
 
-        private com.spaceclub.event.domain.EventInfo toEntity() {
+        private com.spaceclub.event.domain.EventInfo toEntity(FormInfo formInfo) {
             return com.spaceclub.event.domain.EventInfo.builder()
                     .title(title)
                     .content(content)
-                    .startDateTime(startDate.atTime(startTime))
-                    .endDateTime(endDate != null ? endDate.atTime(endTime) : null)
+                    .startDateTime(startDate != null ? startDate.atTime(startTime) : formInfo.openDate.atTime(formInfo.openTime))
+                    .endDateTime(endDate != null ? endDate.atTime(endTime) : formInfo.closeDate.atTime(formInfo.closeTime))
                     .dues(dues)
                     .location(location)
                     .capacity(capacity)
                     .recruitmentTarget(recruitmentTarget)
                     .activityArea(activityArea)
+                    .recruitmentLimit(recruitmentLimit)
                     .build();
         }
 
@@ -118,7 +120,7 @@ public record EventCreateRequest(
     private Event withShow() {
         return Event.builder()
                 .category(EventCategory.SHOW)
-                .eventInfo(eventInfo.toEntity())
+                .eventInfo(eventInfo.toEntity(formInfo))
                 .ticketInfo(ticketInfo.toEntity())
                 .formInfo(formInfo.toEntity())
                 .bankInfo(bankInfo.toEntity())
@@ -128,7 +130,7 @@ public record EventCreateRequest(
     private Event withClub() {
         return Event.builder()
                 .category(EventCategory.CLUB)
-                .eventInfo(eventInfo.toEntity())
+                .eventInfo(eventInfo.toEntity(formInfo))
                 .formInfo(formInfo.toEntity())
                 .build();
     }
@@ -136,7 +138,7 @@ public record EventCreateRequest(
     private Event withPromotion() {
         return Event.builder()
                 .category(EventCategory.PROMOTION)
-                .eventInfo(eventInfo.toEntity())
+                .eventInfo(eventInfo.toEntity(formInfo))
                 .formInfo(formInfo.toEntity())
                 .build();
     }
@@ -144,7 +146,7 @@ public record EventCreateRequest(
     private Event withRecruitment() {
         return Event.builder()
                 .category(EventCategory.RECRUITMENT)
-                .eventInfo(eventInfo.toEntity())
+                .eventInfo(eventInfo.toEntity(formInfo))
                 .formInfo(formInfo.toEntity())
                 .build();
     }

@@ -26,24 +26,26 @@ public record EventUpdateRequest(
             String location,
             Integer capacity,
             String recruitmentTarget,
-            String activityArea
+            String activityArea,
+            Integer recruitmentLimit
     ) {
 
         @Builder
         EventInfo {
         }
 
-        private com.spaceclub.event.domain.EventInfo toEntity() {
+        private com.spaceclub.event.domain.EventInfo toEntity(FormInfo formInfo) {
             return com.spaceclub.event.domain.EventInfo.builder()
                     .title(title)
                     .content(content)
-                    .startDateTime(startDate.atTime(startTime))
+                    .startDateTime(startDate != null ? startDate.atTime(startTime) : null)
                     .endDateTime(endDate != null ? endDate.atTime(endTime) : null)
                     .dues(dues)
                     .location(location)
                     .capacity(capacity)
                     .recruitmentTarget(recruitmentTarget)
                     .activityArea(activityArea)
+                    .recruitmentLimit(recruitmentLimit)
                     .build();
         }
 
@@ -117,35 +119,39 @@ public record EventUpdateRequest(
 
     private Event withShow() {
         return Event.builder()
+                .id(eventId)
                 .category(EventCategory.SHOW)
-                .eventInfo(eventInfo.toEntity())
-                .ticketInfo(ticketInfo.toEntity())
-                .formInfo(formInfo.toEntity())
-                .bankInfo(bankInfo.toEntity())
+                .eventInfo(eventInfo != null ? eventInfo.toEntity(formInfo) : null)
+                .ticketInfo(ticketInfo != null ? ticketInfo.toEntity() : null)
+                .formInfo(formInfo != null ? formInfo.toEntity() : null)
+                .bankInfo(bankInfo != null ? bankInfo.toEntity() : null)
                 .build();
     }
 
     private Event withClub() {
         return Event.builder()
+                .id(eventId)
                 .category(EventCategory.CLUB)
-                .eventInfo(eventInfo.toEntity())
-                .formInfo(formInfo.toEntity())
+                .eventInfo(eventInfo != null ? eventInfo.toEntity(formInfo) : null)
+                .formInfo(formInfo != null ? formInfo.toEntity() : null)
                 .build();
     }
 
     private Event withPromotion() {
         return Event.builder()
+                .id(eventId)
                 .category(EventCategory.PROMOTION)
-                .eventInfo(eventInfo.toEntity())
-                .formInfo(formInfo.toEntity())
+                .eventInfo(eventInfo != null ? eventInfo.toEntity(formInfo) : null)
+                .formInfo(formInfo != null ? formInfo.toEntity() : null)
                 .build();
     }
 
     private Event withRecruitment() {
         return Event.builder()
+                .id(eventId)
                 .category(EventCategory.RECRUITMENT)
-                .eventInfo(eventInfo.toEntity())
-                .formInfo(formInfo.toEntity())
+                .eventInfo(eventInfo != null ? eventInfo.toEntity(formInfo) : null)
+                .formInfo(formInfo != null ? formInfo.toEntity() : null)
                 .build();
     }
 
