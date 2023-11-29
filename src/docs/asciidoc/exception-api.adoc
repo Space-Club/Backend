@@ -194,4 +194,10 @@
 |`+KAKAO_UNLINK_FAIL+`
 |카카오 계정 연결 해제에 실패했습니다
 
+|`+FAIL_BAD_WORD_SETUP+`
+|비속어 목록 Trie 생성 실패
+
+|`+BAD_WORD_DETECTED+`
+|비속어가 발견 되었습니다
+
 |====
