@@ -17,3 +17,39 @@ spring:
         create_empty_composites:
           enabled: true
     defer-datasource-initialization: true
+
+oauth:
+  kakao:
+    url:
+      request-token: https://kauth.kakao.com/oauth/token
+      request-info: https://kapi.kakao.com/v2/user/me
+      logout: https://kapi.kakao.com/v1/user/logout
+      unlink: https://kapi.kakao.com/v1/user/unlink
+    access:
+      client-id: ENC(1HPXzg0UKdo61X7AAZeCMZXT1/gU0rhRhDPO3XucG+9yI3uAxIewoZT/E1ybGvsT)
+      redirect-url: https://spaceclub.vercel.app/oauths/kakao/callback
+      client-secret: ENC(azg1Eb4DTVE7mvByLggSse6ZZGAseZKavbcdVHmux7Oob1fnk2+VlVvwdJB61VcJ)
+      admin-key: ENC(sUWeu9FC4Ha8cfXJWA2LRPWCakRV9IZs7U4ieD5MDF2b7KrJnkIcbURsgDCzGxnJ)
+      grant-type: authorization_code
+      admin-key-prefix: KakaoAK
+
+s3:
+  bucket: space-club-image-bucket
+  iam:
+    access-key: ENC(1G8ZGZQKMoihcCiT2kgRMLqmKHWfk10LtbhDURaLzDs=)
+    secret-key: ENC(iVBb5DDSSAGVQhCL6/KnOPKWC3x89s+9s9SyvR+7/55uBtkdhmL0aobUoL1uGa+67NYXjP1KRUI=)
+    region: ENC(906H8BMOAumiA+H0nevzxJUoUGzBG2Nh)
+  url: https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/
+
+jwt:
+  header: access-token
+  issuer: space-club
+  client-secret: ENC(2qr8v6d7x0P13dZVjQx4XToeeUHUh7tW)
+  expiry-seconds: 36000000  # 1시간
+  refresh-expiry-seconds: 1209600 # 2주
+
+web:
+  allowed-origins:
+    - http://localhost:5173
+
+  interceptor-path-pattern: /api/v1/**
