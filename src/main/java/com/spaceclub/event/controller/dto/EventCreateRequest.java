@@ -1,5 +1,6 @@
 package com.spaceclub.event.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
 import lombok.Builder;
@@ -7,6 +8,7 @@ import lombok.Builder;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record EventCreateRequest(
         Long clubId,
         EventInfo eventInfo,
@@ -15,7 +17,8 @@ public record EventCreateRequest(
         BankInfo bankInfo
 ) {
 
-    private record EventInfo(
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public record EventInfo(
             String title,
             String content,
             LocalDate startDate,
@@ -31,7 +34,7 @@ public record EventCreateRequest(
     ) {
 
         @Builder
-        EventInfo {
+        public EventInfo {
         }
 
         private com.spaceclub.event.domain.EventInfo toEntity(FormInfo formInfo) {
@@ -51,13 +54,14 @@ public record EventCreateRequest(
 
     }
 
-    private record TicketInfo(
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public record TicketInfo(
             Integer cost,
             Integer maxTicketCount
     ) {
 
         @Builder
-        TicketInfo {
+        public TicketInfo {
         }
 
         private com.spaceclub.event.domain.TicketInfo toEntity() {
@@ -69,7 +73,8 @@ public record EventCreateRequest(
 
     }
 
-    private record FormInfo(
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public record FormInfo(
             LocalDate openDate,
             LocalTime openTime,
             LocalDate closeDate,
@@ -78,7 +83,7 @@ public record EventCreateRequest(
     ) {
 
         @Builder
-        FormInfo {
+        public FormInfo {
         }
 
         private com.spaceclub.event.domain.FormInfo toEntity() {
@@ -90,13 +95,14 @@ public record EventCreateRequest(
 
     }
 
-    private record BankInfo(
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public record BankInfo(
             String name,
             String accountNumber
     ) {
 
         @Builder
-        BankInfo {
+        public BankInfo {
         }
 
         private com.spaceclub.event.domain.BankInfo toEntity() {
@@ -106,6 +112,10 @@ public record EventCreateRequest(
                     .build();
         }
 
+    }
+
+    @Builder
+    public EventCreateRequest {
     }
 
     public Event toEntity(EventCategory eventCategory) {

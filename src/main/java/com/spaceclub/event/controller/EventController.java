@@ -1,7 +1,7 @@
 package com.spaceclub.event.controller;
 
-import com.spaceclub.event.controller.dto.EventCreateRequest;
 import com.spaceclub.event.controller.dto.EventBannerResponse;
+import com.spaceclub.event.controller.dto.EventCreateRequest;
 import com.spaceclub.event.controller.dto.EventCreateResponse;
 import com.spaceclub.event.controller.dto.EventDetailGetResponse;
 import com.spaceclub.event.controller.dto.EventOverviewGetResponse;
@@ -152,4 +152,5 @@ public class EventController {
 
         return ResponseEntity.ok(bannerResponses);
     }
+
 }

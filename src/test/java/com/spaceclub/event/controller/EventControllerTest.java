@@ -2,18 +2,11 @@ package com.spaceclub.event.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
-import com.spaceclub.event.controller.dto.createRequest.ClubEventCreateRequest;
-import com.spaceclub.event.controller.dto.createRequest.PromotionEventCreateRequest;
-import com.spaceclub.event.controller.dto.createRequest.RecruitmentEventCreateRequest;
-import com.spaceclub.event.controller.dto.createRequest.ShowEventCreateRequest;
-import com.spaceclub.event.controller.dto.updateRequest.ClubEventUpdateRequest;
-import com.spaceclub.event.controller.dto.updateRequest.PromotionEventUpdateRequest;
-import com.spaceclub.event.controller.dto.updateRequest.RecruitmentEventUpdateRequest;
-import com.spaceclub.event.controller.dto.updateRequest.ShowEventUpdateRequest;
+import com.spaceclub.event.controller.dto.EventCreateRequest;
+import com.spaceclub.event.controller.dto.EventUpdateRequest;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.service.EventService;
-import com.spaceclub.event.service.util.EventValidator;
 import com.spaceclub.event.service.vo.EventCreateInfo;
 import com.spaceclub.event.service.vo.EventGetInfo;
 import com.spaceclub.global.UserArgumentResolver;
@@ -127,24 +120,30 @@ class EventControllerTest {
     @WithMockUser
     public void 공연_행사_생성에_성공한다() throws Exception {
         // given
-        ShowEventCreateRequest showEventCreateRequest = new ShowEventCreateRequest(
+        EventCreateRequest showEventCreateRequest = new EventCreateRequest(
                 1L,
-                new ShowEventCreateRequest.EventInfoRequest(
-                        "행사 제목",
-                        "행사 내용",
-                        LocalDate.of(2023, 11, 15),
-                        LocalTime.of(14, 0),
-                        "행사 장소",
-                        100
-                ),
-                new ShowEventCreateRequest.TicketInfoRequest(20000, 2),
-                new ShowEventCreateRequest.BankInfoRequest("은행 명", "은행 계좌번호"),
-                new ShowEventCreateRequest.FormInfoRequest(
-                        LocalDate.of(2023, 11, 1),
-                        LocalTime.of(9, 0),
-                        LocalDate.of(2023, 11, 10),
-                        LocalTime.of(18, 0)
-                )
+                EventCreateRequest.EventInfo.builder()
+                        .title("행사 제목")
+                        .content("행사 내용")
+                        .startDate(LocalDate.of(2023, 11, 15))
+                        .startTime(LocalTime.of(14, 0))
+                        .location("행사 장소")
+                        .capacity(100)
+                        .build(),
+                EventCreateRequest.FormInfo.builder()
+                        .openDate(LocalDate.of(2023, 11, 1))
+                        .openTime(LocalTime.of(9, 0))
+                        .closeDate(LocalDate.of(2023, 11, 10))
+                        .closeTime(LocalTime.of(18, 0))
+                        .build(),
+                EventCreateRequest.TicketInfo.builder()
+                        .cost(20000)
+                        .maxTicketCount(2)
+                        .build(),
+                EventCreateRequest.BankInfo.builder()
+                        .name("은행 명")
+                        .accountNumber("은행 계좌번호")
+                        .build()
         );
         MockMultipartFile request = new MockMultipartFile(
                 "request",
@@ -216,23 +215,26 @@ class EventControllerTest {
     @WithMockUser
     public void 홍보_행사_생성에_성공한다() throws Exception {
         // given
-        PromotionEventCreateRequest promotionEventCreateRequest = new PromotionEventCreateRequest(
-                1L,
-                new PromotionEventCreateRequest.EventInfoRequest(
-                        "행사 제목",
-                        "행사 내용",
-                        LocalDate.of(2023, 11, 15),
-                        LocalTime.of(14, 0),
-                        "행사 장소",
-                        100
-                ),
-                new PromotionEventCreateRequest.FormInfoRequest(
-                        LocalDate.of(2023, 11, 1),
-                        LocalTime.of(9, 0),
-                        LocalDate.of(2023, 11, 10),
-                        LocalTime.of(18, 0)
+        EventCreateRequest promotionEventCreateRequest = EventCreateRequest.builder()
+                .clubId(1L)
+                .eventInfo(
+                        EventCreateRequest.EventInfo.builder()
+                                .title("행사 제목")
+                                .content("행사 내용")
+                                .startDate(LocalDate.of(2023, 11, 15))
+                                .startTime(LocalTime.of(14, 0))
+                                .location("행사 장소")
+                                .capacity(100)
+                                .build())
+                .formInfo(
+                        EventCreateRequest.FormInfo.builder()
+                                .openDate(LocalDate.of(2023, 11, 1))
+                                .openTime(LocalTime.of(9, 0))
+                                .closeDate(LocalDate.of(2023, 11, 10))
+                                .closeTime(LocalTime.of(18, 0))
+                                .build()
                 )
-        );
+                .build();
 
         MockMultipartFile request = new MockMultipartFile(
                 "request",
@@ -300,22 +302,26 @@ class EventControllerTest {
     @WithMockUser
     public void 모집_공고_행사_생성에_성공한다() throws Exception {
         // given
-        RecruitmentEventCreateRequest recruitmentEventCreateRequest = new RecruitmentEventCreateRequest(
-                1L,
-                new RecruitmentEventCreateRequest.EventInfoRequest(
-                        "행사 제목",
-                        "행사 내용",
-                        "활동 지역",
-                        "모집 대상",
-                        100
-                ),
-                new RecruitmentEventCreateRequest.FormInfoRequest(
-                        LocalDate.of(2023, 11, 1),
-                        LocalTime.of(9, 0),
-                        LocalDate.of(2023, 11, 10),
-                        LocalTime.of(18, 0)
+        EventCreateRequest recruitmentEventCreateRequest = EventCreateRequest.builder()
+                .clubId(1L)
+                .eventInfo(
+                        EventCreateRequest.EventInfo.builder()
+                                .title("행사 제목")
+                                .content("행사 내용")
+                                .activityArea("활동 지역")
+                                .recruitmentTarget("모집 대상")
+                                .recruitmentLimit(100)
+                                .build()
                 )
-        );
+                .formInfo(
+                        EventCreateRequest.FormInfo.builder()
+                                .openDate(LocalDate.of(2023, 11, 1))
+                                .openTime(LocalTime.of(9, 0))
+                                .closeDate(LocalDate.of(2023, 11, 10))
+                                .closeTime(LocalTime.of(18, 0))
+                                .build()
+                )
+                .build();
 
         MockMultipartFile request = new MockMultipartFile(
                 "request",
@@ -382,26 +388,30 @@ class EventControllerTest {
     @WithMockUser
     public void 클럽_일정_행사_생성에_성공한다() throws Exception {
         // given
-        ClubEventCreateRequest clubEventCreateRequest = new ClubEventCreateRequest(
-                1L,
-                new ClubEventCreateRequest.EventInfoRequest(
-                        "행사 제목",
-                        "행사 내용",
-                        LocalDate.of(2023, 11, 15),
-                        LocalTime.of(14, 0),
-                        LocalDate.of(2023, 11, 16),
-                        LocalTime.of(18, 0),
-                        "행사 장소",
-                        100,
-                        5000
-                ),
-                new ClubEventCreateRequest.FormInfoRequest(
-                        LocalDate.of(2023, 11, 1),
-                        LocalTime.of(9, 0),
-                        LocalDate.of(2023, 11, 10),
-                        LocalTime.of(18, 0)
+        EventCreateRequest clubEventCreateRequest = EventCreateRequest.builder()
+                .clubId(1L)
+                .eventInfo(
+                        EventCreateRequest.EventInfo.builder()
+                                .title("행사 제목")
+                                .content("행사 내용")
+                                .startDate(LocalDate.of(2023, 11, 15))
+                                .startTime(LocalTime.of(14, 0))
+                                .endDate(LocalDate.of(2023, 11, 16))
+                                .endTime(LocalTime.of(18, 0))
+                                .location("행사 장소")
+                                .capacity(100)
+                                .dues(5000)
+                                .build()
                 )
-        );
+                .formInfo(
+                        EventCreateRequest.FormInfo.builder()
+                                .openDate(LocalDate.of(2023, 11, 1))
+                                .openTime(LocalTime.of(9, 0))
+                                .closeDate(LocalDate.of(2023, 11, 10))
+                                .closeTime(LocalTime.of(18, 0))
+                                .build()
+                )
+                .build();
 
         MockMultipartFile request = new MockMultipartFile(
                 "request",
@@ -472,25 +482,40 @@ class EventControllerTest {
     @WithMockUser
     public void 공연_행사_수정에_성공한다() throws Exception {
         // given
-        ShowEventUpdateRequest showEventUpdateRequest = new ShowEventUpdateRequest(
-                1L,
-                new ShowEventUpdateRequest.EventInfoRequest(
-                        "행사 제목",
-                        "행사 내용",
-                        LocalDate.of(2023, 11, 15),
-                        LocalTime.of(14, 0),
-                        "행사 장소",
-                        100
-                ),
-                new ShowEventUpdateRequest.TicketInfoRequest(20000, 2),
-                new ShowEventUpdateRequest.BankInfoRequest("은행 명", "은행 계좌번호"),
-                new ShowEventUpdateRequest.FormInfoRequest(
-                        LocalDate.of(2023, 11, 1),
-                        LocalTime.of(9, 0),
-                        LocalDate.of(2023, 11, 10),
-                        LocalTime.of(18, 0)
+        EventUpdateRequest showEventUpdateRequest = EventUpdateRequest.builder()
+                .eventId(1L)
+                .eventInfo(
+                        EventUpdateRequest.EventInfo.builder()
+                                .title("행사 제목")
+                                .content("행사 내용")
+                                .startDate(LocalDate.of(2023, 11, 15))
+                                .startTime(LocalTime.of(14, 0))
+                                .location("행사 장소")
+                                .capacity(100)
+                                .build()
                 )
-        );
+                .ticketInfo(
+                        EventUpdateRequest.TicketInfo.builder()
+                                .cost(20000)
+                                .maxTicketCount(2)
+                                .build()
+                )
+                .formInfo(
+                        EventUpdateRequest.FormInfo.builder()
+                                .openDate(LocalDate.of(2023, 11, 1))
+                                .openTime(LocalTime.of(9, 0))
+                                .closeDate(LocalDate.of(2023, 11, 10))
+                                .closeTime(LocalTime.of(18, 0))
+                                .build()
+                )
+                .bankInfo(
+                        EventUpdateRequest.BankInfo.builder()
+                                .name("은행 명")
+                                .accountNumber("은행 계좌번호")
+                                .build()
+                )
+                .build();
+
         MockMultipartFile request = new MockMultipartFile(
                 "request",
                 "",
@@ -564,23 +589,27 @@ class EventControllerTest {
     @WithMockUser
     public void 홍보_행사_수정에_성공한다() throws Exception {
         // given
-        PromotionEventUpdateRequest promotionEventCreateRequest = new PromotionEventUpdateRequest(
-                1L,
-                new PromotionEventUpdateRequest.EventInfoRequest(
-                        "행사 제목",
-                        "행사 내용",
-                        LocalDate.of(2023, 11, 15),
-                        LocalTime.of(14, 0),
-                        "행사 장소",
-                        100
-                ),
-                new PromotionEventUpdateRequest.FormInfoRequest(
-                        LocalDate.of(2023, 11, 1),
-                        LocalTime.of(9, 0),
-                        LocalDate.of(2023, 11, 10),
-                        LocalTime.of(18, 0)
+        EventUpdateRequest promotionEventCreateRequest = EventUpdateRequest.builder()
+                .eventId(1L)
+                .eventInfo(
+                        EventUpdateRequest.EventInfo.builder()
+                                .title("행사 제목")
+                                .content("행사 내용")
+                                .startDate(LocalDate.of(2023, 11, 15))
+                                .startTime(LocalTime.of(14, 0))
+                                .location("행사 장소")
+                                .capacity(100)
+                                .build()
                 )
-        );
+                .formInfo(
+                        EventUpdateRequest.FormInfo.builder()
+                                .openDate(LocalDate.of(2023, 11, 1))
+                                .openTime(LocalTime.of(9, 0))
+                                .closeDate(LocalDate.of(2023, 11, 10))
+                                .closeTime(LocalTime.of(18, 0))
+                                .build()
+                )
+                .build();
 
         MockMultipartFile request = new MockMultipartFile(
                 "request",
@@ -651,22 +680,26 @@ class EventControllerTest {
     @WithMockUser
     public void 모집_공고_행사_수정에_성공한다() throws Exception {
         // given
-        RecruitmentEventUpdateRequest recruitmentEventUpdateRequest = new RecruitmentEventUpdateRequest(
-                1L,
-                new RecruitmentEventUpdateRequest.EventInfoRequest(
-                        "행사 제목",
-                        "행사 내용",
-                        "활동 지역",
-                        "모집 대상",
-                        100
-                ),
-                new RecruitmentEventUpdateRequest.FormInfoRequest(
-                        LocalDate.of(2023, 11, 1),
-                        LocalTime.of(9, 0),
-                        LocalDate.of(2023, 11, 10),
-                        LocalTime.of(18, 0)
+        EventUpdateRequest recruitmentEventUpdateRequest = EventUpdateRequest.builder()
+                .eventId(1L)
+                .eventInfo(
+                        EventUpdateRequest.EventInfo.builder()
+                                .title("행사 제목")
+                                .content("행사 내용")
+                                .activityArea("활동 지역")
+                                .recruitmentTarget("모집 대상")
+                                .recruitmentLimit(100)
+                                .build()
                 )
-        );
+                .formInfo(
+                        EventUpdateRequest.FormInfo.builder()
+                                .openDate(LocalDate.of(2023, 11, 1))
+                                .openTime(LocalTime.of(9, 0))
+                                .closeDate(LocalDate.of(2023, 11, 10))
+                                .closeTime(LocalTime.of(18, 0))
+                                .build()
+                )
+                .build();
 
         MockMultipartFile request = new MockMultipartFile(
                 "request",
@@ -736,26 +769,30 @@ class EventControllerTest {
     @WithMockUser
     public void 클럽_일정_행사_수정에_성공한다() throws Exception {
         // given
-        ClubEventUpdateRequest clubEventUpdateRequest = new ClubEventUpdateRequest(
-                1L,
-                new ClubEventUpdateRequest.EventInfoRequest(
-                        "행사 제목",
-                        "행사 내용",
-                        LocalDate.of(2023, 11, 15),
-                        LocalTime.of(14, 0),
-                        LocalDate.of(2023, 11, 16),
-                        LocalTime.of(18, 0),
-                        "행사 장소",
-                        100,
-                        5000
-                ),
-                new ClubEventUpdateRequest.FormInfoRequest(
-                        LocalDate.of(2023, 11, 1),
-                        LocalTime.of(9, 0),
-                        LocalDate.of(2023, 11, 10),
-                        LocalTime.of(18, 0)
+        EventUpdateRequest clubEventUpdateRequest = EventUpdateRequest.builder()
+                .eventId(1L)
+                .eventInfo(
+                        EventUpdateRequest.EventInfo.builder()
+                                .title("행사 제목")
+                                .content("행사 내용")
+                                .startDate(LocalDate.of(2023, 11, 15))
+                                .startTime(LocalTime.of(14, 0))
+                                .endDate(LocalDate.of(2023, 11, 16))
+                                .endTime(LocalTime.of(18, 0))
+                                .location("행사 장소")
+                                .capacity(100)
+                                .dues(5000)
+                                .build()
                 )
-        );
+                .formInfo(
+                        EventUpdateRequest.FormInfo.builder()
+                                .openDate(LocalDate.of(2023, 11, 1))
+                                .openTime(LocalTime.of(9, 0))
+                                .closeDate(LocalDate.of(2023, 11, 10))
+                                .closeTime(LocalTime.of(18, 0))
+                                .build()
+                )
+                .build();
 
         MockMultipartFile request = new MockMultipartFile(
                 "request",

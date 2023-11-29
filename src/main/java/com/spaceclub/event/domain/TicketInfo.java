@@ -40,7 +40,8 @@ public class TicketInfo {
 
         if (maxTicketCount != null) {
             boolean invalidMaxTicketCountRange = maxTicketCount < MAX_TICKET_COUNT_MIN_COUNT || maxTicketCount > MAX_TICKET_COUNT_MAX_COUNT;
-            if (invalidMaxTicketCountRange) throw new IllegalArgumentException(INVALID_EVENT_MAX_TICKET_COUNT.toString());
+            if (invalidMaxTicketCountRange)
+                throw new IllegalArgumentException(INVALID_EVENT_MAX_TICKET_COUNT.toString());
         }
 
         if (cost != null) {
