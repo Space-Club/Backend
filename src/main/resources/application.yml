@@ -36,3 +36,5 @@ interceptor:
 
     - path: /api/v1/users/oauth
       method: POST
+web:
+  interceptor-path-pattern: /api/v1/**

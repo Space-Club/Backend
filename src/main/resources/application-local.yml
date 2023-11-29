@@ -51,5 +51,3 @@ jwt:
 web:
   allowed-origins:
     - http://localhost:5173
-
-  interceptor-path-pattern: /api/v1/**

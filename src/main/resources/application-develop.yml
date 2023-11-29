@@ -45,4 +45,3 @@ web:
     - http://localhost:5173
     - https://spaceclub.vercel.app
     - https://spaceclub.site
-  interceptor-path-pattern: /api/v1/**
