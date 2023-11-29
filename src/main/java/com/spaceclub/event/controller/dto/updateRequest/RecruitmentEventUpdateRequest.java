@@ -18,7 +18,7 @@ public record RecruitmentEventUpdateRequest(
         return Event.builder()
                 .id(eventId)
                 .category(category)
-                .eventInfo(eventInfo.toEntity())
+                .eventInfo(eventInfo.toEntity(formInfo))
                 .formInfo(formInfo.toEntity())
                 .build();
     }
@@ -44,16 +44,18 @@ public record RecruitmentEventUpdateRequest(
             String content,
             String activityArea,
             String recruitmentTarget,
-            Integer capacity
+            Integer recruitmentLimit
     ) {
 
-        public EventInfo toEntity() {
+        public EventInfo toEntity(FormInfoRequest formInfo) {
             return EventInfo.builder()
                     .title(title)
                     .content(content)
+                    .startDateTime(formInfo.openDate.atTime(formInfo.openTime))
+                    .endDateTime(formInfo.closeDate.atTime(formInfo.closeTime))
                     .activityArea(activityArea)
                     .recruitmentTarget(recruitmentTarget)
-                    .capacity(capacity)
+                    .recruitmentLimit(recruitmentLimit)
                     .build();
         }
 

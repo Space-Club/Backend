@@ -43,7 +43,7 @@ public record RecruitmentEventCreateRequest(
             String content,
             String activityArea,
             String recruitmentTarget,
-            Integer capacity
+            Integer recruitmentLimit
     ) {
 
         public EventInfo toEntity(FormInfoRequest formInfo) {
@@ -54,7 +54,7 @@ public record RecruitmentEventCreateRequest(
                     .endDateTime(formInfo.closeDate.atTime(formInfo.closeTime))
                     .activityArea(activityArea)
                     .recruitmentTarget(recruitmentTarget)
-                    .capacity(capacity)
+                    .recruitmentLimit(recruitmentLimit)
                     .build();
         }
 
