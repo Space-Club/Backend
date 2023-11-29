@@ -2,7 +2,7 @@ package com.spaceclub.invite.service;
 
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.service.ClubService;
-import com.spaceclub.club.service.ClubUserValidator;
+import com.spaceclub.club.util.ClubUserValidator;
 import com.spaceclub.invite.domain.Invite;
 import com.spaceclub.invite.repository.InviteRepository;
 import com.spaceclub.invite.service.util.InviteCodeGenerator;

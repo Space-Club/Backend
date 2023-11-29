@@ -13,6 +13,7 @@ import com.spaceclub.event.controller.dto.updateRequest.ShowEventUpdateRequest;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.service.EventService;
+import com.spaceclub.event.service.util.EventValidator;
 import com.spaceclub.event.service.vo.EventCreateInfo;
 import com.spaceclub.event.service.vo.EventGetInfo;
 import com.spaceclub.global.UserArgumentResolver;

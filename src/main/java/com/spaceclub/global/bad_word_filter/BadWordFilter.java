@@ -1,8 +1,8 @@
 package com.spaceclub.global.bad_word_filter;
 
 import com.googlecode.concurrenttrees.radix.node.concrete.DefaultCharSequenceNodeFactory;
-import com.googlecode.concurrenttrees.suffix.ConcurrentSuffixTree;
-import com.googlecode.concurrenttrees.suffix.SuffixTree;
+import com.googlecode.concurrenttrees.radixinverted.ConcurrentInvertedRadixTree;
+import com.googlecode.concurrenttrees.radixinverted.InvertedRadixTree;
 import com.spaceclub.global.config.BadWordConfig;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +15,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.spaceclub.global.bad_word_filter.BadWordExceptionMessage.FAIL_BAD_WORD_SETUP;
 import static com.spaceclub.global.bad_word_filter.BadWordExceptionMessage.BAD_WORD_DETECTED;
+import static com.spaceclub.global.bad_word_filter.BadWordExceptionMessage.FAIL_BAD_WORD_SETUP;
 
 @Slf4j
 @Component
@@ -25,7 +25,7 @@ public class BadWordFilter {
 
     private final BadWordConfig config;
 
-    private static final SuffixTree<String> trie = new ConcurrentSuffixTree<>(new DefaultCharSequenceNodeFactory());
+    private static final InvertedRadixTree<String> trie = new ConcurrentInvertedRadixTree<>(new DefaultCharSequenceNodeFactory());
 
     @PostConstruct
     private void setup() {
@@ -41,12 +41,11 @@ public class BadWordFilter {
 
     public static void filter(String textToFilter) {
         List<String> filteredWords = new ArrayList<>();
-        trie.getValuesForKeysContaining(textToFilter)
+        trie.getValuesForKeysContainedIn(textToFilter)
                 .forEach(filteredWords::add);
 
         if (!filteredWords.isEmpty()) {
-            log.info("비속어 감지");
-            log.info(filteredWords.toString());
+            log.info("비속어 감지: {}", filteredWords);
             throw new IllegalArgumentException(BAD_WORD_DETECTED.toString());
         }
     }

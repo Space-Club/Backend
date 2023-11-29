@@ -5,6 +5,7 @@ import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.club.service.vo.ClubInfo;
+import com.spaceclub.club.util.ClubValidator;
 import com.spaceclub.global.s3.S3Folder;
 import com.spaceclub.global.s3.S3ImageUploader;
 import com.spaceclub.global.config.s3.S3Properties;
@@ -35,6 +36,7 @@ public class ClubService implements ClubProvider {
 
     @Transactional
     public Club createClub(Club club, Long userId, MultipartFile logoImage) {
+        ClubValidator.validateClub(club);
 
         if (logoImage != null) {
             String logoImageName = imageUploader.upload(logoImage, S3Folder.LOGO);
@@ -70,6 +72,8 @@ public class ClubService implements ClubProvider {
 
     @Transactional
     public void updateClub(Club newClub, Long userId, MultipartFile logoImage, MultipartFile coverImage) {
+        ClubValidator.validateClub(newClub);
+
         Long clubId = newClub.getId();
 
         ClubUser clubUser = clubUserRepository.findByClub_IdAndUserId(clubId, userId)

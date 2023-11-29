@@ -9,8 +9,6 @@ public record ClubCreateRequest(
 ) {
 
     public Club toEntity() {
-        BadWordFilter.filter(name);
-        BadWordFilter.filter(info);
         return Club.builder()
                 .name(name)
                 .info(info)

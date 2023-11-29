@@ -28,7 +28,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.spaceclub.event.EventExceptionMessage.INVALID_EVENT_CATEGORY;
+import static com.spaceclub.event.EventExceptionMessage.EVENT_CATEGORY_NOT_NULL;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -91,7 +91,7 @@ public class Event extends BaseTimeEntity {
             Long userId,
             LocalDateTime createdAt
     ) {
-        if (category == null) throw new IllegalArgumentException(INVALID_EVENT_CATEGORY.toString());
+        if (category == null) throw new IllegalArgumentException(EVENT_CATEGORY_NOT_NULL.toString());
         this.id = id;
         this.category = category;
         this.eventInfo = eventInfo;

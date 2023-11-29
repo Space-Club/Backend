@@ -1,28 +1,23 @@
-package com.spaceclub.event.service;
+package com.spaceclub.event.service.util;
 
 import com.spaceclub.event.domain.Event;
-import com.spaceclub.event.repository.EventRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import com.spaceclub.global.bad_word_filter.BadWordFilter;
 
-import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_FOUND;
 import static com.spaceclub.event.EventExceptionMessage.EVENT_TICKET_NOT_MANAGED;
 import static com.spaceclub.event.EventExceptionMessage.EXCEED_TICKET_COUNT;
 import static com.spaceclub.event.EventExceptionMessage.TICKET_COUNT_REQUIRED;
 
-@Component
-@Transactional(readOnly = true)
-@RequiredArgsConstructor
 public class EventValidator {
 
-    private final EventRepository eventRepository;
-
-    public Event validateEvent(Long eventId) {
-        return eventRepository.findById(eventId).orElseThrow(() -> new IllegalStateException(EVENT_NOT_FOUND.toString()));
+    public static void validateEvent(Event event) {
+        BadWordFilter.filter(event.getTitle());
+        BadWordFilter.filter(event.getContent());
+        BadWordFilter.filter(event.getLocation());
+        BadWordFilter.filter(event.getBankName());
+        BadWordFilter.filter(event.getBankAccountNumber());
     }
 
-    public void validateEventTicketCount(Integer maxTicketCount, Integer ticketCount) {
+    public static void validateEventTicketCount(Integer maxTicketCount, Integer ticketCount) {
         boolean notManageTicket = maxTicketCount == null && ticketCount != null;
         boolean mustTicketCount = maxTicketCount != null && ticketCount == null;
         boolean exceedTicketCount = maxTicketCount != null && ticketCount != null && maxTicketCount < ticketCount;

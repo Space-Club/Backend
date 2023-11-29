@@ -1,9 +1,10 @@
 package com.spaceclub.form.service;
 
-import com.spaceclub.club.service.ClubUserValidator;
+import com.spaceclub.club.util.ClubUserValidator;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.repository.EventRepository;
-import com.spaceclub.event.service.EventValidator;
+import com.spaceclub.event.service.EventProvider;
+import com.spaceclub.event.service.util.EventValidator;
 import com.spaceclub.form.domain.Form;
 import com.spaceclub.form.repository.FormRepository;
 import com.spaceclub.form.service.vo.FormCreateInfo;
@@ -19,30 +20,28 @@ import static com.spaceclub.form.FormExceptionMessage.FORM_NOT_FOUND;
 @RequiredArgsConstructor
 public class FormService {
 
-    private final EventRepository eventRepository;
+    private final EventProvider eventProvider;
 
     private final FormRepository formRepository;
 
     private final ClubUserValidator clubUserValidator;
 
-    private final EventValidator eventValidator;
-
     @Transactional
     public Long create(FormCreateInfo vo) {
-        Event event = eventValidator.validateEvent(vo.eventId());
+        Event event = eventProvider.getById(vo.eventId());
         clubUserValidator.validateClubManager(event.getClubId(), vo.userId());
 
         vo.form().addItems(vo.options());
         Form savedForm = formRepository.save(vo.form());
 
-        Event registeredForm = event.registerForm(savedForm);
-        eventRepository.save(registeredForm);
+        Event formRegisteredEvent = event.registerForm(savedForm);
+        eventProvider.save(formRegisteredEvent);
 
         return vo.eventId();
     }
 
     public FormGetInfo get(Long eventId) {
-        Event event = eventValidator.validateEvent(eventId);
+        Event event = eventProvider.getById(eventId);
         Form form = formRepository.findById(event.getFormId())
                 .orElseThrow(() -> new IllegalStateException(FORM_NOT_FOUND.toString()));
 
