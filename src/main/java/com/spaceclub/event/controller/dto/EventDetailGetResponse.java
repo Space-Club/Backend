@@ -36,6 +36,7 @@ public record EventDetailGetResponse(
             Integer capacity,
             String posterImageUrl,
             String recruitmentTarget,
+            Integer recruitmentLimit,
             String activityArea
     ) {
 
@@ -237,10 +238,10 @@ public record EventDetailGetResponse(
                                 .startTime(event.getStartTime())
                                 .isEnded(event.isEventEnded())
                                 .applicants(vo.applicants())
-                                .capacity(event.getCapacity())
                                 .posterImageUrl(event.getPosterImageName() != null ? bucketUrl + event.getPosterImageName() : null)
                                 .activityArea(event.getActivityArea())
                                 .recruitmentTarget(event.getRecruitmentTarget())
+                                .recruitmentLimit(event.getRecruitmentLimit())
                                 .build()
                 )
                 .formInfo(

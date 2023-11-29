@@ -61,6 +61,9 @@ public class EventInfo {
     @Getter
     private String recruitmentTarget;
 
+    @Getter
+    private Integer recruitmentLimit;
+
     @Builder
     private EventInfo(
             String title,
@@ -71,6 +74,7 @@ public class EventInfo {
             String posterImageName,
             String activityArea,
             String recruitmentTarget,
+            Integer recruitmentLimit,
             LocalDateTime endDateTime,
             Integer dues
     ) {
@@ -83,6 +87,7 @@ public class EventInfo {
         this.posterImageName = posterImageName;
         this.activityArea = activityArea;
         this.recruitmentTarget = recruitmentTarget;
+        this.recruitmentLimit = recruitmentLimit;
         this.endDateTime = endDateTime;
         this.dues = dues;
     }

@@ -281,6 +281,10 @@ public class Event extends BaseTimeEntity {
         return this.bankInfo.getBankName();
     }
 
+    public Integer getRecruitmentLimit() {
+        return this.eventInfo.getRecruitmentLimit();
+    }
+
     public String getBankAccountNumber() {
         return this.bankInfo.getBankAccountNumber();
     }

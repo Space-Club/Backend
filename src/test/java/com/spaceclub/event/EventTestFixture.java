@@ -29,6 +29,7 @@ public class EventTestFixture {
                 .posterImageName("포스터 파일명")
                 .dues(5000)
                 .recruitmentTarget("연어를 좋아하는 사람 누구나")
+                .recruitmentLimit(200)
                 .activityArea("홍대입구역 근처")
                 .build();
     }
