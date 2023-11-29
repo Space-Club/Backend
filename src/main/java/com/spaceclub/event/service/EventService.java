@@ -89,17 +89,19 @@ public class EventService implements EventProvider {
         EventValidator.validateEvent(event);
         clubUserValidator.validateClubManager(existEvent.getClubId(), userId);
 
-        Event updatedEvent = processPosterImage(existEvent, posterImage);
+        Event updatedEvent = processPosterImage(event, existEvent, posterImage);
 
         eventRepository.save(updatedEvent);
     }
 
-    private Event processPosterImage(Event existEvent, MultipartFile posterImage) {
-        if (posterImage == null) return existEvent;
+    private Event processPosterImage(Event newEvent, Event existEvent, MultipartFile posterImage) {
+        String posterImageName;
 
-        String posterImageName = imageUploader.upload(posterImage, S3Folder.EVENT_POSTER);
+        if (posterImage == null) posterImageName = existEvent.getPosterImageName();
+        else posterImageName = imageUploader.upload(posterImage, S3Folder.EVENT_POSTER);
 
-        return existEvent.registerPosterImage(posterImageName);
+        Event updatedEvent = newEvent.registerPosterImage(posterImageName);
+        return existEvent.update(updatedEvent);
     }
 
     public Page<Event> getAll(EventCategory eventCategory, Pageable pageable) {

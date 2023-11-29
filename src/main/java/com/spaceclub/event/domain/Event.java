@@ -278,6 +278,8 @@ public class Event extends BaseTimeEntity {
     }
 
     public String getBankName() {
+        if (this.bankInfo == null) return null;
+
         return this.bankInfo.getBankName();
     }
 
@@ -286,6 +288,8 @@ public class Event extends BaseTimeEntity {
     }
 
     public String getBankAccountNumber() {
+        if (this.bankInfo == null) return null;
+
         return this.bankInfo.getBankAccountNumber();
     }
 

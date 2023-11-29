@@ -40,6 +40,8 @@ public class BadWordFilter {
     }
 
     public static void filter(String textToFilter) {
+        if (textToFilter == null) return;
+
         List<String> filteredWords = new ArrayList<>();
         trie.getValuesForKeysContainedIn(textToFilter)
                 .forEach(filteredWords::add);
