@@ -13,7 +13,6 @@ import com.spaceclub.event.controller.dto.updateRequest.ShowEventUpdateRequest;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.service.EventService;
-import com.spaceclub.event.service.EventValidator;
 import com.spaceclub.event.service.vo.EventCreateInfo;
 import com.spaceclub.event.service.vo.EventGetInfo;
 import com.spaceclub.global.UserArgumentResolver;
@@ -41,6 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -108,9 +108,6 @@ class EventControllerTest {
 
     @MockBean
     private EventService eventService;
-
-    @MockBean
-    private EventValidator eventValidator;
 
     @MockBean
     private UserArgumentResolver userArgumentResolver;
@@ -1104,7 +1101,7 @@ class EventControllerTest {
 
     @Test
     @WithMockUser
-    public void 행사_검색에_성공한다() throws Exception { // 없어도 됨. 있어도 안씀.
+    void 행사_검색에_성공한다() throws Exception { // 없어도 됨. 있어도 안씀.
         // given
         List<Event> events = List.of(event1(), showEvent(), clubEvent());
         Page<Event> eventPages = new PageImpl<>(events);
@@ -1166,7 +1163,7 @@ class EventControllerTest {
 
     @Test
     @WithMockUser
-    public void 행사_삭제에_성공한다() throws Exception {
+    void 행사_삭제에_성공한다() throws Exception {
         // given
         doNothing().when(eventService).delete(any(Long.class), any());
 
@@ -1188,6 +1185,36 @@ class EventControllerTest {
                         pathParameters(
                                 parameterWithName("eventId").description("행사 ID")
                         ))
+                );
+    }
+
+    @Test
+    @WithMockUser
+    void 배너_행사_조회에_성공한다() throws Exception {
+        // given
+        List<Event> events = List.of(event1(), showEvent(), clubEvent());
+        given(eventService.getBanner(any(LocalDateTime.class), any(Integer.class))).willReturn(events);
+
+        // when, then
+        mvc.perform(get("/api/v1/events/banner")
+                        .with(csrf())
+                ).andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("event/banner",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                responseFields(
+                                        fieldWithPath("[]").type(ARRAY).description("클럽 및 이벤트 정보 목록"),
+                                        fieldWithPath("[].clubInfo").type(OBJECT).description("클럽 정보"),
+                                        fieldWithPath("[].clubInfo.coverImageUrl").type(STRING).description("클럽 이미지 url"),
+                                        fieldWithPath("[].clubInfo.name").type(STRING).description("클럽 이름"),
+                                        fieldWithPath("[].eventInfo").type(OBJECT).description("이벤트 정보"),
+                                        fieldWithPath("[].eventInfo.eventId").type(NUMBER).description("행사 id"),
+                                        fieldWithPath("[].eventInfo.title").type(STRING).description("행사 제목"),
+                                        fieldWithPath("[].eventInfo.formCloseDateTime").type(STRING).description("폼 마감 시간"),
+                                        fieldWithPath("[].eventInfo.eventCategory").type(STRING).description("행사 카테고리")
+                                )
+                        )
                 );
     }
 

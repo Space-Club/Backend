@@ -18,10 +18,15 @@ import com.spaceclub.user.service.UserProvider;
 import com.spaceclub.user.service.vo.UserProfile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.spaceclub.club.ClubExceptionMessage.CLUB_NOT_FOUND;
 import static com.spaceclub.event.EventExceptionMessage.EVENT_CATEGORY_NOT_ALLOWED;
@@ -134,6 +139,12 @@ public class EventService implements EventProvider {
         Page<Event> events = eventRepository.findAllBookmarkedEventPages(userId, pageable);
 
         return events.map(event -> UserBookmarkedEventGetInfo.from(event, s3Properties.url()));
+    }
+
+    public List<Event> getBanner(LocalDateTime now, int limit) {
+        PageRequest pageable = PageRequest.of(0, limit, Sort.by(Sort.Direction.ASC, "formCloseDateTime"));
+
+        return eventRepository.findAllByFormCloseDateTimeGreaterThan(now, pageable).getContent();
     }
 
 }

@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
 
@@ -20,5 +22,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query("select e from Event e join fetch Bookmark b on e.id = b.eventId where b.userId = :userId")
     Page<Event> findAllBookmarkedEventPages(@Param("userId") Long userId, Pageable pageable);
+
+    Page<Event> findAllByFormCloseDateTimeGreaterThan(LocalDateTime now, Pageable pageable);
 
 }
