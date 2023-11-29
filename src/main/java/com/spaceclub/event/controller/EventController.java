@@ -2,6 +2,7 @@ package com.spaceclub.event.controller;
 
 import com.spaceclub.club.controller.EventCreateConverter;
 import com.spaceclub.club.controller.EventUpdateConverter;
+import com.spaceclub.event.controller.dto.EventBannerResponse;
 import com.spaceclub.event.controller.dto.EventCreateResponse;
 import com.spaceclub.event.controller.dto.EventDetailGetResponse;
 import com.spaceclub.event.controller.dto.EventOverviewGetResponse;
@@ -32,12 +33,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
 @RequestMapping("/api/v1/events")
 @RequiredArgsConstructor
 public class EventController {
+
+    private static final int BANNER_LIMIT = 10;
 
     private final EventService eventService;
 
@@ -135,4 +139,15 @@ public class EventController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/banner")
+    public ResponseEntity<List<EventBannerResponse>> getBanner() {
+        LocalDateTime now = LocalDateTime.now();
+        List<Event> events = eventService.getBanner(now, BANNER_LIMIT);
+
+        List<EventBannerResponse> bannerResponses = events.stream()
+                .map(EventBannerResponse::from)
+                .toList();
+
+        return ResponseEntity.ok(bannerResponses);
+    }
 }

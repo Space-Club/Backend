@@ -330,3 +330,15 @@ include::{snippet}/event/delete/request-headers.adoc[]
 
 include::{snippet}/event/delete/http-response.adoc[]
 :sectnums:
+
+=== 행사 배너
+:sectnums!:
+==== Request
+include::{snippet}/event/banner/http-request.adoc[]
+
+==== Response
+include::{snippet}/event/banner/http-response.adoc[]
+
+==== Response Body
+include::{snippet}/event/banner/response-fields.adoc[]
+:sectnums:
