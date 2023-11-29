@@ -13,8 +13,6 @@ public record ClubUpdateRequest(
     }
 
     public Club toEntity(Long clubId) {
-        BadWordFilter.filter(name);
-        BadWordFilter.filter(info);
         return Club.builder()
                 .id(clubId)
                 .name(name)
