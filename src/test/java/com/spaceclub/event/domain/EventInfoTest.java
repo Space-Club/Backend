@@ -92,7 +92,7 @@ class EventInfoTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @ValueSource(ints = {-1, 1000})
+    @ValueSource(ints = {-1, 1001})
     @ParameterizedTest(name = "{index}. capacity : [{arguments}]")
     void 정원이_유효하지_않으면_생성에_실패한다(int capacity) {
         assertThatThrownBy(() ->

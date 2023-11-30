@@ -21,6 +21,7 @@ public record EventCreateRequest(
         BankInfoRequest bankInfo
 ) {
 
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public record EventInfoRequest(
             String title,
@@ -37,6 +38,8 @@ public record EventCreateRequest(
             Integer recruitmentLimit
     ) {
 
+        public static final int MAX_CAPACITY = 1000;
+
         @Builder
         public EventInfoRequest {
         }
@@ -49,7 +52,7 @@ public record EventCreateRequest(
                     .endDateTime(endDate != null ? endDate.atTime(endTime) : formInfoRequest.closeDate.atTime(formInfoRequest.closeTime))
                     .dues(dues)
                     .location(location)
-                    .capacity(capacity)
+                    .capacity(capacity != null ? capacity : MAX_CAPACITY)
                     .recruitmentTarget(recruitmentTarget)
                     .activityArea(activityArea)
                     .recruitmentLimit(recruitmentLimit)
