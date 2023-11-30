@@ -1,6 +1,7 @@
 package com.spaceclub.user.controller;
 
 import com.spaceclub.global.Authenticated;
+import com.spaceclub.global.bad_word_filter.BadWordFilter;
 import com.spaceclub.global.jwt.vo.JwtUser;
 import com.spaceclub.user.controller.dto.UserLoginResponse;
 import com.spaceclub.user.controller.dto.UserProfileResponse;
@@ -31,6 +32,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 public class UserController {
 
     private final UserService userService;
+
     private final AccountService accountService;
 
     @GetMapping
@@ -40,6 +42,7 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<UserLoginResponse> updateProfile(@RequestBody UserProfileUpdateRequest request, @Authenticated JwtUser jwtUser) {
+        BadWordFilter.filter(request.name());
         RequiredProfile requiredProfile = new RequiredProfile(request.name(), request.phoneNumber());
         userService.updateRequiredProfile(jwtUser.id(), requiredProfile);
         UserLoginInfo accountInfo = accountService.createAccount(jwtUser.id());
