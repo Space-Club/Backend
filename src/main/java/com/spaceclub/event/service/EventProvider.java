@@ -16,4 +16,8 @@ public interface EventProvider {
 
     Event save(Event event);
 
+    void minusParticipants(Event event, int ticketCount);
+
+    void update(Event event);
+
 }

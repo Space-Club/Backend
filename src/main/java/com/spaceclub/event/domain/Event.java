@@ -36,8 +36,6 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @EqualsAndHashCode(of = "id", callSuper = false)
 public class Event extends BaseTimeEntity {
 
-    private static final String EVENT_POSTER_S3_URL = "https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/event-poster/";
-
     @Id
     @Getter
     @Column(name = "event_id")
@@ -137,6 +135,12 @@ public class Event extends BaseTimeEntity {
                 .build();
     }
 
+    public Event registerParticipants(int participants) {
+        return event()
+                .eventInfo(this.eventInfo.registerApplicants(participants))
+                .build();
+    }
+
     public Event update(Event event) {
         return event()
                 .id(event.id)
@@ -233,6 +237,10 @@ public class Event extends BaseTimeEntity {
         return this.eventInfo.getContent();
     }
 
+    public boolean isFormed() {
+        return form != null;
+    }
+
     public boolean isFormManaged() {
         return form != null && form.isManaged();
     }
@@ -305,6 +313,10 @@ public class Event extends BaseTimeEntity {
 
         return this.formInfo.getFormOpenDateTime().isBefore(now)
                 && this.formInfo.getFormCloseDateTime().isAfter(now);
+    }
+
+    public int getParticipants() {
+        return this.eventInfo.getParticipants();
     }
 
 }

@@ -2,7 +2,7 @@ package com.spaceclub.user.controller;
 
 import com.spaceclub.club.service.ClubProvider;
 import com.spaceclub.club.service.vo.ClubInfo;
-import com.spaceclub.event.service.ParticipationProvider;
+import com.spaceclub.event.service.UserEventProvider;
 import com.spaceclub.event.service.vo.EventPageInfo;
 import com.spaceclub.global.Authenticated;
 import com.spaceclub.global.dto.PageResponse;
@@ -25,12 +25,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ContentController {
 
-    private final ParticipationProvider participationService;
+    private final UserEventProvider userEventProvider;
     private final ClubProvider clubService;
 
     @GetMapping("/events")
     public PageResponse<UserEventGetResponse, EventPageInfo> getAllEvents(Pageable pageable, @Authenticated JwtUser jwtUser) {
-        Page<EventPageInfo> eventPages = participationService.findAllEventPages(jwtUser.id(), pageable);
+        Page<EventPageInfo> eventPages = userEventProvider.findAllEventPages(jwtUser.id(), pageable);
 
         List<UserEventGetResponse> eventGetResponse = eventPages.getContent().stream()
                 .map(UserEventGetResponse::from)

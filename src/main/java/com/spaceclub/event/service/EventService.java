@@ -132,9 +132,8 @@ public class EventService implements EventProvider {
             clubUserValidator.validateClubMember(event.getClubId(), userId);
 
         boolean hasAlreadyApplied = eventUserRepository.existsByEventIdAndUserId(eventId, userId);
-        int applicants = eventUserRepository.countByEvent_Id(eventId);
 
-        return new EventGetInfo(event, hasAlreadyApplied, applicants);
+        return new EventGetInfo(event, hasAlreadyApplied);
     }
 
     @Override
@@ -152,6 +151,19 @@ public class EventService implements EventProvider {
         Page<Event> events = eventRepository.findAllBookmarkedEventPages(userId, pageable);
 
         return events.map(event -> UserBookmarkedEventGetInfo.from(event, s3Properties.url()));
+    }
+
+    @Override
+    public void minusParticipants(Event event, int ticketCount) {
+        int remainCapacity = event.getParticipants() - ticketCount;
+        Event updateEvent = event.registerParticipants(remainCapacity);
+
+        eventRepository.save(updateEvent);
+    }
+
+    @Override
+    public void update(Event event) {
+        eventRepository.save(event);
     }
 
     public List<Event> getBanner(LocalDateTime now, int limit) {

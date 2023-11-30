@@ -88,11 +88,14 @@
 |`+EVENT_ALREADY_APPLIED+`
 |이미 신청한 행사입니다
 
+|`+APPLY_EXPIRED+`
+|신청 날짜가 지났습니다
+
 |`+EVENT_NOT_APPLIED+`
 |신청한 이력이 없는 행사입니다
 
-|`+EVENT_TICKET_NOT_MANAGED+`
-|행사 티켓을 관리하지 않는 행사입니다
+|`+EXCEED_CAPACITY+`
+|정원을 초과하였습니다
 
 |`+TICKET_COUNT_REQUIRED+`
 |행사 티켓 매수는 필수입니다

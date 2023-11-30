@@ -47,6 +47,7 @@ public class EventUser extends BaseTimeEntity {
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
+    @Getter
     private Integer ticketCount;
 
     @Builder

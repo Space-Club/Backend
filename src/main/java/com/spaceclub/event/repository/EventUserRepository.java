@@ -29,6 +29,4 @@ public interface EventUserRepository extends JpaRepository<EventUser, Long> {
 
     Page<EventUser> findByEvent(Event event, Pageable pageable);
 
-    int countByEvent_Id(Long eventId);
-
 }
