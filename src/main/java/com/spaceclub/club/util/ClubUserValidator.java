@@ -1,4 +1,4 @@
-package com.spaceclub.club.service;
+package com.spaceclub.club.util;
 
 import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.repository.ClubRepository;

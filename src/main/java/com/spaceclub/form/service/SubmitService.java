@@ -1,10 +1,12 @@
 package com.spaceclub.form.service;
 
-import com.spaceclub.club.service.ClubUserValidator;
+import com.spaceclub.club.util.ClubUserValidator;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventUser;
+import com.spaceclub.event.repository.EventRepository;
 import com.spaceclub.event.repository.EventUserRepository;
-import com.spaceclub.event.service.EventValidator;
+import com.spaceclub.event.service.EventProvider;
+import com.spaceclub.event.service.util.EventValidator;
 import com.spaceclub.form.domain.Form;
 import com.spaceclub.form.domain.FormAnswer;
 import com.spaceclub.form.repository.FormAnswerRepository;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_APPLIED;
+import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_FOUND;
 import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_MANAGED;
 
 @Service
@@ -30,12 +33,12 @@ public class SubmitService {
 
     private final EventUserRepository eventUserRepository;
 
-    private final EventValidator eventValidator;
-
     private final ClubUserValidator clubUserValidator;
 
+    private final EventProvider eventProvider;
+
     public FormSubmitGetInfo getAll(Long userId, Long eventId, Pageable pageable) {
-        Event event = eventValidator.validateEvent(eventId);
+        Event event = eventProvider.getById(eventId);
         clubUserValidator.validateClubManager(event.getClubId(), userId);
         Form form = event.getForm();
 
@@ -50,7 +53,8 @@ public class SubmitService {
         EventUser eventUser = eventUserRepository.findByEventIdAndUserId(updateInfo.eventId(), updateInfo.formUserId())
                 .orElseThrow(() -> new IllegalStateException(EVENT_NOT_APPLIED.toString()));
 
-        Event event = eventValidator.validateEvent(eventUser.getEventId());
+        Event event = eventProvider.getById(eventUser.getEventId());
+
         if (event.isNotFormManaged()) throw new IllegalStateException(EVENT_NOT_MANAGED.toString());
 
         clubUserValidator.validateClubManager(event.getClubId(), updateInfo.userId());

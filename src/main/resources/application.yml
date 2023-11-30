@@ -42,3 +42,6 @@ interceptor:
 
 web:
   interceptor-path-pattern: /api/v1/**
+
+bad-word:
+  path: src/main/resources/secrets/bad_word_list.txt

@@ -3,7 +3,6 @@ package com.spaceclub.event.controller.dto;
 import com.spaceclub.event.domain.Event;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public record EventOverviewGetResponse(Long id,

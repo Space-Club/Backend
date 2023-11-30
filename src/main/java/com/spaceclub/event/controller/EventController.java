@@ -1,12 +1,12 @@
 package com.spaceclub.event.controller;
 
-import com.spaceclub.club.controller.EventCreateConverter;
-import com.spaceclub.club.controller.EventUpdateConverter;
 import com.spaceclub.event.controller.dto.EventBannerResponse;
+import com.spaceclub.event.controller.dto.EventCreateRequest;
 import com.spaceclub.event.controller.dto.EventCreateResponse;
 import com.spaceclub.event.controller.dto.EventDetailGetResponse;
 import com.spaceclub.event.controller.dto.EventOverviewGetResponse;
 import com.spaceclub.event.controller.dto.EventSearchOverviewGetResponse;
+import com.spaceclub.event.controller.dto.EventUpdateRequest;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.service.EventService;
@@ -50,22 +50,24 @@ public class EventController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<EventCreateResponse> create(
             @RequestPart(required = false) MultipartFile posterImage,
-            @RequestPart String request,
+            @RequestPart EventCreateRequest request,
             @RequestPart String category,
             @Authenticated JwtUser jwtUser
     ) {
 
         EventCategory eventCategory = EventCategory.valueOf(category);
-        EventCreateConverter eventCreateConverter = EventCreateConverter.of(request, eventCategory);
 
-        EventCreateInfo createInfo = EventCreateInfo.builder()
-                .event(eventCreateConverter.event())
-                .clubId(eventCreateConverter.clubId())
+        Event event = request.toEntity(eventCategory);
+        Long clubId = request.clubId();
+
+        EventCreateInfo vo = EventCreateInfo.builder()
+                .event(event)
                 .userId(jwtUser.id())
+                .clubId(clubId)
                 .posterImage(posterImage)
                 .build();
 
-        Long eventId = eventService.create(createInfo);
+        Long eventId = eventService.create(vo);
 
         return ResponseEntity.ok(new EventCreateResponse(eventId));
     }
@@ -86,15 +88,15 @@ public class EventController {
     @PatchMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> update(
             @RequestPart(required = false) MultipartFile posterImage,
-            @RequestPart String request,
+            @RequestPart EventUpdateRequest request,
             @RequestPart String category,
             @Authenticated JwtUser jwtUser
     ) {
         EventCategory eventCategory = EventCategory.valueOf(category);
 
-        EventUpdateConverter eventUpdateConverter = EventUpdateConverter.of(request, eventCategory);
+        Event event = request.toEntity(eventCategory);
 
-        eventService.update(eventUpdateConverter.event(), jwtUser.id(), posterImage);
+        eventService.update(event, jwtUser.id(), posterImage);
 
         return ResponseEntity.noContent().build();
     }
@@ -150,4 +152,5 @@ public class EventController {
 
         return ResponseEntity.ok(bannerResponses);
     }
+
 }

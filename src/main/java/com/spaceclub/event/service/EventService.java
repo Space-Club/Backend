@@ -2,11 +2,12 @@ package com.spaceclub.event.service;
 
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.repository.ClubRepository;
-import com.spaceclub.club.service.ClubUserValidator;
+import com.spaceclub.club.util.ClubUserValidator;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.repository.EventRepository;
 import com.spaceclub.event.repository.EventUserRepository;
+import com.spaceclub.event.service.util.EventValidator;
 import com.spaceclub.event.service.vo.ClubEventOverviewGetInfo;
 import com.spaceclub.event.service.vo.EventCreateInfo;
 import com.spaceclub.event.service.vo.EventGetInfo;
@@ -30,7 +31,8 @@ import java.util.List;
 
 import static com.spaceclub.club.ClubExceptionMessage.CLUB_NOT_FOUND;
 import static com.spaceclub.event.EventExceptionMessage.EVENT_CATEGORY_NOT_ALLOWED;
-import static com.spaceclub.event.EventExceptionMessage.INVALID_POSTER_IMAGE;
+import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_FOUND;
+import static com.spaceclub.event.EventExceptionMessage.POSTER_IMAGE_NOT_NULL;
 import static com.spaceclub.event.domain.EventCategory.CLUB;
 
 @Service
@@ -44,8 +46,6 @@ public class EventService implements EventProvider {
 
     private final EventUserRepository eventUserRepository;
 
-    private final EventValidator eventValidator;
-
     private final ClubUserValidator clubUserValidator;
 
     private final UserProvider userProvider;
@@ -55,31 +55,38 @@ public class EventService implements EventProvider {
     private final S3Properties s3Properties;
 
     @Transactional
-    public Long create(EventCreateInfo createInfo) {
-        MultipartFile posterImage = createInfo.posterImage();
-        Event event = createInfo.event();
+    public Long create(EventCreateInfo vo) {
+        Event event = vo.event();
+        Long clubId = vo.clubId();
+        Long userId = vo.userId();
+        MultipartFile posterImage = vo.posterImage();
 
-        if (event.getCategory() != CLUB && posterImage == null) {
-            throw new IllegalStateException(INVALID_POSTER_IMAGE.toString());
-        }
+        clubUserValidator.validateClubManager(clubId, userId);
+        EventValidator.validateEvent(event);
+
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new IllegalStateException(CLUB_NOT_FOUND.toString()));
+
+        boolean posterImageNotNull = event.getCategory() != CLUB && posterImage == null;
+        if (posterImageNotNull) throw new IllegalStateException(POSTER_IMAGE_NOT_NULL.toString());
 
         if (posterImage != null) {
             String posterImageName = imageUploader.upload(posterImage, S3Folder.EVENT_POSTER);
             event = event.registerPosterImage(posterImageName);
         }
 
-        clubUserValidator.validateClubManager(createInfo.clubId(), createInfo.userId());
-        Club club = clubRepository.findById(createInfo.clubId())
-                .orElseThrow(() -> new IllegalStateException(CLUB_NOT_FOUND.toString()));
+        Event registeredEvent = event.registerClubAndUser(club, userId);
 
-        Event registeredEvent = event.registerClubAndUser(club, createInfo.userId());
-
-        return eventRepository.save(registeredEvent).getId();
+        Event savedEvent = eventRepository.save(registeredEvent);
+        return savedEvent.getId();
     }
 
     @Transactional
     public void update(Event event, Long userId, MultipartFile posterImage) {
-        Event existEvent = eventValidator.validateEvent(event.getId());
+        Event existEvent = eventRepository.findById(event.getId())
+                .orElseThrow(() -> new IllegalArgumentException(EVENT_NOT_FOUND.toString()));
+
+        EventValidator.validateEvent(event);
         clubUserValidator.validateClubManager(existEvent.getClubId(), userId);
 
         Event updatedEvent = processPosterImage(event, existEvent, posterImage);
@@ -87,9 +94,13 @@ public class EventService implements EventProvider {
         eventRepository.save(updatedEvent);
     }
 
-    private Event processPosterImage(Event originalEvent, Event existEvent, MultipartFile posterImage) {
-        String posterImageName = (posterImage != null) ? imageUploader.upload(posterImage, S3Folder.EVENT_POSTER) : existEvent.getPosterImageName();
-        Event updatedEvent = originalEvent.registerPosterImage(posterImageName);
+    private Event processPosterImage(Event newEvent, Event existEvent, MultipartFile posterImage) {
+        String posterImageName;
+
+        if (posterImage == null) posterImageName = existEvent.getPosterImageName();
+        else posterImageName = imageUploader.upload(posterImage, S3Folder.EVENT_POSTER);
+
+        Event updatedEvent = newEvent.registerPosterImage(posterImageName);
         return existEvent.update(updatedEvent);
     }
 
@@ -106,14 +117,16 @@ public class EventService implements EventProvider {
 
     @Transactional
     public void delete(Long eventId, Long userId) {
-        Event event = eventValidator.validateEvent(eventId);
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new IllegalArgumentException(EVENT_NOT_FOUND.toString()));
         clubUserValidator.validateClubManager(event.getClubId(), userId);
 
         eventRepository.deleteById(eventId);
     }
 
     public EventGetInfo get(Long eventId, Long userId) {
-        Event event = eventValidator.validateEvent(eventId);
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new IllegalArgumentException(EVENT_NOT_FOUND.toString()));
 
         if (event.getCategory() == CLUB)
             clubUserValidator.validateClubMember(event.getClubId(), userId);
@@ -145,6 +158,17 @@ public class EventService implements EventProvider {
         PageRequest pageable = PageRequest.of(0, limit, Sort.by("formInfo.formCloseDateTime").ascending());
 
         return eventRepository.findAllByFormCloseDateTimeGreaterThan(now, pageable).getContent();
+    }
+
+    @Override
+    public Event getById(Long eventId) {
+        return eventRepository.findById(eventId)
+                .orElseThrow(() -> new IllegalArgumentException(EVENT_NOT_FOUND.toString()));
+    }
+
+    @Override
+    public Event save(Event event) {
+        return eventRepository.save(event);
     }
 
 }

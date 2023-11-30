@@ -3,7 +3,9 @@ package com.spaceclub.event.service;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventUser;
 import com.spaceclub.event.domain.ParticipationStatus;
+import com.spaceclub.event.repository.EventRepository;
 import com.spaceclub.event.repository.EventUserRepository;
+import com.spaceclub.event.service.util.EventValidator;
 import com.spaceclub.event.service.vo.EventPageInfo;
 import com.spaceclub.event.service.vo.EventParticipationCreateInfo;
 import com.spaceclub.form.domain.FormAnswer;
@@ -23,6 +25,7 @@ import java.util.function.Function;
 
 import static com.spaceclub.event.EventExceptionMessage.EVENT_ALREADY_APPLIED;
 import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_APPLIED;
+import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_FOUND;
 import static com.spaceclub.event.domain.ParticipationStatus.CANCELED;
 import static com.spaceclub.event.domain.ParticipationStatus.PENDING;
 import static java.util.stream.Collectors.toMap;
@@ -32,18 +35,20 @@ import static java.util.stream.Collectors.toMap;
 @RequiredArgsConstructor
 public class ParticipationService implements ParticipationProvider {
 
+    private final EventRepository eventRepository;
+
     private final EventUserRepository eventUserRepository;
 
     private final FormOptionProvider formOptionProvider;
 
-    private final EventValidator eventValidator;
-
     private final S3Properties s3Properties;
 
     public void apply(EventParticipationCreateInfo info) {
-        Event event = eventValidator.validateEvent(info.eventId());
+        Long eventId = info.eventId();
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new IllegalArgumentException(EVENT_NOT_FOUND.toString()));
 
-        eventValidator.validateEventTicketCount(event.getMaxTicketCount(), info.ticketCount());
+        EventValidator.validateEventTicketCount(event.getMaxTicketCount(), info.ticketCount());
 
         Optional<EventUser> optionalEventUser = eventUserRepository.findByEventIdAndUserId(info.eventId(), info.userId());
 
@@ -79,7 +84,8 @@ public class ParticipationService implements ParticipationProvider {
     }
 
     public ParticipationStatus cancel(Long eventId, Long userId) {
-        Event event = eventValidator.validateEvent(eventId);
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new IllegalArgumentException(EVENT_NOT_FOUND.toString()));
 
         EventUser eventUser = eventUserRepository.findByEventIdAndUserId(eventId, userId)
                 .orElseThrow(() -> new IllegalArgumentException(EVENT_NOT_APPLIED.toString()));

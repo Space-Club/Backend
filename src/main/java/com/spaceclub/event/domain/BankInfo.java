@@ -40,7 +40,8 @@ public class BankInfo {
 
         if (bankAccountNumber != null) {
             boolean invalidBankAccountNumberLength = bankAccountNumber.length() > BANK_ACCOUNT_NUMBER_MAX_LENGTH || bankAccountNumber.isBlank();
-            if (invalidBankAccountNumberLength) throw new IllegalArgumentException(INVALID_EVENT_BANK_ACCOUNT_NUMBER.toString());
+            if (invalidBankAccountNumberLength)
+                throw new IllegalArgumentException(INVALID_EVENT_BANK_ACCOUNT_NUMBER.toString());
         }
     }
 
