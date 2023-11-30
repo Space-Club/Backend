@@ -137,6 +137,12 @@ public class Event extends BaseTimeEntity {
                 .build();
     }
 
+    public Event registerParticipants(int participants) {
+        return event()
+                .eventInfo(this.eventInfo.registerApplicants(participants))
+                .build();
+    }
+
     public Event update(Event event) {
         return event()
                 .id(event.id)
@@ -233,6 +239,10 @@ public class Event extends BaseTimeEntity {
         return this.eventInfo.getContent();
     }
 
+    public boolean isFormed() {
+        return form != null;
+    }
+
     public boolean isFormManaged() {
         return form != null && form.isManaged();
     }
@@ -305,6 +315,10 @@ public class Event extends BaseTimeEntity {
 
         return this.formInfo.getFormOpenDateTime().isBefore(now)
                 && this.formInfo.getFormCloseDateTime().isAfter(now);
+    }
+
+    public int getParticipants() {
+        return this.eventInfo.getParticipants();
     }
 
 }

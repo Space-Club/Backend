@@ -23,6 +23,7 @@ import java.util.List;
 import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_APPLIED;
 import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_FOUND;
 import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_MANAGED;
+import static com.spaceclub.event.domain.ParticipationStatus.CANCELED;
 
 @Service
 @Transactional(readOnly = true)
@@ -32,6 +33,8 @@ public class SubmitService {
     private final FormAnswerRepository formAnswerRepository;
 
     private final EventUserRepository eventUserRepository;
+
+    private final EventValidator eventValidator;
 
     private final ClubUserValidator clubUserValidator;
 
@@ -53,11 +56,14 @@ public class SubmitService {
         EventUser eventUser = eventUserRepository.findByEventIdAndUserId(updateInfo.eventId(), updateInfo.formUserId())
                 .orElseThrow(() -> new IllegalStateException(EVENT_NOT_APPLIED.toString()));
 
-        Event event = eventProvider.getById(eventUser.getEventId());
-
+        Event event = eventValidator.validateEventWithLock(eventUser.getEventId());
         if (event.isNotFormManaged()) throw new IllegalStateException(EVENT_NOT_MANAGED.toString());
 
         clubUserValidator.validateClubManager(event.getClubId(), updateInfo.userId());
+
+        if (CANCELED.equals(updateInfo.status())) {
+            eventProvider.minusParticipants(event, eventUser.getTicketCount());
+        }
 
         EventUser updatedEventUser = eventUser.updateStatus(updateInfo.status());
         eventUserRepository.save(updatedEventUser);

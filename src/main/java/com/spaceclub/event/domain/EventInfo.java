@@ -26,7 +26,7 @@ public class EventInfo {
 
     private static final int LOCATION_MAX_LENGTH = 30;
 
-    private static final int CAPACITY_MIN_LENGTH = 1;
+    private static final int CAPACITY_MIN_LENGTH = 0;
 
     private static final int CAPACITY_MAX_LENGTH = 999;
 
@@ -64,6 +64,9 @@ public class EventInfo {
     @Getter
     private Integer recruitmentLimit;
 
+    @Getter
+    private int participants;
+
     @Builder
     private EventInfo(
             String title,
@@ -76,35 +79,49 @@ public class EventInfo {
             String recruitmentTarget,
             Integer recruitmentLimit,
             LocalDateTime endDateTime,
-            Integer dues
+            Integer dues,
+            int participants
     ) {
         validate(title, content, location, capacity);
         this.title = title;
         this.content = content;
         this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
         this.location = location;
         this.capacity = capacity;
         this.posterImageName = posterImageName;
         this.activityArea = activityArea;
         this.recruitmentTarget = recruitmentTarget;
         this.recruitmentLimit = recruitmentLimit;
-        this.endDateTime = endDateTime;
         this.dues = dues;
+        this.participants = participants;
     }
 
-    public EventInfo registerPosterImage(String posterImageName) {
-        return EventInfo.builder()
+    public EventInfoBuilder eventInfo() {
+        return new EventInfoBuilder()
                 .title(this.title)
                 .content(this.content)
                 .startDateTime(this.startDateTime)
+                .endDateTime(this.endDateTime)
                 .location(this.location)
                 .capacity(this.capacity)
                 .posterImageName(posterImageName)
                 .activityArea(this.activityArea)
                 .recruitmentTarget(this.recruitmentTarget)
                 .recruitmentLimit(this.recruitmentLimit)
-                .endDateTime(this.endDateTime)
                 .dues(this.dues)
+                .participants(this.participants);
+    }
+
+    public EventInfo registerPosterImage(String posterImageName) {
+        return eventInfo()
+                .posterImageName(posterImageName)
+                .build();
+    }
+
+    public EventInfo registerApplicants(int participants) {
+        return eventInfo()
+                .participants(participants)
                 .build();
     }
 

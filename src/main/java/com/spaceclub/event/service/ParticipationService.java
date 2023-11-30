@@ -6,63 +6,64 @@ import com.spaceclub.event.domain.ParticipationStatus;
 import com.spaceclub.event.repository.EventRepository;
 import com.spaceclub.event.repository.EventUserRepository;
 import com.spaceclub.event.service.util.EventValidator;
-import com.spaceclub.event.service.vo.EventPageInfo;
 import com.spaceclub.event.service.vo.EventParticipationCreateInfo;
 import com.spaceclub.form.domain.FormAnswer;
 import com.spaceclub.form.service.FormOptionProvider;
-import com.spaceclub.global.config.s3.S3Properties;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.function.Function;
 
+import static com.spaceclub.event.EventExceptionMessage.APPLY_EXPIRED;
 import static com.spaceclub.event.EventExceptionMessage.EVENT_ALREADY_APPLIED;
 import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_APPLIED;
-import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_FOUND;
+import static com.spaceclub.event.EventExceptionMessage.EXCEED_CAPACITY;
+import static com.spaceclub.event.domain.EventCategory.SHOW;
 import static com.spaceclub.event.domain.ParticipationStatus.CANCELED;
 import static com.spaceclub.event.domain.ParticipationStatus.PENDING;
-import static java.util.stream.Collectors.toMap;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ParticipationService implements ParticipationProvider {
-
-    private final EventRepository eventRepository;
+public class ParticipationService {
 
     private final EventUserRepository eventUserRepository;
 
     private final FormOptionProvider formOptionProvider;
 
-    private final S3Properties s3Properties;
+    private final EventProvider eventProvider;
+
+    private final EventValidator eventValidator;
 
     public void apply(EventParticipationCreateInfo info) {
-        Long eventId = info.eventId();
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new IllegalArgumentException(EVENT_NOT_FOUND.toString()));
+        Event event = eventValidator.validateEventWithLock(info.eventId());
 
-        EventValidator.validateEventTicketCount(event.getMaxTicketCount(), info.ticketCount());
+        validateTicketCount(info.ticketCount(), event);
 
         Optional<EventUser> optionalEventUser = eventUserRepository.findByEventIdAndUserId(info.eventId(), info.userId());
 
         optionalEventUser.ifPresentOrElse(eventUser -> {
-                    processByParticipationStatus(info, eventUser);
+                    processByParticipationStatus(event.isFormed(), info, eventUser);
                     participateEvent(info, event);
                 },
                 () -> participateEvent(info, event));
     }
 
-    private void processByParticipationStatus(EventParticipationCreateInfo info, EventUser eventUser) {
+    private void validateTicketCount(Integer ticketCount, Event event) {
+        if (SHOW.equals(event.getCategory())) {
+            eventValidator.validateMaxEventTicketCount(event.getMaxTicketCount(), ticketCount);
+        }
+    }
+
+    private void processByParticipationStatus(boolean isFormed, EventParticipationCreateInfo info, EventUser eventUser) {
         if (CANCELED.equals(eventUser.getStatus())) {
             eventUserRepository.deleteById(eventUser.getId());
-            formOptionProvider.deleteFormAnswer(info.formAnswers(), info.userId());
+
+            if (isFormed) {
+                formOptionProvider.deleteFormAnswer(info.formAnswers(), info.userId());
+            }
         } else {
             throw new IllegalArgumentException(EVENT_ALREADY_APPLIED.toString());
         }
@@ -73,46 +74,58 @@ public class ParticipationService implements ParticipationProvider {
             formOptionProvider.createFormOption(info.userId(), formAnswer);
         }
 
+        int participants = addParticipants(info, event);
+
+        Event updateEvent = event.registerParticipants(participants);
+        eventProvider.update(updateEvent);
+
+        createNewUser(info.userId(), info.ticketCount(), event);
+    }
+
+    public void createNewUser(Long userId, int ticketCount, Event event) {
         EventUser newEventUser = EventUser.builder()
-                .userId(info.userId())
+                .userId(userId)
                 .event(event)
                 .status(PENDING)
-                .ticketCount(info.ticketCount())
+                .ticketCount(ticketCount)
                 .build();
 
         eventUserRepository.save(newEventUser);
     }
 
+    private int addParticipants(EventParticipationCreateInfo info, Event event) {
+        int participants = event.getParticipants() + info.ticketCount();
+        validateCapacityAndCloseDate(event, participants);
+
+        return participants;
+    }
+
+    private void validateCapacityAndCloseDate(Event event, int participants) {
+        if (participants > event.getCapacity()) {
+            throw new IllegalStateException(EXCEED_CAPACITY.toString());
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isAfter(event.getFormCloseDateTime())) {
+            throw new IllegalStateException(APPLY_EXPIRED.toString());
+        }
+    }
+
+
     public ParticipationStatus cancel(Long eventId, Long userId) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new IllegalArgumentException(EVENT_NOT_FOUND.toString()));
+        Event event = eventValidator.validateEventWithLock(eventId);
 
         EventUser eventUser = eventUserRepository.findByEventIdAndUserId(eventId, userId)
                 .orElseThrow(() -> new IllegalArgumentException(EVENT_NOT_APPLIED.toString()));
 
+        if (event.isNotFormManaged()) {
+            eventProvider.minusParticipants(event, eventUser.getTicketCount());
+        }
         EventUser updateEventUser = eventUser.setStatusByManaged(event.isFormManaged());
 
         eventUserRepository.save(updateEventUser);
 
         return updateEventUser.getStatus();
-    }
-
-    @Override
-    public Page<EventPageInfo> findAllEventPages(Long userId, Pageable pageable) {
-        Page<Event> eventPages = eventUserRepository.findAllByUserId(userId, pageable);
-
-        List<Long> eventIds = eventPages.stream()
-                .map(Event::getId)
-                .toList();
-
-        Map<Long, EventUser> eventUsers = eventUserRepository.findAllByUserIdAndEvent_IdIn(userId, eventIds).stream()
-                .collect(toMap(EventUser::getEventId, Function.identity()));
-
-        List<EventPageInfo> eventPageInfos = eventPages.getContent().stream()
-                .map(event -> EventPageInfo.from(event, eventUsers.get(event.getId()), s3Properties.url()))
-                .toList();
-
-        return new PageImpl<>(eventPageInfos, eventPages.getPageable(), eventPages.getTotalElements());
     }
 
 }
