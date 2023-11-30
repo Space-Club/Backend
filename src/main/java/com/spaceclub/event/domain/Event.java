@@ -36,8 +36,6 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @EqualsAndHashCode(of = "id", callSuper = false)
 public class Event extends BaseTimeEntity {
 
-    private static final String EVENT_POSTER_S3_URL = "https://space-club-image-bucket.s3.ap-northeast-2.amazonaws.com/event-poster/";
-
     @Id
     @Getter
     @Column(name = "event_id")

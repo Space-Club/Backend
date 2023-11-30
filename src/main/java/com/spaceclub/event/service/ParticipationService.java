@@ -3,7 +3,6 @@ package com.spaceclub.event.service;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventUser;
 import com.spaceclub.event.domain.ParticipationStatus;
-import com.spaceclub.event.repository.EventRepository;
 import com.spaceclub.event.repository.EventUserRepository;
 import com.spaceclub.event.service.util.EventValidator;
 import com.spaceclub.event.service.vo.EventParticipationCreateInfo;
@@ -110,7 +109,6 @@ public class ParticipationService {
             throw new IllegalStateException(APPLY_EXPIRED.toString());
         }
     }
-
 
     public ParticipationStatus cancel(Long eventId, Long userId) {
         Event event = eventValidator.validateEventWithLock(eventId);

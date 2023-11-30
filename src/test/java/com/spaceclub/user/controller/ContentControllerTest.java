@@ -3,7 +3,7 @@ package com.spaceclub.user.controller;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.service.ClubService;
 import com.spaceclub.club.service.vo.ClubInfo;
-import com.spaceclub.event.service.ParticipationProvider;
+import com.spaceclub.event.service.UserEventProvider;
 import com.spaceclub.event.service.vo.EventPageInfo;
 import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.config.s3.S3Properties;
@@ -67,7 +67,7 @@ class ContentControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    private ParticipationProvider participationService;
+    private UserEventProvider participationService;
 
     @MockBean
     private ClubService clubService;

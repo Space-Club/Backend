@@ -25,7 +25,6 @@ public class EventValidator {
         BadWordFilter.filter(event.getBankAccountNumber());
     }
 
-
     public Event validateEventWithLock(Long eventId) {
         return eventRepository.findWithLockById(eventId).orElseThrow(() -> new IllegalStateException(EVENT_NOT_FOUND.toString()));
     }
