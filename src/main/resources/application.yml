@@ -8,6 +8,42 @@ spring:
   jpa:
     open-in-view: false
 
+  mail:
+    host: smtp.gmail.com
+    port: 587 # 587 (TLS enabled) or 465 (SSL enabled)
+    username: ENC(H7gbFH2aDRiqy9KkdRmflZU38YjPzk7rGLOjtplJvOukR9pjrNzztg==)
+    password: ENC(swlmN2sQUbZ1SW8t0cUO1ijEGAi/19FXWgeYMudgZqI=)
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+        mime:
+          charset: UTF-8
+        transport:
+          protocol: smtp
+
+  thymeleaf:
+    cache: false
+    check-template-location: true
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML5
+
+mail:
+  properties:
+    background-url: static/images/backgroundImage.jpeg
+    logo-url: static/images/SpaceClub-Logo.png
+    name-en: SPACE CLUB
+    name-ko: 스페이스 클럽
+    about-us: 프로그래머스 Skrrr 팀입니다.
+    location: "서울 강남구 강남대로 388, 강남센타빌딩 지하2층"
+    phone: (+82) 010-1234-5678
+    site-url: https://spaceclub.site
+    markdown-path: src/main/resources/static/markdown/
+
 s3:
   valid-extensions:
     - jpg
