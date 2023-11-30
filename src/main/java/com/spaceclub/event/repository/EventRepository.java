@@ -4,6 +4,7 @@ import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
@@ -28,6 +29,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query("select e from Event e join fetch Bookmark b on e.id = b.eventId where b.userId = :userId")
     Page<Event> findAllBookmarkedEventPages(@Param("userId") Long userId, Pageable pageable);
 
-    Page<Event> findAllByFormCloseDateTimeGreaterThan(LocalDateTime now, Pageable pageable);
+    Page<Event> findAllByFormInfo_FormCloseDateTimeGreaterThan(LocalDateTime now, PageRequest pageable);
 
 }
