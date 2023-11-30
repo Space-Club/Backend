@@ -35,7 +35,7 @@ public record ClubEventOverviewGetInfo(
                 event.getLocation(),
                 event.getCategory().equals(EventCategory.CLUB) ? "CLUB" : "ALL",
                 event.getClubName(),
-                bucketUrl + event.getClubLogoImageName(),
+                event.getClubLogoImageName() == null ? null : bucketUrl + event.getClubLogoImageName(),
                 userProfile.username(),
                 userProfile.profileImageUrl()
         );

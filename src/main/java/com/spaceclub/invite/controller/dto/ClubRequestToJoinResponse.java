@@ -21,7 +21,7 @@ public record ClubRequestToJoinResponse(
                 .name(club.getName())
                 .info(club.getInfo())
                 .memberCount(memberCount)
-                .logoImageUrl(bucketUrl + club.getLogoImageName())
+                .logoImageUrl(club.getLogoImageName() == null ? null : bucketUrl + club.getLogoImageName())
                 .build();
     }
 

@@ -9,10 +9,10 @@ public record EventBannerResponse(
         EventInfoResponse eventInfo
 ) {
 
-    public static EventBannerResponse from(Event event) {
+    public static EventBannerResponse from(Event event, String bucketUrl) {
         ClubInfoResponse clubInfoResponse = new ClubInfoResponse(
-                event.getClubName(),
-                event.getClubCoverImageName()
+                event.getClubCoverImageName() == null ? null : bucketUrl + event.getClubCoverImageName(),
+                event.getClubName()
         );
         EventInfoResponse eventInfoResponse = new EventInfoResponse(
                 event.getId(),

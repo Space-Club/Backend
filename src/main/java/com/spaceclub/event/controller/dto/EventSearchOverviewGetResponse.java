@@ -24,7 +24,7 @@ public record EventSearchOverviewGetResponse(Long id,
                 ),
                 new ClubInfoResponse(
                         event.getClubName(),
-                        bucketUrl + event.getClubLogoImageName()
+                        event.getClubCoverImageName() == null ? null : bucketUrl + event.getClubLogoImageName()
                 )
         );
     }
