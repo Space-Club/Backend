@@ -28,7 +28,7 @@ public class EventInfo {
 
     private static final int CAPACITY_MIN_LENGTH = 0;
 
-    private static final int CAPACITY_MAX_LENGTH = 999;
+    private static final int CAPACITY_MAX_LENGTH = 1000;
 
     @Getter
     private String title;
