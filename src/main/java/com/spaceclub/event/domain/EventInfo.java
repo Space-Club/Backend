@@ -102,6 +102,7 @@ public class EventInfo {
                 .posterImageName(posterImageName)
                 .activityArea(this.activityArea)
                 .recruitmentTarget(this.recruitmentTarget)
+                .recruitmentLimit(this.recruitmentLimit)
                 .endDateTime(this.endDateTime)
                 .dues(this.dues)
                 .build();
