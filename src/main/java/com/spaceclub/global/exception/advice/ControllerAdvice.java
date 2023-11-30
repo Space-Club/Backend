@@ -22,7 +22,7 @@ public class ControllerAdvice {
 
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler
-    public ErrorResponse customExceptionHandle(TokenException exception) {
+    public ErrorResponse customExceptionHandler(TokenException exception) {
         String exceptionName = exception.getClass().getSimpleName();
         log.info("토큰 관련 에러, exception name: {}", exceptionName);
 
@@ -31,7 +31,7 @@ public class ControllerAdvice {
 
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
-    public ErrorResponse customExceptionHandle(RuntimeException exception) {
+    public ErrorResponse customExceptionHandler(RuntimeException exception) {
         String exceptionName = exception.getClass().getSimpleName();
 
         return new ErrorResponse(exceptionName, exception.getMessage());
@@ -52,7 +52,7 @@ public class ControllerAdvice {
 
     @ResponseStatus(METHOD_NOT_ALLOWED)
     @ExceptionHandler({HttpRequestMethodNotSupportedException.class, HttpMessageNotReadableException.class})
-    public ErrorResponse httpRequestMethodNotSupportedExceptionHandle(Exception exception) {
+    public ErrorResponse httpRequestMethodNotSupportedExceptionHandler(Exception exception) {
         String exceptionName = exception.getClass().getSimpleName();
         log.warn("잘못된 요청, exception name: {}", exceptionName);
 
