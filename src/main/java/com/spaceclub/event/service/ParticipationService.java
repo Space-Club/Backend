@@ -21,6 +21,7 @@ import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_APPLIED;
 import static com.spaceclub.event.EventExceptionMessage.EXCEED_CAPACITY;
 import static com.spaceclub.event.domain.EventCategory.SHOW;
 import static com.spaceclub.event.domain.ParticipationStatus.CANCELED;
+import static com.spaceclub.event.domain.ParticipationStatus.CONFIRMED;
 import static com.spaceclub.event.domain.ParticipationStatus.PENDING;
 
 @Service
@@ -78,14 +79,15 @@ public class ParticipationService {
         Event updateEvent = event.registerParticipants(participants);
         eventProvider.update(updateEvent);
 
-        createNewUser(info.userId(), info.ticketCount(), event);
+        if (event.isFormManaged()) createNewUser(info.userId(), event, PENDING, info.ticketCount());
+        else createNewUser(info.userId(), event, CONFIRMED, info.ticketCount());
     }
 
-    public void createNewUser(Long userId, int ticketCount, Event event) {
+    public void createNewUser(Long userId, Event event, ParticipationStatus status, int ticketCount) {
         EventUser newEventUser = EventUser.builder()
                 .userId(userId)
                 .event(event)
-                .status(PENDING)
+                .status(status)
                 .ticketCount(ticketCount)
                 .build();
 
