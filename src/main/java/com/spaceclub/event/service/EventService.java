@@ -34,6 +34,7 @@ import static com.spaceclub.event.EventExceptionMessage.EVENT_CATEGORY_NOT_ALLOW
 import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_FOUND;
 import static com.spaceclub.event.EventExceptionMessage.POSTER_IMAGE_NOT_NULL;
 import static com.spaceclub.event.domain.EventCategory.CLUB;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 @Service
 @Transactional(readOnly = true)
@@ -167,9 +168,9 @@ public class EventService implements EventProvider {
     }
 
     public List<Event> getBanner(LocalDateTime now, int limit) {
-        PageRequest pageable = PageRequest.of(0, limit, Sort.by("formInfo.formCloseDateTime").ascending());
+        PageRequest pageable = PageRequest.of(0, limit, Sort.by(ASC, "formInfo.formCloseDateTime"));
 
-        return eventRepository.findAllByFormCloseDateTimeGreaterThan(now, pageable).getContent();
+        return eventRepository.findAllByFormInfo_FormCloseDateTimeGreaterThan(now, pageable).getContent();
     }
 
     @Override
