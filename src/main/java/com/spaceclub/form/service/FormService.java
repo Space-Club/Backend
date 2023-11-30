@@ -2,9 +2,7 @@ package com.spaceclub.form.service;
 
 import com.spaceclub.club.util.ClubUserValidator;
 import com.spaceclub.event.domain.Event;
-import com.spaceclub.event.repository.EventRepository;
 import com.spaceclub.event.service.EventProvider;
-import com.spaceclub.event.service.util.EventValidator;
 import com.spaceclub.form.domain.Form;
 import com.spaceclub.form.repository.FormRepository;
 import com.spaceclub.form.service.vo.FormCreateInfo;
@@ -13,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.spaceclub.form.FormExceptionMessage.EXISTED_FORM;
 import static com.spaceclub.form.FormExceptionMessage.FORM_NOT_FOUND;
 
 @Service
@@ -30,6 +29,7 @@ public class FormService {
     public Long create(FormCreateInfo vo) {
         Event event = eventProvider.getById(vo.eventId());
         clubUserValidator.validateClubManager(event.getClubId(), vo.userId());
+        if (event.isFormed()) throw new IllegalStateException(EXISTED_FORM.toString());
 
         vo.form().addItems(vo.options());
         Form savedForm = formRepository.save(vo.form());
