@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.spaceclub.club.ClubExceptionMessage.CAN_NOT_SELF_DEGRADING;
 import static com.spaceclub.club.ClubExceptionMessage.CAN_NOT_WITHDRAW;
@@ -65,10 +66,11 @@ public class ClubMemberManagerService {
     }
 
     public String getUserRole(Long clubId, Long userId) {
-        ClubUser clubUser = clubUserRepository.findByClub_IdAndUserId(clubId, userId)
-                .orElseThrow(() -> new IllegalArgumentException(NOT_CLUB_MEMBER.toString()));
+        Optional<ClubUser> clubUser = clubUserRepository.findByClub_IdAndUserId(clubId, userId);
 
-        return clubUser.getRole().name();
+        return clubUser.map(user -> user.getRole().name())
+                .orElse(null);
+
     }
 
     @Transactional
