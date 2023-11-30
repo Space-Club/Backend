@@ -6,10 +6,13 @@ import com.spaceclub.form.domain.Form;
 import com.spaceclub.form.domain.FormAnswer;
 import com.spaceclub.form.domain.FormOption;
 import com.spaceclub.form.service.vo.FormSubmitGetInfo;
+import lombok.Builder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
 import java.util.List;
+
+import static com.spaceclub.event.domain.EventCategory.SHOW;
 
 public record FormSubmitGetResponse(
         FormInfoResponse formInfo,
@@ -42,7 +45,13 @@ public record FormSubmitGetResponse(
                             .map(formAnswer -> new UserFormOptionResponse(formAnswer.getOptionTitle(), formAnswer.getContent()))
                             .toList();
 
-                    return new UserFormResponse(userId, options, new ParticipationResponse(eventUser.getStatus(), eventUser.getParticipationDateTime()));
+                    return UserFormResponse.builder()
+                            .userId(userId)
+                            .options(options)
+                            .participation(new ParticipationResponse(eventUser.getStatus(), eventUser.getParticipationDateTime()))
+                            .ticketCount(SHOW.equals(eventUser.getEventCategory()) ? eventUser.getTicketCount() : null)
+                            .build();
+
                 })
                 .toList();
 
@@ -57,8 +66,14 @@ public record FormSubmitGetResponse(
     private record UserFormResponse(
             Long userId,
             List<UserFormOptionResponse> options,
-            ParticipationResponse participation
+            ParticipationResponse participation,
+            Integer ticketCount
     ) {
+
+        @Builder
+        private UserFormResponse {
+
+        }
 
     }
 

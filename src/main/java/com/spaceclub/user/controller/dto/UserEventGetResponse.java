@@ -12,10 +12,11 @@ public record UserEventGetResponse(
         String clubName,
         String posterImageUrl,
         LocalDate startDate,
-        ParticipationStatus participationStatus
+        ParticipationStatus participationStatus,
+        Integer ticketCount
 ) {
 
-    public static UserEventGetResponse from(EventPageInfo event) {
+    public static UserEventGetResponse from(EventPageInfo event, Integer ticketCount) {
         return new UserEventGetResponse(
                 event.id(),
                 event.title(),
@@ -23,7 +24,8 @@ public record UserEventGetResponse(
                 event.clubName(),
                 event.posterImageUrl(),
                 event.startDate(),
-                event.participationStatus()
+                event.participationStatus(),
+                ticketCount
         );
     }
 

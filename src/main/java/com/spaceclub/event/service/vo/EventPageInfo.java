@@ -1,6 +1,7 @@
 package com.spaceclub.event.service.vo;
 
 import com.spaceclub.event.domain.Event;
+import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.domain.EventUser;
 import com.spaceclub.event.domain.ParticipationStatus;
 
@@ -8,6 +9,7 @@ import java.time.LocalDate;
 
 public record EventPageInfo(
         Long id,
+        EventCategory category,
         String title,
         String location,
         String clubName,
@@ -19,6 +21,7 @@ public record EventPageInfo(
     public static EventPageInfo from(Event event, EventUser eventUser, String bucketUrl) {
         return new EventPageInfo(
                 event.getId(),
+                event.getCategory(),
                 event.getTitle(),
                 event.getLocation(),
                 event.getClubName(),

@@ -20,12 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.spaceclub.event.domain.EventCategory.SHOW;
+
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class ContentController {
 
     private final UserEventProvider userEventProvider;
+
     private final ClubProvider clubService;
 
     @GetMapping("/events")
@@ -33,7 +36,10 @@ public class ContentController {
         Page<EventPageInfo> eventPages = userEventProvider.findAllEventPages(jwtUser.id(), pageable);
 
         List<UserEventGetResponse> eventGetResponse = eventPages.getContent().stream()
-                .map(UserEventGetResponse::from)
+                .map(event -> UserEventGetResponse.from(
+                        event,
+                        SHOW.equals(event.category()) ? userEventProvider.getTicketCount(event.id(), jwtUser.id()) : null
+                ))
                 .toList();
 
         return new PageResponse<>(eventGetResponse, eventPages);

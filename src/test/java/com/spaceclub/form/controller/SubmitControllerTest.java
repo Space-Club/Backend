@@ -127,6 +127,7 @@ class SubmitControllerTest {
                                         fieldWithPath("userForms[].participation").type(OBJECT).description("신청 정보"),
                                         fieldWithPath("userForms[].participation.status").type(STRING).description("신청 상태"),
                                         fieldWithPath("userForms[].participation.dateTime").type(STRING).description("신청 날짜 및 시각"),
+                                        fieldWithPath("userForms[].ticketCount").type(NUMBER).description("신청한 티켓 수"),
                                         fieldWithPath("pageData").type(OBJECT).description("페이지 정보"),
                                         fieldWithPath("pageData.first").type(BOOLEAN).description("첫 페이지 여부"),
                                         fieldWithPath("pageData.last").type(BOOLEAN).description("마지막 페이지 여부"),
