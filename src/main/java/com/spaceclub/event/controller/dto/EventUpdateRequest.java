@@ -1,8 +1,12 @@
 package com.spaceclub.event.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.spaceclub.event.domain.BankInfo;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
+import com.spaceclub.event.domain.EventInfo;
+import com.spaceclub.event.domain.FormInfo;
+import com.spaceclub.event.domain.TicketInfo;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -11,14 +15,14 @@ import java.time.LocalTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record EventUpdateRequest(
         Long eventId,
-        EventInfo eventInfo,
-        FormInfo formInfo,
-        TicketInfo ticketInfo,
-        BankInfo bankInfo
+        EventInfoRequest eventInfo,
+        FormInfoRequest formInfo,
+        TicketInfoRequest ticketInfo,
+        BankInfoRequest bankInfo
 ) {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public record EventInfo(
+    public record EventInfoRequest(
             String title,
             String content,
             LocalDate startDate,
@@ -34,11 +38,11 @@ public record EventUpdateRequest(
     ) {
 
         @Builder
-        public EventInfo {
+        public EventInfoRequest {
         }
 
-        private com.spaceclub.event.domain.EventInfo toEntity(FormInfo formInfo) {
-            return com.spaceclub.event.domain.EventInfo.builder()
+        private EventInfo toEntity() {
+            return EventInfo.builder()
                     .title(title)
                     .content(content)
                     .startDateTime(startDate != null ? startDate.atTime(startTime) : null)
@@ -55,17 +59,17 @@ public record EventUpdateRequest(
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public record TicketInfo(
+    public record TicketInfoRequest(
             Integer cost,
             Integer maxTicketCount
     ) {
 
         @Builder
-        public TicketInfo {
+        public TicketInfoRequest {
         }
 
-        private com.spaceclub.event.domain.TicketInfo toEntity() {
-            return com.spaceclub.event.domain.TicketInfo.builder()
+        private TicketInfo toEntity() {
+            return TicketInfo.builder()
                     .cost(cost)
                     .maxTicketCount(maxTicketCount)
                     .build();
@@ -74,7 +78,7 @@ public record EventUpdateRequest(
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public record FormInfo(
+    public record FormInfoRequest(
             LocalDate openDate,
             LocalTime openTime,
             LocalDate closeDate,
@@ -83,11 +87,11 @@ public record EventUpdateRequest(
     ) {
 
         @Builder
-        public FormInfo {
+        public FormInfoRequest {
         }
 
-        private com.spaceclub.event.domain.FormInfo toEntity() {
-            return com.spaceclub.event.domain.FormInfo.builder()
+        private FormInfo toEntity() {
+            return FormInfo.builder()
                     .formOpenDateTime(openDate.atTime(openTime))
                     .formCloseDateTime(closeDate.atTime(closeTime))
                     .build();
@@ -96,17 +100,17 @@ public record EventUpdateRequest(
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public record BankInfo(
+    public record BankInfoRequest(
             String name,
             String accountNumber
     ) {
 
         @Builder
-        public BankInfo {
+        public BankInfoRequest {
         }
 
-        private com.spaceclub.event.domain.BankInfo toEntity() {
-            return com.spaceclub.event.domain.BankInfo.builder()
+        private BankInfo toEntity() {
+            return BankInfo.builder()
                     .bankName(name)
                     .bankAccountNumber(accountNumber)
                     .build();
@@ -131,7 +135,7 @@ public record EventUpdateRequest(
         return Event.builder()
                 .id(eventId)
                 .category(EventCategory.SHOW)
-                .eventInfo(eventInfo != null ? eventInfo.toEntity(formInfo) : null)
+                .eventInfo(eventInfo != null ? eventInfo.toEntity() : null)
                 .ticketInfo(ticketInfo != null ? ticketInfo.toEntity() : null)
                 .formInfo(formInfo != null ? formInfo.toEntity() : null)
                 .bankInfo(bankInfo != null ? bankInfo.toEntity() : null)
@@ -142,7 +146,7 @@ public record EventUpdateRequest(
         return Event.builder()
                 .id(eventId)
                 .category(EventCategory.CLUB)
-                .eventInfo(eventInfo != null ? eventInfo.toEntity(formInfo) : null)
+                .eventInfo(eventInfo != null ? eventInfo.toEntity() : null)
                 .formInfo(formInfo != null ? formInfo.toEntity() : null)
                 .build();
     }
@@ -151,7 +155,7 @@ public record EventUpdateRequest(
         return Event.builder()
                 .id(eventId)
                 .category(EventCategory.PROMOTION)
-                .eventInfo(eventInfo != null ? eventInfo.toEntity(formInfo) : null)
+                .eventInfo(eventInfo != null ? eventInfo.toEntity() : null)
                 .formInfo(formInfo != null ? formInfo.toEntity() : null)
                 .build();
     }
@@ -160,7 +164,7 @@ public record EventUpdateRequest(
         return Event.builder()
                 .id(eventId)
                 .category(EventCategory.RECRUITMENT)
-                .eventInfo(eventInfo != null ? eventInfo.toEntity(formInfo) : null)
+                .eventInfo(eventInfo != null ? eventInfo.toEntity() : null)
                 .formInfo(formInfo != null ? formInfo.toEntity() : null)
                 .build();
     }

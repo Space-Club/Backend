@@ -16,9 +16,9 @@ public class ClubValidator {
 
     public static void validateNotice(String notice) {
         if (notice == null) throw new IllegalArgumentException(NOTICE_NOT_NULL.toString());
-        BadWordFilter.filter(notice);
         if (notice.isBlank()) throw new IllegalArgumentException(NOTICE_WITH_BLANK.toString());
         if (!notice.strip().equals(notice)) throw new IllegalArgumentException(NOTICE_WITH_MARGIN.toString());
+        BadWordFilter.filter(notice);
     }
 
 }

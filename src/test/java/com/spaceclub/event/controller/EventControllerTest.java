@@ -122,7 +122,7 @@ class EventControllerTest {
         // given
         EventCreateRequest showEventCreateRequest = new EventCreateRequest(
                 1L,
-                EventCreateRequest.EventInfo.builder()
+                EventCreateRequest.EventInfoRequest.builder()
                         .title("행사 제목")
                         .content("행사 내용")
                         .startDate(LocalDate.of(2023, 11, 15))
@@ -130,17 +130,17 @@ class EventControllerTest {
                         .location("행사 장소")
                         .capacity(100)
                         .build(),
-                EventCreateRequest.FormInfo.builder()
+                EventCreateRequest.FormInfoRequest.builder()
                         .openDate(LocalDate.of(2023, 11, 1))
                         .openTime(LocalTime.of(9, 0))
                         .closeDate(LocalDate.of(2023, 11, 10))
                         .closeTime(LocalTime.of(18, 0))
                         .build(),
-                EventCreateRequest.TicketInfo.builder()
+                EventCreateRequest.TicketInfoRequest.builder()
                         .cost(20000)
                         .maxTicketCount(2)
                         .build(),
-                EventCreateRequest.BankInfo.builder()
+                EventCreateRequest.BankInfoRequest.builder()
                         .name("은행 명")
                         .accountNumber("은행 계좌번호")
                         .build()
@@ -218,7 +218,7 @@ class EventControllerTest {
         EventCreateRequest promotionEventCreateRequest = EventCreateRequest.builder()
                 .clubId(1L)
                 .eventInfo(
-                        EventCreateRequest.EventInfo.builder()
+                        EventCreateRequest.EventInfoRequest.builder()
                                 .title("행사 제목")
                                 .content("행사 내용")
                                 .startDate(LocalDate.of(2023, 11, 15))
@@ -227,7 +227,7 @@ class EventControllerTest {
                                 .capacity(100)
                                 .build())
                 .formInfo(
-                        EventCreateRequest.FormInfo.builder()
+                        EventCreateRequest.FormInfoRequest.builder()
                                 .openDate(LocalDate.of(2023, 11, 1))
                                 .openTime(LocalTime.of(9, 0))
                                 .closeDate(LocalDate.of(2023, 11, 10))
@@ -305,7 +305,7 @@ class EventControllerTest {
         EventCreateRequest recruitmentEventCreateRequest = EventCreateRequest.builder()
                 .clubId(1L)
                 .eventInfo(
-                        EventCreateRequest.EventInfo.builder()
+                        EventCreateRequest.EventInfoRequest.builder()
                                 .title("행사 제목")
                                 .content("행사 내용")
                                 .activityArea("활동 지역")
@@ -314,7 +314,7 @@ class EventControllerTest {
                                 .build()
                 )
                 .formInfo(
-                        EventCreateRequest.FormInfo.builder()
+                        EventCreateRequest.FormInfoRequest.builder()
                                 .openDate(LocalDate.of(2023, 11, 1))
                                 .openTime(LocalTime.of(9, 0))
                                 .closeDate(LocalDate.of(2023, 11, 10))
@@ -391,7 +391,7 @@ class EventControllerTest {
         EventCreateRequest clubEventCreateRequest = EventCreateRequest.builder()
                 .clubId(1L)
                 .eventInfo(
-                        EventCreateRequest.EventInfo.builder()
+                        EventCreateRequest.EventInfoRequest.builder()
                                 .title("행사 제목")
                                 .content("행사 내용")
                                 .startDate(LocalDate.of(2023, 11, 15))
@@ -404,7 +404,7 @@ class EventControllerTest {
                                 .build()
                 )
                 .formInfo(
-                        EventCreateRequest.FormInfo.builder()
+                        EventCreateRequest.FormInfoRequest.builder()
                                 .openDate(LocalDate.of(2023, 11, 1))
                                 .openTime(LocalTime.of(9, 0))
                                 .closeDate(LocalDate.of(2023, 11, 10))
@@ -485,7 +485,7 @@ class EventControllerTest {
         EventUpdateRequest showEventUpdateRequest = EventUpdateRequest.builder()
                 .eventId(1L)
                 .eventInfo(
-                        EventUpdateRequest.EventInfo.builder()
+                        EventUpdateRequest.EventInfoRequest.builder()
                                 .title("행사 제목")
                                 .content("행사 내용")
                                 .startDate(LocalDate.of(2023, 11, 15))
@@ -495,13 +495,13 @@ class EventControllerTest {
                                 .build()
                 )
                 .ticketInfo(
-                        EventUpdateRequest.TicketInfo.builder()
+                        EventUpdateRequest.TicketInfoRequest.builder()
                                 .cost(20000)
                                 .maxTicketCount(2)
                                 .build()
                 )
                 .formInfo(
-                        EventUpdateRequest.FormInfo.builder()
+                        EventUpdateRequest.FormInfoRequest.builder()
                                 .openDate(LocalDate.of(2023, 11, 1))
                                 .openTime(LocalTime.of(9, 0))
                                 .closeDate(LocalDate.of(2023, 11, 10))
@@ -509,7 +509,7 @@ class EventControllerTest {
                                 .build()
                 )
                 .bankInfo(
-                        EventUpdateRequest.BankInfo.builder()
+                        EventUpdateRequest.BankInfoRequest.builder()
                                 .name("은행 명")
                                 .accountNumber("은행 계좌번호")
                                 .build()
@@ -592,7 +592,7 @@ class EventControllerTest {
         EventUpdateRequest promotionEventCreateRequest = EventUpdateRequest.builder()
                 .eventId(1L)
                 .eventInfo(
-                        EventUpdateRequest.EventInfo.builder()
+                        EventUpdateRequest.EventInfoRequest.builder()
                                 .title("행사 제목")
                                 .content("행사 내용")
                                 .startDate(LocalDate.of(2023, 11, 15))
@@ -602,7 +602,7 @@ class EventControllerTest {
                                 .build()
                 )
                 .formInfo(
-                        EventUpdateRequest.FormInfo.builder()
+                        EventUpdateRequest.FormInfoRequest.builder()
                                 .openDate(LocalDate.of(2023, 11, 1))
                                 .openTime(LocalTime.of(9, 0))
                                 .closeDate(LocalDate.of(2023, 11, 10))
@@ -683,7 +683,7 @@ class EventControllerTest {
         EventUpdateRequest recruitmentEventUpdateRequest = EventUpdateRequest.builder()
                 .eventId(1L)
                 .eventInfo(
-                        EventUpdateRequest.EventInfo.builder()
+                        EventUpdateRequest.EventInfoRequest.builder()
                                 .title("행사 제목")
                                 .content("행사 내용")
                                 .activityArea("활동 지역")
@@ -692,7 +692,7 @@ class EventControllerTest {
                                 .build()
                 )
                 .formInfo(
-                        EventUpdateRequest.FormInfo.builder()
+                        EventUpdateRequest.FormInfoRequest.builder()
                                 .openDate(LocalDate.of(2023, 11, 1))
                                 .openTime(LocalTime.of(9, 0))
                                 .closeDate(LocalDate.of(2023, 11, 10))
@@ -772,7 +772,7 @@ class EventControllerTest {
         EventUpdateRequest clubEventUpdateRequest = EventUpdateRequest.builder()
                 .eventId(1L)
                 .eventInfo(
-                        EventUpdateRequest.EventInfo.builder()
+                        EventUpdateRequest.EventInfoRequest.builder()
                                 .title("행사 제목")
                                 .content("행사 내용")
                                 .startDate(LocalDate.of(2023, 11, 15))
@@ -785,7 +785,7 @@ class EventControllerTest {
                                 .build()
                 )
                 .formInfo(
-                        EventUpdateRequest.FormInfo.builder()
+                        EventUpdateRequest.FormInfoRequest.builder()
                                 .openDate(LocalDate.of(2023, 11, 1))
                                 .openTime(LocalTime.of(9, 0))
                                 .closeDate(LocalDate.of(2023, 11, 10))
