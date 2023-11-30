@@ -931,7 +931,7 @@ class EventControllerTest {
     void 행사_상세_조회에_성공한다_공연() throws Exception {
         // given
         Event event = showEvent();
-        EventGetInfo vo = new EventGetInfo(event, false, 5);
+        EventGetInfo vo = new EventGetInfo(event, false);
 
         given(eventService.get(any(Long.class), any())).willReturn(vo);
 
@@ -987,7 +987,7 @@ class EventControllerTest {
     void 행사_상세_조회에_성공한다_홍보() throws Exception {
         // given
         Event event = promotionEvent();
-        EventGetInfo vo = new EventGetInfo(event, false, 5);
+        EventGetInfo vo = new EventGetInfo(event, false);
 
         given(eventService.get(any(Long.class), any())).willReturn(vo);
 
@@ -1037,7 +1037,7 @@ class EventControllerTest {
     void 행사_상세_조회에_성공한다_모집_공고() throws Exception {
         // given
         Event event = recruitmentEvent();
-        EventGetInfo vo = new EventGetInfo(event, false, 5);
+        EventGetInfo vo = new EventGetInfo(event, false);
 
         given(eventService.get(any(Long.class), any())).willReturn(vo);
 
@@ -1088,7 +1088,7 @@ class EventControllerTest {
     void 행사_상세_조회에_성공한다_클럽_일정() throws Exception {
         // given
         Event event = clubEvent();
-        EventGetInfo vo = new EventGetInfo(event, false, 5);
+        EventGetInfo vo = new EventGetInfo(event, false);
 
         given(eventService.get(any(Long.class), any())).willReturn(vo);
 
