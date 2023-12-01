@@ -25,9 +25,12 @@ public class Email {
     @Column(nullable = false)
     private String email;
 
-    public Email(String email) {
+    private boolean emailConsent = true;
+
+    public Email(String email, boolean emailConsent) {
         validate(email);
         this.email = email;
+        this.emailConsent = emailConsent;
     }
 
     private void validate(String email) {

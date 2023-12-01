@@ -68,3 +68,19 @@ include::{snippet}/user/removeProfileImage/request-headers.adoc[]
 ===== Response Body
 include::{snippet}/user/removeProfileImage/http-response.adoc[]
 :sectnums:
+
+=== 유저 이메일 수신 상태 변경
+:sectnums!:
+
+==== Request
+include::{snippet}/user/changeEmailConsent/http-request.adoc[]
+
+===== Request Header
+include::{snippet}/user/changeEmailConsent/request-headers.adoc[]
+
+===== Request Fields
+include::{snippet}/user/changeEmailConsent/request-fields.adoc[]
+
+===== Response Body
+include::{snippet}/user/changeEmailConsent/http-response.adoc[]
+:sectnums:

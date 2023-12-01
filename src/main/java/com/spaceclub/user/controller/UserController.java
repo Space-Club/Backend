@@ -3,6 +3,7 @@ package com.spaceclub.user.controller;
 import com.spaceclub.global.Authenticated;
 import com.spaceclub.global.bad_word_filter.BadWordFilter;
 import com.spaceclub.global.jwt.vo.JwtUser;
+import com.spaceclub.user.controller.dto.UserEmailConsentRequest;
 import com.spaceclub.user.controller.dto.UserLoginResponse;
 import com.spaceclub.user.controller.dto.UserProfileResponse;
 import com.spaceclub.user.controller.dto.UserProfileUpdateRequest;
@@ -63,6 +64,11 @@ public class UserController {
             @Authenticated JwtUser jwtUser
     ) {
         userService.changeUserProfileImage(userImage, jwtUser.id());
+    }
+
+    @PatchMapping("/email/consent")
+    public void changeEmailConsent(@Authenticated JwtUser jwtUser, @RequestBody UserEmailConsentRequest request) {
+        accountService.changeEmailConsent(jwtUser.id(), request.emailConsent());
     }
 
 }

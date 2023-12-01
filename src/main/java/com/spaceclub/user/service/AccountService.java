@@ -55,8 +55,9 @@ public class AccountService {
         KakaoTokenInfo accessTokenInfo = kakaoOauthInfoSender.getAccessTokenInfo(code);
         String accessToken = accessTokenInfo.accessToken();
         KakaoUserInfo userInfo = kakaoOauthInfoSender.getUserInfo(accessToken);
+        boolean emailConsent = true;
 
-        Email email = new Email(userInfo.email());
+        Email email = new Email(userInfo.email(), emailConsent);
         String oauthUsername = Provider.KAKAO.name() + userInfo.id();
 
         return userRepository.findByEmailAndOauthUserName(email, oauthUsername)
@@ -119,6 +120,13 @@ public class AccountService {
         }
 
         return true;
+    }
+
+    @Transactional
+    public void changeEmailConsent(Long userId, boolean emailConsent) {
+        User user = getUser(userId);
+
+        userRepository.save(user.changeEmailConsent(emailConsent));
     }
 
 }
