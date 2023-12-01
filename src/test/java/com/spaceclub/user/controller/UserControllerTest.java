@@ -88,7 +88,7 @@ class UserControllerTest {
     @WithMockUser
     void 유저의_프로필_조회에_성공한다() throws Exception {
         //given
-        UserProfile userProfile = new UserProfile("멤버명", "010-1234-5678", "www.image.com");
+        UserProfile userProfile = new UserProfile("멤버명", "010-1234-5678", "www.image.com", "abcd@gmail.com");
 
         given(userService.getProfile(any())).willReturn(userProfile);
 
@@ -107,6 +107,7 @@ class UserControllerTest {
                                 responseFields(
                                         fieldWithPath("username").type(STRING).description("유저 이름"),
                                         fieldWithPath("phoneNumber").type(STRING).description("유저 전화번호"),
+                                        fieldWithPath("email").type(STRING).description("유저 이메일"),
                                         fieldWithPath("profileImageUrl").type(STRING).description("유저 프로필 이미지 URL")
                                 )
                         )
@@ -117,7 +118,7 @@ class UserControllerTest {
     @WithMockUser
     void 유저의_프로필_필수정보_수정에_성공한다() throws Exception {
         //given
-        UserProfileUpdateRequest request = new UserProfileUpdateRequest("멤버명1", "010-1234-6789");
+        UserProfileUpdateRequest request = new UserProfileUpdateRequest("멤버명1", "010-1234-6789", "abcd@gmail.com");
         UserLoginInfo userLoginInfo = new UserLoginInfo(1L, "access token", "refresh token");
 
         doNothing().when(userService).updateRequiredProfile(any(Long.class), any(RequiredProfile.class));
@@ -140,7 +141,8 @@ class UserControllerTest {
                                 ),
                                 requestFields(
                                         fieldWithPath("name").type(STRING).description("유저 이름"),
-                                        fieldWithPath("phoneNumber").type(STRING).description("유저 전화번호")
+                                        fieldWithPath("phoneNumber").type(STRING).description("유저 전화번호"),
+                                        fieldWithPath("email").type(STRING).description("유저 이메일").optional()
                                 ),
                                 responseFields(
                                         fieldWithPath("userId").type(NUMBER).description("유저 ID"),

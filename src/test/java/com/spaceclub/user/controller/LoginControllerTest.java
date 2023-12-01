@@ -147,7 +147,7 @@ class LoginControllerTest {
     @WithMockUser
     void 필수정보를_입력하면_회원가입에_성공한다() throws Exception {
         //given
-        UserRequiredInfoRequest request = new UserRequiredInfoRequest(2L, "name", "010-1234-5678");
+        UserRequiredInfoRequest request = new UserRequiredInfoRequest(2L, "name", "010-1234-5678", "abcd@gmail.com");
         UserLoginInfo loginInfo = UserLoginInfo.from(1L, "access token", "refresh token");
         given(accountService.createAccount(any())).willReturn(loginInfo);
 
@@ -168,7 +168,8 @@ class LoginControllerTest {
                                 requestFields(
                                         fieldWithPath("userId").type(NUMBER).description("유저 ID"),
                                         fieldWithPath("name").type(STRING).description("유저 이름"),
-                                        fieldWithPath("phoneNumber").type(STRING).description("유저 핸드폰 번호")
+                                        fieldWithPath("phoneNumber").type(STRING).description("유저 핸드폰 번호"),
+                                        fieldWithPath("email").type(STRING).description("유저 이메일").optional()
                                 ),
                                 responseHeaders(
                                         headerWithName("location").description("생성된 유저의 URI")

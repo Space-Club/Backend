@@ -83,13 +83,38 @@ class UserTest {
         // when
         final String usernameToUpdate = "업데이트된 멤버명";
         final String phoneNumberToUpdate = "01012346789";
-        User updatedUser = user.updateRequiredInfo(usernameToUpdate, phoneNumberToUpdate);
+        final String emailToUpdate = "abcd@gmail.com";
+
+        User updatedUser = user.updateRequiredInfo(usernameToUpdate, phoneNumberToUpdate, emailToUpdate);
 
         // then
         assertAll(
                 () -> assertThat(updatedUser.getUsername()).isEqualTo(usernameToUpdate),
-                () -> assertThat(updatedUser.getPhoneNumber()).isEqualTo(phoneNumberToUpdate)
+                () -> assertThat(updatedUser.getPhoneNumber()).isEqualTo(phoneNumberToUpdate),
+                () -> assertThat(updatedUser.getEmail()).isEqualTo(emailToUpdate)
         );
+    }
+
+    @Test
+    void 유저의_이메일_입력값이_null이면_기존_이메일을_유지한다() {
+        // given
+        User user = UserTestFixture.user1();
+
+        // when
+        final String usernameToUpdate = "업데이트된 멤버명";
+        final String phoneNumberToUpdate = "01012346789";
+        final String emailToUpdate = null;
+
+        User updatedUser = user.updateRequiredInfo(usernameToUpdate, phoneNumberToUpdate, emailToUpdate);
+
+        // then
+        assertAll(
+                () -> assertThat(updatedUser.getUsername()).isEqualTo(usernameToUpdate),
+                () -> assertThat(updatedUser.getPhoneNumber()).isEqualTo(phoneNumberToUpdate),
+                () -> assertThat(updatedUser.getEmail()).isNotEqualTo(emailToUpdate),
+                () -> assertThat(updatedUser.getEmail()).isEqualTo(user.getEmail())
+        );
+
     }
 
     @Test

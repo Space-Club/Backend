@@ -37,7 +37,7 @@ public class UserService implements UserProvider {
     public void updateRequiredProfile(Long userId, RequiredProfile userRequiredInfo) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND.toString()))
-                .updateRequiredInfo(userRequiredInfo.name(), userRequiredInfo.phoneNumber());
+                .updateRequiredInfo(userRequiredInfo.name(), userRequiredInfo.phoneNumber(), userRequiredInfo.email());
 
         userRepository.save(user);
     }
