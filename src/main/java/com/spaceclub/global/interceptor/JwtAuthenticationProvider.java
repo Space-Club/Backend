@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import static com.spaceclub.global.exception.GlobalExceptionCode.ACCESS_TOKEN_NOT_EXIST;
 import static com.spaceclub.global.exception.GlobalExceptionCode.INVALID_ACCESS_TOKEN;
 import static com.spaceclub.global.exception.GlobalExceptionCode.INVALID_REFRESH_TOKEN;
 import static com.spaceclub.global.exception.GlobalExceptionCode.INVALID_TOKEN_FORMAT;
@@ -55,8 +56,12 @@ public class JwtAuthenticationProvider {
         throw new AccessTokenException(INVALID_ACCESS_TOKEN);
     }
 
-    private void validate(String token) {
-        boolean isWrongFormat = (token == null) || !token.startsWith(TOKEN_PREFIX);
+    private void validate(String authorizationHeader) {
+        if (authorizationHeader == null) {
+            throw new TokenException(ACCESS_TOKEN_NOT_EXIST);
+        }
+
+        boolean isWrongFormat = !authorizationHeader.startsWith(TOKEN_PREFIX);
 
         if (isWrongFormat) {
             throw new TokenException(INVALID_TOKEN_FORMAT);

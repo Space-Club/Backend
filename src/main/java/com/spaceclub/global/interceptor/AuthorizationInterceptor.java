@@ -16,7 +16,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.spaceclub.global.exception.GlobalExceptionCode.BAD_REQUEST;
+import static com.spaceclub.global.exception.GlobalExceptionCode.ACCESS_TOKEN_NOT_EXIST;
 import static java.util.Collections.unmodifiableSet;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -56,7 +56,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 
     private void validateHeader(String authorizationHeader) {
         if (authorizationHeader == null) {
-            throw new TokenException(BAD_REQUEST);
+            throw new TokenException(ACCESS_TOKEN_NOT_EXIST);
         }
     }
 
