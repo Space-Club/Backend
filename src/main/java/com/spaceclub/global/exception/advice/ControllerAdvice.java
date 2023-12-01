@@ -22,7 +22,7 @@ public class ControllerAdvice {
 
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler
-    public ErrorResponse customExceptionHandler(TokenException exception) {
+    public ErrorResponse customExceptionHandle(TokenException exception) {
         String exceptionName = exception.getClass().getSimpleName();
         log.info("토큰 관련 에러, exception name: {}", exceptionName);
 
@@ -31,7 +31,7 @@ public class ControllerAdvice {
 
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
-    public ErrorResponse customExceptionHandler(RuntimeException exception) {
+    public ErrorResponse customExceptionHandle(RuntimeException exception) {
         String exceptionName = exception.getClass().getSimpleName();
 
         return new ErrorResponse(exceptionName, exception.getMessage());
@@ -39,7 +39,7 @@ public class ControllerAdvice {
 
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler
-    public ErrorResponse multipartExceptionHandler(MultipartException exception) {
+    public ErrorResponse multipartExceptionHandle(MultipartException exception) {
         String exceptionName = exception.getClass().getSimpleName();
         log.warn("파일 업로드 에러, exception name: {}", exceptionName);
 
@@ -52,7 +52,7 @@ public class ControllerAdvice {
 
     @ResponseStatus(METHOD_NOT_ALLOWED)
     @ExceptionHandler({HttpRequestMethodNotSupportedException.class, HttpMessageNotReadableException.class})
-    public ErrorResponse httpRequestMethodNotSupportedExceptionHandler(Exception exception) {
+    public ErrorResponse httpRequestMethodNotSupportedExceptionHandle(Exception exception) {
         String exceptionName = exception.getClass().getSimpleName();
         log.warn("잘못된 요청, exception name: {}", exceptionName);
 
@@ -61,7 +61,7 @@ public class ControllerAdvice {
 
     @ResponseStatus(INTERNAL_SERVER_ERROR)
     @ExceptionHandler
-    public ErrorResponse exceptionHandler(Exception exception) {
+    public ErrorResponse exceptionHandle(Exception exception) {
         String exceptionName = exception.getClass().getSimpleName();
         log.info("서버 에러, exception name: {}", exceptionName);
 
