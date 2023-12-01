@@ -92,8 +92,8 @@
 |`+EVENT_ALREADY_APPLIED+`
 |이미 신청한 행사입니다
 
-|`+APPLY_EXPIRED+`
-|신청 날짜가 지났습니다
+|`+NOT_APPLICABLE_DATE+`
+신청이 불가능한 기간의 행사입니다
 
 |`+EVENT_NOT_APPLIED+`
 |신청한 이력이 없는 행사입니다
