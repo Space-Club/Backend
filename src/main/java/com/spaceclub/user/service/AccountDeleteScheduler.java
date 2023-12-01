@@ -1,5 +1,6 @@
 package com.spaceclub.user.service;
 
+import com.spaceclub.global.config.oauth.KakaoOauthInfoSender;
 import com.spaceclub.user.domain.User;
 import com.spaceclub.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +19,16 @@ public class AccountDeleteScheduler {
 
     private final UserRepository userRepository;
 
+    private final KakaoOauthInfoSender kakaoOauthInfoSender;
+
     @Async
-    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
+//    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
+    @Scheduled(fixedRate = 1000 * 60) // 테스트
     public void deleteInactiveUsers() {
         LocalDateTime threeDaysAgoFromNow = LocalDateTime.now().minusDays(GRACE_DAYS_OF_DELETION);
         List<User> usersToDelete = userRepository.findAllUserToDelete(threeDaysAgoFromNow).stream()
                 .map(User::changeStatusToDeleted)
+                .peek(kakaoOauthInfoSender::unlink)
                 .toList();
 
         userRepository.saveAll(usersToDelete);
