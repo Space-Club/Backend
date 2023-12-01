@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 
-import static com.spaceclub.global.exception.GlobalExceptionCode.EXPIRED_TOKEN;
+import static com.spaceclub.global.exception.GlobalExceptionCode.EXPIRED_ACCESS_TOKEN;
 import static com.spaceclub.global.exception.GlobalExceptionCode.INVALID_ACCESS_TOKEN;
 
 @Slf4j
@@ -68,7 +68,7 @@ public class Jwt {
         try {
             jwtVerifier.verify(token);
         } catch (TokenExpiredException e) {
-            throw new AccessTokenException(EXPIRED_TOKEN);
+            throw new AccessTokenException(EXPIRED_ACCESS_TOKEN);
         } catch (JWTVerificationException e) {
             throw new AccessTokenException(INVALID_ACCESS_TOKEN);
         }
