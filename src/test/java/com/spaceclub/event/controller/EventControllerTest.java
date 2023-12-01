@@ -873,7 +873,6 @@ class EventControllerTest {
         // when
         ResultActions actions = mvc.perform(get("/api/v1/events")
                 .param("category", "SHOW")
-                .param("isEnded", "false")
                 .param("page", "1")
                 .param("size", "3")
                 .param("sort", "id,asc")
@@ -894,7 +893,6 @@ class EventControllerTest {
                         preprocessResponse(prettyPrint()),
                         queryParameters(
                                 parameterWithName("category").description("행사 카테고리 (ex. SHOW, RECRUITMENT, PROMOTION, CLUB)"),
-                                parameterWithName("isEnded").optional().description("행사 종료 여부"),
                                 parameterWithName("page").optional().description("페이지"),
                                 parameterWithName("size").optional().description("페이지 내 개수"),
                                 parameterWithName("sort").optional().description("정렬 방법(ex. id,desc)")
@@ -914,7 +912,6 @@ class EventControllerTest {
                                 fieldWithPath("data[].clubInfo").type(OBJECT).description("클럽 정보"),
                                 fieldWithPath("data[].clubInfo.name").type(STRING).description("클럽 명"),
                                 fieldWithPath("data[].clubInfo.logoImageUrl").type(STRING).description("클럽 이미지 Url"),
-                                fieldWithPath("data[].clubInfo.coverImageUrl").type(STRING).description("클럽 커버 이미지 Url"),
                                 fieldWithPath("pageData").type(OBJECT).description("페이지 정보"),
                                 fieldWithPath("pageData.first").type(BOOLEAN).description("첫 페이지 여부"),
                                 fieldWithPath("pageData.last").type(BOOLEAN).description("마지막 페이지 여부"),
