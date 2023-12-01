@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_APPLIED;
 import static java.util.stream.Collectors.toMap;
 
 @Service
@@ -43,6 +44,15 @@ public class UserEventService implements UserEventProvider {
                 .toList();
 
         return new PageImpl<>(eventPageInfos, eventPages.getPageable(), eventPages.getTotalElements());
+    }
+
+    @Override
+    public int getTicketCount(Long eventId, Long userId) {
+        EventUser eventUser = eventUserRepository.findByEventIdAndUserId(eventId, userId).orElseThrow(
+                () -> new IllegalStateException(EVENT_NOT_APPLIED.toString())
+        );
+
+        return eventUser.getTicketCount();
     }
 
 }

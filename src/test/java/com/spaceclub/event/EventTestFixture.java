@@ -121,6 +121,7 @@ public class EventTestFixture {
                 .status(ParticipationStatus.PENDING)
                 .userId(1L)
                 .event(event1())
+                .ticketCount(5)
                 .createdAt(LocalDateTime.now())
                 .build();
     }

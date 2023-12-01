@@ -109,4 +109,8 @@ public class EventUser extends BaseTimeEntity {
         return createdAt.format(formatter);
     }
 
+    public EventCategory getEventCategory() {
+        return event.getCategory();
+    }
+
 }

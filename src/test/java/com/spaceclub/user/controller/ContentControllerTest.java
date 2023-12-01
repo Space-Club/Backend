@@ -125,6 +125,7 @@ class ContentControllerTest {
                                         fieldWithPath("data[].posterImageUrl").type(STRING).description("포스터 URL"),
                                         fieldWithPath("data[].startDate").type(STRING).description("이벤트 시작일"),
                                         fieldWithPath("data[].participationStatus").type(STRING).description("이벤트 신청 상태"),
+                                        fieldWithPath("data[].ticketCount").type(NUMBER).description("신청한 티켓 수"),
                                         fieldWithPath("pageData").type(OBJECT).description("페이지 정보"),
                                         fieldWithPath("pageData.first").type(BOOLEAN).description("첫 페이지 여부"),
                                         fieldWithPath("pageData.last").type(BOOLEAN).description("마지막 페이지 여부"),

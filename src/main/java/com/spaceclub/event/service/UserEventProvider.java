@@ -8,4 +8,6 @@ public interface UserEventProvider {
 
     Page<EventPageInfo> findAllEventPages(Long userId, Pageable pageable);
 
+    int getTicketCount(Long eventId, Long userId);
+
 }
