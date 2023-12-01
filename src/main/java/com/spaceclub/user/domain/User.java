@@ -47,7 +47,7 @@ public class User {
     @Enumerated(STRING)
     private Status status;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String oauthUserName;
 
     @Enumerated(STRING)
@@ -234,7 +234,7 @@ public class User {
     }
 
     public User changeStatusToDeleted() {
-        if (!this.status.equals(INACTIVE)){
+        if (!this.status.equals(INACTIVE)) {
             throw new IllegalStateException(USER_CANNOT_WITHDRAW.toString());
         }
 
@@ -242,7 +242,7 @@ public class User {
                 this.id,
                 this.requiredInfo,
                 DELETED,
-                this.oauthUserName,
+                null,
                 this.provider,
                 this.email,
                 this.refreshToken,
