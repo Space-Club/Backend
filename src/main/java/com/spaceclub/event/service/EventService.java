@@ -170,7 +170,7 @@ public class EventService implements EventProvider {
     public List<Event> getBanner(LocalDateTime now, int limit) {
         PageRequest pageable = PageRequest.of(0, limit, Sort.by(ASC, "formInfo.formCloseDateTime"));
 
-        return eventRepository.findAllByFormInfo_FormCloseDateTimeGreaterThan(now, pageable).getContent();
+        return eventRepository.findAllByCategoryNotAndFormInfo_FormCloseDateTimeGreaterThan(CLUB, now, pageable).getContent();
     }
 
     @Override
