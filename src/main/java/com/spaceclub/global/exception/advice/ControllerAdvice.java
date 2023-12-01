@@ -43,7 +43,7 @@ public class ControllerAdvice {
         String exceptionName = exception.getClass().getSimpleName();
         log.warn("파일 업로드 에러, exception name: {}", exceptionName);
 
-        if (exception.getCause() instanceof MaxUploadSizeExceededException) {
+        if (exception instanceof MaxUploadSizeExceededException) {
             return new ErrorResponse(exceptionName, MAX_IMAGE_SIZE_EXCEEDED.toString());
         }
 
