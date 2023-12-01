@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -28,6 +29,7 @@ public class ClubNotice {
     private Club club;
 
     @Getter
+    @Column(length = 1000)
     private String notice;
 
     @Builder

@@ -18,7 +18,8 @@ public enum ClubExceptionMessage implements ExceptionMessageInterface {
     NOT_CLUB_MEMBER("해당 클럽의 멤버가 아닙니다"),
     UNAUTHORIZED("권한이 없습니다"),
     CAN_NOT_WITHDRAW("마지막 관리자는 탈퇴가 불가합니다"),
-    DUPLICATED_CLUB_NAME("클럽 이름은 중복될 수 없습니다");
+    DUPLICATED_CLUB_NAME("클럽 이름은 중복될 수 없습니다"),
+    EXCEED_NOTICE_LENGTH("클럽 공지사항은 1000자를 넘을 수 없습니다");
 
     private final String message;
 
