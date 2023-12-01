@@ -83,7 +83,7 @@ class ClubEventControllerTest {
     @WithMockUser
     public void 클럽_행사_조회에_성공한다() throws Exception {
         // given
-        UserProfile userProfile = new UserProfile("박씨", "01011112222", "www.aaa.com");
+        UserProfile userProfile = new UserProfile("박씨", "01011112222", "www.aaa.com", "abcd@gmail.com");
         List<ClubEventOverviewGetInfo> events = List.of(ClubEventOverviewGetInfo.from(event1(), userProfile, s3Properties.url()),
                 ClubEventOverviewGetInfo.from(showEvent(), userProfile, s3Properties.url()),
                 ClubEventOverviewGetInfo.from(clubEvent(), userProfile, s3Properties.url()));

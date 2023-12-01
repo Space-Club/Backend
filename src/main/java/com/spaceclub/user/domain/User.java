@@ -145,14 +145,18 @@ public class User {
         return this.oauthUserName.replace(provider.name(), blank);
     }
 
-    public User updateRequiredInfo(String name, String phoneNumber) {
+    public String getEmail() {
+        return email.getEmail();
+    }
+
+    public User updateRequiredInfo(String name, String phoneNumber, String email) {
         return new User(
                 this.id,
                 generateRequiredInfo(name, phoneNumber),
                 REGISTERED,
                 this.oauthUserName,
                 this.provider,
-                this.email,
+                this.email = (email == null) ? this.email : new Email(email),
                 this.refreshToken,
                 this.profileImageUrl,
                 this.deletedAt

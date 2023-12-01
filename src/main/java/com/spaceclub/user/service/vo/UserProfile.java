@@ -6,6 +6,7 @@ import com.spaceclub.user.domain.User;
 public record UserProfile(
         String username,
         String phoneNumber,
+        String email,
         String profileImageUrl
 ) {
 
@@ -13,6 +14,7 @@ public record UserProfile(
         return new UserProfile(
                 user.getUsername(),
                 user.getPhoneNumber(),
+                user.getEmail(),
                 getProfileImageUrl(user, bucketUrl)
         );
     }
@@ -29,6 +31,7 @@ public record UserProfile(
         return new UserProfileResponse(
                 username,
                 phoneNumber,
+                email,
                 profileImageUrl
         );
     }

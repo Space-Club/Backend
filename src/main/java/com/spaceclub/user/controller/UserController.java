@@ -43,7 +43,7 @@ public class UserController {
     @PutMapping
     public ResponseEntity<UserLoginResponse> updateProfile(@RequestBody UserProfileUpdateRequest request, @Authenticated JwtUser jwtUser) {
         BadWordFilter.filter(request.name());
-        RequiredProfile requiredProfile = new RequiredProfile(request.name(), request.phoneNumber());
+        RequiredProfile requiredProfile = RequiredProfile.of(request);
         userService.updateRequiredProfile(jwtUser.id(), requiredProfile);
         UserLoginInfo accountInfo = accountService.createAccount(jwtUser.id());
 
