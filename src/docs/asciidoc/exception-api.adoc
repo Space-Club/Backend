@@ -63,6 +63,9 @@
 |`+DUPLICATED_CLUB_NAME+`
 |클럽 이름은 중복될 수 없습니다
 
+|`+EXCEED_NOTICE_LENGTH+`
+|클럽 공지사항은 1000자를 넘을 수 없습니다
+
 |====
 
 === 초대 링크 관련
