@@ -137,7 +137,7 @@ public class Event extends BaseTimeEntity {
 
     public Event registerParticipants(int participants) {
         return event()
-                .eventInfo(this.eventInfo.registerApplicants(participants))
+                .eventInfo(this.eventInfo.registerParticipants(participants))
                 .build();
     }
 

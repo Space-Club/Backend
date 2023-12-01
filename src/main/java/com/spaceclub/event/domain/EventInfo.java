@@ -119,7 +119,7 @@ public class EventInfo {
                 .build();
     }
 
-    public EventInfo registerApplicants(int participants) {
+    public EventInfo registerParticipants(int participants) {
         return eventInfo()
                 .participants(participants)
                 .build();

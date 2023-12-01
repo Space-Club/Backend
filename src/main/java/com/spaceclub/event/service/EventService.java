@@ -104,7 +104,11 @@ public class EventService implements EventProvider {
         if (posterImage == null) posterImageName = existEvent.getPosterImageName();
         else posterImageName = imageUploader.upload(posterImage, S3Folder.EVENT_POSTER);
 
+        int participants = existEvent.getParticipants();
+
         Event updatedEvent = newEvent.registerPosterImage(posterImageName);
+        updatedEvent = updatedEvent.registerParticipants(participants);
+        
         return existEvent.update(updatedEvent);
     }
 
