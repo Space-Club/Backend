@@ -149,7 +149,7 @@ public class EventController {
         List<Event> events = eventService.getBanner(now, BANNER_LIMIT);
 
         List<EventBannerResponse> bannerResponses = events.stream()
-                .map(EventBannerResponse::from)
+                .map(event -> EventBannerResponse.from(event, s3Properties.url()))
                 .toList();
 
         return ResponseEntity.ok(bannerResponses);

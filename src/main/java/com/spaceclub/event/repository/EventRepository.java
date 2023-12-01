@@ -29,6 +29,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query("select e from Event e join fetch Bookmark b on e.id = b.eventId where b.userId = :userId")
     Page<Event> findAllBookmarkedEventPages(@Param("userId") Long userId, Pageable pageable);
 
-    Page<Event> findAllByFormInfo_FormCloseDateTimeGreaterThan(LocalDateTime now, PageRequest pageable);
+    Page<Event> findAllByCategoryNotAndFormInfo_FormCloseDateTimeGreaterThan(EventCategory category, LocalDateTime now, Pageable pageable);
 
 }

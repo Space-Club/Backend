@@ -14,7 +14,7 @@ public record EventOverviewGetResponse(Long id,
                 event.getId(),
                 new EventInfoResponse(
                         event.getTitle(),
-                        event.getPosterImageName() != null ? bucketUrl + event.getPosterImageName() : null,
+                        event.getPosterImageName() == null ? null : bucketUrl + event.getPosterImageName(),
                         event.getLocation(),
                         event.getStartDate(),
                         event.getStartTime(),
@@ -24,8 +24,8 @@ public record EventOverviewGetResponse(Long id,
                 ),
                 new ClubInfoResponse(
                         event.getClubName(),
-                        bucketUrl + event.getClubLogoImageName(),
-                        bucketUrl + event.getClubCoverImageName()
+                        event.getClubLogoImageName() == null ? null : bucketUrl + event.getClubLogoImageName(),
+                        event.getClubCoverImageName() == null ? null : bucketUrl + event.getClubLogoImageName()
                 )
         );
     }
