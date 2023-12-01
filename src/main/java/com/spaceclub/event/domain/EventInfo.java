@@ -1,5 +1,6 @@
 package com.spaceclub.event.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Lob;
 import lombok.AccessLevel;
@@ -22,7 +23,7 @@ public class EventInfo {
 
     private static final int TITLE_MAX_LENGTH = 30;
 
-    private static final int CONTENT_MAX_LENGTH = 200;
+    private static final int CONTENT_MAX_LENGTH = 1000;
 
     private static final int LOCATION_MAX_LENGTH = 30;
 
@@ -33,6 +34,7 @@ public class EventInfo {
     @Getter
     private String title;
 
+    @Column(length = 1000)
     @Getter
     private String content;
 
