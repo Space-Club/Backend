@@ -15,7 +15,7 @@ public enum EventExceptionMessage implements ExceptionMessageInterface {
     TICKET_COUNT_REQUIRED("행사 티켓 매수는 필수입니다"),
     EXCEED_TICKET_COUNT("인 당 티켓 예매 가능 수를 초과하였습니다"),
     EXCEED_CAPACITY("정원을 초과하였습니다"),
-    APPLY_EXPIRED("신청 날짜가 지났습니다"),
+    NOT_APPLICABLE_DATE("신청이 불가능한 기간의 행사입니다"),
     EVENT_NOT_MANAGED("폼이 없거나 관리모드를 설정하지 않은 폼입니다."),
     INVALID_EVENT_TITLE("제목은 1~30자 사이의 길이의 필수값입니다."),
     INVALID_EVENT_CONTENT("내용은 1~200자 사이의 길이입니다."),

@@ -24,7 +24,7 @@ public interface EventUserRepository extends JpaRepository<EventUser, Long> {
     @Query("select eu from EventUser eu where eu.event.id = :eventId and eu.userId = :userId")
     Optional<EventUser> findByEventIdAndUserId(@Param("eventId") Long eventId, @Param("userId") Long userId);
 
-    @Query("select exists (select eu from EventUser eu where eu.event.id = :eventId and eu.userId = :userId)")
+    @Query("select exists (select eu from EventUser eu where eu.event.id = :eventId and eu.userId = :userId and eu.status != 'CANCELED')")
     boolean existsByEventIdAndUserId(@Param("eventId") Long eventId, @Param("userId") Long userId);
 
     Page<EventUser> findByEvent(Event event, Pageable pageable);

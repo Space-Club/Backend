@@ -15,12 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static com.spaceclub.event.EventExceptionMessage.APPLY_EXPIRED;
 import static com.spaceclub.event.EventExceptionMessage.EVENT_ALREADY_APPLIED;
 import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_APPLIED;
 import static com.spaceclub.event.EventExceptionMessage.EXCEED_CAPACITY;
+import static com.spaceclub.event.EventExceptionMessage.NOT_APPLICABLE_DATE;
 import static com.spaceclub.event.domain.EventCategory.SHOW;
 import static com.spaceclub.event.domain.ParticipationStatus.CANCELED;
+import static com.spaceclub.event.domain.ParticipationStatus.CONFIRMED;
 import static com.spaceclub.event.domain.ParticipationStatus.PENDING;
 
 @Service
@@ -78,14 +79,15 @@ public class ParticipationService {
         Event updateEvent = event.registerParticipants(participants);
         eventProvider.update(updateEvent);
 
-        createNewUser(info.userId(), info.ticketCount(), event);
+        if (event.isFormManaged()) createNewUser(info.userId(), event, PENDING, info.ticketCount());
+        else createNewUser(info.userId(), event, CONFIRMED, info.ticketCount());
     }
 
-    public void createNewUser(Long userId, int ticketCount, Event event) {
+    public void createNewUser(Long userId, Event event, ParticipationStatus status, int ticketCount) {
         EventUser newEventUser = EventUser.builder()
                 .userId(userId)
                 .event(event)
-                .status(PENDING)
+                .status(status)
                 .ticketCount(ticketCount)
                 .build();
 
@@ -94,19 +96,24 @@ public class ParticipationService {
 
     private int addParticipants(EventParticipationCreateInfo info, Event event) {
         int participants = event.getParticipants() + info.ticketCount();
-        validateCapacityAndCloseDate(event, participants);
+        validateCapacity(event.getCapacity(), participants);
+        validateFormDate(event.getFormOpenDateTime(), event.getFormCloseDateTime());
 
         return participants;
     }
 
-    private void validateCapacityAndCloseDate(Event event, int participants) {
-        if (participants > event.getCapacity()) {
+    private void validateCapacity(Integer capacity, int participants) {
+        if (participants > capacity) {
             throw new IllegalStateException(EXCEED_CAPACITY.toString());
         }
+    }
 
+    private void validateFormDate(LocalDateTime formOpen, LocalDateTime formClose) {
         LocalDateTime now = LocalDateTime.now();
-        if (now.isAfter(event.getFormCloseDateTime())) {
-            throw new IllegalStateException(APPLY_EXPIRED.toString());
+        boolean invalidParticipationDate = now.isAfter(formClose) || now.isBefore(formOpen);
+        
+        if (invalidParticipationDate) {
+            throw new IllegalStateException(NOT_APPLICABLE_DATE.toString());
         }
     }
 
