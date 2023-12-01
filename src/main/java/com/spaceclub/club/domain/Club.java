@@ -35,7 +35,7 @@ public class Club extends BaseTimeEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @Column(length = 12, nullable = false)
+    @Column(length = 12, nullable = false, unique = true)
     @Getter
     private String name;
 

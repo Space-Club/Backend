@@ -6,10 +6,11 @@ import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.club.service.vo.ClubInfo;
 import com.spaceclub.club.util.ClubValidator;
+import com.spaceclub.global.config.s3.S3Properties;
 import com.spaceclub.global.s3.S3Folder;
 import com.spaceclub.global.s3.S3ImageUploader;
-import com.spaceclub.global.config.s3.S3Properties;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 import static com.spaceclub.club.ClubExceptionMessage.CLUB_NOT_FOUND;
+import static com.spaceclub.club.ClubExceptionMessage.DUPLICATED_CLUB_NAME;
 import static com.spaceclub.club.ClubExceptionMessage.NOT_CLUB_MEMBER;
 import static com.spaceclub.club.ClubExceptionMessage.UNAUTHORIZED;
 import static com.spaceclub.club.domain.ClubUserRole.MANAGER;
@@ -48,9 +50,12 @@ public class ClubService implements ClubProvider {
                 .userId(userId)
                 .role(MANAGER)
                 .build();
-
-        clubUserRepository.save(clubUser);
-        return clubRepository.save(club);
+        try {
+            clubUserRepository.save(clubUser);
+            return clubRepository.save(club);
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException(DUPLICATED_CLUB_NAME.toString());
+        }
     }
 
     public Club getClub(Long clubId, Long userId) {
@@ -96,7 +101,12 @@ public class ClubService implements ClubProvider {
 
         Club updatedClub = club.update(newClub);
 
-        clubRepository.save(updatedClub);
+        try {
+            clubRepository.save(updatedClub);
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException(DUPLICATED_CLUB_NAME.toString());
+        }
+
     }
 
     @Override

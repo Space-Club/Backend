@@ -39,7 +39,7 @@ public class ControllerAdvice {
 
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler
-    public ErrorResponse multipartExceptionHandler(MultipartException exception) {
+    public ErrorResponse multipartExceptionHandle(MultipartException exception) {
         String exceptionName = exception.getClass().getSimpleName();
         log.warn("파일 업로드 에러, exception name: {}", exceptionName);
 
@@ -61,7 +61,7 @@ public class ControllerAdvice {
 
     @ResponseStatus(INTERNAL_SERVER_ERROR)
     @ExceptionHandler
-    public ErrorResponse exceptionHandler(Exception exception) {
+    public ErrorResponse exceptionHandle(Exception exception) {
         String exceptionName = exception.getClass().getSimpleName();
         log.info("서버 에러, exception name: {}", exceptionName);
 
