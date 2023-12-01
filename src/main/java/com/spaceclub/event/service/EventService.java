@@ -19,6 +19,7 @@ import com.spaceclub.user.service.UserProvider;
 import com.spaceclub.user.service.vo.UserProfile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -27,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.spaceclub.club.ClubExceptionMessage.CLUB_NOT_FOUND;
@@ -105,11 +108,26 @@ public class EventService implements EventProvider {
         return existEvent.update(updatedEvent);
     }
 
-    public Page<Event> getAll(EventCategory eventCategory, Pageable pageable) {
-        if (CLUB.equals(eventCategory)) {
-            throw new IllegalArgumentException(EVENT_CATEGORY_NOT_ALLOWED.toString());
-        }
-        return eventRepository.findAllByCategory(eventCategory, pageable);
+    public Page<Event> getAll(EventCategory category, Pageable pageable) {
+        Comparator<Event> comparator = eventComparator(category);
+
+        Page<Event> eventPage = eventRepository.findAllByCategory(category, pageable);
+        List<Event> events = new ArrayList<>(eventPage.getContent());
+        events.sort(comparator);
+
+        return new PageImpl<>(events, pageable, eventPage.getTotalElements());
+    }
+
+    private Comparator<Event> eventComparator(EventCategory category) {
+        return switch (category) {
+            case SHOW, PROMOTION -> Comparator
+                    .comparing(Event::isEventEnded)
+                    .thenComparing(Event::getStartDateTime);
+            case RECRUITMENT -> Comparator
+                    .comparing(Event::isEventEnded)
+                    .thenComparing(Event::getFormCloseDateTime);
+            default -> throw new IllegalArgumentException(EVENT_CATEGORY_NOT_ALLOWED.toString());
+        };
     }
 
     public Page<Event> search(String keyword, Pageable pageable) {

@@ -74,13 +74,11 @@ public class EventController {
 
     @GetMapping
     public ResponseEntity<PageResponse<EventOverviewGetResponse, Event>> getAll(@RequestParam EventCategory category,
-                                                                                @RequestParam(required = false) Boolean isEnded,
                                                                                 @PageableDefault(size = 1000) Pageable pageable) {
+
         Page<Event> events = eventService.getAll(category, pageable);
 
-        List<EventOverviewGetResponse> responses = events.getContent()
-                .stream()
-                .filter(event -> isEnded == null || event.isEventEnded() == isEnded)
+        List<EventOverviewGetResponse> responses = events.stream()
                 .map(event -> EventOverviewGetResponse.from(event, s3Properties.url()))
                 .toList();
 

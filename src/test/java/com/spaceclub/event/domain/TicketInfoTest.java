@@ -18,7 +18,7 @@ class TicketInfoTest {
         assertThat(ticketInfo()).isNotNull();
     }
 
-    @ValueSource(ints = {0, 1000001})
+    @ValueSource(ints = {-1, 1000001})
     @ParameterizedTest(name = "{index}. cost : [{arguments}]")
     void 비용이_유효하지_않으면_생성에_실패한다(int cost) {
         assertThatThrownBy(() ->

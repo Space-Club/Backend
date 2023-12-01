@@ -182,6 +182,10 @@ public class Event extends BaseTimeEntity {
         return eventInfo.getStartDateTime();
     }
 
+    public LocalDateTime getEndDateTime() {
+        return eventInfo.getEndDateTime();
+    }
+
     public String getLocation() {
         if (eventInfo.getLocation() == null) return null;
         return eventInfo.getLocation();

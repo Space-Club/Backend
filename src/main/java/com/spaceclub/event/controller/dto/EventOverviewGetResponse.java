@@ -24,8 +24,7 @@ public record EventOverviewGetResponse(Long id,
                 ),
                 new ClubInfoResponse(
                         event.getClubName(),
-                        event.getClubLogoImageName() == null ? null : bucketUrl + event.getClubLogoImageName(),
-                        event.getClubCoverImageName() == null ? null : bucketUrl + event.getClubLogoImageName()
+                        event.getClubLogoImageName() == null ? null : bucketUrl + event.getClubLogoImageName()
                 )
         );
     }
@@ -45,8 +44,7 @@ public record EventOverviewGetResponse(Long id,
 
     private record ClubInfoResponse(
             String name,
-            String logoImageUrl,
-            String coverImageUrl
+            String logoImageUrl
     ) {
 
     }
