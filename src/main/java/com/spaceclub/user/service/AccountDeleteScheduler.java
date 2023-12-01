@@ -15,7 +15,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AccountDeleteScheduler {
 
-    private static final int GRACE_DAYS_OF_DELETION = 3;
+    private static final int GRACE_DAYS_OF_DELETION = 1;
+//private static final int GRACE_DAYS_OF_DELETION = 3;
 
     private final UserRepository userRepository;
 
@@ -25,7 +26,8 @@ public class AccountDeleteScheduler {
 //    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
     @Scheduled(fixedRate = 1000 * 60) // 테스트
     public void deleteInactiveUsers() {
-        LocalDateTime threeDaysAgoFromNow = LocalDateTime.now().minusDays(GRACE_DAYS_OF_DELETION);
+//        LocalDateTime threeDaysAgoFromNow = LocalDateTime.now().minusDays(GRACE_DAYS_OF_DELETION);
+        LocalDateTime threeDaysAgoFromNow = LocalDateTime.now().minusMinutes(GRACE_DAYS_OF_DELETION);
         List<User> usersToDelete = userRepository.findAllUserToDelete(threeDaysAgoFromNow).stream()
                 .map(User::changeStatusToDeleted)
                 .peek(kakaoOauthInfoSender::unlink)
