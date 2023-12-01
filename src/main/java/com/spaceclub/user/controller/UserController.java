@@ -46,7 +46,7 @@ public class UserController {
         BadWordFilter.filter(request.name());
         RequiredProfile requiredProfile = RequiredProfile.of(request);
         userService.updateRequiredProfile(jwtUser.id(), requiredProfile);
-        UserLoginInfo accountInfo = accountService.createAccount(jwtUser.id());
+        UserLoginInfo accountInfo = accountService.generateToken(jwtUser.id());
 
         return ResponseEntity.ok(UserLoginResponse.from(accountInfo));
     }

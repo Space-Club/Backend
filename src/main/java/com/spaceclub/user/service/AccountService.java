@@ -5,6 +5,7 @@ import com.spaceclub.global.config.oauth.KakaoOauthInfoSender;
 import com.spaceclub.global.config.oauth.vo.KakaoTokenInfo;
 import com.spaceclub.global.config.oauth.vo.KakaoUserInfo;
 import com.spaceclub.global.jwt.JwtManager;
+import com.spaceclub.global.mail.MailEvent;
 import com.spaceclub.user.domain.Email;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
@@ -12,6 +13,7 @@ import com.spaceclub.user.repository.UserRepository;
 import com.spaceclub.user.service.vo.UserLoginInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +36,8 @@ public class AccountService {
     private final UserRepository userRepository;
 
     private final KakaoOauthInfoSender kakaoOauthInfoSender;
+
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public UserLoginInfo loginUser(String code, LocalDateTime now) {
@@ -105,6 +109,16 @@ public class AccountService {
     public UserLoginInfo createAccount(Long userId) {
         User user = getUser(userId);
         BadWordFilter.filter(user.getUsername());
+        if (user.emailConsent()) {
+            eventPublisher.publishEvent(MailEvent.welcomeEvent(user.getEmail()));
+        }
+
+        return generateToken(userId);
+    }
+
+    @Transactional
+    public UserLoginInfo generateToken(Long userId) {
+        User user = getUser(userId);
 
         String accessToken = jwtManager.createAccessToken(user.getId(), user.getUsername());
         String refreshToken = jwtManager.createRefreshToken(user.getId());

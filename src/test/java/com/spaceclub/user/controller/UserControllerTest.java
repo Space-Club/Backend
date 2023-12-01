@@ -125,7 +125,7 @@ class UserControllerTest {
         UserLoginInfo userLoginInfo = new UserLoginInfo(1L, "access token", "refresh token");
 
         doNothing().when(userService).updateRequiredProfile(any(Long.class), any(RequiredProfile.class));
-        given(accountService.createAccount(any())).willReturn(userLoginInfo);
+        given(accountService.generateToken(any())).willReturn(userLoginInfo);
 
         // when, then
         mvc.perform(put("/api/v1/me/profile")

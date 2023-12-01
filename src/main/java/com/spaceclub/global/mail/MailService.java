@@ -91,7 +91,7 @@ public class MailService {
         emailValues.put("nameEn", mailProperties.nameEn());
         emailValues.put("nameKo", mailProperties.nameKo());
         emailValues.put("aboutUs", mailProperties.aboutUs());
-        emailValues.put("content", markdownToHtml(mailProperties.markdownPath()).concat(markdownFileName).concat(MARKDOWN_FILE_EXTENSION));
+        emailValues.put("content", markdownToHtml(mailProperties.markdownPath().concat(markdownFileName).concat(MARKDOWN_FILE_EXTENSION)));
         emailValues.put("location", mailProperties.location());
         emailValues.put("phone", mailProperties.phone());
         emailValues.put("siteUrl", mailProperties.siteUrl());
