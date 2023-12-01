@@ -82,8 +82,7 @@ public record EventUpdateRequest(
             LocalDate openDate,
             LocalTime openTime,
             LocalDate closeDate,
-            LocalTime closeTime,
-            Boolean isAbleToApply
+            LocalTime closeTime
     ) {
 
         @Builder
