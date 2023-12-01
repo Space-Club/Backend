@@ -18,7 +18,7 @@ class EventInfoTest {
 
     private static final String TITLE_MAX_LENGTH = "값".repeat(31);
 
-    private static final String CONTENT_MAX_LENGTH = "값".repeat(201);
+    private static final String CONTENT_MAX_LENGTH = "값".repeat(1001);
 
     private static final String LOCATION_MAX_LENGTH = "값".repeat(31);
 

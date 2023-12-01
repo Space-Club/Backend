@@ -35,6 +35,7 @@ public class FormOption {
     private Long id;
 
     @Getter
+    @Column(length = 1000)
     private String title;
 
     @Getter

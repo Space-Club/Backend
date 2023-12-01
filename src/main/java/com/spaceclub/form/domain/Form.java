@@ -32,6 +32,7 @@ public class Form extends BaseTimeEntity {
     private Long id;
 
     @Getter
+    @Column(length = 1000)
     private String description;
 
     @Getter

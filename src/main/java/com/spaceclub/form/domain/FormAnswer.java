@@ -36,6 +36,7 @@ public class FormAnswer extends BaseTimeEntity {
     private Long userId;
 
     @Getter
+    @Column(length = 1000)
     private String content;
 
     @Builder
