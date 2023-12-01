@@ -76,9 +76,6 @@ interceptor:
     - path: /api/v1/events/banner
       method: GET
 
-    - path: /api/v1/users/clubs
-      method: GET
-
 web:
   interceptor-path-pattern: /api/v1/**
 
