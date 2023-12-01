@@ -1,5 +1,6 @@
 package com.spaceclub.user.service;
 
+import com.spaceclub.global.bad_word_filter.BadWordFilter;
 import com.spaceclub.global.config.oauth.KakaoOauthInfoSender;
 import com.spaceclub.global.config.oauth.vo.KakaoTokenInfo;
 import com.spaceclub.global.config.oauth.vo.KakaoUserInfo;
@@ -29,7 +30,9 @@ public class AccountService {
     private static final String BLANK = "";
 
     private final JwtManager jwtManager;
+
     private final UserRepository userRepository;
+
     private final KakaoOauthInfoSender kakaoOauthInfoSender;
 
     @Transactional
@@ -100,6 +103,7 @@ public class AccountService {
     @Transactional
     public UserLoginInfo createAccount(Long userId) {
         User user = getUser(userId);
+        BadWordFilter.filter(user.getUsername());
 
         String accessToken = jwtManager.createAccessToken(user.getId(), user.getUsername());
         String refreshToken = jwtManager.createRefreshToken(user.getId());

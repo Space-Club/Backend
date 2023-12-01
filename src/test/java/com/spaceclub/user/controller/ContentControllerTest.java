@@ -156,7 +156,7 @@ class ContentControllerTest {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 requestHeaders(
-                                        headerWithName(AUTHORIZATION).description("액세스 토큰")
+                                        headerWithName(AUTHORIZATION).description("액세스 토큰").optional()
                                 ),
                                 responseFields(
                                         fieldWithPath("[]").type(ARRAY).description("클럽"),

@@ -30,7 +30,9 @@ import static org.springframework.http.HttpStatus.OK;
 public class LoginController {
 
     private final AccountService accountService;
+
     private final ClubProvider clubProvider;
+
     private final UserService userService;
 
     @PostMapping
