@@ -5,6 +5,7 @@ import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
+import com.spaceclub.user.controller.dto.UserEmailConsentRequest;
 import com.spaceclub.user.controller.dto.UserProfileUpdateRequest;
 import com.spaceclub.user.service.AccountService;
 import com.spaceclub.user.service.UserService;
@@ -43,10 +44,12 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.JsonFieldType.BOOLEAN;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -199,7 +202,7 @@ class UserControllerTest {
     @Test
     @WithMockUser
     void 유저_이미지를_기본이미지로_변경하는데_성공한다() throws Exception {
-        doNothing().when(userService).removeUserProfileImage(any(Long.class));
+        doNothing().when(userService).removeUserProfileImage(any());
 
         mvc.perform(delete("/api/v1/me/profile/images")
                         .header(AUTHORIZATION, "Access Token")
@@ -217,4 +220,30 @@ class UserControllerTest {
                 );
     }
 
+    @Test
+    @WithMockUser
+    void 이메일_수신_동의_상태를_변경하는데_성공한다() throws Exception {
+        doNothing().when(accountService).changeEmailConsent(any(Long.class), any(boolean.class));
+        var request = new UserEmailConsentRequest(true);
+
+        mvc.perform(patch("/api/v1/me/profile/email/consent")
+                        .header(AUTHORIZATION, "Access Token")
+                        .contentType(APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(request))
+                        .with(csrf()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(
+                        document("user/changeEmailConsent",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName(AUTHORIZATION).description("액세스 토큰")
+                                ),
+                                requestFields(
+                                        fieldWithPath("emailConsent").type(BOOLEAN).description("이메일 수신 동의 여부")
+                                )
+                        )
+                );
+    }
 }

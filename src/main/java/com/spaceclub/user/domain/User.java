@@ -108,7 +108,7 @@ public class User {
         this.status = status;
         this.oauthUserName = generateOauthUsername(oauthId, provider);
         this.provider = provider;
-        this.email = new Email(email);
+        this.email = new Email(email, true);
         this.refreshToken = refreshToken;
         this.profileImageUrl = profileImageUrl;
         this.deletedAt = deletedAt;
@@ -149,6 +149,10 @@ public class User {
         return email.getEmail();
     }
 
+    public boolean emailConsent() {
+        return this.email.isEmailConsent();
+    }
+
     public User updateRequiredInfo(String name, String phoneNumber, String email) {
         return new User(
                 this.id,
@@ -156,7 +160,7 @@ public class User {
                 REGISTERED,
                 this.oauthUserName,
                 this.provider,
-                this.email = (email == null) ? this.email : new Email(email),
+                this.email = (email == null) ? this.email : new Email(email, this.emailConsent()),
                 this.refreshToken,
                 this.profileImageUrl,
                 this.deletedAt
@@ -265,6 +269,20 @@ public class User {
                 this.email,
                 this.refreshToken,
                 null,
+                this.deletedAt
+        );
+    }
+
+    public User changeEmailConsent(boolean emailConsent) {
+        return new User(
+                this.id,
+                this.requiredInfo,
+                this.status,
+                this.oauthUserName,
+                this.provider,
+                this.email = new Email(this.email.getEmail(), emailConsent),
+                this.refreshToken,
+                this.profileImageUrl,
                 this.deletedAt
         );
     }
