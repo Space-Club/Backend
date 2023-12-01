@@ -19,7 +19,7 @@ public class TicketInfo {
 
     private static final Integer MAX_TICKET_COUNT_MAX_COUNT = 999;
 
-    private static final Integer COST_MIN_LENGTH = 1;
+    private static final Integer COST_MIN_LENGTH = 0;
 
     private static final Integer COST_MAX_LENGTH = 1_000_000;
 

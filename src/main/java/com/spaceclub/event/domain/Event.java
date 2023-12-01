@@ -207,6 +207,10 @@ public class Event extends BaseTimeEntity {
         return club.getCoverImageName();
     }
 
+    public LocalDateTime getFormOpenDateTime() {
+        return formInfo.getFormOpenDateTime();
+    }
+
     public LocalDateTime getFormCloseDateTime() {
         return formInfo.getFormCloseDateTime();
     }
