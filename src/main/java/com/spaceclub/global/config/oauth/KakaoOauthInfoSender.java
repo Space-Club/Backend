@@ -78,15 +78,15 @@ public class KakaoOauthInfoSender {
     public void unlink(User user) {
         HttpEntity<Object> requestEntity = generateRequest(user);
 
-        Long id = restTemplate.exchange(
+        KakaoUserInfo userInfo = restTemplate.exchange(
                 urlProperties.unlink(),
                 POST,
                 requestEntity,
-                Long.class
+                KakaoUserInfo.class
         ).getBody();
 
-        if (id == null) throw new IllegalArgumentException(KAKAO_UNLINK_FAIL.toString());
-        if (id != Long.parseLong(user.getOauthId())) throw new IllegalArgumentException(KAKAO_UNLINK_FAIL.toString());
+        if (userInfo.id() == null) throw new IllegalArgumentException(KAKAO_UNLINK_FAIL.toString());
+        if (userInfo.id() != Long.parseLong(user.getOauthId())) throw new IllegalArgumentException(KAKAO_UNLINK_FAIL.toString());
     }
 
     private HttpEntity<Object> generateRequest(User user) {
