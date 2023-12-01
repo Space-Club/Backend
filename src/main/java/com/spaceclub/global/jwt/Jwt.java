@@ -4,12 +4,14 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.spaceclub.global.exception.AccessTokenException;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 
+import static com.spaceclub.global.exception.GlobalExceptionCode.EXPIRED_TOKEN;
 import static com.spaceclub.global.exception.GlobalExceptionCode.INVALID_ACCESS_TOKEN;
 
 @Slf4j
@@ -65,6 +67,8 @@ public class Jwt {
     public boolean isValidFormat(String token) { // 디코딩
         try {
             jwtVerifier.verify(token);
+        } catch (TokenExpiredException e) {
+            throw new AccessTokenException(EXPIRED_TOKEN);
         } catch (JWTVerificationException e) {
             throw new AccessTokenException(INVALID_ACCESS_TOKEN);
         }
