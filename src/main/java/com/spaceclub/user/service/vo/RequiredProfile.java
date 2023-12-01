@@ -7,4 +7,5 @@ public record RequiredProfile(String name, String phoneNumber, String email) {
     public static RequiredProfile of(UserProfileUpdateRequest request) {
         return new RequiredProfile(request.name(), request.phoneNumber(), request.email());
     }
+
 }
