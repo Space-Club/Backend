@@ -56,6 +56,21 @@ public record EventUpdateRequest(
                     .build();
         }
 
+        private EventInfo toEntity(FormInfoRequest formInfoRequest) {
+            return EventInfo.builder()
+                    .title(title)
+                    .content(content)
+                    .startDateTime(formInfoRequest.openDate.atTime(formInfoRequest.openTime))
+                    .endDateTime(formInfoRequest.closeDate.atTime(formInfoRequest.closeTime))
+                    .dues(dues)
+                    .location(location)
+                    .capacity(capacity)
+                    .recruitmentTarget(recruitmentTarget)
+                    .activityArea(activityArea)
+                    .recruitmentLimit(recruitmentLimit)
+                    .build();
+        }
+
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -134,10 +149,10 @@ public record EventUpdateRequest(
         return Event.builder()
                 .id(eventId)
                 .category(EventCategory.SHOW)
-                .eventInfo(eventInfo != null ? eventInfo.toEntity() : null)
-                .ticketInfo(ticketInfo != null ? ticketInfo.toEntity() : null)
-                .formInfo(formInfo != null ? formInfo.toEntity() : null)
-                .bankInfo(bankInfo != null ? bankInfo.toEntity() : null)
+                .eventInfo(eventInfo.toEntity())
+                .ticketInfo(ticketInfo.toEntity())
+                .formInfo(formInfo.toEntity())
+                .bankInfo(bankInfo.toEntity())
                 .build();
     }
 
@@ -145,8 +160,8 @@ public record EventUpdateRequest(
         return Event.builder()
                 .id(eventId)
                 .category(EventCategory.CLUB)
-                .eventInfo(eventInfo != null ? eventInfo.toEntity() : null)
-                .formInfo(formInfo != null ? formInfo.toEntity() : null)
+                .eventInfo(eventInfo.toEntity())
+                .formInfo(formInfo.toEntity())
                 .build();
     }
 
@@ -154,8 +169,8 @@ public record EventUpdateRequest(
         return Event.builder()
                 .id(eventId)
                 .category(EventCategory.PROMOTION)
-                .eventInfo(eventInfo != null ? eventInfo.toEntity() : null)
-                .formInfo(formInfo != null ? formInfo.toEntity() : null)
+                .eventInfo(eventInfo.toEntity())
+                .formInfo(formInfo.toEntity())
                 .build();
     }
 
@@ -163,8 +178,8 @@ public record EventUpdateRequest(
         return Event.builder()
                 .id(eventId)
                 .category(EventCategory.RECRUITMENT)
-                .eventInfo(eventInfo != null ? eventInfo.toEntity() : null)
-                .formInfo(formInfo != null ? formInfo.toEntity() : null)
+                .eventInfo(eventInfo.toEntity(formInfo))
+                .formInfo(formInfo.toEntity())
                 .build();
     }
 
