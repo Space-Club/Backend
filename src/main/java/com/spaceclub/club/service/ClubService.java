@@ -6,6 +6,7 @@ import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.club.repository.ClubUserRepository;
 import com.spaceclub.club.service.vo.ClubInfo;
 import com.spaceclub.club.util.ClubValidator;
+import com.spaceclub.event.service.EventProvider;
 import com.spaceclub.global.config.s3.S3Properties;
 import com.spaceclub.global.s3.S3Folder;
 import com.spaceclub.global.s3.S3ImageUploader;
@@ -33,6 +34,8 @@ public class ClubService implements ClubProvider {
     private final ClubUserRepository clubUserRepository;
 
     private final S3ImageUploader imageUploader;
+    
+    private final EventProvider eventProvider;
 
     private final S3Properties s3Properties;
 
@@ -72,6 +75,7 @@ public class ClubService implements ClubProvider {
 
         if (clubUser.isNotManager()) throw new IllegalStateException(UNAUTHORIZED.toString());
 
+        eventProvider.deleteClubEvents(clubId);
         clubRepository.deleteById(clubId);
     }
 

@@ -20,4 +20,6 @@ public interface EventProvider {
 
     void update(Event event);
 
+    void deleteClubEvents(Long clubId);
+
 }

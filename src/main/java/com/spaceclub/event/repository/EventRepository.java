@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -21,6 +22,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     Optional<Event> findWithLockById(Long id);
 
     Page<Event> findByClub_Id(Long clubId, Pageable pageable);
+
+    List<Event> findByClub_Id(Long clubId);
 
     Page<Event> findAllByCategory(EventCategory category, Pageable pageable);
 

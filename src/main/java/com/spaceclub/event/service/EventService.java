@@ -147,6 +147,13 @@ public class EventService implements EventProvider {
         eventRepository.deleteById(eventId);
     }
 
+    @Transactional
+    public void deleteClubEvents(Long clubId) {
+        List<Event> events = eventRepository.findByClub_Id(clubId);
+
+        eventRepository.deleteAll(events);
+    }
+
     public EventGetInfo get(Long eventId, Long userId) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new IllegalArgumentException(EVENT_NOT_FOUND.toString()));
