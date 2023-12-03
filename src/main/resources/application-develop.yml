@@ -38,8 +38,8 @@ jwt:
   issuer: space-club
   client-secret: ENC(2qr8v6d7x0P13dZVjQx4XToeeUHUh7tW)
 #  expiry-seconds: 36000000  # 1시간
-  expiry-seconds: 60000 # 2주
-  refresh-expiry-seconds: 90000 # 2주
+  expiry-seconds: 60 # 2주
+  refresh-expiry-seconds: 90 # 2주
 
 web:
   allowed-origins:
