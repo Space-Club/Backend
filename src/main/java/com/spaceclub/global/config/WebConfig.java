@@ -37,7 +37,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins(webProperties.allowedOrigins().toArray(String[]::new))
                 .allowedMethods("*")
                 .allowCredentials(true)
-                .exposedHeaders("Location")
+                .exposedHeaders("Location", "RefreshToken")
                 .maxAge(1800);
     }
 
