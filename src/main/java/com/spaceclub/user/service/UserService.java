@@ -49,16 +49,14 @@ public class UserService implements UserProvider {
         return UserProfile.of(user, s3Properties.url());
     }
 
+    @Override
+    public void validateUser(Long userId) {
+        if (!userRepository.existsById(userId)) throw new IllegalArgumentException(USER_NOT_FOUND.toString());
+    }
+
     public User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND.toString()));
-    }
-
-    @Transactional
-    public void changeProfileImageUrl(Long userId, String profileUrl) {
-        User user = getUser(userId);
-
-        userRepository.save(user.changeProfileImageUrl(profileUrl));
     }
 
     @Transactional

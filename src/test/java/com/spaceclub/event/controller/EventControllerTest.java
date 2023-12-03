@@ -2,15 +2,18 @@ package com.spaceclub.event.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
+import com.spaceclub.club.ClubTestFixture;
+import com.spaceclub.club.domain.Club;
+import com.spaceclub.club.service.ClubProvider;
 import com.spaceclub.event.controller.dto.EventCreateRequest;
 import com.spaceclub.event.controller.dto.EventUpdateRequest;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
+import com.spaceclub.event.service.EventImageService;
 import com.spaceclub.event.service.EventService;
+import com.spaceclub.event.service.UserEventService;
 import com.spaceclub.event.service.vo.EventCreateInfo;
-import com.spaceclub.event.service.vo.EventGetInfo;
 import com.spaceclub.global.UserArgumentResolver;
-import com.spaceclub.global.config.s3.S3Properties;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -104,10 +107,16 @@ class EventControllerTest {
     private EventService eventService;
 
     @MockBean
-    private UserArgumentResolver userArgumentResolver;
+    private UserEventService userEventService;
 
     @MockBean
-    private S3Properties s3Properties;
+    private ClubProvider clubProvider;
+
+    @MockBean
+    private EventImageService eventImageService;
+
+    @MockBean
+    private UserArgumentResolver userArgumentResolver;
 
     private final MockMultipartFile posterImage = new MockMultipartFile(
             "posterImage",
@@ -159,7 +168,9 @@ class EventControllerTest {
                 SHOW.name().getBytes(StandardCharsets.UTF_8)
         );
 
-        given(eventService.create(any(EventCreateInfo.class))).willReturn(1L);
+        Club club = ClubTestFixture.club1();
+        given(clubProvider.getClub(any(Long.class))).willReturn(club);
+        given(eventService.create(any(EventCreateInfo.class), any(Club.class))).willReturn(1L);
 
         // when
         ResultActions actions = mvc.perform(multipart("/api/v1/events")
@@ -250,7 +261,9 @@ class EventControllerTest {
                 PROMOTION.name().getBytes(StandardCharsets.UTF_8)
         );
 
-        given(eventService.create(any(EventCreateInfo.class))).willReturn(1L);
+        Club club = ClubTestFixture.club1();
+        given(clubProvider.getClub(any(Long.class))).willReturn(club);
+        given(eventService.create(any(EventCreateInfo.class), any(Club.class))).willReturn(1L);
 
         // when
         ResultActions actions = mvc.perform(multipart("/api/v1/events")
@@ -337,7 +350,9 @@ class EventControllerTest {
                 RECRUITMENT.name().getBytes(StandardCharsets.UTF_8)
         );
 
-        given(eventService.create(any(EventCreateInfo.class))).willReturn(1L);
+        Club club = ClubTestFixture.club1();
+        given(clubProvider.getClub(any(Long.class))).willReturn(club);
+        given(eventService.create(any(EventCreateInfo.class), any(Club.class))).willReturn(1L);
 
         // when
         ResultActions actions = mvc.perform(multipart("/api/v1/events")
@@ -427,7 +442,9 @@ class EventControllerTest {
                 CLUB.name().getBytes(StandardCharsets.UTF_8)
         );
 
-        given(eventService.create(any(EventCreateInfo.class))).willReturn(1L);
+        Club club = ClubTestFixture.club1();
+        given(clubProvider.getClub(any(Long.class))).willReturn(club);
+        given(eventService.create(any(EventCreateInfo.class), any(Club.class))).willReturn(1L);
 
         // when
         ResultActions actions = mvc.perform(multipart("/api/v1/events")
@@ -928,9 +945,10 @@ class EventControllerTest {
     void 행사_상세_조회에_성공한다_공연() throws Exception {
         // given
         Event event = showEvent();
-        EventGetInfo vo = new EventGetInfo(event, false);
+        boolean hasAlreadyApplied = false;
 
-        given(eventService.get(any(Long.class), any())).willReturn(vo);
+        given(eventService.get(any(Long.class), any())).willReturn(event);
+        given(userEventService.hasAlreadyApplied(any(Long.class), any())).willReturn(hasAlreadyApplied);
 
         // when
         ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}", 1L));
@@ -984,9 +1002,10 @@ class EventControllerTest {
     void 행사_상세_조회에_성공한다_홍보() throws Exception {
         // given
         Event event = promotionEvent();
-        EventGetInfo vo = new EventGetInfo(event, false);
+        boolean hasAlreadyApplied = false;
 
-        given(eventService.get(any(Long.class), any())).willReturn(vo);
+        given(eventService.get(any(Long.class), any())).willReturn(event);
+        given(userEventService.hasAlreadyApplied(any(Long.class), any())).willReturn(hasAlreadyApplied);
 
         // when
         ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}", 1L));
@@ -1034,9 +1053,10 @@ class EventControllerTest {
     void 행사_상세_조회에_성공한다_모집_공고() throws Exception {
         // given
         Event event = recruitmentEvent();
-        EventGetInfo vo = new EventGetInfo(event, false);
+        boolean hasAlreadyApplied = false;
 
-        given(eventService.get(any(Long.class), any())).willReturn(vo);
+        given(eventService.get(any(Long.class), any())).willReturn(event);
+        given(userEventService.hasAlreadyApplied(any(Long.class), any())).willReturn(hasAlreadyApplied);
 
         // when
         ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}", 1L));
@@ -1085,9 +1105,11 @@ class EventControllerTest {
     void 행사_상세_조회에_성공한다_클럽_일정() throws Exception {
         // given
         Event event = clubEvent();
-        EventGetInfo vo = new EventGetInfo(event, false);
+        boolean hasAlreadyApplied = false;
 
-        given(eventService.get(any(Long.class), any())).willReturn(vo);
+        given(eventService.get(any(Long.class), any())).willReturn(event);
+        given(userEventService.hasAlreadyApplied(any(Long.class), any())).willReturn(hasAlreadyApplied);
+
 
         // when
         ResultActions actions = mvc.perform(get("/api/v1/events/{eventId}", 1L)

@@ -6,4 +6,6 @@ public interface UserProvider {
 
     UserProfile getProfile(Long userId);
 
+    void validateUser(Long userId);
+
 }

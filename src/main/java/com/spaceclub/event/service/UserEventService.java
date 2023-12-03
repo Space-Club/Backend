@@ -55,4 +55,8 @@ public class UserEventService implements UserEventProvider {
         return eventUser.getTicketCount();
     }
 
+    public boolean hasAlreadyApplied(Long eventId, Long userId) {
+        return eventUserRepository.existsByEventIdAndUserId(eventId, userId);
+    }
+
 }

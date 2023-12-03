@@ -1,20 +1,14 @@
 package com.spaceclub.event.service;
 
 import com.spaceclub.club.domain.Club;
-import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.club.util.ClubUserValidator;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
 import com.spaceclub.event.repository.EventRepository;
-import com.spaceclub.event.repository.EventUserRepository;
 import com.spaceclub.event.service.util.EventValidator;
 import com.spaceclub.event.service.vo.ClubEventOverviewGetInfo;
 import com.spaceclub.event.service.vo.EventCreateInfo;
-import com.spaceclub.event.service.vo.EventGetInfo;
 import com.spaceclub.event.service.vo.UserBookmarkedEventGetInfo;
-import com.spaceclub.global.config.s3.S3Properties;
-import com.spaceclub.global.s3.S3Folder;
-import com.spaceclub.global.s3.S3ImageUploader;
 import com.spaceclub.user.service.UserProvider;
 import com.spaceclub.user.service.vo.UserProfile;
 import lombok.RequiredArgsConstructor;
@@ -32,10 +26,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.spaceclub.club.ClubExceptionMessage.CLUB_NOT_FOUND;
 import static com.spaceclub.event.EventExceptionMessage.EVENT_CATEGORY_NOT_ALLOWED;
 import static com.spaceclub.event.EventExceptionMessage.EVENT_NOT_FOUND;
-import static com.spaceclub.event.EventExceptionMessage.POSTER_IMAGE_NOT_NULL;
 import static com.spaceclub.event.domain.EventCategory.CLUB;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
@@ -46,43 +38,25 @@ public class EventService implements EventProvider {
 
     private final EventRepository eventRepository;
 
-    private final ClubRepository clubRepository;
-
-    private final EventUserRepository eventUserRepository;
-
     private final ClubUserValidator clubUserValidator;
 
     private final UserProvider userProvider;
 
-    private final S3ImageUploader imageUploader;
-
-    private final S3Properties s3Properties;
+    private final EventImageService eventImageService;
 
     @Transactional
-    public Long create(EventCreateInfo vo) {
+    public Long create(EventCreateInfo vo, Club club) {
         Event event = vo.event();
-        Long clubId = vo.clubId();
-        Long userId = vo.userId();
         MultipartFile posterImage = vo.posterImage();
 
-        clubUserValidator.validateClubManager(clubId, userId);
+        clubUserValidator.validateClubManager(vo.clubId(), vo.userId());
         EventValidator.validateEvent(event);
 
-        Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalStateException(CLUB_NOT_FOUND.toString()));
+        Event eventAfterUploadImage = eventImageService.uploadImage(event, posterImage);
 
-        boolean posterImageNotNull = event.getCategory() != CLUB && posterImage == null;
-        if (posterImageNotNull) throw new IllegalStateException(POSTER_IMAGE_NOT_NULL.toString());
+        Event registeredEvent = eventAfterUploadImage.registerClubAndUser(club, vo.userId());
 
-        if (posterImage != null) {
-            String posterImageName = imageUploader.upload(posterImage, S3Folder.EVENT_POSTER);
-            event = event.registerPosterImage(posterImageName);
-        }
-
-        Event registeredEvent = event.registerClubAndUser(club, userId);
-
-        Event savedEvent = eventRepository.save(registeredEvent);
-        return savedEvent.getId();
+        return eventRepository.save(registeredEvent).getId();
     }
 
     @Transactional
@@ -93,23 +67,9 @@ public class EventService implements EventProvider {
         EventValidator.validateEvent(event);
         clubUserValidator.validateClubManager(existEvent.getClubId(), userId);
 
-        Event updatedEvent = processPosterImage(event, existEvent, posterImage);
+        Event updatedEvent = eventImageService.processPosterImage(event, existEvent, posterImage);
 
         eventRepository.save(updatedEvent);
-    }
-
-    private Event processPosterImage(Event newEvent, Event existEvent, MultipartFile posterImage) {
-        String posterImageName;
-
-        if (posterImage == null) posterImageName = existEvent.getPosterImageName();
-        else posterImageName = imageUploader.upload(posterImage, S3Folder.EVENT_POSTER);
-
-        int participants = existEvent.getParticipants();
-
-        Event updatedEvent = newEvent.registerPosterImage(posterImageName);
-        updatedEvent = updatedEvent.registerParticipants(participants);
-        
-        return existEvent.update(updatedEvent);
     }
 
     public Page<Event> getAll(EventCategory category, Pageable pageable) {
@@ -154,16 +114,15 @@ public class EventService implements EventProvider {
         eventRepository.deleteAll(events);
     }
 
-    public EventGetInfo get(Long eventId, Long userId) {
+    public Event get(Long eventId, Long userId) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new IllegalArgumentException(EVENT_NOT_FOUND.toString()));
 
-        if (event.getCategory() == CLUB)
+        if (event.getCategory() == CLUB) {
             clubUserValidator.validateClubMember(event.getClubId(), userId);
+        }
 
-        boolean hasAlreadyApplied = eventUserRepository.existsByEventIdAndUserId(eventId, userId);
-
-        return new EventGetInfo(event, hasAlreadyApplied);
+        return event;
     }
 
     @Override
@@ -172,7 +131,7 @@ public class EventService implements EventProvider {
 
         return events.map(event -> {
             UserProfile profile = userProvider.getProfile(event.getUserId());
-            return ClubEventOverviewGetInfo.from(event, profile, s3Properties.url());
+            return ClubEventOverviewGetInfo.from(event, profile, eventImageService.getUrl());
         });
     }
 
@@ -180,7 +139,7 @@ public class EventService implements EventProvider {
     public Page<UserBookmarkedEventGetInfo> findAllBookmarkedEventPages(Long userId, Pageable pageable) {
         Page<Event> events = eventRepository.findAllBookmarkedEventPages(userId, pageable);
 
-        return events.map(event -> UserBookmarkedEventGetInfo.from(event, s3Properties.url()));
+        return events.map(event -> UserBookmarkedEventGetInfo.from(event, eventImageService.getUrl()));
     }
 
     @Override

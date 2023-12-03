@@ -122,6 +122,12 @@ public class ClubService implements ClubProvider {
     }
 
     @Override
+    public Club getClub(Long clubId) {
+        return clubRepository.findById(clubId)
+                .orElseThrow(() -> new IllegalArgumentException(CLUB_NOT_FOUND.toString()));
+    }
+
+    @Override
     public int getNumberOfClubsUserBelong(Long userId) {
         return clubUserRepository.countByUserId(userId);
     }
