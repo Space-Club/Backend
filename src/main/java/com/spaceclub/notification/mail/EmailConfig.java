@@ -1,10 +1,10 @@
-package com.spaceclub.global.mail;
+package com.spaceclub.notification.mail;
 
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationPropertiesScan(basePackages = {"com.spaceclub.global.mail"})
+@ConfigurationPropertiesScan(basePackages = {"com.spaceclub.notification"})
 public class EmailConfig {
 
 }
