@@ -41,7 +41,7 @@ mail:
     about-us: 프로그래머스 Skrrr 팀입니다.
     location: "서울 강남구 강남대로 388, 강남센타빌딩 지하2층"
     phone: (+82) 010-1234-5678
-    site-url: https://spaceclub.site
+    site-url: https://spaceclub.vercel.app/
     markdown-path: src/main/resources/static/markdown/
 
 s3:
