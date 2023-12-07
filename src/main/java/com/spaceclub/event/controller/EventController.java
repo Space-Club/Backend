@@ -1,5 +1,7 @@
 package com.spaceclub.event.controller;
 
+import com.spaceclub.club.domain.Club;
+import com.spaceclub.club.service.ClubProvider;
 import com.spaceclub.event.controller.dto.EventBannerResponse;
 import com.spaceclub.event.controller.dto.EventCreateRequest;
 import com.spaceclub.event.controller.dto.EventCreateResponse;
@@ -9,11 +11,12 @@ import com.spaceclub.event.controller.dto.EventSearchOverviewGetResponse;
 import com.spaceclub.event.controller.dto.EventUpdateRequest;
 import com.spaceclub.event.domain.Event;
 import com.spaceclub.event.domain.EventCategory;
+import com.spaceclub.event.service.EventImageService;
 import com.spaceclub.event.service.EventService;
+import com.spaceclub.event.service.UserEventService;
 import com.spaceclub.event.service.vo.EventCreateInfo;
 import com.spaceclub.event.service.vo.EventGetInfo;
 import com.spaceclub.global.Authenticated;
-import com.spaceclub.global.config.s3.S3Properties;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.vo.JwtUser;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +48,11 @@ public class EventController {
 
     private final EventService eventService;
 
-    private final S3Properties s3Properties;
+    private final UserEventService userEventService;
+
+    private final ClubProvider clubProvider;
+
+    private final EventImageService eventImageService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<EventCreateResponse> create(
@@ -60,14 +67,15 @@ public class EventController {
         Event event = request.toEntity(eventCategory);
         Long clubId = request.clubId();
 
-        EventCreateInfo vo = EventCreateInfo.builder()
+        EventCreateInfo eventInfo = EventCreateInfo.builder()
                 .event(event)
                 .userId(jwtUser.id())
                 .clubId(clubId)
                 .posterImage(posterImage)
                 .build();
 
-        Long eventId = eventService.create(vo);
+        Club club = clubProvider.getClub(eventInfo.clubId());
+        Long eventId = eventService.create(eventInfo, club);
 
         return ResponseEntity.ok(new EventCreateResponse(eventId));
     }
@@ -79,7 +87,7 @@ public class EventController {
         Page<Event> events = eventService.getAll(category, pageable);
 
         List<EventOverviewGetResponse> responses = events.stream()
-                .map(event -> EventOverviewGetResponse.from(event, s3Properties.url()))
+                .map(event -> EventOverviewGetResponse.from(event, eventImageService.getUrl()))
                 .toList();
 
         return ResponseEntity.ok(new PageResponse<>(responses, events));
@@ -116,7 +124,7 @@ public class EventController {
         Page<Event> events = eventService.search(keyword, pageable);
 
         List<EventSearchOverviewGetResponse> responses = events.getContent().stream()
-                .map(event -> EventSearchOverviewGetResponse.from(event, s3Properties.url()))
+                .map(event -> EventSearchOverviewGetResponse.from(event, eventImageService.getUrl()))
                 .toList();
 
         return ResponseEntity.ok(new PageResponse<>(responses, events));
@@ -126,16 +134,16 @@ public class EventController {
     public ResponseEntity<EventDetailGetResponse> get(@PathVariable Long eventId, @Authenticated JwtUser jwtUser) {
         Long userId = jwtUser.id();
 
-        EventGetInfo vo = eventService.get(eventId, userId);
-        Event event = vo.event();
+        Event event = eventService.get(eventId, userId);
+        boolean hasAlreadyApplied = userEventService.hasAlreadyApplied(event.getId(), userId);
 
-        EventCategory category = event.getCategory();
+        EventGetInfo eventInfo = new EventGetInfo(event, hasAlreadyApplied);
 
-        EventDetailGetResponse response = switch (category) {
-            case SHOW -> EventDetailGetResponse.withShow(vo, s3Properties.url());
-            case CLUB -> EventDetailGetResponse.withClub(vo, s3Properties.url());
-            case PROMOTION -> EventDetailGetResponse.withPromotion(vo, s3Properties.url());
-            case RECRUITMENT -> EventDetailGetResponse.withRecruitment(vo, s3Properties.url());
+        EventDetailGetResponse response = switch (event.getCategory()) {
+            case SHOW -> EventDetailGetResponse.withShow(eventInfo, eventImageService.getUrl());
+            case CLUB -> EventDetailGetResponse.withClub(eventInfo, eventImageService.getUrl());
+            case PROMOTION -> EventDetailGetResponse.withPromotion(eventInfo, eventImageService.getUrl());
+            case RECRUITMENT -> EventDetailGetResponse.withRecruitment(eventInfo, eventImageService.getUrl());
         };
 
         return ResponseEntity.ok(response);
@@ -147,7 +155,7 @@ public class EventController {
         List<Event> events = eventService.getBanner(now, BANNER_LIMIT);
 
         List<EventBannerResponse> bannerResponses = events.stream()
-                .map(event -> EventBannerResponse.from(event, s3Properties.url()))
+                .map(event -> EventBannerResponse.from(event, eventImageService.getUrl()))
                 .toList();
 
         return ResponseEntity.ok(bannerResponses);
