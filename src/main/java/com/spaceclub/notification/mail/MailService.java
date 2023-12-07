@@ -1,7 +1,7 @@
-package com.spaceclub.global.mail;
+package com.spaceclub.notification.mail;
 
-import com.spaceclub.global.mail.domain.MailTracker;
-import com.spaceclub.global.mail.repository.MailTrackerRepository;
+import com.spaceclub.notification.mail.domain.MailTracker;
+import com.spaceclub.notification.mail.repository.MailTrackerRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 
 import static com.fasterxml.jackson.core.JsonEncoding.UTF8;
-import static com.spaceclub.global.mail.HtmlConverter.markdownToHtml;
 import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
 
 @Slf4j
@@ -91,7 +90,7 @@ public class MailService {
         emailValues.put("nameEn", mailProperties.nameEn());
         emailValues.put("nameKo", mailProperties.nameKo());
         emailValues.put("aboutUs", mailProperties.aboutUs());
-        emailValues.put("content", markdownToHtml(mailProperties.markdownPath().concat(markdownFileName).concat(MARKDOWN_FILE_EXTENSION)));
+        emailValues.put("content", HtmlConverter.markdownToHtml(mailProperties.markdownPath().concat(markdownFileName).concat(MARKDOWN_FILE_EXTENSION)));
         emailValues.put("location", mailProperties.location());
         emailValues.put("phone", mailProperties.phone());
         emailValues.put("siteUrl", mailProperties.siteUrl());

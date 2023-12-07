@@ -1,4 +1,4 @@
-package com.spaceclub.global.mail.domain;
+package com.spaceclub.notification.mail.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

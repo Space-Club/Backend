@@ -1,4 +1,4 @@
-package com.spaceclub.global.mail;
+package com.spaceclub.notification.mail;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

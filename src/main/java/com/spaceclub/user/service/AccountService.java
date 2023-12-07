@@ -5,7 +5,7 @@ import com.spaceclub.global.config.oauth.KakaoOauthInfoSender;
 import com.spaceclub.global.config.oauth.vo.KakaoTokenInfo;
 import com.spaceclub.global.config.oauth.vo.KakaoUserInfo;
 import com.spaceclub.global.jwt.JwtManager;
-import com.spaceclub.global.mail.MailEvent;
+import com.spaceclub.notification.mail.MailEvent;
 import com.spaceclub.user.domain.Email;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;

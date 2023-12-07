@@ -1,4 +1,4 @@
-package com.spaceclub.global.mail;
+package com.spaceclub.notification.mail;
 
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
