@@ -31,8 +31,6 @@ public class MailTracker {
 
     String title;
 
-    String markdownFileName;
-
     String template;
 
     LocalDateTime sentAt;
@@ -44,7 +42,6 @@ public class MailTracker {
             String addresses,
             String ccAddresses,
             String title,
-            String markdownFileName,
             String template,
             LocalDateTime sentAt,
             boolean isSent
@@ -52,7 +49,6 @@ public class MailTracker {
         this.addresses = addresses;
         this.ccAddresses = ccAddresses;
         this.title = title;
-        this.markdownFileName = markdownFileName;
         this.template = template;
         this.sentAt = sentAt;
         this.isSent = isSent;

@@ -17,7 +17,7 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.util.Map;
 
 import static com.fasterxml.jackson.core.JsonEncoding.UTF8;
 import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
@@ -26,8 +26,6 @@ import static org.springframework.transaction.annotation.Propagation.REQUIRES_NE
 @Service
 @RequiredArgsConstructor
 public class MailService {
-
-    private static final String MARKDOWN_FILE_EXTENSION = ".md";
 
     private static final String DELIMITER = ",";
 
@@ -46,11 +44,11 @@ public class MailService {
         MimeMessage message = emailSender.createMimeMessage();
         MailInfo mailInfo = mailEvent.mailInfo();
 
-        Context context = createContext(mailInfo.markdownFileName());
+        Context context = createContext();
         String html = templateEngine.process(mailInfo.template(), context);
         boolean isSent = true;
 
-        try{
+        try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF8.getJavaName());
             helper.setSubject(mailInfo.title());
             helper.setTo(mailInfo.address());
@@ -73,7 +71,6 @@ public class MailService {
                     .addresses(addresses)
                     .ccAddresses(ccAddresses)
                     .title(mailInfo.title())
-                    .markdownFileName(mailInfo.markdownFileName())
                     .template(mailInfo.template())
                     .sentAt(LocalDateTime.now())
                     .isSent(isSent)
@@ -84,17 +81,17 @@ public class MailService {
         log.info("메일 발송 완료!");
     }
 
-    private Context createContext(String markdownFileName) {
+    private Context createContext() {
+        Map<String, Object> emailValues = Map.of(
+                "nameEn", mailProperties.nameEn(),
+                "nameKo", mailProperties.nameKo(),
+                "aboutUs", mailProperties.aboutUs(),
+                "location", mailProperties.location(),
+                "phone", mailProperties.phone(),
+                "siteUrl", mailProperties.siteUrl()
+        );
         Context context = new Context();
-        HashMap<String, String> emailValues = new HashMap<>();
-        emailValues.put("nameEn", mailProperties.nameEn());
-        emailValues.put("nameKo", mailProperties.nameKo());
-        emailValues.put("aboutUs", mailProperties.aboutUs());
-        emailValues.put("content", HtmlConverter.markdownToHtml(mailProperties.markdownPath().concat(markdownFileName).concat(MARKDOWN_FILE_EXTENSION)));
-        emailValues.put("location", mailProperties.location());
-        emailValues.put("phone", mailProperties.phone());
-        emailValues.put("siteUrl", mailProperties.siteUrl());
-        emailValues.forEach(context::setVariable);
+        context.setVariables(emailValues);
 
         return context;
     }

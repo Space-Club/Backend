@@ -9,10 +9,10 @@ public record MailEvent(MailInfo mailInfo) {
                 List.of(email),
                 List.of(),
                 "Space Club에 가입해주셔서 감사합니다.",
-                "welcome",
                 "index"
         );
 
         return new MailEvent(mailInfo);
     }
+
 }
