@@ -25,12 +25,13 @@ public class MailTracker {
     @GeneratedValue(strategy = IDENTITY)
     Long id;
 
+    @Getter
     String addresses;
 
-    String ccAddresses;
-
+    @Getter
     String title;
 
+    @Getter
     String template;
 
     LocalDateTime sentAt;
@@ -40,18 +41,21 @@ public class MailTracker {
     @Builder
     private MailTracker(
             String addresses,
-            String ccAddresses,
             String title,
             String template,
             LocalDateTime sentAt,
             boolean isSent
     ) {
         this.addresses = addresses;
-        this.ccAddresses = ccAddresses;
         this.title = title;
         this.template = template;
         this.sentAt = sentAt;
         this.isSent = isSent;
+    }
+
+    public void changeToSent() {
+        this.sentAt = LocalDateTime.now();
+        this.isSent = true;
     }
 
 }

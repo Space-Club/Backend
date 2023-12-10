@@ -24,4 +24,7 @@ include::event-api.adoc[]
 
 include::form-api.adoc[]
 
+include::notification-api.adoc[]
+
 include::exception-api.adoc[]
+

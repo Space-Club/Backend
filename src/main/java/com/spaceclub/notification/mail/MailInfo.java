@@ -1,23 +1,32 @@
 package com.spaceclub.notification.mail;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.StringJoiner;
 
 public record MailInfo(
         String[] address,
-        String[] ccAddress,
         String title,
         String template
 ) {
 
     public static MailInfo of(
-            List<String> address,
-            List<String> ccAddress,
+            String address,
             String title,
             String template
-    ) {
-        String[] addressArray = address.toArray(new String[0]);
-        String[] ccAddressArray = ccAddress.toArray(new String[0]);
+    ){
+        String[] addressArray = Arrays.stream(address.split(",")).toArray(String[]::new);
 
-        return new MailInfo(addressArray, ccAddressArray, title, template);
+        return new MailInfo(addressArray, title, template);
     }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", MailInfo.class.getSimpleName() + "[", "]")
+                .add("address=" + Arrays.toString(address))
+                .add("title='" + title + "'")
+                .add("template='" + template + "'")
+                .toString();
+    }
+
 }
+
