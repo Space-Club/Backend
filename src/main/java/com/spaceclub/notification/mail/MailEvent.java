@@ -1,15 +1,14 @@
 package com.spaceclub.notification.mail;
 
-import java.util.List;
+import static com.spaceclub.notification.mail.domain.Template.WELCOME;
 
 public record MailEvent(MailInfo mailInfo) {
 
     public static MailEvent welcomeEvent(String email) {
         MailInfo mailInfo = MailInfo.of(
-                List.of(email),
-                List.of(),
-                "Space Club에 가입해주셔서 감사합니다.",
-                "index"
+                email,
+                WELCOME.getTitle(),
+                WELCOME.getTemplateName()
         );
 
         return new MailEvent(mailInfo);

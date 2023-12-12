@@ -11,8 +11,7 @@ public record MailProperties(
         String aboutUs,
         String location,
         String phone,
-        String siteUrl,
-        String markdownPath
+        String siteUrl
 ) {
 
 }

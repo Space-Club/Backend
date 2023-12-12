@@ -1,0 +1,13 @@
+:sectnums:
+== Notification
+
+=== 실패한 메일 재전송
+:sectnums!:
+
+==== Request
+include::{snippets}/mails/retryAllFailedEmails/http-request.adoc[]
+
+==== Response
+include::{snippets}/mails/retryAllFailedEmails/http-response.adoc[]
+
+:sectnums:
