@@ -5,7 +5,7 @@ import com.spaceclub.global.config.oauth.KakaoOauthInfoSender;
 import com.spaceclub.global.config.oauth.vo.KakaoTokenInfo;
 import com.spaceclub.global.config.oauth.vo.KakaoUserInfo;
 import com.spaceclub.global.jwt.JwtManager;
-import com.spaceclub.notification.mail.MailEvent;
+import com.spaceclub.notification.mail.service.event.MailEvent;
 import com.spaceclub.user.domain.Email;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
@@ -110,7 +110,7 @@ public class AccountService {
         User user = getUser(userId);
         BadWordFilter.filter(user.getUsername());
         if (user.emailConsent()) {
-            eventPublisher.publishEvent(MailEvent.welcomeEvent(user.getEmail()));
+            eventPublisher.publishEvent(MailEvent.createMailEvent(user.getEmail()));
         }
 
         return generateToken(userId);

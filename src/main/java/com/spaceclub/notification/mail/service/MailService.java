@@ -1,10 +1,10 @@
 package com.spaceclub.notification.mail.service;
 
-import com.spaceclub.notification.mail.MailEvent;
-import com.spaceclub.notification.mail.MailInfo;
 import com.spaceclub.notification.mail.MailProperties;
 import com.spaceclub.notification.mail.domain.MailTracker;
 import com.spaceclub.notification.mail.repository.MailTrackerRepository;
+import com.spaceclub.notification.mail.service.event.MailEvent;
+import com.spaceclub.notification.mail.service.vo.MailInfo;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,6 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 import static com.fasterxml.jackson.core.JsonEncoding.UTF8;
 import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
@@ -49,9 +48,9 @@ public class MailService {
     @TransactionalEventListener
     public void sendEmail(MailEvent mailEvent) {
         MailInfo mailInfo = mailEvent.mailInfo();
+        Context context = new ContextCreator(mailProperties).createContext(mailInfo);
 
-        Context context = createContext();
-        String html = templateEngine.process(mailInfo.template(), context);
+        String html = templateEngine.process(mailInfo.templateName(), context);
 
         boolean isSent = true;
         try {
@@ -61,11 +60,11 @@ public class MailService {
             log.error("메일 전송 실패", e);
             isSent = false;
         } finally {
-            String addresses = String.join(DELIMITER, mailInfo.address());
+            String addresses = String.join(DELIMITER, mailInfo.email());
             MailTracker mailHistory = MailTracker.builder()
                     .addresses(addresses)
                     .title(mailInfo.title())
-                    .template(mailInfo.template())
+                    .template(mailInfo.templateName())
                     .sentAt(LocalDateTime.now())
                     .isSent(isSent)
                     .build();
@@ -82,15 +81,17 @@ public class MailService {
         Slice<MailTracker> mailTrackers = mailTrackerRepository.findAllByIsSentFalse(pageRequest);
 
         mailTrackers.forEach(mailTracker -> {
-            MailInfo mailInfo = MailInfo.of(mailTracker.getAddresses(), mailTracker.getTitle(), mailTracker.getTemplate());
-            log.debug("mailInfo: {}", mailInfo);
-            sendEachMail(mailInfo, mailTracker.getId());
+            // TODO: html을 db에 저장하는 형식으로 리팩토링 예정
+//            MailInfo.of(mailTracker.getAddresses(), mailTracker.getTemplate());
+//            WelcomeMailInfo welcomeMailInfo = WelcomeMailInfo.of(mailTracker.getAddresses(), mailTracker.getTitle(), mailTracker.getTemplate());
+//            log.debug("mailInfo: {}", welcomeMailInfo);
+//            sendEachMail(welcomeMailInfo, mailTracker.getId());
         });
     }
 
     public void sendEachMail(MailInfo mailInfo, Long mailTrackerId) {
-        Context context = createContext();
-        String html = templateEngine.process(mailInfo.template(), context);
+        Context context = new ContextCreator(mailProperties).createContext(mailInfo);
+        String html = templateEngine.process(mailInfo.templateName(), context);
         try {
             MimeMessage message = createMailMessage(mailInfo, html);
             emailSender.send(message);
@@ -109,27 +110,12 @@ public class MailService {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF8.getJavaName());
         helper.setSubject(mailInfo.title());
-        helper.setTo(mailInfo.address());
+        helper.setTo(mailInfo.email());
         helper.setText(html, true);
         helper.addInline("image1", new ClassPathResource(mailProperties.backgroundUrl()));
         helper.addInline("image2", new ClassPathResource(mailProperties.logoUrl()));
 
         return message;
-    }
-
-    private Context createContext() {
-        Map<String, Object> emailValues = Map.of(
-                "nameEn", mailProperties.nameEn(),
-                "nameKo", mailProperties.nameKo(),
-                "aboutUs", mailProperties.aboutUs(),
-                "location", mailProperties.location(),
-                "phone", mailProperties.phone(),
-                "siteUrl", mailProperties.siteUrl()
-        );
-        Context context = new Context();
-        context.setVariables(emailValues);
-
-        return context;
     }
 
 }
