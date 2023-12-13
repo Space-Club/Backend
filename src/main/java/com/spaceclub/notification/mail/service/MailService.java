@@ -3,6 +3,7 @@ package com.spaceclub.notification.mail.service;
 import com.spaceclub.notification.mail.MailProperties;
 import com.spaceclub.notification.mail.domain.MailTracker;
 import com.spaceclub.notification.mail.repository.MailTrackerRepository;
+import com.spaceclub.notification.mail.repository.TemplateRepository;
 import com.spaceclub.notification.mail.service.event.MailEvent;
 import com.spaceclub.notification.mail.service.vo.MailInfo;
 import jakarta.mail.MessagingException;
@@ -23,8 +24,6 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
-import java.time.LocalDateTime;
-
 import static com.fasterxml.jackson.core.JsonEncoding.UTF8;
 import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
 
@@ -32,8 +31,6 @@ import static org.springframework.transaction.annotation.Propagation.REQUIRES_NE
 @Service
 @RequiredArgsConstructor
 public class MailService {
-
-    private static final String DELIMITER = ",";
 
     private final JavaMailSender emailSender;
 
@@ -43,6 +40,8 @@ public class MailService {
 
     private final MailTrackerRepository mailTrackerRepository;
 
+    private final TemplateRepository templateRepository;
+
     @Async
     @Transactional(propagation = REQUIRES_NEW)
     @TransactionalEventListener
@@ -50,7 +49,9 @@ public class MailService {
         MailInfo mailInfo = mailEvent.mailInfo();
         Context context = new ContextCreator(mailProperties).createContext(mailInfo);
 
-        String html = templateEngine.process(mailInfo.templateName(), context);
+        String templateName = mailInfo.templateName();
+        String templateHtml = templateRepository.findTemplateByTemplateName(templateName);
+        String html = templateEngine.process(templateHtml, context);
 
         boolean isSent = true;
         try {
@@ -60,15 +61,7 @@ public class MailService {
             log.error("메일 전송 실패", e);
             isSent = false;
         } finally {
-            String addresses = String.join(DELIMITER, mailInfo.email());
-            MailTracker mailHistory = MailTracker.builder()
-                    .addresses(addresses)
-                    .title(mailInfo.title())
-                    .template(mailInfo.templateName())
-                    .sentAt(LocalDateTime.now())
-                    .isSent(isSent)
-                    .build();
-
+            MailTracker mailHistory = MailTracker.from(mailInfo, isSent);
             mailTrackerRepository.save(mailHistory);
         }
         log.debug("메일 발송 완료!");
@@ -80,18 +73,16 @@ public class MailService {
         Pageable pageRequest = PageRequest.of(partitionNumber, chunkSize);
         Slice<MailTracker> mailTrackers = mailTrackerRepository.findAllByIsSentFalse(pageRequest);
 
-        mailTrackers.forEach(mailTracker -> {
-            // TODO: html을 db에 저장하는 형식으로 리팩토링 예정
-//            MailInfo.of(mailTracker.getAddresses(), mailTracker.getTemplate());
-//            WelcomeMailInfo welcomeMailInfo = WelcomeMailInfo.of(mailTracker.getAddresses(), mailTracker.getTitle(), mailTracker.getTemplate());
-//            log.debug("mailInfo: {}", welcomeMailInfo);
-//            sendEachMail(welcomeMailInfo, mailTracker.getId());
-        });
+        mailTrackers.forEach(this::sendEachMail);
     }
 
-    public void sendEachMail(MailInfo mailInfo, Long mailTrackerId) {
+    private void sendEachMail(MailTracker mailTracker) {
+        MailInfo mailInfo = mailTracker.toMailInfo();
         Context context = new ContextCreator(mailProperties).createContext(mailInfo);
-        String html = templateEngine.process(mailInfo.templateName(), context);
+
+        String templateHtml = templateRepository.findById(mailTracker.getTemplateId()).orElseThrow().getTemplate();
+        String html = templateEngine.process(templateHtml, context);
+
         try {
             MimeMessage message = createMailMessage(mailInfo, html);
             emailSender.send(message);
@@ -99,10 +90,7 @@ public class MailService {
             log.error("메일 전송 실패", e);
             return;
         }
-
-        mailTrackerRepository.findById(mailTrackerId)
-                .ifPresent(MailTracker::changeToSent);
-
+        mailTracker.changeToSent();
         log.debug("메일 재전송 완료");
     }
 

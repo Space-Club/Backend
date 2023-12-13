@@ -1,17 +1,34 @@
 package com.spaceclub.notification.mail.domain;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
+
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Getter
-@RequiredArgsConstructor
-public enum Template {
-    WELCOME("[Space Club] 스페이스 클럽에 가입해주셔서 감사합니다.", "welcome"),
-    EVENT_STATUS_CHANGED("[Space Club] 신청한 행사 상태 변경 알림", "event-status-change"),
-    ;
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Template {
 
-    private final String title;
+    @Id
+    @Column(name = "template_id")
+    @GeneratedValue(strategy = IDENTITY)
+    private Long id;
 
-    private final String templateName;
+    @Lob
+    private String template;
+
+    @Builder
+    public Template(Long id, String template) {
+        this.id = id;
+        this.template = template;
+    }
 
 }

@@ -1,6 +1,6 @@
 package com.spaceclub.notification.mail.service.vo;
 
-import static com.spaceclub.notification.mail.domain.Template.WELCOME;
+import static com.spaceclub.notification.mail.service.vo.Template.WELCOME;
 
 public class WelcomeMailInfo extends MailInfo {
 

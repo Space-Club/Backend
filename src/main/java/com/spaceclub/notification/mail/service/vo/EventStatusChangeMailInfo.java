@@ -2,7 +2,7 @@ package com.spaceclub.notification.mail.service.vo;
 
 import lombok.Getter;
 
-import static com.spaceclub.notification.mail.domain.Template.*;
+import static com.spaceclub.notification.mail.service.vo.Template.*;
 
 @Getter
 public class EventStatusChangeMailInfo extends MailInfo {
