@@ -1,7 +1,7 @@
 package com.spaceclub.notification.mail.service.vo;
 
 import com.spaceclub.notification.mail.domain.AdditionalInfo;
-import com.spaceclub.notification.mail.domain.MailTracker;
+import com.spaceclub.notification.mail.domain.MailHistory;
 import com.spaceclub.notification.mail.domain.TemplateName;
 import lombok.Getter;
 
@@ -32,17 +32,17 @@ public class EventStatusChangeMailInfo extends MailInfo {
         return new EventStatusChangeMailInfo(addressArray, clubName, eventName, statusName);
     }
 
-    public static EventStatusChangeMailInfo from(MailTracker mailTracker) {
-        String[] addressArray = mailTracker.getAddresses().split(DELIMITER);
-        String statusName = ParticipationStatus.getStatusName(mailTracker.getEventStatus());
+    public static EventStatusChangeMailInfo from(MailHistory mailHistory) {
+        String[] addressArray = mailHistory.getAddresses().split(DELIMITER);
+        String statusName = ParticipationStatus.getStatusName(mailHistory.getEventStatus());
 
-        return new EventStatusChangeMailInfo(addressArray, mailTracker.getClubName(), mailTracker.getEventName(), statusName);
+        return new EventStatusChangeMailInfo(addressArray, mailHistory.getClubName(), mailHistory.getEventName(), statusName);
     }
 
-    public static MailTracker from(MailInfo mailInfo, boolean isSent) {
+    public static MailHistory from(MailInfo mailInfo, boolean isSent) {
         EventStatusChangeMailInfo eventStatusChangeMailInfo = (EventStatusChangeMailInfo) mailInfo;
 
-        return MailTracker.builder()
+        return MailHistory.builder()
                 .addresses(String.join(DELIMITER, mailInfo.email()))
                 .title(mailInfo.title())
                 .templateName(TemplateName.findByTemplateName(mailInfo.templateName()))

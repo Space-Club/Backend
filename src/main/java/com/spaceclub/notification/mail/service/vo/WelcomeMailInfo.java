@@ -1,6 +1,6 @@
 package com.spaceclub.notification.mail.service.vo;
 
-import com.spaceclub.notification.mail.domain.MailTracker;
+import com.spaceclub.notification.mail.domain.MailHistory;
 import com.spaceclub.notification.mail.domain.TemplateName;
 
 import java.time.LocalDateTime;
@@ -21,8 +21,8 @@ public class WelcomeMailInfo extends MailInfo {
         return new WelcomeMailInfo(addressArray);
     }
 
-    public static MailTracker createMailHistory(MailInfo mailInfo, boolean isSent) {
-        return MailTracker.builder()
+    public static MailHistory createMailHistory(MailInfo mailInfo, boolean isSent) {
+        return MailHistory.builder()
                 .addresses(String.join(DELIMITER, mailInfo.email()))
                 .title(mailInfo.title())
                 .templateName(TemplateName.findByTemplateName(mailInfo.templateName()))

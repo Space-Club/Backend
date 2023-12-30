@@ -1,7 +1,7 @@
 package com.spaceclub.notification.mail.service;
 
 import com.spaceclub.notification.mail.MailProperties;
-import com.spaceclub.notification.mail.domain.MailTracker;
+import com.spaceclub.notification.mail.domain.MailHistory;
 import com.spaceclub.notification.mail.domain.TemplateName;
 import com.spaceclub.notification.mail.repository.MailTrackerRepository;
 import com.spaceclub.notification.mail.repository.TemplateRepository;
@@ -70,7 +70,7 @@ public class MailService {
             log.error("메일 전송 실패", e);
             isSent = false;
         } finally {
-            MailTracker mailHistory = switch (templateName) {
+            MailHistory mailHistory = switch (templateName) {
                 case WELCOME -> WelcomeMailInfo.createMailHistory(mailInfo, isSent);
                 case EVENT_STATUS_CHANGED -> EventStatusChangeMailInfo.from(mailInfo, isSent);
             };
@@ -84,17 +84,17 @@ public class MailService {
     @Transactional(propagation = REQUIRES_NEW)
     public void sendEmail(int partitionNumber, int chunkSize) {
         Pageable pageRequest = PageRequest.of(partitionNumber, chunkSize);
-        Slice<MailTracker> mailTrackers = mailTrackerRepository.findAllByIsSentFalse(pageRequest);
+        Slice<MailHistory> mailTrackers = mailTrackerRepository.findAllByIsSentFalse(pageRequest);
 
         mailTrackers.forEach(this::sendEachMail);
     }
 
-    private void sendEachMail(MailTracker mailTracker) {
-        MailInfo mailInfo = getInfo(mailTracker);
-        Map<String, Object> additionalInfo = getAdditionalInfo(mailTracker.getTemplateName(), mailInfo);
+    private void sendEachMail(MailHistory mailHistory) {
+        MailInfo mailInfo = getInfo(mailHistory);
+        Map<String, Object> additionalInfo = getAdditionalInfo(mailHistory.getTemplateName(), mailInfo);
         Context context = new ContextCreator(mailProperties).createContext(additionalInfo);
 
-        String templateHtml = templateRepository.findById(mailTracker.getTemplateId()).orElseThrow().getTemplate();
+        String templateHtml = templateRepository.findById(mailHistory.getTemplateId()).orElseThrow().getTemplate();
         String html = templateEngine.process(templateHtml, context);
 
         try {
@@ -104,7 +104,7 @@ public class MailService {
             log.error("메일 전송 실패", e);
             return;
         }
-        mailTracker.changeToSent();
+        mailHistory.changeToSent();
         log.debug("메일 재전송 완료");
     }
 
@@ -122,10 +122,10 @@ public class MailService {
         };
     }
 
-    private MailInfo getInfo(MailTracker mailTracker) {
-        return switch (mailTracker.getTemplateName()) {
-            case WELCOME -> WelcomeMailInfo.from(mailTracker.getAddresses());
-            case EVENT_STATUS_CHANGED -> EventStatusChangeMailInfo.from(mailTracker);
+    private MailInfo getInfo(MailHistory mailHistory) {
+        return switch (mailHistory.getTemplateName()) {
+            case WELCOME -> WelcomeMailInfo.from(mailHistory.getAddresses());
+            case EVENT_STATUS_CHANGED -> EventStatusChangeMailInfo.from(mailHistory);
         };
     }
 

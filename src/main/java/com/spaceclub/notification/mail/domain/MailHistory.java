@@ -24,11 +24,11 @@ import static lombok.AccessLevel.PROTECTED;
 @ToString
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor(access = PROTECTED)
-public class MailTracker {
+public class MailHistory {
 
     @Id
     @Getter
-    @Column(name = "mail_tracker_id")
+    @Column(name = "mail_history_id")
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
@@ -53,7 +53,7 @@ public class MailTracker {
     private boolean isSent;
 
     @Builder
-    private MailTracker(
+    private MailHistory(
             String addresses,
             String title,
             TemplateName templateName,

@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 public interface TemplateRepository extends JpaRepository<Template, Long> {
 
     @Query("select distinct t.template from Template t " +
-            "join fetch MailTracker m on m.templateId = t.id " +
+            "join fetch MailHistory m on m.templateId = t.id " +
             "where m.templateName = :templateName")
     String findTemplateByTemplateName(@Param("templateName") TemplateName templateName);
 
