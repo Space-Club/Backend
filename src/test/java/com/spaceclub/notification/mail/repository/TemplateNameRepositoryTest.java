@@ -1,7 +1,8 @@
 package com.spaceclub.notification.mail.repository;
 
-import com.spaceclub.notification.mail.domain.MailTracker;
+import com.spaceclub.notification.mail.domain.MailHistory;
 import com.spaceclub.notification.mail.domain.Template;
+import com.spaceclub.notification.mail.domain.TemplateName;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,7 +18,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFOR
 
 @DataJpaTest
 @DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
-class TemplateRepositoryTest {
+class TemplateNameRepositoryTest {
 
     @Autowired
     EntityManager em;
@@ -31,31 +32,31 @@ class TemplateRepositoryTest {
                 .template("template 2")
                 .build();
 
-        MailTracker mailTracker1 = MailTracker.builder()
+        MailHistory mailHistory1 = MailHistory.builder()
                 .addresses("abcd@naver.com")
                 .title("title 1")
-                .template("welcome")
+                .templateName(TemplateName.WELCOME)
                 .sentAt(LocalDateTime.now())
                 .isSent(true)
                 .build();
-        MailTracker mailTracker2 = MailTracker.builder()
+        MailHistory mailHistory2 = MailHistory.builder()
                 .addresses("zxcv@naver.com")
                 .title("title 2")
-                .template("event-status-change")
+                .templateName(TemplateName.EVENT_STATUS_CHANGED)
                 .sentAt(LocalDateTime.now())
                 .isSent(true)
                 .build();
-        MailTracker mailTracker3 = MailTracker.builder()
+        MailHistory mailHistory3 = MailHistory.builder()
                 .addresses("asdf@naver.com")
                 .title("title 1")
-                .template("welcome")
+                .templateName(TemplateName.WELCOME)
                 .sentAt(LocalDateTime.now())
                 .isSent(false)
                 .build();
 
-        em.persist(mailTracker1);
-        em.persist(mailTracker2);
-        em.persist(mailTracker3);
+        em.persist(mailHistory1);
+        em.persist(mailHistory2);
+        em.persist(mailHistory3);
 
         em.persist(template1);
         em.persist(template2);
@@ -65,11 +66,11 @@ class TemplateRepositoryTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"event-status-change, template 2", "welcome, template 1"})
-    void findByTemplateName(String templateName, String expectedTemplate) {
+    @CsvSource({"EVENT_STATUS_CHANGED,template 2", "WELCOME,template 1"})
+    void findByTemplateName(TemplateName templateName, String expectedTemplate) {
         // when
         String singleResult = em.createQuery("select distinct t.template from Template t " +
-                        "join fetch MailTracker m on m.templateId = t.id " +
+                        "join fetch MailHistory m on m.templateId = t.id " +
                         "where m.templateName = :templateName", String.class)
                 .setParameter("templateName", templateName)
                 .getSingleResult();

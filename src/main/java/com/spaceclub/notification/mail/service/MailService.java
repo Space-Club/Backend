@@ -1,11 +1,14 @@
 package com.spaceclub.notification.mail.service;
 
 import com.spaceclub.notification.mail.MailProperties;
-import com.spaceclub.notification.mail.domain.MailTracker;
+import com.spaceclub.notification.mail.domain.MailHistory;
+import com.spaceclub.notification.mail.domain.TemplateName;
 import com.spaceclub.notification.mail.repository.MailTrackerRepository;
 import com.spaceclub.notification.mail.repository.TemplateRepository;
 import com.spaceclub.notification.mail.service.event.MailEvent;
+import com.spaceclub.notification.mail.service.vo.EventStatusChangeMailInfo;
 import com.spaceclub.notification.mail.service.vo.MailInfo;
+import com.spaceclub.notification.mail.service.vo.WelcomeMailInfo;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
+
+import java.util.Collections;
+import java.util.Map;
 
 import static com.fasterxml.jackson.core.JsonEncoding.UTF8;
 import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
@@ -47,10 +53,13 @@ public class MailService {
     @TransactionalEventListener
     public void sendEmail(MailEvent mailEvent) {
         MailInfo mailInfo = mailEvent.mailInfo();
-        Context context = new ContextCreator(mailProperties).createContext(mailInfo);
 
-        String templateName = mailInfo.templateName();
+        TemplateName templateName = TemplateName.findByTemplateName(mailInfo.templateName());
         String templateHtml = templateRepository.findTemplateByTemplateName(templateName);
+
+        Map<String, Object> additionalInfo = getAdditionalInfo(templateName, mailInfo);
+        Context context = new ContextCreator(mailProperties).createContext(additionalInfo);
+
         String html = templateEngine.process(templateHtml, context);
 
         boolean isSent = true;
@@ -61,7 +70,11 @@ public class MailService {
             log.error("메일 전송 실패", e);
             isSent = false;
         } finally {
-            MailTracker mailHistory = MailTracker.from(mailInfo, isSent);
+            MailHistory mailHistory = switch (templateName) {
+                case WELCOME -> WelcomeMailInfo.createMailHistory(mailInfo, isSent);
+                case EVENT_STATUS_CHANGED -> EventStatusChangeMailInfo.from(mailInfo, isSent);
+            };
+
             mailTrackerRepository.save(mailHistory);
         }
         log.debug("메일 발송 완료!");
@@ -71,16 +84,17 @@ public class MailService {
     @Transactional(propagation = REQUIRES_NEW)
     public void sendEmail(int partitionNumber, int chunkSize) {
         Pageable pageRequest = PageRequest.of(partitionNumber, chunkSize);
-        Slice<MailTracker> mailTrackers = mailTrackerRepository.findAllByIsSentFalse(pageRequest);
+        Slice<MailHistory> mailTrackers = mailTrackerRepository.findAllByIsSentFalse(pageRequest);
 
         mailTrackers.forEach(this::sendEachMail);
     }
 
-    private void sendEachMail(MailTracker mailTracker) {
-        MailInfo mailInfo = mailTracker.toMailInfo();
-        Context context = new ContextCreator(mailProperties).createContext(mailInfo);
+    private void sendEachMail(MailHistory mailHistory) {
+        MailInfo mailInfo = getInfo(mailHistory);
+        Map<String, Object> additionalInfo = getAdditionalInfo(mailHistory.getTemplateName(), mailInfo);
+        Context context = new ContextCreator(mailProperties).createContext(additionalInfo);
 
-        String templateHtml = templateRepository.findById(mailTracker.getTemplateId()).orElseThrow().getTemplate();
+        String templateHtml = templateRepository.findById(mailHistory.getTemplateId()).orElseThrow().getTemplate();
         String html = templateEngine.process(templateHtml, context);
 
         try {
@@ -90,8 +104,29 @@ public class MailService {
             log.error("메일 전송 실패", e);
             return;
         }
-        mailTracker.changeToSent();
+        mailHistory.changeToSent();
         log.debug("메일 재전송 완료");
+    }
+
+    private Map<String, Object> getAdditionalInfo(TemplateName templateName, MailInfo mailInfo) {
+        return switch (templateName) {
+            case WELCOME -> Collections.emptyMap();
+            case EVENT_STATUS_CHANGED -> {
+                EventStatusChangeMailInfo eventStatusChangeMailInfo = (EventStatusChangeMailInfo) mailInfo;
+                yield Map.of(
+                        "clubName", eventStatusChangeMailInfo.getClubName(),
+                        "eventName", eventStatusChangeMailInfo.getEventName(),
+                        "eventStatus", eventStatusChangeMailInfo.getEventStatus()
+                );
+            }
+        };
+    }
+
+    private MailInfo getInfo(MailHistory mailHistory) {
+        return switch (mailHistory.getTemplateName()) {
+            case WELCOME -> WelcomeMailInfo.from(mailHistory.getAddresses());
+            case EVENT_STATUS_CHANGED -> EventStatusChangeMailInfo.from(mailHistory);
+        };
     }
 
     private MimeMessage createMailMessage(MailInfo mailInfo, String html) throws MessagingException {

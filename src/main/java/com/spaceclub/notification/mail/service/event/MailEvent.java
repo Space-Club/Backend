@@ -13,7 +13,7 @@ public record MailEvent(MailInfo mailInfo) {
     }
 
     public static MailEvent createMailEvent(String email, String clubName, String eventName, String eventStatus) {
-        EventStatusChangeMailInfo mailInfo = EventStatusChangeMailInfo.of(email, clubName, eventName, eventStatus);
+        EventStatusChangeMailInfo mailInfo = EventStatusChangeMailInfo.from(email, clubName, eventName, eventStatus);
 
         return new MailEvent(mailInfo);
     }

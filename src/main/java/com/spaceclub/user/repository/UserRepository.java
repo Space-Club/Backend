@@ -28,4 +28,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 """)
     List<User> findAllUserToDelete(@Param("threeDaysAgoFromNow") LocalDateTime threeDaysAgoFromNow);
 
+    @Query("select u.email.email from User u where u.id = :userId and u.email.emailConsent = true")
+    Optional<String> findEmail(Long userId);
+
 }

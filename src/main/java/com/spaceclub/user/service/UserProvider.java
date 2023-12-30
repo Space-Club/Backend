@@ -8,4 +8,6 @@ public interface UserProvider {
 
     void validateUser(Long userId);
 
+    String getEmailAddress(Long userId);
+
 }
