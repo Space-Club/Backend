@@ -2,6 +2,7 @@ package com.spaceclub.notification.mail.repository;
 
 import com.spaceclub.notification.mail.domain.MailTracker;
 import com.spaceclub.notification.mail.domain.Template;
+import com.spaceclub.notification.mail.domain.TemplateName;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,7 +18,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFOR
 
 @DataJpaTest
 @DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
-class TemplateRepositoryTest {
+class TemplateNameRepositoryTest {
 
     @Autowired
     EntityManager em;
@@ -34,21 +35,21 @@ class TemplateRepositoryTest {
         MailTracker mailTracker1 = MailTracker.builder()
                 .addresses("abcd@naver.com")
                 .title("title 1")
-                .template("welcome")
+                .templateName(TemplateName.WELCOME)
                 .sentAt(LocalDateTime.now())
                 .isSent(true)
                 .build();
         MailTracker mailTracker2 = MailTracker.builder()
                 .addresses("zxcv@naver.com")
                 .title("title 2")
-                .template("event-status-change")
+                .templateName(TemplateName.EVENT_STATUS_CHANGED)
                 .sentAt(LocalDateTime.now())
                 .isSent(true)
                 .build();
         MailTracker mailTracker3 = MailTracker.builder()
                 .addresses("asdf@naver.com")
                 .title("title 1")
-                .template("welcome")
+                .templateName(TemplateName.WELCOME)
                 .sentAt(LocalDateTime.now())
                 .isSent(false)
                 .build();
@@ -65,8 +66,8 @@ class TemplateRepositoryTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"event-status-change, template 2", "welcome, template 1"})
-    void findByTemplateName(String templateName, String expectedTemplate) {
+    @CsvSource({"EVENT_STATUS_CHANGED,template 2", "WELCOME,template 1"})
+    void findByTemplateName(TemplateName templateName, String expectedTemplate) {
         // when
         String singleResult = em.createQuery("select distinct t.template from Template t " +
                         "join fetch MailTracker m on m.templateId = t.id " +

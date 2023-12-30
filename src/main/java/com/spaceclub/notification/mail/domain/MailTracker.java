@@ -1,12 +1,10 @@
 package com.spaceclub.notification.mail.domain;
 
-import com.spaceclub.notification.mail.service.vo.EventStatusChangeMailInfo;
-import com.spaceclub.notification.mail.service.vo.MailInfo;
-import com.spaceclub.notification.mail.service.vo.Template;
-import com.spaceclub.notification.mail.service.vo.WelcomeMailInfo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.Builder;
@@ -41,7 +39,8 @@ public class MailTracker {
     private String title;
 
     @Getter
-    private String templateName;
+    @Enumerated(EnumType.STRING)
+    private TemplateName templateName;
 
     @Getter
     private Long templateId;
@@ -57,52 +56,18 @@ public class MailTracker {
     private MailTracker(
             String addresses,
             String title,
-            String template,
+            TemplateName templateName,
             LocalDateTime sentAt,
             boolean isSent,
             AdditionalInfo additionalInfo
     ) {
         this.addresses = addresses;
         this.title = title;
-        this.templateName = template;
-        this.templateId = setTemplateId(template);
+        this.templateName = templateName;
+        this.templateId = templateName.getTemplateId();
         this.sentAt = sentAt;
         this.isSent = isSent;
         log.info("MailTracker created: {}", this);
-    }
-
-    public static MailTracker from(MailInfo mailInfo, boolean isSent) {
-        if (mailInfo instanceof EventStatusChangeMailInfo eventStatusChangeMailInfo) {
-            return MailTracker.builder()
-                    .addresses(String.join(",", mailInfo.email()))
-                    .title(mailInfo.title())
-                    .template(mailInfo.templateName())
-                    .sentAt(LocalDateTime.now())
-                    .isSent(isSent)
-                    .additionalInfo(
-                            new AdditionalInfo(eventStatusChangeMailInfo.getClubName(),
-                                    eventStatusChangeMailInfo.getEventName(),
-                                    eventStatusChangeMailInfo.getEventStatus()
-                            )
-                    )
-                    .build();
-        }
-        return MailTracker.builder()
-                .addresses(String.join(",", mailInfo.email()))
-                .title(mailInfo.title())
-                .template(mailInfo.templateName())
-                .sentAt(LocalDateTime.now())
-                .isSent(isSent)
-                .build();
-    }
-
-    private Long setTemplateId(String template) {
-        Template foundTemplate = Template.findByTemplateName(template);
-
-        return switch (foundTemplate) {
-            case WELCOME -> 1L;
-            case EVENT_STATUS_CHANGED -> 2L;
-        };
     }
 
     public void changeToSent() {
@@ -110,13 +75,16 @@ public class MailTracker {
         this.isSent = true;
     }
 
-    public MailInfo toMailInfo() {
-        Template template = Template.findByTemplateName(templateName);
+    public String getClubName() {
+        return additionalInfo.getClubName();
+    }
 
-        return switch (template) {
-            case WELCOME -> WelcomeMailInfo.from(addresses);
-            case EVENT_STATUS_CHANGED -> EventStatusChangeMailInfo.of(addresses, additionalInfo.getClubName(), additionalInfo.getEventName(), additionalInfo.getEventStatus());
-        };
+    public String getEventName() {
+        return additionalInfo.getEventName();
+    }
+
+    public String getEventStatus() {
+        return additionalInfo.getEventStatus();
     }
 
 }

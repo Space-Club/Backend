@@ -70,10 +70,11 @@ public class SubmitService {
             eventProvider.minusParticipants(event, eventUser.getTicketCount());
         }
 
+        // 신청상태가 이렇게 변했다. 라는 이벤트 발행
         EventUser updatedEventUser = eventUser.updateStatus(updateInfo.status());
 
         // 폼 상태 변경 시 메일 발송
-        String userEmailAddress = userProvider.getProfile(eventUser.getUserId()).email();
+        String userEmailAddress = userProvider.getEmailAddress(eventUser.getUserId());
         applicationEventPublisher.publishEvent(MailEvent.createMailEvent(userEmailAddress, event.getClubName(), event.getTitle(), updateInfo.status().toString()));
 
         eventUserRepository.save(updatedEventUser);

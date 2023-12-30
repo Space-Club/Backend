@@ -1,9 +1,6 @@
 package com.spaceclub.notification.mail.service;
 
 import com.spaceclub.notification.mail.MailProperties;
-import com.spaceclub.notification.mail.service.vo.EventStatusChangeMailInfo;
-import com.spaceclub.notification.mail.service.vo.MailInfo;
-import com.spaceclub.notification.mail.service.vo.WelcomeMailInfo;
 import org.thymeleaf.context.Context;
 
 import java.util.Map;
@@ -24,24 +21,10 @@ public class ContextCreator {
         context.setVariables(emailValues);
     }
 
-    public Context createContext(MailInfo mailInfo) {
-        if (mailInfo instanceof WelcomeMailInfo) {
-            return this.context;
-        }
-        if (mailInfo instanceof EventStatusChangeMailInfo eventStatusChangeMailInfo) {
-            addAdditionalInfo(eventStatusChangeMailInfo);
-            return this.context;
-        }
-        throw new IllegalArgumentException("Unknown mailInfo type: " + mailInfo.getClass().getName());
-    }
-
-    private void addAdditionalInfo(EventStatusChangeMailInfo eventStatusChangeMailInfo) {
-        Map<String, Object> additionalInfo = Map.of(
-                "clubName", eventStatusChangeMailInfo.getClubName(),
-                "eventName", eventStatusChangeMailInfo.getEventName(),
-                "eventStatus", eventStatusChangeMailInfo.getEventStatus()
-        );
+    public Context createContext(Map<String, Object> additionalInfo) {
         this.context.setVariables(additionalInfo);
+
+        return this.context;
     }
 
 }

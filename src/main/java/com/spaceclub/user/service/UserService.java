@@ -54,6 +54,11 @@ public class UserService implements UserProvider {
         if (!userRepository.existsById(userId)) throw new IllegalArgumentException(USER_NOT_FOUND.toString());
     }
 
+    @Override
+    public String getEmailAddress(Long userId) {
+        return userRepository.findEmail(userId).orElseThrow(() -> new IllegalStateException("유저가 동의하지 않습니다."));
+    }
+
     public User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND.toString()));
