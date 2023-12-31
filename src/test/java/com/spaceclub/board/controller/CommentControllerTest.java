@@ -47,6 +47,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -128,6 +129,9 @@ class CommentControllerTest {
                                 requestHeaders(
                                         headerWithName(AUTHORIZATION).description("액세스 토큰")
                                 ),
+                                pathParameters(
+                                        parameterWithName("postId").description("게시글 아이디")
+                                ),
                                 queryParameters(
                                         parameterWithName("page").optional().description("페이지"),
                                         parameterWithName("size").optional().description("페이지 내 개수, default 10"),
@@ -187,6 +191,10 @@ class CommentControllerTest {
                                 requestHeaders(
                                         headerWithName(AUTHORIZATION).description("액세스 토큰")
                                 ),
+                                pathParameters(
+                                        parameterWithName("postId").description("게시글 아이디"),
+                                        parameterWithName("commentId").description("댓글 아이디")
+                                ),
                                 responseFields(
                                         fieldWithPath("commentId").type(NUMBER).description("댓글 아이디"),
                                         fieldWithPath("content").type(STRING).description("댓글 내용"),
@@ -225,6 +233,9 @@ class CommentControllerTest {
                                 requestHeaders(
                                         headerWithName(AUTHORIZATION).description("액세스 토큰")
                                 ),
+                                pathParameters(
+                                        parameterWithName("postId").description("게시글 아이디")
+                                ),
                                 requestFields(
                                         fieldWithPath("content").type(STRING).description("댓글 내용"),
                                         fieldWithPath("isPrivate").type(BOOLEAN).description("비밀 댓글 여부")
@@ -256,6 +267,10 @@ class CommentControllerTest {
                                 requestHeaders(
                                         headerWithName(AUTHORIZATION).description("액세스 토큰")
                                 ),
+                                pathParameters(
+                                        parameterWithName("postId").description("게시글 아이디"),
+                                        parameterWithName("commentId").description("댓글 아이디")
+                                ),
                                 requestFields(
                                         fieldWithPath("content").type(STRING).description("댓글 내용"),
                                         fieldWithPath("isPrivate").type(BOOLEAN).description("비밀 댓글 여부")
@@ -283,6 +298,10 @@ class CommentControllerTest {
                                 preprocessResponse(prettyPrint()),
                                 requestHeaders(
                                         headerWithName(AUTHORIZATION).description("액세스 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("postId").description("게시글 아이디"),
+                                        parameterWithName("commentId").description("댓글 아이디")
                                 )
                         )
                 );

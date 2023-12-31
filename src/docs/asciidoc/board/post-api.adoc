@@ -1,0 +1,139 @@
+ifndef::snippet[]
+:snippet: ../../../../build/generated-snippets
+endif::[]
+
+=== 게시글 페이징 조회
+:sectnums!:
+
+==== Request
+include::{snippet}/post/getPostsByPaging/http-request.adoc[]
+
+===== Request header
+include::{snippet}/post/getPostsByPaging/request-headers.adoc[]
+
+===== Path Parameters
+include::{snippet}/post/getPostsByPaging/path-parameters.adoc[]
+
+===== Query Parameters
+include::{snippet}/post/getPostsByPaging/query-parameters.adoc[]
+
+==== Response
+include::{snippet}/post/getPostsByPaging/http-response.adoc[]
+
+===== Response Body
+include::{snippet}/post/getPostsByPaging/response-body.adoc[]
+include::{snippet}/post/getPostsByPaging/response-fields.adoc[]
+
+:sectnums:
+
+
+=== 게시글 단건 조회
+:sectnums!:
+
+==== Request
+include::{snippet}/post/getSinglePost/http-request.adoc[]
+
+===== Request header
+include::{snippet}/post/getSinglePost/request-headers.adoc[]
+
+===== Path Parameters
+include::{snippet}/post/getSinglePost/path-parameters.adoc[]
+
+==== Response
+include::{snippet}/post/getSinglePost/http-response.adoc[]
+
+===== Response Body
+include::{snippet}/post/getSinglePost/response-body.adoc[]
+include::{snippet}/post/getSinglePost/response-fields.adoc[]
+
+:sectnums:
+
+
+=== 게시글 등록 (파일 첨부)
+:sectnums!:
+
+==== Request
+include::{snippet}/post/createWithImage/http-request.adoc[]
+
+===== Request header
+include::{snippet}/post/createWithImage/request-headers.adoc[]
+
+===== Path Parameters
+include::{snippet}/post/createWithImage/path-parameters.adoc[]
+
+===== Request Part
+include::{snippet}/post/createWithImage/request-parts.adoc[]
+
+===== Request Part (postRequest)
+include::{snippet}/post/createWithImage/request-part-postRequest-fields.adoc[]
+
+==== Response
+include::{snippet}/post/createWithImage/http-response.adoc[]
+
+:sectnums:
+
+
+=== 게시글 등록 (파일 미첨부)
+:sectnums!:
+
+==== Request
+include::{snippet}/post/createWithoutImage/http-request.adoc[]
+
+===== Request header
+include::{snippet}/post/createWithoutImage/request-headers.adoc[]
+
+===== Path Parameters
+include::{snippet}/post/createWithoutImage/path-parameters.adoc[]
+
+===== Request Part
+include::{snippet}/post/createWithoutImage/request-parts.adoc[]
+
+===== Request Part (postRequest)
+include::{snippet}/post/createWithoutImage/request-part-postRequest-fields.adoc[]
+
+==== Response
+include::{snippet}/post/createWithoutImage/http-response.adoc[]
+
+:sectnums:
+
+
+=== 게시글 수정
+:sectnums!:
+
+==== Request
+include::{snippet}/post/update/http-request.adoc[]
+
+===== Request header
+include::{snippet}/post/update/request-headers.adoc[]
+
+===== Path Parameters
+include::{snippet}/post/update/path-parameters.adoc[]
+
+===== Request Part
+include::{snippet}/post/update/request-parts.adoc[]
+
+===== Request Part (postRequest)
+include::{snippet}/post/update/request-part-postRequest-fields.adoc[]
+
+==== Response
+include::{snippet}/post/update/http-response.adoc[]
+
+:sectnums:
+
+
+=== 게시글 삭제
+:sectnums!:
+
+==== Request
+include::{snippet}/post/delete/http-request.adoc[]
+
+===== Request header
+include::{snippet}/post/delete/request-headers.adoc[]
+
+===== Path Parameters
+include::{snippet}/post/delete/path-parameters.adoc[]
+
+==== Response
+include::{snippet}/post/delete/http-response.adoc[]
+
+:sectnums:

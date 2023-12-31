@@ -51,6 +51,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestP
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -135,6 +136,9 @@ class PostControllerTest {
                                 requestHeaders(
                                         headerWithName(AUTHORIZATION).description("액세스 토큰")
                                 ),
+                                pathParameters(
+                                        parameterWithName("clubId").description("클럽 아이디")
+                                ),
                                 queryParameters(
                                         parameterWithName("page").optional().description("페이지"),
                                         parameterWithName("size").optional().description("페이지 내 개수, default 10"),
@@ -198,6 +202,10 @@ class PostControllerTest {
                                 requestHeaders(
                                         headerWithName(AUTHORIZATION).description("액세스 토큰")
                                 ),
+                                pathParameters(
+                                        parameterWithName("clubId").description("클럽 아이디"),
+                                        parameterWithName("postId").description("게시글 아이디")
+                                ),
                                 responseFields(
                                         fieldWithPath("postId").type(NUMBER).description("게시글 아이디"),
                                         fieldWithPath("title").type(STRING).description("게시글 제목"),
@@ -237,7 +245,6 @@ class PostControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().stringValues("Location", "/api/v1/boards/posts/%d/%d".formatted(clubId, postId)))
-
                 .andDo(
                         document("post/createWithImage",
                                 preprocessRequest(prettyPrint()),
@@ -245,9 +252,12 @@ class PostControllerTest {
                                 requestHeaders(
                                         headerWithName(AUTHORIZATION).description("액세스 토큰")
                                 ),
+                                pathParameters(
+                                        parameterWithName("clubId").description("클럽 아이디")
+                                ),
                                 requestParts(
                                         partWithName("postRequest").description("게시글 제목 및 내용"),
-                                        partWithName("image").description("첨부 이미지")
+                                        partWithName("image").description("첨부 이미지").optional()
                                 ),
                                 requestPartFields("postRequest",
                                         fieldWithPath("title").type(STRING).description("게시글 제목"),
@@ -285,6 +295,9 @@ class PostControllerTest {
                                 preprocessResponse(prettyPrint()),
                                 requestHeaders(
                                         headerWithName(AUTHORIZATION).description("액세스 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("clubId").description("클럽 아이디")
                                 ),
                                 requestParts(
                                         partWithName("postRequest").description("게시글 제목 및 내용")
@@ -333,6 +346,9 @@ class PostControllerTest {
                                 requestHeaders(
                                         headerWithName(AUTHORIZATION).description("액세스 토큰")
                                 ),
+                                pathParameters(
+                                        parameterWithName("postId").description("게시글 아이디")
+                                ),
                                 requestParts(
                                         partWithName("postRequest").description("게시글 제목 및 내용"),
                                         partWithName("image").description("첨부 이미지").optional()
@@ -360,6 +376,9 @@ class PostControllerTest {
                         document("post/delete",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
+                                pathParameters(
+                                        parameterWithName("postId").description("게시글 아이디")
+                                ),
                                 requestHeaders(
                                         headerWithName(AUTHORIZATION).description("액세스 토큰")
                                 )

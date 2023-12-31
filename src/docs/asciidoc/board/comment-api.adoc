@@ -1,0 +1,109 @@
+ifndef::snippet[]
+:snippet: ../../../../build/generated-snippets
+endif::[]
+
+=== 댓글 페이징 조회
+:sectnums!:
+
+==== Request
+include::{snippet}/comment/getCommentsByPaging/http-request.adoc[]
+
+===== Request header
+include::{snippet}/comment/getCommentsByPaging/request-headers.adoc[]
+
+===== Path Parameters
+include::{snippet}/comment/getCommentsByPaging/path-parameters.adoc[]
+
+===== Query Parameters
+include::{snippet}/comment/getCommentsByPaging/query-parameters.adoc[]
+
+==== Response
+include::{snippet}/comment/getCommentsByPaging/http-response.adoc[]
+
+===== Response Body
+include::{snippet}/comment/getCommentsByPaging/response-body.adoc[]
+include::{snippet}/comment/getCommentsByPaging/response-fields.adoc[]
+
+:sectnums:
+
+
+=== 댓글 단건 조회
+:sectnums!:
+
+==== Request
+include::{snippet}/comment/getSingleComment/http-request.adoc[]
+
+===== Request header
+include::{snippet}/comment/getSingleComment/request-headers.adoc[]
+
+===== Path Parameters
+include::{snippet}/comment/getSingleComment/path-parameters.adoc[]
+
+==== Response
+include::{snippet}/comment/getSingleComment/http-response.adoc[]
+
+===== Response Body
+include::{snippet}/comment/getSingleComment/response-body.adoc[]
+include::{snippet}/comment/getSingleComment/response-fields.adoc[]
+
+:sectnums:
+
+
+=== 댓글 생성
+:sectnums!:
+
+==== Request
+include::{snippet}/comment/create/http-request.adoc[]
+
+===== Request header
+include::{snippet}/comment/create/request-headers.adoc[]
+
+===== Request Fields
+include::{snippet}/comment/create/request-fields.adoc[]
+
+===== Path Parameters
+include::{snippet}/comment/create/path-parameters.adoc[]
+
+==== Response
+include::{snippet}/comment/create/http-response.adoc[]
+
+:sectnums:
+
+
+=== 댓글 수정
+:sectnums!:
+
+==== Request
+include::{snippet}/comment/update/http-request.adoc[]
+
+===== Request header
+include::{snippet}/comment/update/request-headers.adoc[]
+
+===== Request Fields
+include::{snippet}/comment/update/request-fields.adoc[]
+
+===== Path Parameters
+include::{snippet}/comment/update/path-parameters.adoc[]
+
+==== Response
+include::{snippet}/comment/update/http-response.adoc[]
+
+:sectnums:
+
+
+=== 댓글 삭제
+:sectnums!:
+
+==== Request
+include::{snippet}/comment/delete/http-request.adoc[]
+
+===== Request header
+include::{snippet}/comment/delete/request-headers.adoc[]
+
+===== Path Parameters
+include::{snippet}/comment/delete/path-parameters.adoc[]
+
+==== Response
+include::{snippet}/comment/delete/http-response.adoc[]
+
+:sectnums:
