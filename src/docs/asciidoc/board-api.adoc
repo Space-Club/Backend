@@ -1,0 +1,4 @@
+== 게시판
+
+include::board/post-api.adoc[]
+include::board/comment-api.adoc[]
