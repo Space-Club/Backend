@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.board.controller.domain.Comment;
 import com.spaceclub.board.controller.dto.CommentRequest;
-import com.spaceclub.board.service.BoardService;
+import com.spaceclub.board.service.CommentService;
 import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
@@ -73,7 +73,7 @@ class CommentControllerTest {
     private ObjectMapper mapper;
 
     @MockBean
-    private BoardService boardService;
+    private CommentService commentService;
 
     @MockBean
     private UserArgumentResolver userArgumentResolver;
@@ -107,7 +107,7 @@ class CommentControllerTest {
         );
 
         Slice<Comment> commentPages = new PageImpl<>(comments);
-        given(boardService.getComments(any(), any(), any())).willReturn(commentPages);
+        given(commentService.getComments(any(), any(), any())).willReturn(commentPages);
 
         mockMvc.perform(get("/api/v1/boards/posts/{postId}/comments", postId)
                         .header(AUTHORIZATION, "access token")
@@ -170,7 +170,7 @@ class CommentControllerTest {
                 .isPrivate(false)
                 .postId(postId)
                 .build();
-        given(boardService.getComment(any(), any(), any())).willReturn(comment);
+        given(commentService.getComment(any(), any(), any())).willReturn(comment);
 
         mockMvc.perform(get("/api/v1/boards/posts/{postId}/comments/{commentId}", postId, commentId)
                         .header(AUTHORIZATION, "access token")
@@ -216,7 +216,7 @@ class CommentControllerTest {
         Long postId = 1L;
         CommentRequest commentRequest = new CommentRequest("content1", false);
 
-        given(boardService.createComment(any(), any(), any())).willReturn(commentId);
+        given(commentService.createComment(any(), any(), any())).willReturn(commentId);
 
         mockMvc.perform(post("/api/v1/boards/posts/{postId}/comments", postId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -251,7 +251,7 @@ class CommentControllerTest {
         Long commentId = 1L;
         CommentRequest commentRequest = new CommentRequest("content1", false);
 
-        doNothing().when(boardService).updateComment(any(), any(), any(), any());
+        doNothing().when(commentService).updateComment(any(), any(), any(), any());
 
         mockMvc.perform(put("/api/v1/boards/posts/{postId}/comments/{commentId}", postId, commentId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -285,7 +285,7 @@ class CommentControllerTest {
         Long postId = 1L;
         Long commentId = 1L;
 
-        doNothing().when(boardService).deleteComment(any(), any(), any());
+        doNothing().when(commentService).deleteComment(any(), any(), any());
 
         mockMvc.perform(delete("/api/v1/boards/posts/{postId}/comments/{commentId}", postId, commentId)
                         .header(AUTHORIZATION, "access token")

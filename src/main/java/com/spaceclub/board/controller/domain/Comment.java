@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,8 @@ public class Comment extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Lob
+    @Column(nullable = false)
     private String content;
 
     private Long authorId;
@@ -35,6 +38,11 @@ public class Comment extends BaseTimeEntity {
         this.authorId = authorId;
         this.isPrivate = isPrivate;
         this.postId = postId;
+    }
+
+    public void updateComment(String content, boolean isPrivate) {
+        this.content = content;
+        this.isPrivate = isPrivate;
     }
 
 }

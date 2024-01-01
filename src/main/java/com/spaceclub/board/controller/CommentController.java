@@ -3,7 +3,7 @@ package com.spaceclub.board.controller;
 import com.spaceclub.board.controller.domain.Comment;
 import com.spaceclub.board.controller.dto.CommentRequest;
 import com.spaceclub.board.controller.dto.CommentResponse;
-import com.spaceclub.board.service.BoardService;
+import com.spaceclub.board.service.CommentService;
 import com.spaceclub.global.Authenticated;
 import com.spaceclub.global.dto.SliceResponse;
 import com.spaceclub.global.jwt.vo.JwtUser;
@@ -33,7 +33,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 @RequiredArgsConstructor
 public class CommentController {
 
-    private final BoardService boardService;
+    private final CommentService commentService;
 
     @GetMapping("/{postId}/comments")
     public SliceResponse<CommentResponse, Comment> getCommentsByPaging(
@@ -43,7 +43,7 @@ public class CommentController {
     ) {
         // 댓글 페이징 조회
         Long userId = jwtUser.id();
-        Slice<Comment> commentPages = boardService.getComments(postId, pageable, userId);
+        Slice<Comment> commentPages = commentService.getComments(postId, pageable, userId);
         List<CommentResponse> comments = commentPages.getContent().stream()
                 .map(CommentResponse::of)
                 .toList();
@@ -59,7 +59,7 @@ public class CommentController {
     ) {
         // 댓글 단건 조회
         Long userId = jwtUser.id();
-        Comment comment = boardService.getComment(postId, commentId, userId);
+        Comment comment = commentService.getComment(postId, commentId, userId);
 
         return CommentResponse.of(comment);
     }
@@ -72,7 +72,7 @@ public class CommentController {
     ) {
         // 댓글 생성
         Long userId = jwtUser.id();
-        Long commentId = boardService.createComment(postId, commentRequest, userId);
+        Long commentId = commentService.createComment(postId, commentRequest, userId);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -89,7 +89,7 @@ public class CommentController {
     ) {
         // 댓글 수정
         Long userId = jwtUser.id();
-        boardService.updateComment(postId, commentId, commentRequest, userId);
+        commentService.updateComment(postId, commentId, commentRequest, userId);
     }
 
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
@@ -101,7 +101,7 @@ public class CommentController {
     ) {
         // 댓글 삭제
         Long userId = jwtUser.id();
-        boardService.deleteComment(postId, commentId, userId);
+        commentService.deleteComment(postId, commentId, userId);
     }
 
 }

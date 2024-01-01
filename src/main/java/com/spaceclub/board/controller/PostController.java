@@ -3,10 +3,13 @@ package com.spaceclub.board.controller;
 import com.spaceclub.board.controller.domain.Post;
 import com.spaceclub.board.controller.dto.PostRequest;
 import com.spaceclub.board.controller.dto.PostResponse;
-import com.spaceclub.board.service.BoardService;
+import com.spaceclub.board.controller.dto.PostUpdateRequest;
+import com.spaceclub.board.service.PostService;
 import com.spaceclub.global.Authenticated;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.vo.JwtUser;
+import com.spaceclub.global.s3.S3Folder;
+import com.spaceclub.global.s3.S3ImageUploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,15 +39,15 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 @RequiredArgsConstructor
 public class PostController {
 
-    private final BoardService boardService;
+    private final PostService postService;
+    private final S3ImageUploader imageUploader;
 
-    @GetMapping("/{clubId}") //api/v1/boards/{clubId}?page={pageNum}&size={size}&sort=id,desc
+    @GetMapping("/{clubId}")
     public PageResponse<PostResponse, Post> getClubBoardPostsByPaging(
             @PageableDefault(sort = "id", direction = DESC) Pageable pageable,
             @PathVariable Long clubId,
             @Authenticated JwtUser jwtUser) {
-        // 게시글 페이징 조회
-        Page<Post> postPages = boardService.getClubBoardPostsByPaging(pageable, clubId, jwtUser.id());
+        Page<Post> postPages = postService.getClubBoardPostsByPaging(pageable, clubId, jwtUser.id());
         List<PostResponse> posts = postPages.getContent().stream()
                 .map(PostResponse::from)
                 .toList();
@@ -57,9 +60,8 @@ public class PostController {
             @PathVariable Long clubId,
             @PathVariable Long postId,
             @Authenticated JwtUser jwtUser) {
-        // 게시글 단건 조회
         Long userId = jwtUser.id();
-        Post post = boardService.getClubBoardPost(clubId, postId, userId);
+        Post post = postService.getClubBoardPost(clubId, postId, userId);
 
         return PostResponse.from(post);
     }
@@ -70,9 +72,20 @@ public class PostController {
             @RequestPart PostRequest postRequest,
             @PathVariable Long clubId,
             @Authenticated JwtUser jwtUser) {
-        // 게시글 생성
         Long userId = jwtUser.id();
-        Long postId = boardService.createClubBoardPost(clubId, postRequest, userId);
+
+        // 이미지가 존재할 경우
+        if (multipartFile != null) {
+            String postImageUrl = imageUploader.upload(multipartFile, S3Folder.POST_IMAGE);
+            Long postId = postService.createClubBoardPost(clubId, postRequest, userId, postImageUrl);
+
+            return ResponseEntity
+                    .status(CREATED)
+                    .location(URI.create("/api/v1/boards/posts/%d/%d".formatted(clubId, postId)))
+                    .build();
+        }
+        // 이미지가 존재하지 않을 경우
+        Long postId = postService.createClubBoardPost(clubId, postRequest, userId, null);
 
         return ResponseEntity
                 .status(CREATED)
@@ -83,12 +96,16 @@ public class PostController {
     @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void updateClubBoardPost(
             @RequestPart(required = false) MultipartFile multipartFile,
-            @RequestPart PostRequest postRequest,
+            @RequestPart PostUpdateRequest postRequest,
             @PathVariable Long postId,
             @Authenticated JwtUser jwtUser) {
-        // 게시글 수정
         Long userId = jwtUser.id();
-        boardService.updateClubBoardPost(postId, postRequest, userId);
+        if (multipartFile != null) {
+            String postImageUrl = imageUploader.upload(multipartFile, S3Folder.POST_IMAGE);
+            postService.updateClubBoardPost(postId, postRequest, userId, postImageUrl);
+            return;
+        }
+        postService.updateClubBoardPost(postId, postRequest, userId, null);
     }
 
     @DeleteMapping("/{postId}")
@@ -96,9 +113,8 @@ public class PostController {
     public void deleteClubBoardPost(
             @PathVariable Long postId,
             @Authenticated JwtUser jwtUser) {
-        // 게시글 삭제
         Long userId = jwtUser.id();
-        boardService.deleteClubBoardPost(postId, userId);
+        postService.deleteClubBoardPost(postId, userId);
     }
 
 }
