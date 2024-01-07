@@ -4,12 +4,14 @@ import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.domain.ClubUser;
 import com.spaceclub.club.domain.ClubUserRole;
 import com.spaceclub.user.repository.UserRepository;
+import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,18 +26,20 @@ import static com.spaceclub.user.UserTestFixture.user2;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@DataJpaTest
+@SpringBootTest
+@Transactional
 @DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.class)
 class ClubUserRepositoryTest {
 
     @Autowired
     private ClubUserRepository clubUserRepository;
-
     @Autowired
     private ClubRepository clubRepository;
-
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private EntityManager entityManager;
+
 
     @BeforeEach
     void setUp() {
@@ -44,8 +48,13 @@ class ClubUserRepositoryTest {
         clubUserRepository.save(club1User1Manager());
     }
 
+    @AfterEach
+    void resetAutoIncrementId() {
+        entityManager.createNativeQuery("ALTER TABLE CLUB ALTER COLUMN CLUB_ID RESTART WITH 1")
+                .executeUpdate();
+    }
+
     @Test
-    @DirtiesContext
     void 클럽_id로_클럽유저_조회에_성공한다() {
         // given
         clubRepository.save(club2());
@@ -60,7 +69,6 @@ class ClubUserRepositoryTest {
 
 
     @Test
-    @DirtiesContext
     void 클럽의_유저_조회에_성공한다() {
         // when
         Optional<ClubUser> getClubUser = clubUserRepository.findByClub_IdAndUserId(club1().getId(), user1().getId());
@@ -74,7 +82,6 @@ class ClubUserRepositoryTest {
     }
 
     @Test
-    @DirtiesContext
     void 클럽의_권한에_따른_인원수_조회에_성공한다() {
         // given
         userRepository.save(user2());
@@ -88,7 +95,6 @@ class ClubUserRepositoryTest {
     }
 
     @Test
-    @DirtiesContext
     void 유저에_따른_클럽유저_조회에_성공한다() {
         // given
         clubRepository.save(club2());

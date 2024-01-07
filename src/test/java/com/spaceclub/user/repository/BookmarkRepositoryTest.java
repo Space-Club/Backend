@@ -1,5 +1,6 @@
 package com.spaceclub.user.repository;
 
+import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.domain.Club;
 import com.spaceclub.club.repository.ClubRepository;
 import com.spaceclub.event.domain.Event;
@@ -8,27 +9,28 @@ import com.spaceclub.user.domain.Bookmark;
 import com.spaceclub.user.domain.Provider;
 import com.spaceclub.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.spaceclub.event.EventTestFixture.clubEvent;
 import static com.spaceclub.event.EventTestFixture.event1;
 import static com.spaceclub.event.EventTestFixture.showEvent;
-import static com.spaceclub.event.EventTestFixture.clubEvent;
 import static com.spaceclub.user.domain.Status.NOT_REGISTERED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.data.domain.Sort.Direction.DESC;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
-@DataJpaTest
-@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
+@SpringBootTest
+@Transactional
+@DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.class)
 class BookmarkRepositoryTest {
 
     @Autowired
