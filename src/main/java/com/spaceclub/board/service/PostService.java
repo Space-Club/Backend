@@ -18,11 +18,11 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    public Page<Post> getClubBoardPostsByPaging(Pageable pageable, Long clubId, Long userId) {
+    public Page<Post> getClubBoardPostsByPaging(Pageable pageable, Long clubId) {
         return postRepository.findByClubId(clubId, pageable);
     }
 
-    public Post getClubBoardPost(Long clubId, Long postId, Long userId) {
+    public Post getClubBoardPost(Long clubId, Long postId) {
         return postRepository.findByClubIdAndId(clubId, postId).orElseThrow();
     }
 
@@ -40,7 +40,7 @@ public class PostService {
     }
 
     @Transactional
-    public void updateClubBoardPost(Long postId, PostUpdateRequest postRequest, Long userId, String postImageUrl) {
+    public void updateClubBoardPost(Long postId, PostUpdateRequest postRequest, String postImageUrl) {
         boolean doesImageExists = postRequest.doesPostImageExist();
 
         switch (PostUpdateCommand.getCommand(doesImageExists, postImageUrl)) {
@@ -56,7 +56,7 @@ public class PostService {
     }
 
     @Transactional
-    public void deleteClubBoardPost(Long postId, Long userId) {
+    public void deleteClubBoardPost(Long postId) {
         postRepository.deleteById(postId);
     }
 

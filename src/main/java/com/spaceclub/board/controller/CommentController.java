@@ -38,12 +38,9 @@ public class CommentController {
     @GetMapping("/{postId}/comments")
     public SliceResponse<CommentResponse, Comment> getCommentsByPaging(
             @PageableDefault(sort = "createdAt", direction = DESC) Pageable pageable,
-            @PathVariable Long postId,
-            @Authenticated JwtUser jwtUser
+            @PathVariable Long postId
     ) {
-        // 댓글 페이징 조회
-        Long userId = jwtUser.id();
-        Slice<Comment> commentPages = commentService.getComments(postId, pageable, userId);
+        Slice<Comment> commentPages = commentService.getComments(postId, pageable);
         List<CommentResponse> comments = commentPages.getContent().stream()
                 .map(CommentResponse::of)
                 .toList();
@@ -51,15 +48,11 @@ public class CommentController {
         return new SliceResponse<>(comments, commentPages);
     }
 
-    @GetMapping("/{postId}/comments/{commentId}")
+    @GetMapping("/comments/{commentId}")
     public CommentResponse getSingleComment(
-            @PathVariable Long postId,
-            @PathVariable Long commentId,
-            @Authenticated JwtUser jwtUser
+            @PathVariable Long commentId
     ) {
-        // 댓글 단건 조회
-        Long userId = jwtUser.id();
-        Comment comment = commentService.getComment(postId, commentId, userId);
+        Comment comment = commentService.getComment(commentId);
 
         return CommentResponse.of(comment);
     }
@@ -70,38 +63,29 @@ public class CommentController {
             @PathVariable Long postId,
             @Authenticated JwtUser jwtUser
     ) {
-        // 댓글 생성
         Long userId = jwtUser.id();
         Long commentId = commentService.createComment(postId, commentRequest, userId);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .location(URI.create("/api/v1/boards/posts/%d/comments/%d".formatted(postId, commentId)))
+                .location(URI.create("/api/v1/boards/posts/comments/%d".formatted(commentId)))
                 .build();
     }
 
-    @PutMapping("/{postId}/comments/{commentId}")
+    @PutMapping("/comments/{commentId}")
     public void updateComment(
             @RequestBody CommentRequest commentRequest,
-            @PathVariable Long postId,
-            @PathVariable Long commentId,
-            @Authenticated JwtUser jwtUser
+            @PathVariable Long commentId
     ) {
-        // 댓글 수정
-        Long userId = jwtUser.id();
-        commentService.updateComment(postId, commentId, commentRequest, userId);
+        commentService.updateComment(commentId, commentRequest);
     }
 
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    @DeleteMapping("/{postId}/comments/{commentId}")
+    @DeleteMapping("/comments/{commentId}")
     public void deleteComment(
-            @PathVariable Long postId,
-            @PathVariable Long commentId,
-            @Authenticated JwtUser jwtUser
+            @PathVariable Long commentId
     ) {
-        // 댓글 삭제
-        Long userId = jwtUser.id();
-        commentService.deleteComment(postId, commentId, userId);
+        commentService.deleteComment(commentId);
     }
 
 }

@@ -1,0 +1,37 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:test;MODE=MySQL;NON_KEYWORDS=USER
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        auto_quote_keyword: true
+        show_sql: true
+        format_sql: true
+        highlight_sql: true
+        create_empty_composites:
+          enabled: true
+    defer-datasource-initialization: true
+s3:
+  bucket: space-club-image-bucket
+  iam:
+    access-key: accessKey
+    secret-key: secretKey
+    region: region
+  url: https://test.com/
+
+jwt:
+  header: access-token
+  issuer: space-club
+  client-secret: secret-key
+  expiry-seconds: 36000000  # 1시간
+  refresh-expiry-seconds: 1209600 # 2주
+
+web:
+  allowed-origins:
+    - http://localhost:5173

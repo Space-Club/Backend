@@ -45,9 +45,9 @@ public class PostController {
     @GetMapping("/{clubId}")
     public PageResponse<PostResponse, Post> getClubBoardPostsByPaging(
             @PageableDefault(sort = "id", direction = DESC) Pageable pageable,
-            @PathVariable Long clubId,
-            @Authenticated JwtUser jwtUser) {
-        Page<Post> postPages = postService.getClubBoardPostsByPaging(pageable, clubId, jwtUser.id());
+            @PathVariable Long clubId
+    ) {
+        Page<Post> postPages = postService.getClubBoardPostsByPaging(pageable, clubId);
         List<PostResponse> posts = postPages.getContent().stream()
                 .map(PostResponse::from)
                 .toList();
@@ -58,10 +58,10 @@ public class PostController {
     @GetMapping("/{clubId}/{postId}")
     public PostResponse getSingleClubBoardPost(
             @PathVariable Long clubId,
-            @PathVariable Long postId,
-            @Authenticated JwtUser jwtUser) {
-        Long userId = jwtUser.id();
-        Post post = postService.getClubBoardPost(clubId, postId, userId);
+
+            @PathVariable Long postId
+    ) {
+        Post post = postService.getClubBoardPost(clubId, postId);
 
         return PostResponse.from(post);
     }
@@ -97,24 +97,20 @@ public class PostController {
     public void updateClubBoardPost(
             @RequestPart(required = false) MultipartFile multipartFile,
             @RequestPart PostUpdateRequest postRequest,
-            @PathVariable Long postId,
-            @Authenticated JwtUser jwtUser) {
-        Long userId = jwtUser.id();
+            @PathVariable Long postId
+    ) {
         if (multipartFile != null) {
             String postImageUrl = imageUploader.upload(multipartFile, S3Folder.POST_IMAGE);
-            postService.updateClubBoardPost(postId, postRequest, userId, postImageUrl);
+            postService.updateClubBoardPost(postId, postRequest, postImageUrl);
             return;
         }
-        postService.updateClubBoardPost(postId, postRequest, userId, null);
+        postService.updateClubBoardPost(postId, postRequest, null);
     }
 
     @DeleteMapping("/{postId}")
     @ResponseStatus(code = NO_CONTENT)
-    public void deleteClubBoardPost(
-            @PathVariable Long postId,
-            @Authenticated JwtUser jwtUser) {
-        Long userId = jwtUser.id();
-        postService.deleteClubBoardPost(postId, userId);
+    public void deleteClubBoardPost(@PathVariable Long postId) {
+        postService.deleteClubBoardPost(postId);
     }
 
 }

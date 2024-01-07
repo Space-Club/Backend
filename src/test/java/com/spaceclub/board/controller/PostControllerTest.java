@@ -7,6 +7,7 @@ import com.spaceclub.board.controller.dto.PostRequest;
 import com.spaceclub.board.controller.dto.PostUpdateRequest;
 import com.spaceclub.board.service.PostService;
 import com.spaceclub.global.UserArgumentResolver;
+import com.spaceclub.global.config.WebConfig;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
 import com.spaceclub.global.s3.S3ImageUploader;
@@ -66,6 +67,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         value = PostController.class,
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+                        WebConfig.class,
                         AuthorizationInterceptor.class,
                         AuthenticationInterceptor.class
                 })
@@ -94,21 +96,18 @@ class PostControllerTest {
     void 게시글_전체_조회에_성공한다() throws Exception {
         List<Post> posts = List.of(
                 Post.builder()
-                        .id(1L)
                         .title("title1")
                         .content("content1")
                         .postImageUrl("postImageUrl1")
                         .authorId(1L)
                         .build(),
                 Post.builder()
-                        .id(2L)
                         .title("title2")
                         .content("content2")
                         .postImageUrl(null)
                         .authorId(1L)
                         .build(),
                 Post.builder()
-                        .id(3L)
                         .title("title3")
                         .content("content3")
                         .postImageUrl("postImageUrl3")
@@ -117,7 +116,7 @@ class PostControllerTest {
         );
 
         Page<Post> postPages = new PageImpl<>(posts);
-        given(postService.getClubBoardPostsByPaging(any(), any(), any())).willReturn(postPages);
+        given(postService.getClubBoardPostsByPaging(any(), any())).willReturn(postPages);
         Long clubId = 1L;
 
         mockMvc.perform(get("/api/v1/boards/posts/{clubId}", clubId)
@@ -177,13 +176,12 @@ class PostControllerTest {
     @WithMockUser
     void 게시글_단건_조회에_성공한다() throws Exception {
         Post post = Post.builder()
-                .id(1L)
                 .title("title1")
                 .content("content1")
                 .postImageUrl("postImageUrl1")
                 .authorId(1L)
                 .build();
-        given(postService.getClubBoardPost(any(), any(), any())).willReturn(post);
+        given(postService.getClubBoardPost(any(), any())).willReturn(post);
         Long clubId = 1L;
         Long postId = 1L;
 
@@ -320,7 +318,7 @@ class PostControllerTest {
     void 게시글_수정에_성공한다() throws Exception {
         Long postId = 1L;
         PostUpdateRequest postRequest = new PostUpdateRequest("title1", "content1", true);
-        doNothing().when(postService).updateClubBoardPost(any(Long.class), any(PostUpdateRequest.class), any(Long.class), any(String.class));
+        doNothing().when(postService).updateClubBoardPost(any(Long.class), any(PostUpdateRequest.class), any(String.class));
 
         MockMultipartFile multipartFile =
                 new MockMultipartFile("image", "image.png", MediaType.IMAGE_PNG_VALUE, "content".getBytes(StandardCharsets.UTF_8));
@@ -371,7 +369,7 @@ class PostControllerTest {
     @WithMockUser
     void 게시글_삭제에_성공한다() throws Exception {
         Long postId = 1L;
-        doNothing().when(postService).deleteClubBoardPost(any(Long.class), any(Long.class));
+        doNothing().when(postService).deleteClubBoardPost(any(Long.class));
 
         mockMvc.perform(delete("/api/v1/boards/posts/{postId}", postId)
                         .header(AUTHORIZATION, "access token")

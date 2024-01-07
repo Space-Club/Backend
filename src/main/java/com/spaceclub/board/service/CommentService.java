@@ -16,12 +16,12 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
 
-    public Comment getComment(Long postId, Long commentId, Long userId) {
-        return commentRepository.findById(commentId).orElseThrow();
+    public Slice<Comment> getComments(Long postId, Pageable pageable) {
+        return commentRepository.findByPostId(postId, pageable);
     }
 
-    public Slice<Comment> getComments(Long postId, Pageable pageable, Long userId) {
-        return commentRepository.findByPostId(postId, pageable);
+    public Comment getComment(Long commentId) {
+        return commentRepository.findById(commentId).orElseThrow();
     }
 
     @Transactional
@@ -37,13 +37,13 @@ public class CommentService {
     }
 
     @Transactional
-    public void updateComment(Long postId, Long commentId, CommentRequest commentRequest, Long userId) {
-        Comment comment = getComment(postId, commentId, userId);
+    public void updateComment(Long commentId, CommentRequest commentRequest) {
+        Comment comment = getComment(commentId);
         comment.updateComment(commentRequest.content(), commentRequest.isPrivate());
     }
 
     @Transactional
-    public void deleteComment(Long postId, Long commentId, Long userId) {
+    public void deleteComment(Long commentId) {
         commentRepository.deleteById(commentId);
     }
 
