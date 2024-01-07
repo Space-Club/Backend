@@ -14,6 +14,7 @@ import com.spaceclub.event.service.EventService;
 import com.spaceclub.event.service.UserEventService;
 import com.spaceclub.event.service.vo.EventCreateInfo;
 import com.spaceclub.global.UserArgumentResolver;
+import com.spaceclub.global.config.WebConfig;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -89,6 +90,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(value = EventController.class,
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+                        WebConfig.class,
                         AuthorizationInterceptor.class,
                         AuthenticationInterceptor.class
                 })

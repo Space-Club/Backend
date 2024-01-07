@@ -4,10 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.board.controller.domain.Post;
 import com.spaceclub.board.controller.dto.PostRequest;
-import com.spaceclub.board.service.BoardService;
+import com.spaceclub.board.controller.dto.PostUpdateRequest;
+import com.spaceclub.board.service.PostService;
 import com.spaceclub.global.UserArgumentResolver;
+import com.spaceclub.global.config.WebConfig;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
+import com.spaceclub.global.s3.S3ImageUploader;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +67,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         value = PostController.class,
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+                        WebConfig.class,
                         AuthorizationInterceptor.class,
                         AuthenticationInterceptor.class
                 })
@@ -79,7 +83,10 @@ class PostControllerTest {
     private ObjectMapper mapper;
 
     @MockBean
-    private BoardService boardService;
+    private PostService postService;
+
+    @MockBean
+    private S3ImageUploader imageUploader;
 
     @MockBean
     private UserArgumentResolver userArgumentResolver;
@@ -112,7 +119,7 @@ class PostControllerTest {
         );
 
         Page<Post> postPages = new PageImpl<>(posts);
-        given(boardService.getClubBoardPostsByPaging(any(), any(), any())).willReturn(postPages);
+        given(postService.getClubBoardPostsByPaging(any(), any())).willReturn(postPages);
         Long clubId = 1L;
 
         mockMvc.perform(get("/api/v1/boards/posts/{clubId}", clubId)
@@ -178,7 +185,7 @@ class PostControllerTest {
                 .postImageUrl("postImageUrl1")
                 .authorId(1L)
                 .build();
-        given(boardService.getClubBoardPost(any(), any(), any())).willReturn(post);
+        given(postService.getClubBoardPost(any(), any())).willReturn(post);
         Long clubId = 1L;
         Long postId = 1L;
 
@@ -226,7 +233,7 @@ class PostControllerTest {
     void 파일을_첨부한_게시글_생성에_성공한다() throws Exception {
         Long clubId = 1L;
         Long postId = 1L;
-        given(boardService.createClubBoardPost(any(), any(), any())).willReturn(1L);
+        given(postService.createClubBoardPost(any(), any(), any(), any())).willReturn(1L);
         PostRequest postRequest = new PostRequest("title1", "content1");
         MockMultipartFile multipartFile =
                 new MockMultipartFile("image", "image.png", MediaType.IMAGE_PNG_VALUE, "content".getBytes(StandardCharsets.UTF_8));
@@ -272,7 +279,7 @@ class PostControllerTest {
     void 파일을_첨부하지_않은_게시글_생성에_성공한다() throws Exception {
         Long clubId = 1L;
         Long postId = 1L;
-        given(boardService.createClubBoardPost(any(), any(), any())).willReturn(1L);
+        given(postService.createClubBoardPost(any(), any(), any(), any())).willReturn(1L);
         PostRequest postRequest = new PostRequest("title1", "content1");
         MockMultipartFile postRequestFile =
                 new MockMultipartFile("postRequest", "", MediaType.APPLICATION_JSON_VALUE, mapper.writeValueAsString(postRequest).getBytes(StandardCharsets.UTF_8));
@@ -314,8 +321,8 @@ class PostControllerTest {
     @WithMockUser
     void 게시글_수정에_성공한다() throws Exception {
         Long postId = 1L;
-        PostRequest postRequest = new PostRequest("title1", "content1");
-        doNothing().when(boardService).updateClubBoardPost(any(Long.class), any(PostRequest.class), any(Long.class));
+        PostUpdateRequest postRequest = new PostUpdateRequest("title1", "content1", true);
+        doNothing().when(postService).updateClubBoardPost(any(Long.class), any(PostUpdateRequest.class), any(String.class));
 
         MockMultipartFile multipartFile =
                 new MockMultipartFile("image", "image.png", MediaType.IMAGE_PNG_VALUE, "content".getBytes(StandardCharsets.UTF_8));
@@ -355,7 +362,8 @@ class PostControllerTest {
                                 ),
                                 requestPartFields("postRequest",
                                         fieldWithPath("title").type(STRING).description("게시글 제목"),
-                                        fieldWithPath("content").type(STRING).description("게시글 내용")
+                                        fieldWithPath("content").type(STRING).description("게시글 내용"),
+                                        fieldWithPath("doesPostImageExist").type(BOOLEAN).description("게시글 이미지 존재 여부")
                                 )
                         )
                 );
@@ -365,7 +373,7 @@ class PostControllerTest {
     @WithMockUser
     void 게시글_삭제에_성공한다() throws Exception {
         Long postId = 1L;
-        doNothing().when(boardService).deleteClubBoardPost(any(Long.class), any(Long.class));
+        doNothing().when(postService).deleteClubBoardPost(any(Long.class));
 
         mockMvc.perform(delete("/api/v1/boards/posts/{postId}", postId)
                         .header(AUTHORIZATION, "access token")

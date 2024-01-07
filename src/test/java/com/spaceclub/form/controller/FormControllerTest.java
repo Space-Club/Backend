@@ -10,6 +10,7 @@ import com.spaceclub.form.service.FormService;
 import com.spaceclub.form.service.vo.FormCreateInfo;
 import com.spaceclub.form.service.vo.FormGetInfo;
 import com.spaceclub.global.UserArgumentResolver;
+import com.spaceclub.global.config.WebConfig;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -56,6 +57,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(value = FormController.class,
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+                        WebConfig.class,
                         AuthorizationInterceptor.class,
                         AuthenticationInterceptor.class
                 })

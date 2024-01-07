@@ -1,12 +1,85 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
   profiles:
     active: test
-
   jpa:
+    open-in-view: false
+
+  mail:
+    host: smtp.gmail.com
+    port: 587 # 587 (TLS enabled) or 465 (SSL enabled)
+    username: username
+    password: password
     properties:
-      hibernate:
-        auto_quote_keyword: true
-        show_sql: true
-        format_sql: true
-        highlight_sql: true
-    defer-datasource-initialization: true
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+        mime:
+          charset: UTF-8
+        transport:
+          protocol: smtp
+
+  thymeleaf:
+    cache: false
+    check-template-location: true
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML5
+
+mail:
+  properties:
+    background-url: static/images/backgroundImage.jpeg
+    logo-url: static/images/SpaceClub-Logo.png
+    name-en: SPACE CLUB
+    name-ko: 스페이스 클럽
+    about-us: 프로그래머스 Skrrr 팀입니다.
+    location: "서울 강남구 강남대로 388, 강남센타빌딩 지하2층"
+    phone: (+82) 010-1234-5678
+    site-url: https://spaceclub.vercel.app/
+
+s3:
+  valid-extensions:
+    - jpg
+    - jpeg
+    - png
+
+space-club:
+  system:
+    max-affordable-seconds: 3
+
+interceptor:
+  token-prefix: "Bearer "
+
+  path-to-exclude:
+    - path: /api/v1/users
+      method: POST
+
+    - path: /api/v1/clubs/invites/
+      method: GET
+
+    - path: /api/v1/events
+      method: GET
+
+    - path: /api/v1/events/searches
+      method: GET
+
+    - path: /api/v1/users/oauth
+      method: POST
+
+    - path: /api/v1/events/banner
+      method: GET
+
+    - path: /api/v1/mails/retry-all-failed-emails
+      method: POST
+
+web:
+  interceptor-path-pattern: /api/v1/**
+
+bad-word:
+  path: src/main/resources/secrets/bad_word_list.txt

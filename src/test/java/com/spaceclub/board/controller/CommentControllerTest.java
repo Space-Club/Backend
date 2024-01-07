@@ -4,8 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.board.controller.domain.Comment;
 import com.spaceclub.board.controller.dto.CommentRequest;
-import com.spaceclub.board.service.BoardService;
+import com.spaceclub.board.service.CommentService;
 import com.spaceclub.global.UserArgumentResolver;
+import com.spaceclub.global.config.WebConfig;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -17,6 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -58,6 +60,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         value = CommentController.class,
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+                        WebConfig.class,
                         AuthorizationInterceptor.class,
                         AuthenticationInterceptor.class
                 })
@@ -73,7 +76,7 @@ class CommentControllerTest {
     private ObjectMapper mapper;
 
     @MockBean
-    private BoardService boardService;
+    private CommentService commentService;
 
     @MockBean
     private UserArgumentResolver userArgumentResolver;
@@ -107,7 +110,7 @@ class CommentControllerTest {
         );
 
         Slice<Comment> commentPages = new PageImpl<>(comments);
-        given(boardService.getComments(any(), any(), any())).willReturn(commentPages);
+        given(commentService.getComments(any(Long.class), any(Pageable.class))).willReturn(commentPages);
 
         mockMvc.perform(get("/api/v1/boards/posts/{postId}/comments", postId)
                         .header(AUTHORIZATION, "access token")
@@ -170,9 +173,9 @@ class CommentControllerTest {
                 .isPrivate(false)
                 .postId(postId)
                 .build();
-        given(boardService.getComment(any(), any(), any())).willReturn(comment);
+        given(commentService.getComment(any(Long.class))).willReturn(comment);
 
-        mockMvc.perform(get("/api/v1/boards/posts/{postId}/comments/{commentId}", postId, commentId)
+        mockMvc.perform(get("/api/v1/boards/posts/comments/{commentId}", commentId)
                         .header(AUTHORIZATION, "access token")
                 )
                 .andExpect(status().isOk())
@@ -192,7 +195,6 @@ class CommentControllerTest {
                                         headerWithName(AUTHORIZATION).description("액세스 토큰")
                                 ),
                                 pathParameters(
-                                        parameterWithName("postId").description("게시글 아이디"),
                                         parameterWithName("commentId").description("댓글 아이디")
                                 ),
                                 responseFields(
@@ -216,7 +218,7 @@ class CommentControllerTest {
         Long postId = 1L;
         CommentRequest commentRequest = new CommentRequest("content1", false);
 
-        given(boardService.createComment(any(), any(), any())).willReturn(commentId);
+        given(commentService.createComment(any(), any(), any())).willReturn(commentId);
 
         mockMvc.perform(post("/api/v1/boards/posts/{postId}/comments", postId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -225,7 +227,7 @@ class CommentControllerTest {
                         .with(csrf())
                 )
                 .andExpect(status().isCreated())
-                .andExpect(header().stringValues("Location", "/api/v1/boards/posts/%d/comments/%d".formatted(postId, commentId)))
+                .andExpect(header().stringValues("Location", "/api/v1/boards/posts/comments/%d".formatted(commentId)))
                 .andDo(
                         document("comment/create",
                                 preprocessRequest(prettyPrint()),
@@ -247,13 +249,12 @@ class CommentControllerTest {
     @Test
     @WithMockUser
     void 댓글_수정에_성공한다() throws Exception {
-        Long postId = 1L;
         Long commentId = 1L;
         CommentRequest commentRequest = new CommentRequest("content1", false);
 
-        doNothing().when(boardService).updateComment(any(), any(), any(), any());
+        doNothing().when(commentService).updateComment(any(Long.class), any(CommentRequest.class));
 
-        mockMvc.perform(put("/api/v1/boards/posts/{postId}/comments/{commentId}", postId, commentId)
+        mockMvc.perform(put("/api/v1/boards/posts/comments/{commentId}", commentId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(commentRequest))
                         .header(AUTHORIZATION, "access token")
@@ -268,7 +269,6 @@ class CommentControllerTest {
                                         headerWithName(AUTHORIZATION).description("액세스 토큰")
                                 ),
                                 pathParameters(
-                                        parameterWithName("postId").description("게시글 아이디"),
                                         parameterWithName("commentId").description("댓글 아이디")
                                 ),
                                 requestFields(
@@ -277,17 +277,17 @@ class CommentControllerTest {
                                 )
                         )
                 );
+
     }
 
     @Test
     @WithMockUser
     void 댓글_삭제에_성공한다() throws Exception {
-        Long postId = 1L;
         Long commentId = 1L;
 
-        doNothing().when(boardService).deleteComment(any(), any(), any());
+        doNothing().when(commentService).deleteComment(any(Long.class));
 
-        mockMvc.perform(delete("/api/v1/boards/posts/{postId}/comments/{commentId}", postId, commentId)
+        mockMvc.perform(delete("/api/v1/boards/posts/comments/{commentId}", commentId)
                         .header(AUTHORIZATION, "access token")
                         .with(csrf())
                 )
@@ -300,7 +300,6 @@ class CommentControllerTest {
                                         headerWithName(AUTHORIZATION).description("액세스 토큰")
                                 ),
                                 pathParameters(
-                                        parameterWithName("postId").description("게시글 아이디"),
                                         parameterWithName("commentId").description("댓글 아이디")
                                 )
                         )

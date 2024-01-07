@@ -5,6 +5,7 @@ import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.club.service.ClubEventService;
 import com.spaceclub.event.service.vo.ClubEventOverviewGetInfo;
 import com.spaceclub.global.UserArgumentResolver;
+import com.spaceclub.global.config.WebConfig;
 import com.spaceclub.global.config.s3.S3Properties;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -56,11 +58,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         value = ClubEventController.class,
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+                        WebConfig.class,
                         AuthorizationInterceptor.class,
                         AuthenticationInterceptor.class
                 })
         })
 @AutoConfigureRestDocs
+@ActiveProfiles("local")
 @DisplayNameGeneration(SpaceClubCustomDisplayNameGenerator.class)
 class ClubEventControllerTest {
 
