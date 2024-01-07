@@ -87,18 +87,21 @@ class CommentControllerTest {
         Long postId = 1L;
         List<Comment> comments = List.of(
                 Comment.builder()
+                        .id(1L)
                         .content("content1")
                         .authorId(1L)
                         .isPrivate(false)
                         .postId(postId)
                         .build(),
                 Comment.builder()
+                        .id(2L)
                         .content("content2")
                         .authorId(1L)
                         .isPrivate(false)
                         .postId(postId)
                         .build(),
                 Comment.builder()
+                        .id(3L)
                         .content("content3")
                         .authorId(2L)
                         .isPrivate(true)
@@ -164,6 +167,7 @@ class CommentControllerTest {
         Long postId = 1L;
         Long commentId = 1L;
         Comment comment = Comment.builder()
+                .id(commentId)
                 .content("content1")
                 .authorId(1L)
                 .isPrivate(false)

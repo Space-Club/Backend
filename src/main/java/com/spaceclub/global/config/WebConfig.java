@@ -15,7 +15,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
-@Profile({"develop", "local"})
 @Configuration
 @EnableScheduling
 @RequiredArgsConstructor

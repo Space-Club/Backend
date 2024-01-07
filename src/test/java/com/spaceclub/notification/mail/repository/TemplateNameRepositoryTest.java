@@ -4,24 +4,37 @@ import com.spaceclub.notification.mail.domain.MailHistory;
 import com.spaceclub.notification.mail.domain.Template;
 import com.spaceclub.notification.mail.domain.TemplateName;
 import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 
-@DataJpaTest
-@DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
+@SpringBootTest
+@Transactional
+@ActiveProfiles("test")
 class TemplateNameRepositoryTest {
 
     @Autowired
-    EntityManager em;
+    private TemplateRepository templateRepository;
+    @Autowired
+    private MailTrackerRepository mailTrackerRepository;
+    @Autowired
+    private EntityManager entityManager;
+
+    @AfterEach
+    void resetAutoIncrementId() {
+        entityManager.createNativeQuery("ALTER TABLE TEMPLATE ALTER COLUMN template_id RESTART WITH 1")
+                .executeUpdate();
+    }
 
     @BeforeEach
     void setUp() {
@@ -31,6 +44,7 @@ class TemplateNameRepositoryTest {
         Template template2 = Template.builder()
                 .template("template 2")
                 .build();
+        templateRepository.saveAll(List.of(template1, template2));
 
         MailHistory mailHistory1 = MailHistory.builder()
                 .addresses("abcd@naver.com")
@@ -54,28 +68,17 @@ class TemplateNameRepositoryTest {
                 .isSent(false)
                 .build();
 
-        em.persist(mailHistory1);
-        em.persist(mailHistory2);
-        em.persist(mailHistory3);
-
-        em.persist(template1);
-        em.persist(template2);
-
-        em.flush();
-        em.clear();
+        mailTrackerRepository.saveAll(List.of(mailHistory1, mailHistory2, mailHistory3));
     }
 
     @ParameterizedTest
     @CsvSource({"EVENT_STATUS_CHANGED,template 2", "WELCOME,template 1"})
     void findByTemplateName(TemplateName templateName, String expectedTemplate) {
         // when
-        String singleResult = em.createQuery("select distinct t.template from Template t " +
-                        "join fetch MailHistory m on m.templateId = t.id " +
-                        "where m.templateName = :templateName", String.class)
-                .setParameter("templateName", templateName)
-                .getSingleResult();
+        String actualTemplate = templateRepository.findTemplateByTemplateName(templateName);
 
         // then
-        assertThat(singleResult).isEqualTo(expectedTemplate);
+        assertThat(actualTemplate).isEqualTo(expectedTemplate);
     }
+
 }

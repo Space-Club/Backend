@@ -36,7 +36,8 @@ public class Post extends BaseTimeEntity {
     private Long clubId;
 
     @Builder
-    private Post(String title, String content, String postImageUrl, Long authorId, Long clubId) {
+    private Post(Long id, String title, String content, String postImageUrl, Long authorId, Long clubId) {
+        this.id = id;
         this.title = title;
         this.content = content;
         this.postImageUrl = postImageUrl;

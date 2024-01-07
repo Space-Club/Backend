@@ -32,7 +32,8 @@ public class Comment extends BaseTimeEntity {
     private Long postId;
 
     @Builder
-    private Comment(String content, Long authorId, boolean isPrivate, Long postId) {
+    private Comment(Long id, String content, Long authorId, boolean isPrivate, Long postId) {
+        this.id = id;
         this.content = content;
         this.authorId = authorId;
         this.isPrivate = isPrivate;

@@ -96,18 +96,21 @@ class PostControllerTest {
     void 게시글_전체_조회에_성공한다() throws Exception {
         List<Post> posts = List.of(
                 Post.builder()
+                        .id(1L)
                         .title("title1")
                         .content("content1")
                         .postImageUrl("postImageUrl1")
                         .authorId(1L)
                         .build(),
                 Post.builder()
+                        .id(2L)
                         .title("title2")
                         .content("content2")
                         .postImageUrl(null)
                         .authorId(1L)
                         .build(),
                 Post.builder()
+                        .id(3L)
                         .title("title3")
                         .content("content3")
                         .postImageUrl("postImageUrl3")
@@ -176,6 +179,7 @@ class PostControllerTest {
     @WithMockUser
     void 게시글_단건_조회에_성공한다() throws Exception {
         Post post = Post.builder()
+                .id(1L)
                 .title("title1")
                 .content("content1")
                 .postImageUrl("postImageUrl1")
