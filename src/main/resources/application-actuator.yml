@@ -1,0 +1,32 @@
+management:
+  info:
+    java: ## 자바 런타임 정보
+      enabled: true
+    os:  ## OS 정보
+      enabled: true
+    env:  ## Environment에서 info.로 시작하는정보
+      enabled: true
+    git: ## git 정보
+      mode: full
+    build: ## 빌드 정보
+      enabled: true
+
+  endpoint:
+    health:
+      show-components: always
+
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+info:
+  app:
+    name: space-club-backend
+    company: space-club
+
+## 톰캣의 최대 쓰레드, 사용 쓰레드 수 포함 다양 메트릭 확인 가능
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true
