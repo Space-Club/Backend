@@ -3,8 +3,10 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+
   profiles:
     active: local
+
   jpa:
     open-in-view: false
 
@@ -31,6 +33,9 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
     mode: HTML5
+
+  config:
+    import: classpath:application-actuator.yml
 
 mail:
   properties:
