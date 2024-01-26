@@ -1,10 +1,10 @@
 package com.spaceclub.board.controller;
 
-import com.spaceclub.board.controller.domain.Post;
 import com.spaceclub.board.controller.dto.PostRequest;
 import com.spaceclub.board.controller.dto.PostResponse;
 import com.spaceclub.board.controller.dto.PostUpdateRequest;
 import com.spaceclub.board.service.PostService;
+import com.spaceclub.board.service.vo.PostInfo;
 import com.spaceclub.global.Authenticated;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.vo.JwtUser;
@@ -43,13 +43,13 @@ public class PostController {
     private final S3ImageUploader imageUploader;
 
     @GetMapping("/{clubId}")
-    public PageResponse<PostResponse, Post> getClubBoardPostsByPaging(
+    public PageResponse<PostResponse, PostInfo> getClubBoardPostsByPaging(
             @PageableDefault(sort = "id", direction = DESC) Pageable pageable,
             @PathVariable Long clubId
     ) {
-        Page<Post> postPages = postService.getClubBoardPostsByPaging(pageable, clubId);
+        Page<PostInfo> postPages = postService.getClubBoardPostsByPaging(pageable, clubId);
         List<PostResponse> posts = postPages.getContent().stream()
-                .map(PostResponse::from)
+                .map(post -> PostResponse.from(post, imageUploader.getBucketUrl()))
                 .toList();
 
         return new PageResponse<>(posts, postPages);
@@ -58,12 +58,11 @@ public class PostController {
     @GetMapping("/{clubId}/{postId}")
     public PostResponse getSingleClubBoardPost(
             @PathVariable Long clubId,
-
             @PathVariable Long postId
     ) {
-        Post post = postService.getClubBoardPost(clubId, postId);
+        PostInfo postInfo = postService.getClubBoardPost(clubId, postId);
 
-        return PostResponse.from(post);
+        return PostResponse.from(postInfo, imageUploader.getBucketUrl());
     }
 
     @PostMapping(value = "/{clubId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

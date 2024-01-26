@@ -71,4 +71,8 @@ public class S3ImageUploader {
         if (invalidExtension) throw new MultipartException(INVALID_FILE_EXTENSION.toString());
     }
 
+    public String getBucketUrl() {
+        return s3Properties.url();
+    }
+
 }

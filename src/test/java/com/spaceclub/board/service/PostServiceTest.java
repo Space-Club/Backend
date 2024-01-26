@@ -5,6 +5,9 @@ import com.spaceclub.board.controller.domain.Post;
 import com.spaceclub.board.controller.dto.PostRequest;
 import com.spaceclub.board.controller.dto.PostUpdateRequest;
 import com.spaceclub.board.repository.PostRepository;
+import com.spaceclub.board.service.vo.PostInfo;
+import com.spaceclub.user.service.UserService;
+import com.spaceclub.user.service.vo.UserProfile;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +15,7 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +25,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
 @Transactional
@@ -33,6 +38,9 @@ class PostServiceTest {
     private PostRepository postRepository;
     @Autowired
     private EntityManager entityManager;
+
+    @MockBean
+    private UserService userService;
 
     @AfterEach
     void resetAutoIncrementId() {
@@ -62,11 +70,14 @@ class PostServiceTest {
     @Test
     void 게시글_페이징_조회에_성공한다() {
         // given
+        UserProfile userProfile = new UserProfile("username", "phoneNumber", "email", "profileImageUrl");
+        given(userService.getProfile(1L)).willReturn(userProfile);
+
         PageRequest pageRequest = PageRequest.of(0, 10);
         Long clubId = 1L;
 
         // when
-        Page<Post> posts = postService.getClubBoardPostsByPaging(pageRequest, clubId);
+        Page<PostInfo> posts = postService.getClubBoardPostsByPaging(pageRequest, clubId);
 
         // then
         assertAll(
@@ -80,16 +91,21 @@ class PostServiceTest {
     @Test
     void 게시글_단건_조회에_성공한다() {
         // given
+        UserProfile userProfile = new UserProfile("username", "phoneNumber", "email", "profileImageUrl");
+        given(userService.getProfile(1L)).willReturn(userProfile);
+
         Long clubId = 1L;
         Long postId = 2L;
 
         // when
-        Post clubBoardPost = postService.getClubBoardPost(clubId, postId);
+        PostInfo clubBoardPost = postService.getClubBoardPost(clubId, postId);
 
         // then
         assertAll(
                 () -> assertThat(clubBoardPost).extracting("content").isEqualTo("content2"),
-                () -> assertThat(clubBoardPost).extracting("postImageUrl").isEqualTo("imageUrl2")
+                () -> assertThat(clubBoardPost).extracting("postImageUrl").isEqualTo("imageUrl2"),
+                () -> assertThat(clubBoardPost).extracting("author").isEqualTo("username"),
+                () -> assertThat(clubBoardPost).extracting("authorImageUrl").isEqualTo("profileImageUrl")
         );
     }
 

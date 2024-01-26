@@ -1,6 +1,6 @@
 package com.spaceclub.board.controller.dto;
 
-import com.spaceclub.board.controller.domain.Comment;
+import com.spaceclub.board.service.vo.CommentInfo;
 
 import java.time.LocalDateTime;
 
@@ -15,16 +15,16 @@ public record CommentResponse(
         boolean isPrivate
 ) {
 
-    public static CommentResponse of(Comment comment) {
+    public static CommentResponse of(CommentInfo commentInfo, String bucketUrl) {
         return new CommentResponse(
-                comment.getId(),
-                comment.getContent(),
-                comment.getAuthorId(),
-                "authorName",
-                "authorImageUrl",
-                LocalDateTime.of(2023, 12, 31, 12, 0, 0),
-                LocalDateTime.of(2023, 12, 31, 12, 0, 0),
-                comment.isPrivate()
+                commentInfo.commentId(),
+                commentInfo.content(),
+                commentInfo.authorId(),
+                commentInfo.author(),
+                commentInfo.authorImageUrl() == null ? null : bucketUrl + commentInfo.authorImageUrl(),
+                commentInfo.createdDate(),
+                commentInfo.lastModifiedDate(),
+                commentInfo.isPrivate()
         );
     }
 
