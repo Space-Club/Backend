@@ -5,10 +5,13 @@ import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.board.controller.domain.Comment;
 import com.spaceclub.board.controller.dto.CommentRequest;
 import com.spaceclub.board.service.CommentService;
+import com.spaceclub.board.service.vo.CommentInfo;
 import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.config.WebConfig;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
+import com.spaceclub.global.s3.S3ImageUploader;
+import com.spaceclub.user.service.vo.UserProfile;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +20,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -79,6 +83,9 @@ class CommentControllerTest {
     private CommentService commentService;
 
     @MockBean
+    private S3ImageUploader s3ImageUploader;
+
+    @MockBean
     private UserArgumentResolver userArgumentResolver;
 
     @Test
@@ -92,6 +99,8 @@ class CommentControllerTest {
                         .authorId(1L)
                         .isPrivate(false)
                         .postId(postId)
+                        .createdAt(LocalDateTime.of(2024, 1, 1, 0, 0))
+                        .lastModifiedAt(LocalDateTime.of(2024, 1, 1, 0, 0))
                         .build(),
                 Comment.builder()
                         .id(2L)
@@ -99,6 +108,8 @@ class CommentControllerTest {
                         .authorId(1L)
                         .isPrivate(false)
                         .postId(postId)
+                        .createdAt(LocalDateTime.of(2024, 1, 1, 0, 0))
+                        .lastModifiedAt(LocalDateTime.of(2024, 1, 1, 0, 0))
                         .build(),
                 Comment.builder()
                         .id(3L)
@@ -106,10 +117,13 @@ class CommentControllerTest {
                         .authorId(2L)
                         .isPrivate(true)
                         .postId(postId)
+                        .createdAt(LocalDateTime.of(2024, 1, 1, 0, 0))
+                        .lastModifiedAt(LocalDateTime.of(2024, 1, 1, 0, 0))
                         .build()
         );
-
-        Slice<Comment> commentPages = new PageImpl<>(comments);
+        UserProfile userProfile = new UserProfile("authorName", "authorPhoneNumber", "authorEmail", "authorImageUrl");
+        List<CommentInfo> commentInfos = comments.stream().map(comment -> CommentInfo.of(comment, userProfile)).toList();
+        Page<CommentInfo> commentPages = new PageImpl<>(commentInfos);
         given(commentService.getComments(any(Long.class), any(Pageable.class))).willReturn(commentPages);
 
         mockMvc.perform(get("/api/v1/boards/posts/{postId}/comments", postId)
@@ -120,11 +134,11 @@ class CommentControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.size()").value(comments.size()))
-                .andExpect(jsonPath("$.sliceData.first").value(true))
-                .andExpect(jsonPath("$.sliceData.last").value(true))
-                .andExpect(jsonPath("$.sliceData.number").value(0))
-                .andExpect(jsonPath("$.sliceData.size").value(comments.size()))
-                .andExpect(jsonPath("$.sliceData.numberOfElements").value(comments.size()))
+                .andExpect(jsonPath("$.pageData.first").value(true))
+                .andExpect(jsonPath("$.pageData.last").value(true))
+                .andExpect(jsonPath("$.pageData.pageNumber").value(0))
+                .andExpect(jsonPath("$.pageData.size").value(comments.size()))
+                .andExpect(jsonPath("$.pageData.totalElements").value(comments.size()))
                 .andDo(
                         document("comment/getCommentsByPaging",
                                 preprocessRequest(prettyPrint()),
@@ -150,12 +164,13 @@ class CommentControllerTest {
                                         fieldWithPath("data[].createdDate").type(STRING).description("댓글 작성일"),
                                         fieldWithPath("data[].lastModifiedDate").type(STRING).description("댓글 마지막 수정일"),
                                         fieldWithPath("data[].isPrivate").type(BOOLEAN).description("비밀 댓글 여부"),
-                                        fieldWithPath("sliceData").type(OBJECT).description("페이지 정보"),
-                                        fieldWithPath("sliceData.first").type(BOOLEAN).description("첫 페이지 여부"),
-                                        fieldWithPath("sliceData.last").type(BOOLEAN).description("마지막 페이지 여부"),
-                                        fieldWithPath("sliceData.number").type(NUMBER).description("현재 페이지 번호"),
-                                        fieldWithPath("sliceData.size").type(NUMBER).description("페이지 size (default 10)"),
-                                        fieldWithPath("sliceData.numberOfElements").type(NUMBER).description("페이지 내 댓글 개수")
+                                        fieldWithPath("pageData").type(OBJECT).description("페이지 정보"),
+                                        fieldWithPath("pageData.totalPages").type(NUMBER).description("총 페이지"),
+                                        fieldWithPath("pageData.first").type(BOOLEAN).description("첫 페이지 여부"),
+                                        fieldWithPath("pageData.last").type(BOOLEAN).description("마지막 페이지 여부"),
+                                        fieldWithPath("pageData.pageNumber").type(NUMBER).description("현재 페이지 번호"),
+                                        fieldWithPath("pageData.size").type(NUMBER).description("페이지 size (default 10)"),
+                                        fieldWithPath("pageData.totalElements").type(NUMBER).description("페이지 내 댓글 개수")
                                 )
                         )
                 );
@@ -172,8 +187,14 @@ class CommentControllerTest {
                 .authorId(1L)
                 .isPrivate(false)
                 .postId(postId)
+                .createdAt(LocalDateTime.of(2024, 1, 1, 0, 0))
+                .lastModifiedAt(LocalDateTime.of(2024, 1, 1, 0, 0))
                 .build();
-        given(commentService.getComment(any(Long.class))).willReturn(comment);
+        UserProfile userProfile = new UserProfile("authorName", "authorPhoneNumber", "authorEmail", "authorImageUrl");
+        given(commentService.getComment(any(Long.class))).willReturn(CommentInfo.of(comment, userProfile));
+
+        String bucketUrl = "spaceclub.site/";
+        given(s3ImageUploader.getBucketUrl()).willReturn(bucketUrl);
 
         mockMvc.perform(get("/api/v1/boards/posts/comments/{commentId}", commentId)
                         .header(AUTHORIZATION, "access token")
@@ -182,10 +203,10 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$.commentId").value(commentId))
                 .andExpect(jsonPath("$.content").value(comment.getContent()))
                 .andExpect(jsonPath("$.authorId").value(comment.getAuthorId()))
-                .andExpect(jsonPath("$.author").value("authorName"))
-                .andExpect(jsonPath("$.authorImageUrl").value("authorImageUrl"))
-                .andExpect(jsonPath("$.createdDate").value("2023-12-31T12:00:00"))
-                .andExpect(jsonPath("$.lastModifiedDate").value("2023-12-31T12:00:00"))
+                .andExpect(jsonPath("$.author").value(userProfile.username()))
+                .andExpect(jsonPath("$.authorImageUrl").value(bucketUrl + userProfile.profileImageUrl()))
+                .andExpect(jsonPath("$.createdDate").value("2024-01-01T00:00:00"))
+                .andExpect(jsonPath("$.lastModifiedDate").value("2024-01-01T00:00:00"))
                 .andExpect(jsonPath("$.isPrivate").value(comment.isPrivate()))
                 .andDo(
                         document("comment/getSingleComment",

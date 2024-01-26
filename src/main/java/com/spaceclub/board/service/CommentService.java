@@ -3,9 +3,11 @@ package com.spaceclub.board.service;
 import com.spaceclub.board.controller.domain.Comment;
 import com.spaceclub.board.controller.dto.CommentRequest;
 import com.spaceclub.board.repository.CommentRepository;
+import com.spaceclub.board.service.vo.CommentInfo;
+import com.spaceclub.user.service.UserProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,13 +17,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final UserProvider userProvider;
 
-    public Slice<Comment> getComments(Long postId, Pageable pageable) {
-        return commentRepository.findByPostId(postId, pageable);
+    public Page<CommentInfo> getComments(Long postId, Pageable pageable) {
+        return commentRepository.findByPostId(postId, pageable)
+                .map(comment -> CommentInfo.of(comment, userProvider.getProfile(comment.getAuthorId())));
     }
 
-    public Comment getComment(Long commentId) {
-        return commentRepository.findById(commentId).orElseThrow();
+    public CommentInfo getComment(Long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow();
+
+        return CommentInfo.of(comment, userProvider.getProfile(comment.getAuthorId()));
     }
 
     @Transactional
@@ -38,7 +44,7 @@ public class CommentService {
 
     @Transactional
     public void updateComment(Long commentId, CommentRequest commentRequest) {
-        Comment comment = getComment(commentId);
+        Comment comment = commentRepository.findById(commentId).orElseThrow();
         comment.updateComment(commentRequest.content(), commentRequest.isPrivate());
     }
 

@@ -6,11 +6,13 @@ import com.spaceclub.board.controller.domain.Post;
 import com.spaceclub.board.controller.dto.PostRequest;
 import com.spaceclub.board.controller.dto.PostUpdateRequest;
 import com.spaceclub.board.service.PostService;
+import com.spaceclub.board.service.vo.PostInfo;
 import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.config.WebConfig;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
 import com.spaceclub.global.s3.S3ImageUploader;
+import com.spaceclub.user.service.vo.UserProfile;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -101,6 +104,8 @@ class PostControllerTest {
                         .content("content1")
                         .postImageUrl("postImageUrl1")
                         .authorId(1L)
+                        .createdAt(LocalDateTime.of(2024, 1, 1, 0, 0))
+                        .lastModifiedAt(LocalDateTime.of(2024, 1, 1, 0, 0))
                         .build(),
                 Post.builder()
                         .id(2L)
@@ -108,6 +113,8 @@ class PostControllerTest {
                         .content("content2")
                         .postImageUrl(null)
                         .authorId(1L)
+                        .createdAt(LocalDateTime.of(2024, 1, 1, 0, 0))
+                        .lastModifiedAt(LocalDateTime.of(2024, 1, 1, 0, 0))
                         .build(),
                 Post.builder()
                         .id(3L)
@@ -115,10 +122,14 @@ class PostControllerTest {
                         .content("content3")
                         .postImageUrl("postImageUrl3")
                         .authorId(2L)
+                        .createdAt(LocalDateTime.of(2024, 1, 1, 0, 0))
+                        .lastModifiedAt(LocalDateTime.of(2024, 1, 1, 0, 0))
                         .build()
         );
 
-        Page<Post> postPages = new PageImpl<>(posts);
+        UserProfile userProfile = new UserProfile("authorName", "authorPhoneNumber", "authorEmail", "authorImageUrl");
+        List<PostInfo> postInfos = posts.stream().map(post -> PostInfo.of(post, userProfile)).toList();
+        Page<PostInfo> postPages = new PageImpl<>(postInfos);
         given(postService.getClubBoardPostsByPaging(any(), any())).willReturn(postPages);
         Long clubId = 1L;
 
@@ -130,6 +141,8 @@ class PostControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.size()").value(posts.size()))
+                .andExpect(jsonPath("$.data[0].createdDate").value("2024-01-01T00:00:00"))
+                .andExpect(jsonPath("$.data[0].lastModifiedDate").value("2024-01-01T00:00:00"))
                 .andExpect(jsonPath("$.pageData.first").value(true))
                 .andExpect(jsonPath("$.pageData.last").value(true))
                 .andExpect(jsonPath("$.pageData.pageNumber").value(0))
@@ -184,8 +197,13 @@ class PostControllerTest {
                 .content("content1")
                 .postImageUrl("postImageUrl1")
                 .authorId(1L)
+                .createdAt(LocalDateTime.of(2024, 1, 1, 0, 0))
+                .lastModifiedAt(LocalDateTime.of(2024, 1, 1, 0, 0))
                 .build();
-        given(postService.getClubBoardPost(any(), any())).willReturn(post);
+        UserProfile userProfile = new UserProfile("authorName", "authorPhoneNumber", "authorEmail", "authorImageUrl");
+        given(postService.getClubBoardPost(any(), any())).willReturn(PostInfo.of(post, userProfile));
+        String bucketUrl = "spaceclub.site/";
+        given(imageUploader.getBucketUrl()).willReturn(bucketUrl);
         Long clubId = 1L;
         Long postId = 1L;
 
@@ -197,11 +215,11 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.title").value(post.getTitle()))
                 .andExpect(jsonPath("$.content").value(post.getContent()))
                 .andExpect(jsonPath("$.authorId").value(post.getAuthorId()))
-                .andExpect(jsonPath("$.author").value("authorName"))
-                .andExpect(jsonPath("$.authorImageUrl").value("authorImageUrl"))
-                .andExpect(jsonPath("$.postImageUrl").value(post.getPostImageUrl()))
-                .andExpect(jsonPath("$.createdDate").value("2023-12-31T12:00:00"))
-                .andExpect(jsonPath("$.lastModifiedDate").value("2023-12-31T12:00:00"))
+                .andExpect(jsonPath("$.author").value(userProfile.username()))
+                .andExpect(jsonPath("$.authorImageUrl").value(bucketUrl + userProfile.profileImageUrl()))
+                .andExpect(jsonPath("$.postImageUrl").value(bucketUrl + post.getPostImageUrl()))
+                .andExpect(jsonPath("$.createdDate").value("2024-01-01T00:00:00"))
+                .andExpect(jsonPath("$.lastModifiedDate").value("2024-01-01T00:00:00"))
                 .andDo(
                         document("post/getSinglePost",
                                 preprocessRequest(prettyPrint()),
@@ -226,6 +244,7 @@ class PostControllerTest {
                                 )
                         )
                 );
+
     }
 
     @Test

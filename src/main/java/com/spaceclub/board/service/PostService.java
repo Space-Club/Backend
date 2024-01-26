@@ -4,7 +4,9 @@ import com.spaceclub.board.controller.domain.Post;
 import com.spaceclub.board.controller.dto.PostRequest;
 import com.spaceclub.board.controller.dto.PostUpdateRequest;
 import com.spaceclub.board.repository.PostRepository;
+import com.spaceclub.board.service.vo.PostInfo;
 import com.spaceclub.board.service.vo.PostUpdateCommand;
+import com.spaceclub.user.service.UserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,13 +19,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UserProvider userProvider;
 
-    public Page<Post> getClubBoardPostsByPaging(Pageable pageable, Long clubId) {
-        return postRepository.findByClubId(clubId, pageable);
+    public Page<PostInfo> getClubBoardPostsByPaging(Pageable pageable, Long clubId) {
+        return postRepository.findByClubId(clubId, pageable)
+                .map(post -> PostInfo.of(post, userProvider.getProfile(post.getAuthorId())));
     }
 
-    public Post getClubBoardPost(Long clubId, Long postId) {
-        return postRepository.findByClubIdAndId(clubId, postId).orElseThrow();
+    public PostInfo getClubBoardPost(Long clubId, Long postId) {
+        Post post = postRepository.findByClubIdAndId(clubId, postId).orElseThrow();
+
+        return PostInfo.of(post, userProvider.getProfile(post.getAuthorId()));
     }
 
     @Transactional

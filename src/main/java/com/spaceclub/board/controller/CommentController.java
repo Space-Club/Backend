@@ -1,15 +1,16 @@
 package com.spaceclub.board.controller;
 
-import com.spaceclub.board.controller.domain.Comment;
 import com.spaceclub.board.controller.dto.CommentRequest;
 import com.spaceclub.board.controller.dto.CommentResponse;
 import com.spaceclub.board.service.CommentService;
+import com.spaceclub.board.service.vo.CommentInfo;
 import com.spaceclub.global.Authenticated;
-import com.spaceclub.global.dto.SliceResponse;
+import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.vo.JwtUser;
+import com.spaceclub.global.s3.S3ImageUploader;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,27 +35,28 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 public class CommentController {
 
     private final CommentService commentService;
+    private final S3ImageUploader s3ImageUploader;
 
     @GetMapping("/{postId}/comments")
-    public SliceResponse<CommentResponse, Comment> getCommentsByPaging(
+    public PageResponse<CommentResponse, CommentInfo> getCommentsByPaging(
             @PageableDefault(sort = "createdAt", direction = DESC) Pageable pageable,
             @PathVariable Long postId
     ) {
-        Slice<Comment> commentPages = commentService.getComments(postId, pageable);
+        Page<CommentInfo> commentPages = commentService.getComments(postId, pageable);
         List<CommentResponse> comments = commentPages.getContent().stream()
-                .map(CommentResponse::of)
+                .map(comment -> CommentResponse.of(comment, s3ImageUploader.getBucketUrl()))
                 .toList();
 
-        return new SliceResponse<>(comments, commentPages);
+        return new PageResponse<>(comments, commentPages);
     }
 
     @GetMapping("/comments/{commentId}")
     public CommentResponse getSingleComment(
             @PathVariable Long commentId
     ) {
-        Comment comment = commentService.getComment(commentId);
+        CommentInfo commentInfo = commentService.getComment(commentId);
 
-        return CommentResponse.of(comment);
+        return CommentResponse.of(commentInfo, s3ImageUploader.getBucketUrl());
     }
 
     @PostMapping("/{postId}/comments")

@@ -4,12 +4,16 @@ import com.spaceclub.SpaceClubCustomDisplayNameGenerator;
 import com.spaceclub.board.controller.domain.Comment;
 import com.spaceclub.board.controller.dto.CommentRequest;
 import com.spaceclub.board.repository.CommentRepository;
+import com.spaceclub.board.service.vo.CommentInfo;
+import com.spaceclub.user.service.UserService;
+import com.spaceclub.user.service.vo.UserProfile;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +22,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
 @Transactional
@@ -28,6 +33,9 @@ class CommentServiceTest {
     private CommentService commentService;
     @Autowired
     private CommentRepository commentRepository;
+
+    @MockBean
+    private UserService userService;
 
     @Test
     void 게시물의_댓글_페이징_조회에_성공한다() {
@@ -54,16 +62,24 @@ class CommentServiceTest {
         commentRepository.saveAll(List.of(comment1, comment2, comment3));
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.Direction.ASC, "createdAt");
 
+        UserProfile userProfile = new UserProfile("username", "phoneNumber", "email", "profileImageUrl");
+        given(userService.getProfile(1L)).willReturn(userProfile);
+        given(userService.getProfile(5L)).willReturn(userProfile);
+        given(userService.getProfile(10L)).willReturn(userProfile);
+
         // when
-        Slice<Comment> commentSlice = commentService.getComments(postId, pageRequest);
-        List<Comment> comments = commentSlice.getContent();
+        Page<CommentInfo> commentInfoPage = commentService.getComments(postId, pageRequest);
+        List<CommentInfo> comments = commentInfoPage.getContent();
 
         // then
         assertAll(
-                () -> assertThat(commentSlice).hasSize(3),
-                () -> assertThat(commentSlice.isFirst()).isTrue(),
-                () -> assertThat(commentSlice.isLast()).isTrue(),
-                () -> assertThat(commentSlice.hasNext()).isFalse(),
+                () -> assertThat(commentInfoPage).hasSize(3),
+                () -> assertThat(commentInfoPage.isFirst()).isTrue(),
+                () -> assertThat(commentInfoPage.isLast()).isTrue(),
+                () -> assertThat(commentInfoPage.hasNext()).isFalse(),
+                () -> assertThat(commentInfoPage.getTotalElements()).isEqualTo(3),
+                () -> assertThat(commentInfoPage.getTotalPages()).isEqualTo(1),
+                () -> assertThat(comments).hasSize(3),
                 () -> assertThat(comments.get(0)).extracting("content").isEqualTo("comment1"),
                 () -> assertThat(comments.get(1)).extracting("content").isEqualTo("comment2"),
                 () -> assertThat(comments.get(2)).extracting("content").isEqualTo("comment3")
@@ -85,14 +101,18 @@ class CommentServiceTest {
                 .build();
         Comment savedComment = commentRepository.save(commentToSave);
 
+        UserProfile userProfile = new UserProfile("username", "phoneNumber", "email", "profileImageUrl");
+        given(userService.getProfile(2L)).willReturn(userProfile);
+
         // when
-        Comment comment = commentService.getComment(savedComment.getId());
+        CommentInfo comment = commentService.getComment(savedComment.getId());
 
         // then
         assertAll(
                 () -> assertThat(comment).extracting("content").isEqualTo(content),
                 () -> assertThat(comment).extracting("authorId").isEqualTo(authorId),
-                () -> assertThat(comment).extracting("postId").isEqualTo(postId),
+                () -> assertThat(comment).extracting("author").isEqualTo(userProfile.username()),
+                () -> assertThat(comment).extracting("authorImageUrl").isEqualTo(userProfile.profileImageUrl()),
                 () -> assertThat(comment).extracting("isPrivate").isEqualTo(isPrivate)
         );
     }

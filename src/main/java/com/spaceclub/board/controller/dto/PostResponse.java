@@ -1,12 +1,9 @@
 package com.spaceclub.board.controller.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.spaceclub.board.controller.domain.Post;
-import lombok.Builder;
+import com.spaceclub.board.service.vo.PostInfo;
 
 import java.time.LocalDateTime;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public record PostResponse(
         Long postId,
         String title,
@@ -19,21 +16,17 @@ public record PostResponse(
         LocalDateTime lastModifiedDate
 ) {
 
-    @Builder
-    public PostResponse {
-    }
-
-    public static PostResponse from(Post post) {
+    public static PostResponse from(PostInfo postInfo, String bucketUrl) {
         return new PostResponse(
-                post.getId(),
-                post.getTitle(),
-                post.getContent(),
-                post.getAuthorId(),
-                "authorName",
-                "authorImageUrl",
-                post.getPostImageUrl(),
-                LocalDateTime.of(2023, 12, 31, 12, 0, 0),
-                LocalDateTime.of(2023, 12, 31, 12, 0, 0)
+                postInfo.postId(),
+                postInfo.title(),
+                postInfo.content(),
+                postInfo.authorId(),
+                postInfo.author(),
+                postInfo.authorImageUrl() == null ? null : bucketUrl + postInfo.authorImageUrl(),
+                postInfo.postImageUrl() == null ? null : bucketUrl + postInfo.postImageUrl(),
+                postInfo.createdDate(),
+                postInfo.lastModifiedDate()
         );
     }
 
