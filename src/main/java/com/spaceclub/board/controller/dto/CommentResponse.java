@@ -21,7 +21,7 @@ public record CommentResponse(
                 commentInfo.content(),
                 commentInfo.authorId(),
                 commentInfo.author(),
-                commentInfo.authorImageUrl() == null ? null : bucketUrl + commentInfo.authorImageUrl(),
+                commentInfo.authorImageUrl(),
                 commentInfo.createdDate(),
                 commentInfo.lastModifiedDate(),
                 commentInfo.isPrivate()

@@ -31,4 +31,12 @@ public record PostInfo(
                 post.getLastModifiedAt()
         );
     }
+
+    public String postImageUrl(String bucketUrl) {
+        if (postImageUrl == null) {
+            return null;
+        }
+        return bucketUrl + postImageUrl;
+    }
+
 }

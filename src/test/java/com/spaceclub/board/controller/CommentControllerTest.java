@@ -204,7 +204,7 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$.content").value(comment.getContent()))
                 .andExpect(jsonPath("$.authorId").value(comment.getAuthorId()))
                 .andExpect(jsonPath("$.author").value(userProfile.username()))
-                .andExpect(jsonPath("$.authorImageUrl").value(bucketUrl + userProfile.profileImageUrl()))
+                .andExpect(jsonPath("$.authorImageUrl").value(userProfile.profileImageUrl()))
                 .andExpect(jsonPath("$.createdDate").value("2024-01-01T00:00:00"))
                 .andExpect(jsonPath("$.lastModifiedDate").value("2024-01-01T00:00:00"))
                 .andExpect(jsonPath("$.isPrivate").value(comment.isPrivate()))
