@@ -23,8 +23,8 @@ public record PostResponse(
                 postInfo.content(),
                 postInfo.authorId(),
                 postInfo.author(),
-                postInfo.authorImageUrl() == null ? null : bucketUrl + postInfo.authorImageUrl(),
-                postInfo.postImageUrl() == null ? null : bucketUrl + postInfo.postImageUrl(),
+                postInfo.authorImageUrl(),
+                postInfo.postImageUrl(bucketUrl),
                 postInfo.createdDate(),
                 postInfo.lastModifiedDate()
         );

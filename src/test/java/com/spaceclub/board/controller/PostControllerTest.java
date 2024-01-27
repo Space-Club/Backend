@@ -216,7 +216,7 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.content").value(post.getContent()))
                 .andExpect(jsonPath("$.authorId").value(post.getAuthorId()))
                 .andExpect(jsonPath("$.author").value(userProfile.username()))
-                .andExpect(jsonPath("$.authorImageUrl").value(bucketUrl + userProfile.profileImageUrl()))
+                .andExpect(jsonPath("$.authorImageUrl").value(userProfile.profileImageUrl()))
                 .andExpect(jsonPath("$.postImageUrl").value(bucketUrl + post.getPostImageUrl()))
                 .andExpect(jsonPath("$.createdDate").value("2024-01-01T00:00:00"))
                 .andExpect(jsonPath("$.lastModifiedDate").value("2024-01-01T00:00:00"))
