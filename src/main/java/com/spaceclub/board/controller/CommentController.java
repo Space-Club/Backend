@@ -7,7 +7,6 @@ import com.spaceclub.board.service.vo.CommentInfo;
 import com.spaceclub.global.Authenticated;
 import com.spaceclub.global.dto.PageResponse;
 import com.spaceclub.global.jwt.vo.JwtUser;
-import com.spaceclub.global.s3.S3ImageUploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +34,6 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 public class CommentController {
 
     private final CommentService commentService;
-    private final S3ImageUploader s3ImageUploader;
 
     @GetMapping("/{postId}/comments")
     public PageResponse<CommentResponse, CommentInfo> getCommentsByPaging(
@@ -44,7 +42,7 @@ public class CommentController {
     ) {
         Page<CommentInfo> commentPages = commentService.getComments(postId, pageable);
         List<CommentResponse> comments = commentPages.getContent().stream()
-                .map(comment -> CommentResponse.of(comment, s3ImageUploader.getBucketUrl()))
+                .map(CommentResponse::of)
                 .toList();
 
         return new PageResponse<>(comments, commentPages);
@@ -56,7 +54,7 @@ public class CommentController {
     ) {
         CommentInfo commentInfo = commentService.getComment(commentId);
 
-        return CommentResponse.of(commentInfo, s3ImageUploader.getBucketUrl());
+        return CommentResponse.of(commentInfo);
     }
 
     @PostMapping("/{postId}/comments")

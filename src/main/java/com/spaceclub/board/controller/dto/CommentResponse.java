@@ -15,7 +15,7 @@ public record CommentResponse(
         boolean isPrivate
 ) {
 
-    public static CommentResponse of(CommentInfo commentInfo, String bucketUrl) {
+    public static CommentResponse of(CommentInfo commentInfo) {
         return new CommentResponse(
                 commentInfo.commentId(),
                 commentInfo.content(),

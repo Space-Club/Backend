@@ -10,7 +10,6 @@ import com.spaceclub.global.UserArgumentResolver;
 import com.spaceclub.global.config.WebConfig;
 import com.spaceclub.global.interceptor.AuthenticationInterceptor;
 import com.spaceclub.global.interceptor.AuthorizationInterceptor;
-import com.spaceclub.global.s3.S3ImageUploader;
 import com.spaceclub.user.service.vo.UserProfile;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
@@ -81,9 +80,6 @@ class CommentControllerTest {
 
     @MockBean
     private CommentService commentService;
-
-    @MockBean
-    private S3ImageUploader s3ImageUploader;
 
     @MockBean
     private UserArgumentResolver userArgumentResolver;
@@ -192,9 +188,6 @@ class CommentControllerTest {
                 .build();
         UserProfile userProfile = new UserProfile("authorName", "authorPhoneNumber", "authorEmail", "authorImageUrl");
         given(commentService.getComment(any(Long.class))).willReturn(CommentInfo.of(comment, userProfile));
-
-        String bucketUrl = "spaceclub.site/";
-        given(s3ImageUploader.getBucketUrl()).willReturn(bucketUrl);
 
         mockMvc.perform(get("/api/v1/boards/posts/comments/{commentId}", commentId)
                         .header(AUTHORIZATION, "access token")

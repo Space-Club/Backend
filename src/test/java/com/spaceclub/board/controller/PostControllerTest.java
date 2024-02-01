@@ -130,6 +130,9 @@ class PostControllerTest {
         UserProfile userProfile = new UserProfile("authorName", "authorPhoneNumber", "authorEmail", "authorImageUrl");
         List<PostInfo> postInfos = posts.stream().map(post -> PostInfo.of(post, userProfile)).toList();
         Page<PostInfo> postPages = new PageImpl<>(postInfos);
+
+        final String bucketUrl = "spaceclub.site/";
+        given(imageUploader.getBucketUrl()).willReturn(bucketUrl);
         given(postService.getClubBoardPostsByPaging(any(), any())).willReturn(postPages);
         Long clubId = 1L;
 
@@ -143,6 +146,11 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.data.size()").value(posts.size()))
                 .andExpect(jsonPath("$.data[0].createdDate").value("2024-01-01T00:00:00"))
                 .andExpect(jsonPath("$.data[0].lastModifiedDate").value("2024-01-01T00:00:00"))
+                .andExpect(jsonPath("$.data[0].postImageUrl").value(bucketUrl + posts.get(0).getPostImageUrl()))
+                .andExpect(jsonPath("$.data[0].authorImageUrl").value(userProfile.profileImageUrl()))
+                .andExpect(jsonPath("$.data[0].author").value(userProfile.username()))
+                .andExpect(jsonPath("$.data[1].postImageUrl").doesNotExist())
+                .andExpect(jsonPath("$.data[2].postImageUrl").value(bucketUrl + posts.get(2).getPostImageUrl()))
                 .andExpect(jsonPath("$.pageData.first").value(true))
                 .andExpect(jsonPath("$.pageData.last").value(true))
                 .andExpect(jsonPath("$.pageData.pageNumber").value(0))
@@ -165,7 +173,6 @@ class PostControllerTest {
                                         parameterWithName("sort").optional().description("정렬 방법(ex. id,desc), default id,desc")
                                 ),
                                 responseFields(
-
                                         fieldWithPath("data").type(ARRAY).description("페이지 내 게시글 정보"),
                                         fieldWithPath("data[].postId").type(NUMBER).description("게시글 아이디"),
                                         fieldWithPath("data[].title").type(STRING).description("게시글 제목"),
