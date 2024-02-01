@@ -1,5 +1,6 @@
 package com.spaceclub.board.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.spaceclub.board.service.vo.CommentInfo;
 
 import java.time.LocalDateTime;
@@ -10,7 +11,9 @@ public record CommentResponse(
         Long authorId,
         String author,
         String authorImageUrl,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         LocalDateTime createdDate,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         LocalDateTime lastModifiedDate,
         boolean isPrivate
 ) {

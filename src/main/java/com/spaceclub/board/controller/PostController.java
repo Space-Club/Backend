@@ -67,15 +67,15 @@ public class PostController {
 
     @PostMapping(value = "/{clubId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> createClubBoardPost(
-            @RequestPart(required = false) MultipartFile multipartFile,
+            @RequestPart(required = false) MultipartFile image,
             @RequestPart PostRequest postRequest,
             @PathVariable Long clubId,
             @Authenticated JwtUser jwtUser) {
         Long userId = jwtUser.id();
 
         // 이미지가 존재할 경우
-        if (multipartFile != null) {
-            String postImageUrl = imageUploader.upload(multipartFile, S3Folder.POST_IMAGE);
+        if (image != null) {
+            String postImageUrl = imageUploader.upload(image, S3Folder.POST_IMAGE);
             Long postId = postService.createClubBoardPost(clubId, postRequest, userId, postImageUrl);
 
             return ResponseEntity
@@ -94,12 +94,12 @@ public class PostController {
 
     @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void updateClubBoardPost(
-            @RequestPart(required = false) MultipartFile multipartFile,
+            @RequestPart(required = false) MultipartFile image,
             @RequestPart PostUpdateRequest postRequest,
             @PathVariable Long postId
     ) {
-        if (multipartFile != null) {
-            String postImageUrl = imageUploader.upload(multipartFile, S3Folder.POST_IMAGE);
+        if (image != null) {
+            String postImageUrl = imageUploader.upload(image, S3Folder.POST_IMAGE);
             postService.updateClubBoardPost(postId, postRequest, postImageUrl);
             return;
         }
